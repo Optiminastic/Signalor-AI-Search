@@ -38,6 +38,20 @@ export async function getRuns(email: string, orgId?: number): Promise<RunSummary
   return z.array(runSummarySchema).parse(data)
 }
 
+// Lightweight poll surface for a single in-flight run: status + 0-100 progress.
+export const runStatusSchema = z.object({
+  id: z.number(),
+  status: z.string(), // pending | crawling | analyzing | scoring | complete | failed
+  progress: z.number().optional().default(0),
+  composite_score: z.number().nullable().optional(),
+})
+export type RunStatus = z.infer<typeof runStatusSchema>
+
+/** GET /api/analyzer/runs/<id>/status/ → the run's live status + progress. */
+export async function getRunStatus(runId: number): Promise<RunStatus> {
+  return runStatusSchema.parse(await apiGet<unknown>(`/api/analyzer/runs/${runId}/status/`))
+}
+
 export interface StartAnalysisInput {
   url: string
   email: string

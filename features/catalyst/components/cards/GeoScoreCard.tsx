@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 
+import { Badge } from '@/features/catalyst/components/Badge'
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
+import { AnimatedScore } from '@/features/catalyst/components/cards/AnimatedScore'
 import { Delta } from '@/features/catalyst/components/Delta'
 import { LineChart } from '@/features/catalyst/components/LineChart'
-import { Metric } from '@/features/catalyst/components/Metric'
 import { RangeTabs, type Range } from '@/features/catalyst/components/RangeTabs'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useGeoScore } from '@/hooks/useGeoScore'
@@ -19,11 +20,10 @@ export function GeoScoreCard(): JSX.Element {
   return (
     <Card>
       <CardHead title="GEO Score" action="Report" />
-      <Metric
-        value={data ? `${data.score}` : '—'}
-        positive={data?.positive ?? true}
-        badge={data ? data.delta : '—'}
-      />
+      <div className="flex items-center gap-2.5">
+        <AnimatedScore value={data?.score} />
+        <Badge positive={data?.positive ?? true}>{data ? data.delta : '—'}</Badge>
+      </div>
       <RangeTabs value={range} onChange={setRange} />
       <LineChart data={data?.points ?? []} />
       <div className="mt-3 flex flex-col gap-2.5">

@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart3, Eye, MessageSquareText, Network } from 'lucide-react'
+import { BarChart3, Eye, Gauge, MessageSquareText, Network } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -9,6 +9,7 @@ import type { ComponentType } from 'react'
 import { AnalyticsView } from '@/features/catalyst/components/analytics/AnalyticsView'
 import { PromptTrackerView } from '@/features/catalyst/components/prompt-tracker/PromptTrackerView'
 import { SitemapView } from '@/features/catalyst/components/sitemap/SitemapView'
+import { SiteOneView } from '@/features/catalyst/components/siteone/SiteOneView'
 import { VisibilityView } from '@/features/catalyst/components/visibility/VisibilityView'
 import { useBrandPath } from '@/hooks/useBrandPath'
 
@@ -23,6 +24,7 @@ const TABS: MonitoringTab[] = [
   { key: 'visibility', label: 'Visibility', icon: Eye, View: VisibilityView },
   { key: 'prompts', label: 'Prompt Tracking', icon: MessageSquareText, View: PromptTrackerView },
   { key: 'sitemap', label: 'Sitemap', icon: Network, View: SitemapView },
+  { key: 'siteone', label: 'SiteOne', icon: Gauge, View: SiteOneView },
   { key: 'analytics', label: 'Analytics', icon: BarChart3, View: AnalyticsView },
 ]
 

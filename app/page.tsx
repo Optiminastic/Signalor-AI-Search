@@ -1,6 +1,18 @@
+import type { Metadata } from 'next'
+
 import { Hero } from '@/features/landing/components/Hero'
 import { LandingNav } from '@/features/landing/components/LandingNav'
 
+import { JsonLd } from '@/features/site/components/seo/json-ld'
+import {
+  AGGREGATE_RATING,
+  breadcrumbJsonLd,
+  buildMetadata,
+  faqJsonLd,
+  SITE_BRAND,
+  SITE_URL,
+  siteNavigationJsonLd,
+} from '@/features/site/lib/seo'
 import { LandingFaq } from '@/features/site/components/landing/landing-faq'
 import { LandingFeaturesGrid } from '@/features/site/components/landing/landing-features-grid'
 import { LandingFooter } from '@/features/site/components/landing/landing-footer'
@@ -44,9 +56,45 @@ const HOMEPAGE_FAQ = [
   },
 ]
 
+export const metadata: Metadata = {
+  ...buildMetadata({
+    description:
+      'Signalor scores, monitors, and improves how ChatGPT, Claude, Gemini, Perplexity, and Google AI cite your brand. Free GEO + AEO audit, paste any URL to start.',
+    path: '/',
+  }),
+  // Absolute title bypasses the root "%s | Signalor.ai" template so the brand
+  // leads the SERP (helps the brand-term ranking) without a redundant suffix.
+  title: { absolute: 'Signalor: AI Visibility & GEO Platform for AI Search' },
+}
+
+const homeProductJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: SITE_BRAND,
+  description:
+    'GEO and AEO platform that scores how AI engines cite your brand and ships prioritized fixes.',
+  brand: { '@type': 'Brand', name: 'Signalor' },
+  url: SITE_URL,
+  image: `${SITE_URL}/icon.svg`,
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'GBP',
+    lowPrice: '19.99',
+    highPrice: '59.99',
+    offerCount: 3,
+    url: `${SITE_URL}/pricing`,
+  },
+  aggregateRating: AGGREGATE_RATING,
+}
+
 export default function HomePage(): JSX.Element {
   return (
     <div className="min-h-screen overflow-x-clip bg-[#fbfbfa] font-sans">
+      <JsonLd id="ld-home-breadcrumb" data={breadcrumbJsonLd([{ name: 'Home', path: '/' }])} />
+      <JsonLd id="ld-home-faq" data={faqJsonLd(HOMEPAGE_FAQ)} />
+      <JsonLd id="ld-home-product" data={homeProductJsonLd} />
+      <JsonLd id="ld-home-sitenav" data={siteNavigationJsonLd()} />
+
       {/* new-signalor header + hero — gradient spans from the very top */}
       <div className="relative overflow-hidden">
         <div className="hero-aurora pointer-events-none absolute inset-0 opacity-60" />

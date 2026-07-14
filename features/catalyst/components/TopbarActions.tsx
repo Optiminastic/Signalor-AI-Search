@@ -1,6 +1,5 @@
 'use client'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Bell,
   Calendar,
@@ -16,7 +15,7 @@ import { useState, type ReactNode } from 'react'
 
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import { useActiveProject } from '@/hooks/useActiveProject'
-import { startAnalysis } from '@/lib/api/analyzer'
+import { useNewAnalysis } from '@/hooks/useNewAnalysis'
 
 const CHIP =
   'inline-flex h-[34px] items-center gap-2 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[13px] font-medium text-[var(--cat-ink)] shadow-sm transition-colors hover:bg-[var(--cat-hover)]'
@@ -147,42 +146,18 @@ function SelectChip({
 const RANGES = ['Last 7 days', 'Last month', 'Last 3 months', 'Last year']
 const FILTERS = ['All engines', 'ChatGPT', 'Claude', 'Gemini', 'Google', 'Perplexity']
 
-function newAnalysisLabel(pending: boolean, done: boolean): string {
-  if (pending) return 'Analyzing…'
-  return done ? 'Started' : 'New Analysis'
-}
-
 function NewAnalysisButton(): JSX.Element {
   const { email, activeOrg } = useActiveProject()
-  const queryClient = useQueryClient()
-  const [done, setDone] = useState(false)
-
-  const mutation = useMutation({
-    mutationFn: (vars: { url: string; email: string; orgId: number }) => startAnalysis(vars),
-    onSuccess: () => {
-      setDone(true)
-      queryClient.invalidateQueries({ queryKey: ['catalyst'] })
-      window.setTimeout(() => setDone(false), 2500)
-    },
-  })
-
-  function handleClick(): void {
-    if (!email || !activeOrg) return
-    mutation.mutate({ url: activeOrg.url, email, orgId: activeOrg.id })
-  }
-
-  let icon: LucideIcon | undefined = Plus
-  if (mutation.isPending) icon = undefined
-  else if (done) icon = Check
+  const { trigger, isRunning } = useNewAnalysis()
 
   return (
     <PrimaryButton
-      icon={icon}
-      disabled={!email || !activeOrg || mutation.isPending}
-      onClick={handleClick}
+      icon={isRunning ? undefined : Plus}
+      disabled={!email || !activeOrg || isRunning}
+      onClick={trigger}
     >
-      {mutation.isPending && <Loader2 size={16} className="animate-spin" />}
-      {newAnalysisLabel(mutation.isPending, done)}
+      {isRunning && <Loader2 size={16} className="animate-spin" />}
+      {isRunning ? 'Analyzing…' : 'New Analysis'}
     </PrimaryButton>
   )
 }
