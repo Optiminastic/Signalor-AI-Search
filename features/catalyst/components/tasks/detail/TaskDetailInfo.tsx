@@ -112,7 +112,7 @@ function ScoringRows({ task }: { task: TaskDetail }): JSX.Element {
       <InfoRow label="Priority" value={capitalize(task.priority) || '—'} />
       <InfoRow
         label="Measured lift"
-        value={task.measuredLift != null ? `+${task.measuredLift} GEO pts` : '—'}
+        value={task.measuredLift !== null ? `+${task.measuredLift} GEO pts` : '—'}
       />
       <InfoRow label="Effort" value={capitalize(formatEffort(task.effort)) || '—'} />
     </>
