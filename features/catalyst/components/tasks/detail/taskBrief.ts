@@ -14,7 +14,7 @@ function metaLines(task: TaskDetail, siteUrl: string): string {
     siteUrl && `- Site: ${siteUrl}`,
     task.pillar && `- GEO pillar: ${pillarLabel(task.pillar)}`,
     `- Priority: ${task.priority}`,
-    task.measuredLift != null && `- Measured GEO-score lift: +${task.measuredLift} points`,
+    task.measuredLift !== null && `- Measured GEO-score lift: +${task.measuredLift} points`,
     `- Estimated effort: ${formatEffort(task.effort)}`,
   ]
   return lines.filter(Boolean).join('\n')

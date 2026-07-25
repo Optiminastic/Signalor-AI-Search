@@ -1,11 +1,13 @@
 'use client'
 
 import { AiCitationCard } from '@/features/catalyst/components/cards/AiCitationCard'
+import { ClicksTrendCard } from '@/features/catalyst/components/cards/ClicksTrendCard'
 import { CompetitorHeatmapCard } from '@/features/catalyst/components/cards/CompetitorHeatmapCard'
 import { ConversionRateCard } from '@/features/catalyst/components/cards/ConversionRateCard'
 import { DomainAuthorityCard } from '@/features/catalyst/components/cards/DomainAuthorityCard'
 import { EngagementOpportunitiesCard } from '@/features/catalyst/components/cards/EngagementOpportunitiesCard'
 import { GeoScoreCard } from '@/features/catalyst/components/cards/GeoScoreCard'
+import { SessionsTrendCard } from '@/features/catalyst/components/cards/SessionsTrendCard'
 import { TopSourcesCard } from '@/features/catalyst/components/cards/TopSourcesCard'
 import { UserRetentionCard } from '@/features/catalyst/components/cards/UserRetentionCard'
 import { VisibilityBreakdownCard } from '@/features/catalyst/components/cards/VisibilityBreakdownCard'
@@ -31,33 +33,71 @@ export function DashboardContent(): JSX.Element {
         <DashboardGreeting />
         <AiAssistantPanel />
 
-        {/* Three equal columns; each column stacks its own cards (masonry).
-            Kept to three cards per column so the column heights stay balanced. */}
-        <div className="cat-stagger grid grid-cols-1 items-start gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          <div className="flex flex-col gap-2">
-            <GeoScoreCard />
-            <DomainAuthorityCard />
-            <VisibilityTrendCard />
-            <ConversionRateCard />
-          </div>
-          <div className="flex flex-col gap-2">
-            <AiCitationCard />
-            <VisitorsChannelsCard />
-            <TopSourcesCard />
-          </div>
-          <div className="flex flex-col gap-2">
-            <EngagementOpportunitiesCard />
-            <VisibilityBreakdownCard />
-            <UserRetentionCard />
-          </div>
-        </div>
-
-        {/* Wide, table/map cards span the full width and stack cleanly below. */}
-        <div className="flex flex-col gap-2">
-          <CompetitorHeatmapCard />
-          <WorldPresenceCard />
-        </div>
+        <PrimaryCards />
+        <WideRows />
       </div>
     </OverviewFiltersProvider>
+  )
+}
+
+/** One masonry item. `break-inside-avoid` keeps a card from splitting across columns. */
+function Tile({ children }: { children: React.ReactNode }): JSX.Element {
+  return <div className="mb-2 break-inside-avoid">{children}</div>
+}
+
+/** The primary card grid as a true CSS masonry — columns auto-balance to equal
+ *  height, so shorter columns don't leave dead space at the bottom. */
+function PrimaryCards(): JSX.Element {
+  return (
+    <div className="columns-1 gap-2 sm:columns-2 xl:columns-3">
+      <Tile>
+        <GeoScoreCard />
+      </Tile>
+      <Tile>
+        <DomainAuthorityCard />
+      </Tile>
+      <Tile>
+        <VisibilityTrendCard />
+      </Tile>
+      <Tile>
+        <AiCitationCard />
+      </Tile>
+      <Tile>
+        <VisitorsChannelsCard />
+      </Tile>
+      <Tile>
+        <EngagementOpportunitiesCard />
+      </Tile>
+      <Tile>
+        <VisibilityBreakdownCard />
+      </Tile>
+      <Tile>
+        <ConversionRateCard />
+      </Tile>
+      <Tile>
+        <TopSourcesCard />
+      </Tile>
+      <Tile>
+        <UserRetentionCard />
+      </Tile>
+    </div>
+  )
+}
+
+/** Bottom row: the left 2-col stack (competitor heatmap + the two GA/GSC trend
+ *  cards filling the gap beneath it) sits beside World Presence. The grid stretches
+ *  so the left column's bottom lines up with World Presence — it never runs past it. */
+function WideRows(): JSX.Element {
+  return (
+    <div className="grid grid-cols-1 gap-2 xl:grid-cols-3">
+      <div className="flex min-w-0 flex-col gap-2 xl:col-span-2">
+        <CompetitorHeatmapCard />
+        <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
+          <SessionsTrendCard />
+          <ClicksTrendCard />
+        </div>
+      </div>
+      <WorldPresenceCard />
+    </div>
   )
 }

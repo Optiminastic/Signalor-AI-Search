@@ -21,7 +21,7 @@ function buildStats(task: TaskDetail): StatCard[] {
       icon: TrendingUp,
       color: GREEN,
       label: 'Measured lift',
-      value: task.measuredLift != null ? `+${task.measuredLift} GEO pts` : '—',
+      value: task.measuredLift !== null ? `+${task.measuredLift} GEO pts` : '—',
     },
     { icon: Timer, color: BLUE, label: 'Effort', value: capitalize(formatEffort(task.effort)) },
     {

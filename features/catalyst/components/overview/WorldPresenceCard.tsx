@@ -65,7 +65,7 @@ function TopMarkets({ markers }: { markers: WorldMarker[] }): JSX.Element {
   const top = [...markers].sort((a, b) => b.share - a.share).slice(0, 5)
   const max = top[0]?.share ?? 1
   return (
-    <div className="w-full shrink-0 lg:w-[210px] lg:border-l lg:border-[var(--cat-border-soft)] lg:pl-5">
+    <div className="w-full border-t border-[var(--cat-border-soft)] pt-3">
       <div className="mb-1 text-[11px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">
         Top markets
       </div>
@@ -143,7 +143,7 @@ export function WorldPresenceCard(): JSX.Element {
   const { markers, countries, sessions, hasData, isEmpty, isLoading, syncing } = useWorldPresence()
 
   return (
-    <Card className="xl:col-span-2">
+    <Card>
       <Header />
       {isLoading && (
         <div className="min-h-[172px] animate-pulse rounded-md bg-[var(--cat-hover)]" />
@@ -151,8 +151,8 @@ export function WorldPresenceCard(): JSX.Element {
       {!isLoading && !hasData && <EmptyOrConnect isEmpty={isEmpty} syncing={syncing} />}
       {!isLoading && hasData && (
         <>
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-            <div className="min-w-0 flex-1">
+          <div className="flex flex-col gap-3">
+            <div className="min-w-0">
               <WorldMap markers={markers} />
             </div>
             <TopMarkets markers={markers} />

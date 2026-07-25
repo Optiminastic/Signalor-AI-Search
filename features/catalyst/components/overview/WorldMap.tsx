@@ -1,152 +1,43 @@
+'use client'
+
+import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
+
 import { BRAND } from '@/features/catalyst/constants'
 import type { WorldMarker } from '@/hooks/useWorldPresence'
 
-const W = 48
-const H = 22
-const LAT_TOP = 84
-const LAT_SPAN = 144 // 84°N .. -60°S
+// World country shapes (TopoJSON, ~105KB) served from public/ — same-origin, no CDN.
+const GEO_URL = '/geo/countries-110m.json'
 
-function projX(lon: number): number {
-  return ((lon + 180) / 360) * W
-}
-function projY(lat: number): number {
-  return ((LAT_TOP - lat) / LAT_SPAN) * H
+const GEOGRAPHY_STYLE = {
+  default: { outline: 'none' as const },
+  hover: { outline: 'none' as const, fill: 'var(--cat-hover)' },
+  pressed: { outline: 'none' as const },
 }
 
-// Coarse equirectangular land mask: inclusive [startCol, endCol] spans per row
-// (row 0 = north). Filled as a dot grid — reads as a recognizable world map.
-const LAND_SPANS: Array<Array<[number, number]>> = [
-  [
-    [9, 13],
-    [19, 22],
-    [31, 40],
-  ],
-  [
-    [6, 15],
-    [18, 23],
-    [26, 45],
-  ],
-  [
-    [4, 16],
-    [19, 22],
-    [24, 46],
-  ],
-  [
-    [5, 16],
-    [23, 46],
-  ],
-  [
-    [6, 16],
-    [23, 46],
-  ],
-  [
-    [7, 15],
-    [24, 45],
-  ],
-  [
-    [7, 16],
-    [24, 45],
-  ],
-  [
-    [8, 16],
-    [22, 45],
-  ],
-  [
-    [9, 14],
-    [22, 44],
-  ],
-  [
-    [11, 14],
-    [22, 44],
-  ],
-  [
-    [12, 14],
-    [22, 38],
-    [41, 45],
-  ],
-  [
-    [15, 19],
-    [23, 34],
-    [40, 46],
-  ],
-  [
-    [15, 21],
-    [25, 33],
-    [40, 46],
-  ],
-  [
-    [15, 21],
-    [27, 33],
-    [41, 46],
-  ],
-  [
-    [15, 21],
-    [28, 33],
-    [42, 46],
-  ],
-  [
-    [16, 21],
-    [28, 33],
-    [41, 46],
-  ],
-  [
-    [16, 20],
-    [29, 33],
-    [41, 46],
-  ],
-  [
-    [16, 20],
-    [30, 32],
-    [41, 45],
-  ],
-  [
-    [17, 19],
-    [44, 44],
-  ],
-  [[17, 18]],
-  [[17, 18]],
-  [[17, 17]],
-]
-
-interface Dot {
-  x: number
-  y: number
-}
-
-const LAND_DOTS: Dot[] = []
-LAND_SPANS.forEach((spans, row) => {
-  spans.forEach(([a, b]) => {
-    for (let c = a; c <= b; c += 1) LAND_DOTS.push({ x: c, y: row })
-  })
-})
-
-function Marker({ marker }: { marker: WorldMarker }): JSX.Element {
-  const x = projX(marker.lon)
-  const y = projY(marker.lat)
-  // Area-proportional radius so a 96% market reads far bigger than a 1% one,
-  // while the smallest still stays visible.
-  const r = 0.7 + Math.sqrt(marker.share / 100) * 3
+/** A session-share bubble anchored to a country's centroid. */
+function Bubble({ marker }: { marker: WorldMarker }): JSX.Element {
+  // Area-proportional radius so a 96% market dwarfs a 1% one, small ones stay visible.
+  const r = 4 + Math.sqrt(marker.share / 100) * 15
   return (
-    <g>
-      {/* Native tooltip on hover — the Top Markets list carries the full readout. */}
+    <Marker coordinates={[marker.lon, marker.lat]}>
       <title>{`${marker.country} · ${marker.share}%`}</title>
-      <circle cx={x} cy={y} r={r} fill={BRAND} opacity={0.14}>
+      <circle r={r} fill={BRAND} opacity={0.14}>
         <animate
           attributeName="r"
-          values={`${r};${r * 1.55};${r}`}
+          values={`${r};${r * 1.5};${r}`}
           dur="2.6s"
           repeatCount="indefinite"
         />
         <animate
           attributeName="opacity"
-          values="0.14;0.04;0.14"
+          values="0.14;0.03;0.14"
           dur="2.6s"
           repeatCount="indefinite"
         />
       </circle>
-      <circle cx={x} cy={y} r={r * 0.55} fill={BRAND} />
-      <circle cx={x} cy={y} r={r * 0.22} fill="#fff" opacity={0.7} />
-    </g>
+      <circle r={r * 0.5} fill={BRAND} />
+      <circle r={r * 0.2} fill="#fff" opacity={0.7} />
+    </Marker>
   )
 }
 
@@ -154,22 +45,35 @@ interface WorldMapProps {
   markers: WorldMarker[]
 }
 
+/** Real geographic world map (react-simple-maps) with proportional session bubbles. */
 export function WorldMap({ markers }: WorldMapProps): JSX.Element {
   return (
-    <svg viewBox="-1 -1 50 24" preserveAspectRatio="xMidYMid meet" className="h-[172px] w-full">
-      {LAND_DOTS.map(d => (
-        <circle
-          key={`${d.x}-${d.y}`}
-          cx={d.x}
-          cy={d.y}
-          r={0.34}
-          fill="var(--cat-ink-3)"
-          opacity={0.3}
-        />
-      ))}
-      {markers.map(m => (
-        <Marker key={m.country} marker={m} />
-      ))}
-    </svg>
+    <div className="aspect-[2/1] w-full border">
+      <ComposableMap
+        projection="geoEqualEarth"
+        projectionConfig={{ scale: 165 }}
+        width={800}
+        height={400}
+        style={{ width: '100%', height: '100%' }}
+      >
+        <Geographies geography={GEO_URL}>
+          {({ geographies }) =>
+            geographies.map(geo => (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                fill="var(--cat-hover)"
+                stroke="var(--cat-border)"
+                strokeWidth={0.4}
+                style={GEOGRAPHY_STYLE}
+              />
+            ))
+          }
+        </Geographies>
+        {markers.map(m => (
+          <Bubble key={m.country} marker={m} />
+        ))}
+      </ComposableMap>
+    </div>
   )
 }
