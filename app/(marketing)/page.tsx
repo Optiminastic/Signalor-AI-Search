@@ -23,6 +23,7 @@ import { HomePricing } from '@/features/site/components/landing/home-pricing'
 import { HomeStats } from '@/features/site/components/landing/home-stats'
 import { HomeFooter } from '@/features/site/components/landing/home-footer'
 import { HomeTestimonials } from '@/features/site/components/landing/home-testimonials'
+import { HomeExperience } from '@/features/site/components/landing/home-experience'
 
 const HOMEPAGE_FAQ = [
   {
@@ -109,6 +110,7 @@ export default function HomePage(): JSX.Element {
           <HomeHowItWorks />
           <HomeStats />
           <HomeTestimonials />
+          <HomeExperience />
           <HomeIntegrations />
           <HomePricing />
           <HomeFaq items={HOMEPAGE_FAQ} />
