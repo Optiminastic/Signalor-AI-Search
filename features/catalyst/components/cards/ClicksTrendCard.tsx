@@ -9,7 +9,7 @@ import { useGscData } from '@/hooks/useGscData'
 /** Search Console clicks over time, with its own date-range selector. */
 export function ClicksTrendCard(): JSX.Element {
   const [days, setDays] = useState<number | undefined>(undefined)
-  const { data, isLoading, isEmpty, connected } = useGscData(days)
+  const { data, isLoading, syncing, isEmpty, connected } = useGscData(days)
   const brandPath = useBrandPath()
 
   return (
@@ -23,6 +23,7 @@ export function ClicksTrendCard(): JSX.Element {
       onDays={setDays}
       connected={connected}
       isLoading={isLoading}
+      syncing={syncing}
       isEmpty={isEmpty}
       connectHref={brandPath('integrations')}
       connectLabel="Connect Search Console"

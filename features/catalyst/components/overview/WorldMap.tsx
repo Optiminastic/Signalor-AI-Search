@@ -54,7 +54,7 @@ export function WorldMap({ markers }: WorldMapProps): JSX.Element {
         projectionConfig={{ scale: 165 }}
         width={800}
         height={400}
-        style={{ width: '100%', height: '100%' }}
+        className="h-full w-full"
       >
         <Geographies geography={GEO_URL}>
           {({ geographies }) =>

@@ -19,6 +19,7 @@ export interface MetricTrendCardProps {
   onDays: (days: number | undefined) => void
   connected: boolean
   isLoading: boolean
+  syncing: boolean
   isEmpty: boolean
   connectHref: string
   connectLabel: string
@@ -57,8 +58,8 @@ function TrendBody({
 }
 
 function CardBody(props: MetricTrendCardProps): JSX.Element {
-  const { connected, isLoading, isEmpty, connectHref, connectLabel, title } = props
-  if (connected && isLoading) {
+  const { connected, isLoading, syncing, isEmpty, connectHref, connectLabel, title } = props
+  if (connected && (isLoading || syncing)) {
     return (
       <CenteredNote>
         <Loader2 className="h-5 w-5 animate-spin text-[var(--cat-ink-3)]" />
