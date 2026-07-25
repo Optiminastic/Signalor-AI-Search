@@ -4,7 +4,7 @@ import 'react-day-picker/style.css'
 
 import { endOfDay, format, isSameDay, isWithinInterval, startOfDay } from 'date-fns'
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
-import { DayPicker, type DateRange } from 'react-day-picker'
+import { DayPicker, getDefaultClassNames, type DateRange } from 'react-day-picker'
 
 import { CONTROL_CHIP } from '@/features/catalyst/components/control-styles'
 import { CalendarDays, ChevronDown } from '@/lib/icons'
@@ -25,11 +25,34 @@ const MODES: { value: Mode; label: string }[] = [
   { value: 'range', label: 'Range' },
 ]
 
-// react-day-picker accent → brand red.
+// react-day-picker theming → brand red accent, compact sizing, no default blue.
 const CALENDAR_STYLE = {
   '--rdp-accent-color': '#e04a3d',
   '--rdp-accent-background-color': 'rgba(224,74,61,0.12)',
+  '--rdp-today-color': '#e04a3d',
+  '--rdp-range_middle-background-color': 'rgba(224,74,61,0.12)',
+  '--rdp-range_start-color': '#fff',
+  '--rdp-range_end-color': '#fff',
+  '--rdp-day-width': '2.15rem',
+  '--rdp-day-height': '2.15rem',
+  '--rdp-day_button-width': '2.15rem',
+  '--rdp-day_button-height': '2.15rem',
+  '--rdp-day_button-border-radius': '7px',
+  '--rdp-weekday-opacity': '1',
 } as CSSProperties
+
+// Merge house-style Tailwind over the library defaults so layout stays intact.
+const defaults = getDefaultClassNames()
+const CALENDAR_CLASSNAMES = {
+  month_caption: `${defaults.month_caption} h-8`,
+  caption_label: `${defaults.caption_label} text-[13px] font-semibold text-[var(--cat-ink)]`,
+  button_previous: `${defaults.button_previous} inline-grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]`,
+  button_next: `${defaults.button_next} inline-grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]`,
+  chevron: `${defaults.chevron} !fill-[var(--cat-ink-2)]`,
+  weekday: `${defaults.weekday} text-[11px] font-medium text-[var(--cat-ink-3)]`,
+  day: `${defaults.day} text-[12px] text-[var(--cat-ink-2)]`,
+  outside: `${defaults.outside} text-[var(--cat-ink-3)] opacity-50`,
+}
 
 export function dateFilterLabel(filter: DateFilter): string {
   if (filter.mode === 'single') return format(filter.date, 'MMM d, yyyy')
@@ -83,6 +106,7 @@ function Calendar({ mode, filter, onPick }: CalendarProps): JSX.Element {
         mode="single"
         selected={selected}
         onSelect={d => d && onPick({ mode: 'single', date: d })}
+        classNames={CALENDAR_CLASSNAMES}
       />
     )
   }
@@ -94,6 +118,7 @@ function Calendar({ mode, filter, onPick }: CalendarProps): JSX.Element {
         mode="range"
         selected={selected}
         onSelect={r => r?.from && r?.to && onPick({ mode: 'range', from: r.from, to: r.to })}
+        classNames={CALENDAR_CLASSNAMES}
       />
     )
   }
