@@ -20,8 +20,8 @@ function buildStats(task: TaskDetail): StatCard[] {
     {
       icon: TrendingUp,
       color: GREEN,
-      label: 'Score Impact',
-      value: task.impact > 0 ? `+${task.impact}` : '—',
+      label: 'Measured lift',
+      value: task.measuredLift != null ? `+${task.measuredLift} GEO pts` : '—',
     },
     { icon: Timer, color: BLUE, label: 'Effort', value: capitalize(formatEffort(task.effort)) },
     {

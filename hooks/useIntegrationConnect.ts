@@ -60,11 +60,16 @@ export function useIntegrationConnect(): UseIntegrationConnectResult {
         // Shopify connect is handled by the view's token modal; the Google OAuth
         // hand-offs run here (their callbacks finish and return to the app).
         if (slug === 'shopify') return
-        const returnTo = window.location.pathname + window.location.search
-        window.location.href =
-          slug === 'search-console'
-            ? await getGscAuthUrl(email, returnTo)
-            : await getGAAuthUrl(email)
+        if (slug === 'search-console') {
+          // GSC's callback is server-side, so send the user straight to the
+          // property picker afterwards (mirrors GA4 selecting on its callback).
+          window.location.href = await getGscAuthUrl(
+            email,
+            '/settings/integrations/google-search-console/property',
+          )
+          return
+        }
+        window.location.href = await getGAAuthUrl(email)
         return
       }
       if (slug === 'shopify') await disconnectShopify(email)

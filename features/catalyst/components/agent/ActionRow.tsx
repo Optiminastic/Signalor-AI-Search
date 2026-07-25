@@ -2,8 +2,8 @@
 
 import { TransitionLink } from '@/components/TransitionLink'
 import { ActionCtaButton } from '@/features/catalyst/components/agent/ActionCtaButton'
+import { PriorityPill } from '@/features/catalyst/components/agent/PriorityPill'
 import { TaskTypeIcon } from '@/features/catalyst/components/agent/TaskTypeIcon'
-import { Badge } from '@/features/catalyst/components/Badge'
 import { formatEffort, TASK_TYPE_LABEL, taskTypeOf } from '@/features/catalyst/tasks-data'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { AgentAction } from '@/lib/api/agent'
@@ -37,8 +37,8 @@ export function ActionRow({ action }: { action: AgentAction }): JSX.Element {
           </p>
         )}
       </div>
-      <div className="flex w-[52px] shrink-0 justify-end">
-        <Badge positive>+{action.impact}</Badge>
+      <div className="flex w-[68px] shrink-0 justify-end">
+        <PriorityPill priority={action.priority} />
       </div>
       <span className="hidden w-[56px] shrink-0 text-right text-[11px] text-[var(--cat-ink-3)] lg:block">
         {formatEffort(action.effort)}

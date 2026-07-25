@@ -5,12 +5,19 @@ import Link from 'next/link'
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import { Card } from '@/features/catalyst/components/Card'
 import { WorldMap } from '@/features/catalyst/components/overview/WorldMap'
-import { BRAND } from '@/features/catalyst/constants'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import { useWorldPresence, type WorldMarker } from '@/hooks/useWorldPresence'
-import { Globe, Loader2, MoreHorizontal } from '@/lib/icons'
+import { ArrowRight, Globe, Loader2 } from '@/lib/icons'
+
+/** ISO alpha-2 code → flag emoji (regional indicators); globe fallback. */
+function flagEmoji(code: string): string {
+  const cc = (code || '').toUpperCase()
+  if (!/^[A-Z]{2}$/.test(cc)) return '🌐'
+  return String.fromCodePoint(...[...cc].map(c => 127397 + c.charCodeAt(0)))
+}
 
 function Header(): JSX.Element {
+  const brandPath = useBrandPath()
   return (
     <div className="mb-3 flex items-start justify-between">
       <div className="flex items-center gap-2.5">
@@ -22,17 +29,16 @@ function Header(): JSX.Element {
           <p className="text-[11px] text-[var(--cat-ink-3)]">Sessions by country</p>
         </div>
       </div>
-      <span className="flex items-center gap-1.5">
+      <span className="flex items-center gap-2">
         <span className="rounded-full bg-[var(--cat-hover)] px-2 py-0.5 text-[10px] font-medium text-[var(--cat-ink-3)]">
           Google Analytics
         </span>
-        <button
-          type="button"
-          aria-label="More"
-          className="grid h-6 w-6 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)]"
+        <Link
+          href={`${brandPath('visibility')}?tab=analytics`}
+          className="inline-flex items-center gap-0.5 text-[12px] font-medium text-[#e04a3d] transition-colors hover:text-[#b9382d]"
         >
-          <MoreHorizontal size={15} />
-        </button>
+          View details <ArrowRight size={13} />
+        </Link>
       </span>
     </div>
   )
@@ -42,7 +48,7 @@ function MarketRow({ marker, max }: { marker: WorldMarker; max: number }): JSX.E
   return (
     <div className="py-[7px]">
       <div className="mb-1.5 flex items-center gap-2">
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: BRAND }} />
+        <span className="shrink-0 text-[14px] leading-none">{flagEmoji(marker.code)}</span>
         <span className="flex-1 truncate text-[12.5px] font-medium text-[var(--cat-ink)]">
           {marker.country}
         </span>

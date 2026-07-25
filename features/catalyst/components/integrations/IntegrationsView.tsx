@@ -17,6 +17,7 @@ import { useSession } from '@/lib/auth-client'
 // so a user can switch which GA4 property feeds the brand without reconnecting.
 const MANAGE_HREF: Record<string, string> = {
   'google-analytics': '/settings/integrations/google-analytics/property',
+  'search-console': '/settings/integrations/google-search-console/property',
 }
 
 interface GroupSectionProps {

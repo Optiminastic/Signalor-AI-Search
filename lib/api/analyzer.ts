@@ -187,6 +187,27 @@ export async function getTopSources(slug: string): Promise<TopSources> {
   return topSourcesSchema.parse(await apiGet<unknown>(`/api/analyzer/runs/s/${slug}/top-sources/`))
 }
 
+/* ──────────────────────────────────────────────────────────── domain authority */
+
+export const domainAuthoritySchema = z.object({
+  domain: z.string(),
+  domain_rating: z.number().nullable(),
+  global_rank: z.number().nullable(),
+  backlinks: z.number().nullable(),
+  linking_websites: z.number().nullable(),
+  /** "ahrefs" | "openpagerank" | null (unavailable). */
+  source: z.string().nullable(),
+  fetched_at: z.string().nullable(),
+})
+export type DomainAuthority = z.infer<typeof domainAuthoritySchema>
+
+/** GET runs/s/<slug>/domain-authority/ → DR (+ backlinks when Ahrefs is on). */
+export async function getDomainAuthority(slug: string): Promise<DomainAuthority> {
+  return domainAuthoritySchema.parse(
+    await apiGet<unknown>(`/api/analyzer/runs/s/${slug}/domain-authority/`),
+  )
+}
+
 /* ────────────────────────────────────────────────────────────────── citations */
 
 export const citationsSchema = z.object({
@@ -267,9 +288,6 @@ export const recommendationSchema = z.object({
   title: z.string(),
   description: z.string().optional().default(''),
   action: z.string().optional().default(''),
-  // Backend sends this as free text ("Could improve your score by ~10 points"),
-  // but older runs may store a bare number — accept either.
-  impact_estimate: z.union([z.number(), z.string()]).nullable().optional(),
   category: z.string().optional().default(''),
   // Analyzer finding code (e.g. "no_llms_txt", "no_jsonld") — needed to trigger
   // the GitHub PR auto-fix, which keys off finding codes.

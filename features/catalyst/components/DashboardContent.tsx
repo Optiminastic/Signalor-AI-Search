@@ -3,6 +3,7 @@
 import { AiCitationCard } from '@/features/catalyst/components/cards/AiCitationCard'
 import { CompetitorHeatmapCard } from '@/features/catalyst/components/cards/CompetitorHeatmapCard'
 import { ConversionRateCard } from '@/features/catalyst/components/cards/ConversionRateCard'
+import { DomainAuthorityCard } from '@/features/catalyst/components/cards/DomainAuthorityCard'
 import { EngagementOpportunitiesCard } from '@/features/catalyst/components/cards/EngagementOpportunitiesCard'
 import { GeoScoreCard } from '@/features/catalyst/components/cards/GeoScoreCard'
 import { TopSourcesCard } from '@/features/catalyst/components/cards/TopSourcesCard'
@@ -35,6 +36,7 @@ export function DashboardContent(): JSX.Element {
         <div className="cat-stagger grid grid-cols-1 items-start gap-2 sm:grid-cols-2 xl:grid-cols-3">
           <div className="flex flex-col gap-2">
             <GeoScoreCard />
+            <DomainAuthorityCard />
             <VisibilityTrendCard />
             <ConversionRateCard />
           </div>

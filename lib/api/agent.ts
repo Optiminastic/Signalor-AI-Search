@@ -23,7 +23,8 @@ export const agentActionSchema = z.object({
   priority: z.string().default('medium'),
   rank: z.number().default(0),
   is_top_fix: z.boolean().default(false),
-  impact: z.number().default(0),
+  /** Real measured GEO-score lift once the task is verified; null until then. */
+  measured_lift: z.number().nullable().optional().default(null),
   effort: z.object({
     difficulty: z.string().default(''),
     minutes: z.number().default(0),
@@ -40,8 +41,6 @@ export const agentPlanSchema = z.object({
     website: z.string().default(''),
     brand_name: z.string().default(''),
     score: z.number().nullable(),
-    /** Composite score if every open task were completed (real, headroom-clamped). */
-    projected_score: z.number().nullable().optional().default(null),
     last_analyzed_at: z.string().nullable(),
     next_analysis_at: z.string().nullable(),
   }),

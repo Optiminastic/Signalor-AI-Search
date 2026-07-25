@@ -8,6 +8,8 @@ import { centroidFor } from '@/lib/geo/country-centroids'
 
 export interface WorldMarker {
   country: string
+  /** ISO alpha-2 code (e.g. "IN") — drives the flag emoji. */
+  code: string
   /** Geographic centroid — projected onto the map in WorldMap. */
   lat: number
   lon: number
@@ -46,6 +48,7 @@ function toMarkers(countries: GACountry[], totalSessions: number): WorldMarker[]
       if (!centroid) return null
       return {
         country: c.country,
+        code: c.country_id,
         lat: centroid.lat,
         lon: centroid.lon,
         share: Math.round((c.sessions / totalSessions) * 1000) / 10,
