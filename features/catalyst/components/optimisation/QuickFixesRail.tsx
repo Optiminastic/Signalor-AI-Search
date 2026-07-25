@@ -55,9 +55,6 @@ function FixRow({ rec, flow }: { rec: Recommendation; flow: AutoFixFlow }): JSX.
           <p className="text-foreground truncate text-[12.5px] font-medium">{rec.title}</p>
           <p className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-[10.5px]">
             <span>{rec.pillar}</span>
-            {rec.impact > 0 && (
-              <span className="text-success font-semibold">+{rec.impact} pts</span>
-            )}
             <span>· {rec.effort}</span>
           </p>
         </div>

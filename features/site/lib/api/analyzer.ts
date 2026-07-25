@@ -80,7 +80,7 @@ const recommendationSchema = z.object({
   title: z.string(),
   description: z.string(),
   action: z.string(),
-  impact_estimate: z.string(),
+  impact_estimate: z.string().optional().default(''),
   category: z.string(),
   can_auto_fix: z.boolean(),
   code_fixable: z.boolean().optional().default(false),

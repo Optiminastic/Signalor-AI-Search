@@ -55,7 +55,6 @@ function RecRow({ item, state, onFix }: RecActionProps): JSX.Element {
           <span className="rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-medium text-[var(--cat-ink-2)]">
             {item.pillar}
           </span>
-          <span>+{item.impact} pts</span>
           <span>· {item.effort}</span>
         </div>
       </div>

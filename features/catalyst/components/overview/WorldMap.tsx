@@ -120,15 +120,32 @@ LAND_SPANS.forEach((spans, row) => {
   })
 })
 
-function Marker({ lon, lat, share }: { lon: number; lat: number; share: number }): JSX.Element {
-  const x = projX(lon)
-  const y = projY(lat)
-  const solid = 0.5 + share * 0.03
+function Marker({ marker }: { marker: WorldMarker }): JSX.Element {
+  const x = projX(marker.lon)
+  const y = projY(marker.lat)
+  // Area-proportional radius so a 96% market reads far bigger than a 1% one,
+  // while the smallest still stays visible.
+  const r = 0.7 + Math.sqrt(marker.share / 100) * 3
   return (
     <g>
-      <circle cx={x} cy={y} r={solid + 1.2} fill={BRAND} opacity={0.13} />
-      <circle cx={x} cy={y} r={solid} fill={BRAND} />
-      <circle cx={x} cy={y} r={solid * 0.4} fill="#fff" opacity={0.6} />
+      {/* Native tooltip on hover — the Top Markets list carries the full readout. */}
+      <title>{`${marker.country} · ${marker.share}%`}</title>
+      <circle cx={x} cy={y} r={r} fill={BRAND} opacity={0.14}>
+        <animate
+          attributeName="r"
+          values={`${r};${r * 1.55};${r}`}
+          dur="2.6s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          values="0.14;0.04;0.14"
+          dur="2.6s"
+          repeatCount="indefinite"
+        />
+      </circle>
+      <circle cx={x} cy={y} r={r * 0.55} fill={BRAND} />
+      <circle cx={x} cy={y} r={r * 0.22} fill="#fff" opacity={0.7} />
     </g>
   )
 }
@@ -151,7 +168,7 @@ export function WorldMap({ markers }: WorldMapProps): JSX.Element {
         />
       ))}
       {markers.map(m => (
-        <Marker key={m.country} lon={m.lon} lat={m.lat} share={m.share} />
+        <Marker key={m.country} marker={m} />
       ))}
     </svg>
   )

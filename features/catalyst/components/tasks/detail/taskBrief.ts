@@ -14,7 +14,7 @@ function metaLines(task: TaskDetail, siteUrl: string): string {
     siteUrl && `- Site: ${siteUrl}`,
     task.pillar && `- GEO pillar: ${pillarLabel(task.pillar)}`,
     `- Priority: ${task.priority}`,
-    task.impact > 0 && `- Estimated score impact: +${task.impact} points`,
+    task.measuredLift != null && `- Measured GEO-score lift: +${task.measuredLift} points`,
     `- Estimated effort: ${formatEffort(task.effort)}`,
   ]
   return lines.filter(Boolean).join('\n')
@@ -29,7 +29,6 @@ export function buildTaskBrief(task: TaskDetail, siteUrl: string): string {
     `# GEO task: ${task.title}`,
     metaLines(task, siteUrl),
     task.description && `## Why it matters\n${task.description}`,
-    task.impactNote && `> ${task.impactNote}`,
     task.actionGuide && `## How to fix\n${task.actionGuide}`,
     '## What I need from you\nGive me a concrete implementation plan for my site, then produce the exact content or code to apply. Ask me for any missing specifics (page URLs, brand facts, tech stack) before assuming.',
   ]

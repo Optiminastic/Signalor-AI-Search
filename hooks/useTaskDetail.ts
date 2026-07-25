@@ -13,7 +13,8 @@ export interface TaskDetail {
   description: string
   status: string
   priority: string
-  impact: number
+  /** Real measured GEO-score lift once the task is verified; null until then. */
+  measuredLift: number | null
   effort: { difficulty: string; minutes: number }
   pillar: string
   group: string
@@ -26,8 +27,6 @@ export interface TaskDetail {
   planAction: AgentAction | null
   /** Step-by-step fix instructions from the source recommendation. */
   actionGuide: string
-  /** Free-text impact estimate, e.g. "Could improve your score by ~10 points". */
-  impactNote: string
   category: string
   canAutoFix: boolean
   /** Analyzer finding code (e.g. "no_jsonld") — keys the GitHub PR auto-fix. */
@@ -53,16 +52,6 @@ function priorityOfPoints(points: number | null | undefined): string {
   return 'low'
 }
 
-/** Pull "~10 points" out of the backend's free-text impact estimate. */
-function impactFromEstimate(estimate: Recommendation['impact_estimate']): number {
-  if (typeof estimate === 'number') return Math.round(estimate)
-  if (typeof estimate === 'string') {
-    const match = estimate.match(/(\d+)/)
-    return match ? Number(match[1]) : 0
-  }
-  return 0
-}
-
 interface BuildDetailInput {
   id: number
   planAction: AgentAction | null
@@ -78,11 +67,8 @@ function buildDetail({ id, planAction, raw, rec }: BuildDetailInput): TaskDetail
     description: planAction?.description || raw?.description || rec?.description || '',
     status: planAction?.status || raw?.status || 'pending',
     priority: planAction?.priority || rec?.priority || priorityOfPoints(raw?.points_value),
-    impact:
-      planAction?.impact ??
-      raw?.score_improvement ??
-      raw?.points_value ??
-      impactFromEstimate(rec?.impact_estimate),
+    // Real measured lift only — null until the task is verified by re-analysis.
+    measuredLift: planAction?.measured_lift ?? raw?.score_improvement ?? null,
     effort: planAction?.effort ?? {
       difficulty: rec?.difficulty ?? '',
       minutes: rec?.estimated_minutes ?? 0,
@@ -96,7 +82,6 @@ function buildDetail({ id, planAction, raw, rec }: BuildDetailInput): TaskDetail
     recommendationId: planAction?.recommendation_id ?? raw?.recommendation ?? null,
     planAction,
     actionGuide: rec?.action ?? '',
-    impactNote: typeof rec?.impact_estimate === 'string' ? rec.impact_estimate : '',
     category: rec?.category ?? '',
     canAutoFix: Boolean(rec?.can_auto_fix || rec?.code_fixable),
     findingCode: rec?.finding_code ?? '',

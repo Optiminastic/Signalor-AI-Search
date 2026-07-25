@@ -4,12 +4,13 @@ import { useState } from 'react'
 
 import { TransitionLink } from '@/components/TransitionLink'
 import { ActionCtaButton } from '@/features/catalyst/components/agent/ActionCtaButton'
+import { PriorityPill } from '@/features/catalyst/components/agent/PriorityPill'
 import { TaskTypeIcon } from '@/features/catalyst/components/agent/TaskTypeIcon'
 import { TASK_TYPE_LABEL, taskTypeOf } from '@/features/catalyst/tasks-data'
 import { useAgentPlan } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { AgentAction, AgentPlan } from '@/lib/api/agent'
-import { ChevronDown, Sparkles, Timer, TrendingUp } from '@/lib/icons'
+import { ChevronDown, Sparkles, Timer } from '@/lib/icons'
 
 const MAX_SUGGESTIONS = 4
 const PRIORITY_ORDER: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 }
@@ -86,11 +87,7 @@ function CardTopRow({ action }: { action: AgentAction }): JSX.Element {
       >
         <TaskTypeIcon type={type} size={15} />
       </span>
-      {action.impact > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-[#E7F7EF] px-2 py-0.5 text-[11px] font-semibold text-[#1e8a5c] tabular-nums">
-          <TrendingUp size={11} /> +{action.impact}
-        </span>
-      )}
+      <PriorityPill priority={action.priority} />
     </div>
   )
 }

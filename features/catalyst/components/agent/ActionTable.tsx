@@ -15,7 +15,7 @@ function ColumnHeader(): JSX.Element {
     <div className="flex items-center gap-3 border-b border-[var(--cat-border-soft)] px-4 py-2 text-[10px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">
       <span className="w-8 shrink-0" />
       <span className="flex-1">Action</span>
-      <span className="w-[52px] shrink-0 text-right">Impact</span>
+      <span className="w-[68px] shrink-0 text-right">Priority</span>
       <span className="hidden w-[56px] shrink-0 text-right lg:block">Effort</span>
       <span className="w-[104px] shrink-0" />
     </div>

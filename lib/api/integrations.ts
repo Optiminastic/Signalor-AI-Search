@@ -179,11 +179,36 @@ export const gaCountrySchema = z.object({
 })
 export type GACountry = z.infer<typeof gaCountrySchema>
 
+export const gaTopPageSchema = z.object({
+  path: z.string().default(''),
+  sessions: z.number().default(0),
+  bounce_rate: z.number().default(0),
+  avg_duration: z.number().default(0),
+})
+export type GaTopPage = z.infer<typeof gaTopPageSchema>
+
+export const gaTrafficSourceSchema = z.object({
+  source: z.string().default(''),
+  medium: z.string().default(''),
+  sessions: z.number().default(0),
+})
+export type GaTrafficSource = z.infer<typeof gaTrafficSourceSchema>
+
+export const gaTrendPointSchema = z.object({
+  date: z.string(),
+  sessions: z.number().default(0),
+  organic_sessions: z.number().default(0),
+})
+export type GaTrendPoint = z.infer<typeof gaTrendPointSchema>
+
 export const gaDataSchema = z.object({
   sessions: z.number().default(0),
   organic_sessions: z.number().default(0),
   bounce_rate: z.number().default(0),
   avg_session_duration: z.number().default(0),
+  top_pages: z.array(gaTopPageSchema).default([]),
+  traffic_sources: z.array(gaTrafficSourceSchema).default([]),
+  daily_trend: z.array(gaTrendPointSchema).default([]),
   countries: z.array(gaCountrySchema).default([]),
   sync_status: z.string().default('pending'),
   date_start: z.string().optional(),
@@ -192,17 +217,103 @@ export const gaDataSchema = z.object({
 export type GAData = z.infer<typeof gaDataSchema>
 
 /**
- * GET /api/integrations/google-analytics/data/?email= → the latest GA4 snapshot.
+ * GET /api/integrations/google-analytics/data/?email=&days= → GA4 data.
  *
- * Returns null when GA isn't connected or has never synced — both are 404s from
- * the backend and are normal states, not errors worth surfacing.
+ * `days` omitted → the cached (~30d) snapshot (fast). `days` set → a live fetch
+ * for that window. Returns null when GA isn't connected or has never synced (404s,
+ * normal states, not errors worth surfacing).
  */
-export async function getGAData(email: string): Promise<GAData | null> {
+export async function getGAData(email: string, days?: number): Promise<GAData | null> {
   try {
     const data = await apiGet<unknown>('/api/integrations/google-analytics/data/', {
-      params: { email: normalizeEmail(email) },
+      params: { email: normalizeEmail(email), ...(days ? { days: String(days) } : {}) },
     })
     return gaDataSchema.parse(data)
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return null
+    throw err
+  }
+}
+
+/* ─────────────────────────────────────────────────── google search console */
+
+export const gscSiteSchema = z.object({
+  site_url: z.string(),
+  permission_level: z.string().optional().default(''),
+})
+export type GscSite = z.infer<typeof gscSiteSchema>
+
+/**
+ * GET /api/integrations/google-search-console/sites/?email= → the verified
+ * Search Console properties this account can read.
+ *
+ * Like GA4's property step, connecting stores tokens but binds no property; sync
+ * and data both 400/404 until a site is selected. So this step is required.
+ */
+export async function getGscSites(email: string): Promise<GscSite[]> {
+  const data = await apiGet<unknown>('/api/integrations/google-search-console/sites/', {
+    params: { email: normalizeEmail(email) },
+  })
+  return z.object({ sites: z.array(gscSiteSchema) }).parse(data).sites
+}
+
+/** POST /api/integrations/google-search-console/select-site/ → bind a property. */
+export async function selectGscSite(options: { email: string; siteUrl: string }): Promise<void> {
+  await apiPost<unknown>('/api/integrations/google-search-console/select-site/', {
+    email: normalizeEmail(options.email),
+    site_url: options.siteUrl,
+  })
+}
+
+/** POST /api/integrations/google-search-console/sync/?email= → kick off a pull. */
+export async function syncGsc(email: string): Promise<void> {
+  await apiPost<unknown>(
+    `/api/integrations/google-search-console/sync/?email=${encodeURIComponent(normalizeEmail(email))}`,
+    {},
+  )
+}
+
+const gscRowSchema = z
+  .object({
+    query: z.string().optional(),
+    page: z.string().optional(),
+    country: z.string().optional(),
+    date: z.string().optional(),
+    clicks: z.number().default(0),
+    impressions: z.number().default(0),
+    ctr: z.number().default(0),
+    position: z.number().default(0),
+  })
+  .passthrough()
+export type GscRow = z.infer<typeof gscRowSchema>
+
+export const gscDataSchema = z.object({
+  clicks: z.number().default(0),
+  impressions: z.number().default(0),
+  ctr: z.number().default(0), // 0..1
+  position: z.number().default(0), // average position
+  top_queries: z.array(gscRowSchema).default([]),
+  top_pages: z.array(gscRowSchema).default([]),
+  countries: z.array(gscRowSchema).default([]),
+  daily_trend: z.array(gscRowSchema).default([]),
+  sync_status: z.string().default('pending'),
+  date_start: z.string().optional(),
+  date_end: z.string().optional(),
+})
+export type GscData = z.infer<typeof gscDataSchema>
+
+/**
+ * GET /api/integrations/google-search-console/data/?email=&days= → GSC data.
+ *
+ * `days` omitted → the cached (~28d) snapshot; `days` set → a live fetch for that
+ * window. Null when not connected or never synced (both 404s, normal states).
+ */
+export async function getGscData(email: string, days?: number): Promise<GscData | null> {
+  try {
+    const data = await apiGet<unknown>('/api/integrations/google-search-console/data/', {
+      params: { email: normalizeEmail(email), ...(days ? { days: String(days) } : {}) },
+    })
+    return gscDataSchema.parse(data)
   } catch (err) {
     if (err instanceof ApiError && err.status === 404) return null
     throw err

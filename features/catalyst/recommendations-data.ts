@@ -7,7 +7,6 @@ export interface Recommendation {
   title: string
   pillar: string
   priority: Priority
-  impact: number
   effort: string
   status: RecStatus
   auto: boolean

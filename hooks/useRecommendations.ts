@@ -27,16 +27,6 @@ function priorityLabel(priority: string): Priority {
   return 'Medium'
 }
 
-/** Pull "~10 points" out of the backend's free-text impact estimate. */
-function impactOf(estimate: number | string | null | undefined): number {
-  if (typeof estimate === 'number') return Math.round(estimate)
-  if (typeof estimate === 'string') {
-    const match = estimate.match(/(\d+)/)
-    return match ? Number(match[1]) : 0
-  }
-  return 0
-}
-
 function effortOf(rec: ApiRecommendation): string {
   if (rec.estimated_minutes && rec.estimated_minutes > 0) {
     const m = rec.estimated_minutes
@@ -51,7 +41,6 @@ function toRec(rec: ApiRecommendation): Recommendation {
     title: rec.title,
     pillar: pillarLabel(rec.pillar),
     priority: priorityLabel(rec.priority),
-    impact: impactOf(rec.impact_estimate),
     effort: effortOf(rec),
     // Per-run completion tracking isn't modelled yet — everything starts open.
     status: 'open',
@@ -62,12 +51,12 @@ function toRec(rec: ApiRecommendation): Recommendation {
 
 function buildStats(recs: Recommendation[]): DashStatData[] {
   const open = recs.filter(r => r.status !== 'done').length
-  const lift = recs.reduce((a, r) => a + r.impact, 0)
+  const highPriority = recs.filter(r => r.priority === 'High').length
   const auto = recs.filter(r => r.auto).length
   const done = recs.filter(r => r.status === 'done').length
   return [
     { label: 'Open fixes', value: String(open) },
-    { label: 'Potential lift', value: `+${lift}`, delta: 'GEO pts', positive: true },
+    { label: 'High priority', value: String(highPriority) },
     { label: 'Auto-fixable', value: String(auto) },
     { label: 'Completed', value: `${done} / ${recs.length}` },
   ]
