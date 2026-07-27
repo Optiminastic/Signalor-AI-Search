@@ -86,7 +86,7 @@ export function HomeFaq({ items }: HomeFaqProps): JSX.Element {
                 id="home-faq-heading"
                 className="text-foreground mt-3 max-w-sm text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
               >
-                Your questions, answered
+                Frequently Asked Questions
               </h2>
               <p className="text-muted-foreground mt-4 max-w-sm text-base leading-relaxed text-pretty">
                 Can&rsquo;t find what you&rsquo;re looking for?{' '}
