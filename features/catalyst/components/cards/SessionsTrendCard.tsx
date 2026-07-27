@@ -9,7 +9,7 @@ import { useGaData } from '@/hooks/useGaData'
 /** GA4 sessions over time, with its own date-range selector. */
 export function SessionsTrendCard(): JSX.Element {
   const [days, setDays] = useState<number | undefined>(undefined)
-  const { data, isLoading, isEmpty, connected } = useGaData(days)
+  const { data, isLoading, syncing, isEmpty, connected } = useGaData(days)
   const brandPath = useBrandPath()
 
   return (
@@ -23,6 +23,7 @@ export function SessionsTrendCard(): JSX.Element {
       onDays={setDays}
       connected={connected}
       isLoading={isLoading}
+      syncing={syncing}
       isEmpty={isEmpty}
       connectHref={brandPath('integrations')}
       connectLabel="Connect Analytics"
