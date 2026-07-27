@@ -1,11 +1,13 @@
 'use client'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { deleteAccount, DELETE_ACCOUNT_CONFIRM } from '@/lib/api/account'
 import { ApiError } from '@/lib/api/client'
 import { authClient, signOut } from '@/lib/auth-client'
+import { clearClientSession } from '@/lib/clearClientSession'
 import { Loader2, LogOut, Trash2 } from '@/lib/icons'
 import { routes } from '@/lib/routes'
 
@@ -16,6 +18,7 @@ interface DangerZoneProps {
 /** Account actions: sign out, and irreversibly delete the account + all data. */
 export function DangerZone({ email }: DangerZoneProps): JSX.Element {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [confirming, setConfirming] = useState(false)
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
@@ -23,6 +26,7 @@ export function DangerZone({ email }: DangerZoneProps): JSX.Element {
 
   const handleLogout = async (): Promise<void> => {
     await signOut().catch(() => {})
+    clearClientSession(queryClient)
     router.push(routes.signIn)
   }
 
@@ -33,7 +37,11 @@ export function DangerZone({ email }: DangerZoneProps): JSX.Element {
       await deleteAccount(email)
       await authClient.deleteUser().catch(() => {})
       await signOut().catch(() => {})
-      router.push(routes.home)
+      clearClientSession(queryClient)
+      // Hard navigation (not router.push): forces the browser to apply the
+      // cleared session cookie and start from a blank in-memory state, so a
+      // later sign-up is not shortcut past /sign-in by a lingering cookie.
+      window.location.href = routes.home
     } catch (err) {
       // Surface the backend's exact reason (the `detail` carries the failing
       // record/constraint) so a blocking row is diagnosable, not a dead end.

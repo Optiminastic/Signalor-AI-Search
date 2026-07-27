@@ -21,6 +21,8 @@ import LogoComp from '@/features/site/components/LogoComp'
 import { UserAvatar } from '@/features/site/components/ui/user-avatar'
 import { authClient, useSession } from '@/features/site/lib/auth-client'
 import { cn } from '@/features/site/lib/utils'
+import { useQueryClient } from '@tanstack/react-query'
+import { clearClientSession } from '@/lib/clearClientSession'
 
 import { CreatorProvider, useCreator } from './creator-context'
 
@@ -120,6 +122,7 @@ function CreatorShareCard() {
 function CreatorSidebarBottom() {
   const { data: session } = useSession()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -135,6 +138,7 @@ function CreatorSidebarBottom() {
 
   async function handleSignOut() {
     await authClient.signOut()
+    clearClientSession(queryClient)
     router.replace('/creator/sign-in')
   }
 

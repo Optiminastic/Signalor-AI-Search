@@ -16,6 +16,8 @@ import { routes } from '@/features/site/lib/config'
 import { cn } from '@/features/site/lib/utils'
 import { getRunBySlug } from '@/features/site/lib/api/analyzer'
 import { signOut } from '@/features/site/lib/auth-client'
+import { useQueryClient } from '@tanstack/react-query'
+import { clearClientSession } from '@/lib/clearClientSession'
 
 type LinkItem = {
   label: string
@@ -27,6 +29,7 @@ type LinkItem = {
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(true)
   const [runUrl, setRunUrl] = useState('')
   const [signingOut, setSigningOut] = useState(false)
@@ -94,6 +97,7 @@ export function AppSidebar() {
     try {
       setSigningOut(true)
       await signOut()
+      clearClientSession(queryClient)
       router.push(routes.signIn)
     } finally {
       setSigningOut(false)

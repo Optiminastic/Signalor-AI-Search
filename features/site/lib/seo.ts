@@ -15,7 +15,14 @@ export const SITE_BRAND = 'SignalorAI'
 // indexed, so they stay in `alternateName` / keywords: that is what tells the
 // knowledge graph the renamed entity is the same one, instead of a new brand
 // starting from zero. Remove only once "SignalorAI" ranks for these terms.
-export const SITE_PRIOR_NAMES = ['Signalor', 'Signalor AI', 'signalor.ai'] as const
+//
+// Deliberately NOT including the bare domain "signalor.ai": listing the domain
+// as an `alternateName` on the WebSite schema tells Google it is an approved
+// site name, and because it matches the URL Google then renders "signalor.ai"
+// as the site name above the result instead of "SignalorAI". The domain still
+// lives in `SITE_KEYWORDS` for search targeting, which does not affect the
+// displayed site name.
+export const SITE_PRIOR_NAMES = ['Signalor', 'Signalor AI'] as const
 export const SITE_TAGLINE = 'AI search visibility & GEO platform'
 export const SITE_DESCRIPTION =
   'SignalorAI is the Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO) platform that scores, monitors, and improves how ChatGPT, Claude, Gemini, Perplexity, and Google AI cite your brand.'

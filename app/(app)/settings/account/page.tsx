@@ -1,5 +1,6 @@
 'use client'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 
@@ -25,9 +26,11 @@ import {
 import { signOut, useSession } from '@/features/site/lib/auth-client'
 import { routes } from '@/features/site/lib/config'
 import { useOrgStore } from '@/features/site/lib/stores/org-store'
+import { clearClientSession } from '@/lib/clearClientSession'
 
 export default function AccountSettingsPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { data: session } = useSession()
   const email = session?.user?.email ?? ''
   const { setOrganizations } = useOrgStore()
@@ -72,6 +75,7 @@ export default function AccountSettingsPage() {
     try {
       setSigningOut(true)
       await signOut()
+      clearClientSession(queryClient)
       router.push(routes.signIn)
     } finally {
       setSigningOut(false)

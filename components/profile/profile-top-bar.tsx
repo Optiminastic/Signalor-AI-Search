@@ -1,19 +1,23 @@
 'use client'
 
+import { useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { useCatalystTheme } from '@/features/catalyst/components/CatalystThemeProvider'
 import { signOut } from '@/lib/auth-client'
+import { clearClientSession } from '@/lib/clearClientSession'
 import { ArrowLeft, LogOut, Moon, Sun } from '@/lib/icons'
 import { routes } from '@/lib/routes'
 
 export function ProfileTopBar(): JSX.Element {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { dark, toggle } = useCatalystTheme()
 
   const handleSignOut = async (): Promise<void> => {
     await signOut().catch(() => {})
+    clearClientSession(queryClient)
     router.push(routes.signIn)
   }
 
