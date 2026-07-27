@@ -53,7 +53,6 @@ function TypeChips({ task }: { task: TaskDetail }): JSX.Element {
     </div>
   )
 }
-
 /** The affected pillar's current score — the number this task should move. */
 function PillarScoreRow({ pillar }: { pillar: string }): JSX.Element | null {
   const { slug } = useActiveProject()
