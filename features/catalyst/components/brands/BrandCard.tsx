@@ -3,7 +3,7 @@ import Link from 'next/link'
 import type { Brand } from '@/features/catalyst/brands-data'
 import { StatusPill, TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import { scoreColor } from '@/features/catalyst/visibility-data'
-import { ArrowRight, Settings, Users } from '@/lib/icons'
+import { ArrowRight, Settings, Timer } from '@/lib/icons'
 
 const AVATAR = 'conic-gradient(from 210deg at 50% 50%, #F2A79E, #e04a3d, #b9382d, #F2A79E)'
 const LABEL = 'text-[10px] font-medium uppercase tracking-wide text-[var(--cat-ink-3)]'
@@ -25,10 +25,6 @@ function BrandMetrics({ brand }: { brand: Brand }): JSX.Element {
         <div className="mt-2">
           <TickBar value={brand.visibility} ticks={12} />
         </div>
-      </div>
-      <div className="text-right">
-        <p className={LABEL}>Plan</p>
-        <p className="mt-1 text-[15px] font-semibold text-[var(--cat-ink)]">{brand.plan}</p>
       </div>
     </div>
   )
@@ -71,11 +67,11 @@ export function BrandCard({ brand }: { brand: Brand }): JSX.Element {
 
       <div className="mt-5 flex items-center justify-between border-t border-[var(--cat-border-soft)] pt-3.5">
         <span className="flex items-center gap-1.5 text-[12px] text-[var(--cat-ink-3)]">
-          <Users size={13} />
-          {brand.members} members · {brand.lastRun}
+          <Timer size={13} />
+          {brand.lastRun}
         </span>
         <Link
-          href="/dashboard"
+          href={`/dashboard/${brand.slug}`}
           className="flex items-center gap-1 text-[13px] font-semibold text-[#e04a3d] transition-all group-hover:gap-1.5"
         >
           Open

@@ -7,6 +7,13 @@ import { useAgentPlan } from '@/hooks/useAgentPlan'
 import type { AgentAction, AgentPlan } from '@/lib/api/agent'
 import { getActions, getRunDetail, type Recommendation, type UserAction } from '@/lib/api/analyzer'
 
+/** One numbered step of a task's detailed "how to do it" guide. */
+export interface TaskStep {
+  n: number
+  title: string
+  detail: string
+}
+
 export interface TaskDetail {
   id: number
   title: string
@@ -25,8 +32,11 @@ export interface TaskDetail {
   recommendationId: number | null
   /** Present when the task is part of today's plan — drives the start CTA. */
   planAction: AgentAction | null
-  /** Step-by-step fix instructions from the source recommendation. */
+  /** One-line fix summary from the source recommendation. */
   actionGuide: string
+  /** Detailed, numbered "how to do it" steps (manual tasks + any finding with a
+   *  step guide). Empty when the source recommendation carries no steps. */
+  steps: TaskStep[]
   category: string
   canAutoFix: boolean
   /** Analyzer finding code (e.g. "no_jsonld") — keys the GitHub PR auto-fix. */
@@ -82,6 +92,7 @@ function buildDetail({ id, planAction, raw, rec }: BuildDetailInput): TaskDetail
     recommendationId: planAction?.recommendation_id ?? raw?.recommendation ?? null,
     planAction,
     actionGuide: rec?.action ?? '',
+    steps: (rec?.steps ?? []).map(s => ({ n: s.n, title: s.title, detail: s.detail })),
     category: rec?.category ?? '',
     canAutoFix: Boolean(rec?.can_auto_fix || rec?.code_fixable),
     findingCode: rec?.finding_code ?? '',
