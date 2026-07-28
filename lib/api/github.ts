@@ -18,6 +18,13 @@ export const githubOrgStatusSchema = z.object({
   repo_full_name: z.string().optional().default(''),
   /** Every repo the install granted — the user picks which one fixes target. */
   repositories: z.array(z.string()).optional().default([]),
+  /** Pinned to this repo, so an install callback can't move it. */
+  repo_locked: z.boolean().optional().default(false),
+  /** The install granted several repos and none clearly matched the brand's
+   *  domain, so nothing is targeted until the user chooses. */
+  needs_repo_choice: z.boolean().optional().default(false),
+  /** Why the current repo was chosen, in words. */
+  repo_reason: z.string().optional().default(''),
 })
 export type GithubOrgStatus = z.infer<typeof githubOrgStatusSchema>
 

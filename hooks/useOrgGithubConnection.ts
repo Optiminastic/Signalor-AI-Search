@@ -40,6 +40,11 @@ export interface OrgGithubConnection {
   repo: string
   /** Every repo the install granted — lets the user pick which one fixes target. */
   repositories: string[]
+  /** The install granted several repos and none matched this brand's domain, so
+   *  no PR can be opened until the user picks one. */
+  needsRepoChoice: boolean
+  /** Why the current repo was chosen (domain match, manual pick, only repo). */
+  repoReason: string
   /** Switch which granted repo auto-fix PRs open against. */
   selectRepo: (repoFullName: string) => void
   selectingRepo: boolean
@@ -142,6 +147,8 @@ export function useOrgGithubConnection({
     connected,
     repo: status.data?.repo_full_name ?? '',
     repositories: status.data?.repositories ?? [],
+    needsRepoChoice: status.data?.needs_repo_choice ?? false,
+    repoReason: status.data?.repo_reason ?? '',
     selectRepo: (repo: string) => selectRepoMutation.mutate(repo),
     selectingRepo: selectRepoMutation.isPending,
     notConfigured: Boolean(status.data && !status.data.configured),

@@ -9,6 +9,10 @@ const CARD_BASE =
 
 function description(gh: OrgGithubConnection): string {
   if (gh.notConfigured) return "GitHub connect isn't enabled on this server yet."
+  // Several repos are connected but none is clearly this brand's site, so no PR
+  // can be opened until the user says which one.
+  if (gh.needsRepoChoice)
+    return 'Choose which connected repository this brand should open fix PRs against.'
   if (gh.connected) return 'Auto-fix PRs enabled — works with Next.js, Astro, or any framework.'
   if (gh.connecting) return 'Pick your repository and approve access in the GitHub window.'
   return 'Connect your repo so SignalorAI can open fix PRs. Works with any framework.'
@@ -78,11 +82,15 @@ function RepoPicker({ gh }: { gh: OrgGithubConnection }): JSX.Element {
   if (gh.repositories.length <= 1) {
     if (!gh.repo) return <span className="min-w-0 flex-1" />
     return (
-      <span className="min-w-0 flex-1 truncate rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]">
+      <span
+        title={gh.repoReason}
+        className="min-w-0 flex-1 truncate rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]"
+      >
         {gh.repo}
       </span>
     )
   }
+  const edge = gh.needsRepoChoice ? 'border-[#e04a3d]' : 'border-[var(--cat-border)]'
   return (
     <label className="flex min-w-0 flex-1 items-center gap-1.5">
       <span className="shrink-0 text-[11px] text-[var(--cat-ink-3)]">Repo</span>
@@ -91,8 +99,12 @@ function RepoPicker({ gh }: { gh: OrgGithubConnection }): JSX.Element {
         disabled={gh.selectingRepo}
         onChange={e => gh.selectRepo(e.target.value)}
         aria-label="Repository for auto-fix PRs"
-        className="min-w-0 flex-1 truncate rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-1.5 py-1 font-mono text-[11px] text-[var(--cat-ink-2)] outline-none disabled:opacity-60"
+        title={gh.repoReason}
+        className={`min-w-0 flex-1 truncate rounded-md border ${edge} bg-[var(--cat-card)] px-1.5 py-1 font-mono text-[11px] text-[var(--cat-ink-2)] outline-none disabled:opacity-60`}
       >
+        {/* No target yet: force a deliberate pick rather than defaulting to
+            whichever repo happens to be first in the list. */}
+        {gh.needsRepoChoice && <option value="">Select a repository…</option>}
         {gh.repositories.map(repo => (
           <option key={repo} value={repo}>
             {repo}
