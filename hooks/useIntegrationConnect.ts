@@ -3,6 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
+import { useActiveProject } from '@/hooks/useActiveProject'
 import { ApiError } from '@/lib/api/client'
 import {
   disconnectGA,
@@ -47,6 +48,10 @@ interface UseIntegrationConnectResult {
 export function useIntegrationConnect(): UseIntegrationConnectResult {
   const { data: session } = useSession()
   const email = session?.user?.email
+  // Connect and disconnect must target the brand on screen, not the account's
+  // first brand — otherwise connecting GA on brand B writes the token to brand A.
+  const { activeOrg } = useActiveProject()
+  const orgId = activeOrg?.id
   const queryClient = useQueryClient()
   const [busySlug, setBusySlug] = useState('')
   const [error, setError] = useState('')
@@ -66,15 +71,16 @@ export function useIntegrationConnect(): UseIntegrationConnectResult {
           window.location.href = await getGscAuthUrl(
             email,
             '/settings/integrations/google-search-console/property',
+            orgId,
           )
           return
         }
-        window.location.href = await getGAAuthUrl(email)
+        window.location.href = await getGAAuthUrl(email, orgId)
         return
       }
       if (slug === 'shopify') await disconnectShopify(email)
-      else if (slug === 'search-console') await disconnectGsc(email)
-      else await disconnectGA(email)
+      else if (slug === 'search-console') await disconnectGsc(email, orgId)
+      else await disconnectGA(email, orgId)
       await queryClient.invalidateQueries({ queryKey: ['catalyst', 'integrations'] })
       await queryClient.invalidateQueries({ queryKey: ['catalyst', 'ga-world-presence'] })
     } catch (err) {

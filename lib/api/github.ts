@@ -21,35 +21,47 @@ export const githubOrgStatusSchema = z.object({
 })
 export type GithubOrgStatus = z.infer<typeof githubOrgStatusSchema>
 
-/** GET /api/github/status/?email= → whether the org's GitHub App is connected. */
-export async function getOrgGithubStatus(email: string): Promise<GithubOrgStatus> {
+/** Query params for the brand-scoped GitHub endpoints. */
+function orgParams(email: string, orgId?: number): Record<string, string | undefined> {
+  return { email: normalizeEmail(email), org_id: orgId ? String(orgId) : undefined }
+}
+
+/** GET /api/github/status/?email=&org_id= → whether this brand's GitHub App is
+ *  connected. Without `org_id` the backend answers for the account's first brand,
+ *  so every brand reports the same state. */
+export async function getOrgGithubStatus(email: string, orgId?: number): Promise<GithubOrgStatus> {
   return githubOrgStatusSchema.parse(
-    await apiGet<unknown>('/api/github/status/', { params: { email: normalizeEmail(email) } }),
+    await apiGet<unknown>('/api/github/status/', { params: orgParams(email, orgId) }),
   )
 }
 
-/** GET /api/github/install-url/?email= → the GitHub App installation URL. */
-export async function getOrgGithubInstallUrl(email: string): Promise<string> {
+/** GET /api/github/install-url/?email=&org_id= → the GitHub App installation URL. */
+export async function getOrgGithubInstallUrl(email: string, orgId?: number): Promise<string> {
   const data = await apiGet<unknown>('/api/github/install-url/', {
-    params: { email: normalizeEmail(email) },
+    params: orgParams(email, orgId),
   })
   return z.object({ install_url: z.string() }).parse(data).install_url
 }
 
-/** POST /api/github/disconnect/?email= → unlink the org's GitHub App installation
- *  (deactivates it) so the user can reconnect a different repo. */
-export async function disconnectOrgGithub(email: string): Promise<void> {
+/** POST /api/github/disconnect/?email=&org_id= → unlink this brand's GitHub App
+ *  installation (deactivates it) so the user can reconnect a different repo. */
+export async function disconnectOrgGithub(email: string, orgId?: number): Promise<void> {
   await apiPost<unknown>('/api/github/disconnect/', undefined, {
-    params: { email: normalizeEmail(email) },
+    params: orgParams(email, orgId),
   })
 }
 
 /** POST /api/github/select-repo/ → choose which granted repo fixes target (used
  *  when the App was installed on "all repositories" and we can't guess). */
-export async function selectOrgGithubRepo(email: string, repoFullName: string): Promise<void> {
+export async function selectOrgGithubRepo(
+  email: string,
+  repoFullName: string,
+  orgId?: number,
+): Promise<void> {
   await apiPost<unknown>('/api/github/select-repo/', {
     email: normalizeEmail(email),
     repo_full_name: repoFullName,
+    org_id: orgId,
   })
 }
 

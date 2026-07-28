@@ -32,10 +32,17 @@ export async function getIntegrationStatus(
 
 /* ─────────────────────────────────────────────────────── Google Analytics (GA4) */
 
-/** GET /api/integrations/google-analytics/auth-url/?email= → the Google OAuth URL. */
-export async function getGAAuthUrl(email: string): Promise<string> {
+/** Query suffix scoping a disconnect to one brand. */
+function orgQuery(email: string, orgId?: number): string {
+  const base = `?email=${encodeURIComponent(normalizeEmail(email))}`
+  return orgId ? `${base}&org_id=${orgId}` : base
+}
+
+/** GET /api/integrations/google-analytics/auth-url/?email=&org_id= → the Google
+ *  OAuth URL. `org_id` decides which brand the resulting tokens are stored on. */
+export async function getGAAuthUrl(email: string, orgId?: number): Promise<string> {
   const data = await apiGet<unknown>('/api/integrations/google-analytics/auth-url/', {
-    params: { email: normalizeEmail(email) },
+    params: { email: normalizeEmail(email), org_id: orgId ? String(orgId) : undefined },
   })
   return z.object({ auth_url: z.string() }).parse(data).auth_url
 }
@@ -50,21 +57,26 @@ export async function getGAAuthUrl(email: string): Promise<string> {
  * `{frontend_base}{return_to}?gsc=connected|error`. Both are passed here so the
  * user lands back on the page they started from.
  */
-export async function getGscAuthUrl(email: string, returnTo: string): Promise<string> {
+export async function getGscAuthUrl(
+  email: string,
+  returnTo: string,
+  orgId?: number,
+): Promise<string> {
   const data = await apiGet<unknown>('/api/integrations/google-search-console/auth-url/', {
     params: {
       email: normalizeEmail(email),
       return_to: returnTo,
       frontend_base: typeof window === 'undefined' ? '' : window.location.origin,
+      org_id: orgId ? String(orgId) : undefined,
     },
   })
   return z.object({ auth_url: z.string() }).parse(data).auth_url
 }
 
-/** DELETE /api/integrations/google-search-console/disconnect/?email= */
-export async function disconnectGsc(email: string): Promise<void> {
+/** DELETE /api/integrations/google-search-console/disconnect/?email=&org_id= */
+export async function disconnectGsc(email: string, orgId?: number): Promise<void> {
   await apiDelete<unknown>(
-    `/api/integrations/google-search-console/disconnect/?email=${encodeURIComponent(normalizeEmail(email))}`,
+    `/api/integrations/google-search-console/disconnect/${orgQuery(email, orgId)}`,
   )
 }
 
@@ -122,10 +134,10 @@ export async function sendGACallback(code: string, state: string): Promise<void>
   await apiPost<unknown>('/api/integrations/google-analytics/callback/', { code, state })
 }
 
-/** DELETE /api/integrations/google-analytics/disconnect/?email= → revoke + remove. */
-export async function disconnectGA(email: string): Promise<void> {
+/** DELETE /api/integrations/google-analytics/disconnect/?email=&org_id= → revoke + remove. */
+export async function disconnectGA(email: string, orgId?: number): Promise<void> {
   await apiDelete<unknown>(
-    `/api/integrations/google-analytics/disconnect/?email=${encodeURIComponent(normalizeEmail(email))}`,
+    `/api/integrations/google-analytics/disconnect/${orgQuery(email, orgId)}`,
   )
 }
 

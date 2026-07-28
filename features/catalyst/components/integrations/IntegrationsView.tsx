@@ -8,6 +8,7 @@ import { IntegrationsSummary } from '@/features/catalyst/components/integrations
 import { ShopifyConnectModal } from '@/features/catalyst/components/integrations/ShopifyConnectModal'
 import { INTEGRATION_GROUPS, INTEGRATIONS } from '@/features/catalyst/integrations-data'
 import type { IntegrationGroup, IntegrationWithStatus } from '@/features/catalyst/integrations-data'
+import { useActiveProject } from '@/hooks/useActiveProject'
 import { isConnectable, useIntegrationConnect } from '@/hooks/useIntegrationConnect'
 import { useIntegrations } from '@/hooks/useIntegrations'
 import { useOrgGithubConnection, type OrgGithubConnection } from '@/hooks/useOrgGithubConnection'
@@ -92,9 +93,12 @@ function GithubSection({ gh }: { gh: OrgGithubConnection }): JSX.Element {
 export function IntegrationsView(): JSX.Element {
   const { data: session } = useSession()
   const email = session?.user?.email ?? ''
+  const { activeOrg } = useActiveProject()
   const { connected } = useIntegrations()
   const { toggle, busySlug, error } = useIntegrationConnect()
-  const github = useOrgGithubConnection({ email })
+  // Scope GitHub to the brand on screen — an account can own several brands,
+  // each connecting a different repo.
+  const github = useOrgGithubConnection({ email, orgId: activeOrg?.id })
   const [shopifyOpen, setShopifyOpen] = useState(false)
   const items = INTEGRATIONS.map(i => ({ ...i, connected: connected.has(i.slug) }))
 

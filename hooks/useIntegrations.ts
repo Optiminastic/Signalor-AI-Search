@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query'
 
+import { useActiveProject } from '@/hooks/useActiveProject'
 import { getIntegrationStatus } from '@/lib/api/integrations'
-import { useSession } from '@/lib/auth-client'
 
 /** Backend provider id → the catalog card slug it connects. */
 const PROVIDER_SLUG: Record<string, string> = {
@@ -31,16 +31,22 @@ interface UseIntegrationsResult {
   isError: boolean
 }
 
-/** The set of catalog slugs that currently have an active backend integration. */
+/**
+ * The set of catalog slugs connected for the CURRENTLY SELECTED brand.
+ *
+ * Both the request and the cache key are scoped by org id. Without it the
+ * backend falls back to the account's first brand, so every brand showed the
+ * same GA/GSC state and switching brands never refetched.
+ */
 export function useIntegrations(): UseIntegrationsResult {
-  const { data: session } = useSession()
-  const email = session?.user?.email ?? undefined
+  const { email, activeOrg } = useActiveProject()
+  const orgId = activeOrg?.id
 
   const query = useQuery({
-    queryKey: ['catalyst', 'integrations', email ?? ''],
-    enabled: Boolean(email),
+    queryKey: ['catalyst', 'integrations', email ?? '', orgId ?? 0],
+    enabled: Boolean(email && orgId),
     queryFn: async (): Promise<string[]> => {
-      const rows = await getIntegrationStatus(email as string)
+      const rows = await getIntegrationStatus(email as string, orgId)
       return rows.filter(r => r.is_active).map(r => slugFor(r.provider))
     },
   })

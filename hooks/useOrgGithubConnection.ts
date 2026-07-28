@@ -28,6 +28,8 @@ function openCenteredPopup(url: string): Window | null {
 
 interface UseOrgGithubConnectionOptions {
   email: string
+  /** The selected brand. Omitted during onboarding, where no brand is chosen yet. */
+  orgId?: number
   /** Fired when the connection state resolves (connect → true, unlink → false). */
   onConnectedChange?: (connected: boolean) => void
 }
@@ -59,15 +61,18 @@ export interface OrgGithubConnection {
  */
 export function useOrgGithubConnection({
   email,
+  orgId,
   onConnectedChange,
 }: UseOrgGithubConnectionOptions): OrgGithubConnection {
   const [connecting, setConnecting] = useState(false)
   const popupRef = useRef<Window | null>(null)
   const watchRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  // Keyed by brand: one account can own several brands with different repos, and
+  // an unkeyed cache showed the first brand's connection state on all of them.
   const status = useQuery({
-    queryKey: ['org-github', email],
-    queryFn: () => getOrgGithubStatus(email),
+    queryKey: ['org-github', email, orgId ?? 0],
+    queryFn: () => getOrgGithubStatus(email, orgId),
     enabled: Boolean(email),
     refetchInterval: q => (q.state.data?.connected ? false : connecting ? 2000 : 5000),
   })
@@ -99,7 +104,7 @@ export function useOrgGithubConnection({
   useEffect(() => stopWatch, [stopWatch])
 
   const mutation = useMutation({
-    mutationFn: () => getOrgGithubInstallUrl(email),
+    mutationFn: () => getOrgGithubInstallUrl(email, orgId),
     onMutate: () => setConnecting(true),
     onSuccess: (url: string) => {
       const popup = openCenteredPopup(url)
@@ -120,7 +125,7 @@ export function useOrgGithubConnection({
   })
 
   const unlinkMutation = useMutation({
-    mutationFn: () => disconnectOrgGithub(email),
+    mutationFn: () => disconnectOrgGithub(email, orgId),
     onSuccess: () => {
       onConnectedChange?.(false)
       void status.refetch()
@@ -128,7 +133,7 @@ export function useOrgGithubConnection({
   })
 
   const selectRepoMutation = useMutation({
-    mutationFn: (repo: string) => selectOrgGithubRepo(email, repo),
+    mutationFn: (repo: string) => selectOrgGithubRepo(email, repo, orgId),
     onSuccess: () => void status.refetch(),
   })
 
