@@ -33,7 +33,10 @@ function toBrand(org: Organization, runs: RunSummary[]): Brand {
   const run = pickRun(runs)
   const score = Math.round(run?.composite_score ?? 0)
   return {
-    slug: run?.slug ?? String(org.id),
+    // The ORG slug, not the run slug: `/dashboard/<slug>` is resolved against
+    // `org.slug` by useActiveProject, and an unmatched slug silently falls back
+    // to the first brand rather than 404ing.
+    slug: org.slug || String(org.id),
     name: org.name,
     url: domainOf(org.url),
     plan: '—',

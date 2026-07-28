@@ -12,6 +12,7 @@ import { TaskDetailStats } from '@/features/catalyst/components/tasks/detail/Tas
 import { TaskFixGuideBody } from '@/features/catalyst/components/tasks/detail/TaskFixGuide'
 import { TaskSection } from '@/features/catalyst/components/tasks/detail/TaskSection'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
+import { TaskStepsBody } from '@/features/catalyst/components/tasks/detail/TaskStepsCard'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { LOGO_SIZE } from '@/features/catalyst/constants'
 import { formatStatus } from '@/features/catalyst/tasks-data'
@@ -119,9 +120,13 @@ function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.El
           <TaskSection title="Why this matters">
             <TaskDescriptionBody task={task} />
           </TaskSection>
-          {task.actionGuide && (
+          {(task.steps.length > 0 || task.actionGuide) && (
             <TaskSection title="How to fix it">
-              <TaskFixGuideBody guide={task.actionGuide} />
+              {task.steps.length > 0 ? (
+                <TaskStepsBody steps={task.steps} />
+              ) : (
+                <TaskFixGuideBody guide={task.actionGuide} />
+              )}
             </TaskSection>
           )}
         </div>

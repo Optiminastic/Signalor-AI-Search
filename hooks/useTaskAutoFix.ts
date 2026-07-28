@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -103,11 +103,19 @@ interface UseGithubJobArgs {
   jobId: number | null
   findingCode: string
   toastId: string
+  /** A fix was just requested this session; poll until its job row appears. */
+  requested: boolean
 }
 
 /** The run's fix job for this target, hydrated from the backend on mount (so it
  *  survives refresh), polled while in flight, and announcing transitions. */
-function useGithubJob({ slug, jobId, findingCode, toastId }: UseGithubJobArgs): GithubJob | null {
+function useGithubJob({
+  slug,
+  jobId,
+  findingCode,
+  toastId,
+  requested,
+}: UseGithubJobArgs): GithubJob | null {
   const jobsQuery = useQuery({
     // Enabled on slug alone (not a session jobId) so an already-running/open job
     // re-hydrates after a refresh.
@@ -116,7 +124,11 @@ function useGithubJob({ slug, jobId, findingCode, toastId }: UseGithubJobArgs): 
     queryFn: () => getGithubJobs(slug as string),
     refetchInterval: q => {
       const job = selectJob(q.state.data as GithubJob[] | undefined, jobId, findingCode)
-      return isJobInFlight(job) ? POLL_MS : false
+      if (isJobInFlight(job)) return POLL_MS
+      // Just requested a fix but its job row isn't in the cached list yet — keep
+      // polling so the result (or failure) shows without a manual refresh.
+      if (requested && !job) return POLL_MS
+      return false
     },
   })
   const job = selectJob(jobsQuery.data, jobId, findingCode)
@@ -145,10 +157,12 @@ interface StartGithubArgs {
   toastId: string
   setJobId: (id: number) => void
   setRequested: (on: boolean) => void
+  /** Force an immediate refetch of the jobs list so the new job appears at once. */
+  refetchJobs: () => void
 }
 
 async function startGithubFix(args: StartGithubArgs): Promise<void> {
-  const { slug, findingCode, toastId, setJobId, setRequested } = args
+  const { slug, findingCode, toastId, setJobId, setRequested, refetchJobs } = args
   if (!findingCode) {
     toast.error('This task has no auto-fixable finding code.', { id: toastId })
     return
@@ -160,6 +174,9 @@ async function startGithubFix(args: StartGithubArgs): Promise<void> {
     const id = stubs[0]?.job_id
     if (id) {
       setJobId(id)
+      // The job row exists backend-side now; pull it in immediately rather than
+      // waiting for the next poll, so the panel updates in real time.
+      refetchJobs()
       toast.loading('Fix in progress. The agent is writing the change…', { id: toastId })
     } else {
       setRequested(false)
@@ -218,6 +235,7 @@ async function startCmsFix(args: StartCmsArgs): Promise<void> {
 export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
   const { slug, email, activeOrg } = useActiveProject()
   const { platform, connected } = useAutoFix({ slug, email, orgId: activeOrg?.id })
+  const queryClient = useQueryClient()
   const [active, setActive] = useState<AutoFixTarget | null>(null)
   const [jobId, setJobId] = useState<number | null>(null)
   const [requested, setRequested] = useState(false)
@@ -230,6 +248,7 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
     jobId,
     findingCode: active?.findingCode || hydrateFindingCode,
     toastId: `autofix-${active?.key ?? 'none'}`,
+    requested,
   })
   const siteUrl = activeOrg?.url ?? ''
   const orgId = activeOrg?.id
@@ -256,6 +275,10 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
           toastId,
           setJobId,
           setRequested,
+          refetchJobs: () =>
+            void queryClient.invalidateQueries({
+              queryKey: ['catalyst', 'github-fix-jobs', slug],
+            }),
         })
       } else if (target.recommendationId) {
         void startCmsFix({
@@ -270,7 +293,7 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
         })
       }
     },
-    [slug, email, connected, platform, orgId, siteUrl],
+    [slug, email, connected, platform, orgId, siteUrl, queryClient],
   )
 
   return {

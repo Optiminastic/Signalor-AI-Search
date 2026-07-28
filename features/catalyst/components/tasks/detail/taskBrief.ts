@@ -25,11 +25,16 @@ function metaLines(task: TaskDetail, siteUrl: string): string {
  * clipboard. Includes everything: context, why it matters, and the fix guide.
  */
 export function buildTaskBrief(task: TaskDetail, siteUrl: string): string {
+  const steps =
+    task.steps.length > 0
+      ? `## Steps\n${task.steps.map(s => `${s.n}. ${s.title}${s.detail ? ` — ${s.detail}` : ''}`).join('\n')}`
+      : ''
   const sections = [
     `# GEO task: ${task.title}`,
     metaLines(task, siteUrl),
     task.description && `## Why it matters\n${task.description}`,
     task.actionGuide && `## How to fix\n${task.actionGuide}`,
+    steps,
     '## What I need from you\nGive me a concrete implementation plan for my site, then produce the exact content or code to apply. Ask me for any missing specifics (page URLs, brand facts, tech stack) before assuming.',
   ]
   return sections.filter(Boolean).join('\n\n')
