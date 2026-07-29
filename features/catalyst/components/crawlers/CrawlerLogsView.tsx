@@ -2,12 +2,14 @@
 
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
+import { CrawlerAccessCard } from '@/features/catalyst/components/crawlers/CrawlerAccessCard'
 import { CrawlerActivityChart } from '@/features/catalyst/components/crawlers/CrawlerActivityChart'
 import {
   TopCrawlersCard,
   TopPagesCard,
 } from '@/features/catalyst/components/crawlers/CrawlerBreakdownCards'
 import { CrawlerSetupCard } from '@/features/catalyst/components/crawlers/CrawlerSetupCard'
+import { IndexNowCard } from '@/features/catalyst/components/crawlers/IndexNowCard'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useCrawlerLogs, type CrawlerLogsData } from '@/hooks/useCrawlerLogs'
@@ -92,6 +94,15 @@ export function CrawlerLogsView(): JSX.Element {
         </div>
       </div>
       <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+        {/* Outside the DataState on purpose. Neither card reads crawler-logs
+            data, and both are most useful exactly when there are no logs: one
+            says whether robots.txt is the reason nothing arrived, the other is
+            how you get engines to look. Nested inside, a logs fetch that failed
+            or returned nothing hid the explanation along with the data. */}
+        <div className="cat-stagger mb-2 flex flex-col gap-2">
+          <CrawlerAccessCard slug={slug} />
+          <IndexNowCard slug={slug} />
+        </div>
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}

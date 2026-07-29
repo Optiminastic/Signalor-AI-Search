@@ -1,6 +1,8 @@
 'use client'
 
 import { DataState } from '@/features/catalyst/components/DataState'
+import { EntityResolutionCard } from '@/features/catalyst/components/prompts/EntityResolutionCard'
+import { PromptCoverageCard } from '@/features/catalyst/components/prompts/PromptCoverageCard'
 import { MentionsCard } from '@/features/catalyst/components/visibility/MentionsCard'
 import { OverallVisibilityCard } from '@/features/catalyst/components/visibility/OverallVisibilityCard'
 import { PlatformScoreCard } from '@/features/catalyst/components/visibility/PlatformScoreCard'
@@ -32,6 +34,12 @@ export function VisibilityView(): JSX.Element {
               {data.platforms.map(platform => (
                 <PlatformScoreCard key={platform.key} platform={platform} />
               ))}
+              {/* Whether the site answers each tracked prompt at all — the
+                  question that precedes every other visibility metric here. */}
+              <PromptCoverageCard slug={slug} />
+              {/* Whether engines resolve the name at all — a zero here explains
+                  a zero everywhere else. */}
+              <EntityResolutionCard slug={slug} />
             </div>
           )}
         </DataState>

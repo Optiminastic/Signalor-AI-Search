@@ -1,10 +1,10 @@
 'use client'
 
 import { BRAND } from '@/features/catalyst/constants'
-import { Gift, ShoppingBag, Sparkles } from '@/lib/icons'
+import { Gift, Link2, ShoppingBag, Sparkles } from '@/lib/icons'
 import type { LucideIcon } from '@/lib/icons'
 
-export type BacklinkTab = 'auto' | 'free' | 'paid'
+export type BacklinkTab = 'auto' | 'gaps' | 'free' | 'paid'
 
 interface TabDef {
   value: BacklinkTab
@@ -14,6 +14,8 @@ interface TabDef {
 
 const TABS: TabDef[] = [
   { value: 'auto', label: 'Auto Backlinks', icon: Sparkles },
+  // Observed gaps rank above generated suggestions: these are measured, not guessed.
+  { value: 'gaps', label: 'Citation Gaps', icon: Link2 },
   { value: 'free', label: 'Free Backlinks', icon: Gift },
   { value: 'paid', label: 'Paid Backlinks', icon: ShoppingBag },
 ]
