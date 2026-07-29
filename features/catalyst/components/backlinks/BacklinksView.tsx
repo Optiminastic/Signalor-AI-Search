@@ -7,6 +7,7 @@ import {
   BacklinksTabs,
   type BacklinkTab,
 } from '@/features/catalyst/components/backlinks/BacklinksTabs'
+import { CitationGapsPanel } from '@/features/catalyst/components/backlinks/CitationGapsPanel'
 import { FreeBacklinksPanel } from '@/features/catalyst/components/backlinks/FreeBacklinksPanel'
 import { PaidBacklinksPanel } from '@/features/catalyst/components/backlinks/PaidBacklinksPanel'
 import { DashHeader } from '@/features/catalyst/components/dash/DashStat'
@@ -22,6 +23,7 @@ export function BacklinksView(): JSX.Element {
       />
       <BacklinksTabs active={tab} onChange={setTab} />
       {tab === 'auto' && <AutoBacklinksPanel />}
+      {tab === 'gaps' && <CitationGapsPanel />}
       {tab === 'free' && <FreeBacklinksPanel />}
       {tab === 'paid' && <PaidBacklinksPanel />}
     </div>

@@ -2,12 +2,14 @@
 
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
+import { CrawlerAccessCard } from '@/features/catalyst/components/crawlers/CrawlerAccessCard'
 import { CrawlerActivityChart } from '@/features/catalyst/components/crawlers/CrawlerActivityChart'
 import {
   TopCrawlersCard,
   TopPagesCard,
 } from '@/features/catalyst/components/crawlers/CrawlerBreakdownCards'
 import { CrawlerSetupCard } from '@/features/catalyst/components/crawlers/CrawlerSetupCard'
+import { IndexNowCard } from '@/features/catalyst/components/crawlers/IndexNowCard'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useCrawlerLogs, type CrawlerLogsData } from '@/hooks/useCrawlerLogs'
@@ -55,9 +57,21 @@ function WaitingBanner(): JSX.Element {
   )
 }
 
-function LogsBody({ data }: { data: CrawlerLogsData }): JSX.Element {
+function LogsBody({
+  data,
+  slug,
+}: {
+  data: CrawlerLogsData
+  slug: string | undefined
+}): JSX.Element {
   return (
     <div className="cat-stagger flex flex-col gap-2">
+      {/* Access first: whether engines are *allowed* in gates everything below,
+          and unlike activity it is meaningful before any telemetry arrives. */}
+      <CrawlerAccessCard slug={slug} />
+      {/* Access and indexing are the same question from two sides: can engines
+          reach the page, and do they know it exists. */}
+      <IndexNowCard slug={slug} />
       {data.raw.total_hits === 0 ? (
         <WaitingBanner />
       ) : (
@@ -99,7 +113,7 @@ export function CrawlerLogsView(): JSX.Element {
           emptyTitle="No crawler data yet"
           emptyHint="Run an analysis first, then connect your site to start logging AI crawler visits."
         >
-          {data && <LogsBody data={data} />}
+          {data && <LogsBody data={data} slug={slug} />}
         </DataState>
       </div>
     </>

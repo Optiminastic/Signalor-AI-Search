@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
 import { PromptResultsPanel } from '@/features/catalyst/components/prompt-tracker/PromptResultsPanel'
+import { AnswerBlockPanel } from '@/features/catalyst/components/prompts/AnswerBlockPanel'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
 import { scoreColor } from '@/features/catalyst/visibility-data'
 import { ChevronDown, Loader2, RefreshCw, Trash2 } from '@/lib/icons'
@@ -160,6 +161,11 @@ export function PromptRow(props: PromptRowProps): JSX.Element {
       >
         <div className="min-h-0 overflow-hidden">
           <PromptResultsPanel results={item.results} slug={slug} trackId={item.id} />
+          {/* Drafting is a billed call, so it only runs when the row is open
+              and the user asks for it. */}
+          <div className="px-4 pb-3.5">
+            <AnswerBlockPanel slug={slug} trackId={item.id} promptText={item.prompt} />
+          </div>
         </div>
       </div>
     </div>

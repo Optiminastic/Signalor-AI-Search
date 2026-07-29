@@ -59,7 +59,11 @@ function CountsFooter({ plan }: { plan: AgentPlan }): JSX.Element {
       <CompactStat icon={ListTodo} label="Today" value={String(today)} />
       <CompactStat icon={Inbox} label="Backlog" value={String(backlog)} />
       <CompactStat icon={CheckCircle2} label="Done" value={String(done)} />
-      <CompactStat icon={CalendarClock} label="Analyzed" value={shortDate(plan.brief.last_analyzed_at)} />
+      <CompactStat
+        icon={CalendarClock}
+        label="Analyzed"
+        value={shortDate(plan.brief.last_analyzed_at)}
+      />
     </div>
   )
 }
