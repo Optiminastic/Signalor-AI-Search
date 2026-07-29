@@ -5,7 +5,7 @@ import { CardHead } from '@/features/catalyst/components/CardHead'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { GREEN, NEG, YELLOW } from '@/features/catalyst/constants'
 import { useActiveProject } from '@/hooks/useActiveProject'
-import { useCitationGaps, useSetGapStatus } from '@/hooks/useGeoIntel'
+import { useCitationGaps, useSetGapStatus } from '@/hooks/useCitationGaps'
 import type { CitationGap, CitationGapStatus } from '@/lib/api/prompts'
 
 const STATUS: Record<CitationGapStatus, { label: string; color: string }> = {
@@ -28,6 +28,7 @@ function StatusControl({ gap, slug }: { gap: CitationGap; slug: string | undefin
   }
   return (
     <select
+      aria-label={`Outreach status for ${gap.domain}`}
       value={gap.status}
       disabled={isSaving}
       onChange={e =>

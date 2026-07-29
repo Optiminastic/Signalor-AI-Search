@@ -18,13 +18,21 @@ import {
  * configured differently, so the worst agent decides the engine's verdict.
  */
 
-/** Worst-first. Order drives both the engine verdict and the display sort. */
+/**
+ * Worst-first. Order drives both the engine verdict and the display sort.
+ *
+ * `unknown` sits directly after `blocked` rather than last. It means "not
+ * measured", not "fine" — ranking it best let an engine with one unmeasured
+ * agent report as `active`, i.e. claim confirmed crawling from data we do not
+ * have. Blocked still outranks it: a robots.txt rule is known regardless of
+ * telemetry.
+ */
 const SEVERITY: Record<CrawlerAccessStatus, number> = {
   blocked: 0,
-  allowed_never_crawled: 1,
-  allowed_stale: 2,
-  active: 3,
-  unknown: 4,
+  unknown: 1,
+  allowed_never_crawled: 2,
+  allowed_stale: 3,
+  active: 4,
 }
 
 export interface EngineGroup {
@@ -77,8 +85,10 @@ function adapt(raw: CrawlerAccess): CrawlerAccessData {
     raw,
     groups,
     blockedCount: groups.filter(g => g.status === 'blocked').length,
-    crawlableCount: groups.filter(g => g.status === 'active' || g.status === 'allowed_stale')
-      .length,
+    // Only `active` counts. `allowed_stale` means no recent visit and
+    // `unknown` means no telemetry — neither supports the headline's claim
+    // that an engine is "actively crawling".
+    crawlableCount: groups.filter(g => g.status === 'active').length,
     hasBlocked: groups.some(g => g.status === 'blocked'),
     unmeasured: !raw.has_telemetry,
   }

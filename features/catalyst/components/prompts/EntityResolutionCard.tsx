@@ -4,7 +4,7 @@ import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import { GREEN, NEG } from '@/features/catalyst/constants'
-import { useEntityResolution } from '@/hooks/useGeoIntel'
+import { useEntityResolution } from '@/hooks/useEntityResolution'
 import type { EntityResolution } from '@/lib/api/prompts'
 import { Eye, Loader2 } from '@/lib/icons'
 

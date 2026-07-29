@@ -57,21 +57,9 @@ function WaitingBanner(): JSX.Element {
   )
 }
 
-function LogsBody({
-  data,
-  slug,
-}: {
-  data: CrawlerLogsData
-  slug: string | undefined
-}): JSX.Element {
+function LogsBody({ data }: { data: CrawlerLogsData }): JSX.Element {
   return (
     <div className="cat-stagger flex flex-col gap-2">
-      {/* Access first: whether engines are *allowed* in gates everything below,
-          and unlike activity it is meaningful before any telemetry arrives. */}
-      <CrawlerAccessCard slug={slug} />
-      {/* Access and indexing are the same question from two sides: can engines
-          reach the page, and do they know it exists. */}
-      <IndexNowCard slug={slug} />
       {data.raw.total_hits === 0 ? (
         <WaitingBanner />
       ) : (
@@ -106,6 +94,15 @@ export function CrawlerLogsView(): JSX.Element {
         </div>
       </div>
       <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+        {/* Outside the DataState on purpose. Neither card reads crawler-logs
+            data, and both are most useful exactly when there are no logs: one
+            says whether robots.txt is the reason nothing arrived, the other is
+            how you get engines to look. Nested inside, a logs fetch that failed
+            or returned nothing hid the explanation along with the data. */}
+        <div className="cat-stagger mb-2 flex flex-col gap-2">
+          <CrawlerAccessCard slug={slug} />
+          <IndexNowCard slug={slug} />
+        </div>
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}
@@ -113,7 +110,7 @@ export function CrawlerLogsView(): JSX.Element {
           emptyTitle="No crawler data yet"
           emptyHint="Run an analysis first, then connect your site to start logging AI crawler visits."
         >
-          {data && <LogsBody data={data} slug={slug} />}
+          {data && <LogsBody data={data} />}
         </DataState>
       </div>
     </>

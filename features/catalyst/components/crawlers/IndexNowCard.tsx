@@ -4,7 +4,7 @@ import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import { GREEN, NEG } from '@/features/catalyst/constants'
-import { useIndexNow } from '@/hooks/useGeoIntel'
+import { useIndexNow } from '@/hooks/useIndexNow'
 import type { IndexNowResult, IndexNowSetup } from '@/lib/api/prompts'
 import { Loader2, Zap } from '@/lib/icons'
 
@@ -69,9 +69,23 @@ function Body({ setup, verified, submit, result, isSubmitting }: BodyProps): JSX
  * Submitting is never presented as indexing — a successful call means the engine
  * accepted the request, nothing more.
  */
+type Phase = 'loading' | 'error' | 'unlinked' | 'ready'
+
+/**
+ * `unlinked` is `configured: false` from the API, which means the run has no
+ * organization — there is no key to host, so there is nothing actionable to
+ * show. It is not "setup pending".
+ */
+function phaseOf(isLoading: boolean, isError: boolean, setup: IndexNowSetup | undefined): Phase {
+  if (isLoading) return 'loading'
+  if (isError) return 'error'
+  if (!setup?.configured) return 'unlinked'
+  return 'ready'
+}
+
 export function IndexNowCard({ slug }: { slug: string | undefined }): JSX.Element {
-  const { setup, isLoading, submit, result, isSubmitting } = useIndexNow(slug)
-  const verified = Boolean(setup?.verified)
+  const { setup, isLoading, isError, submit, result, isSubmitting } = useIndexNow(slug)
+  const phase = phaseOf(isLoading, isError, setup)
 
   return (
     <Card>
@@ -80,14 +94,26 @@ export function IndexNowCard({ slug }: { slug: string | undefined }): JSX.Elemen
         {setup?.why || 'Push changed pages to Bing, which is the index ChatGPT search reads.'}
       </p>
 
-      {isLoading && (
+      {phase === 'loading' && (
         <p className="mt-2 text-[12px] text-[var(--cat-ink-3)]">Checking your key file…</p>
       )}
 
-      {setup?.configured && (
+      {phase === 'error' && (
+        <p className="mt-2 text-[12px] text-[var(--cat-ink-2)]">
+          Could not check your IndexNow setup just now. Try again in a moment.
+        </p>
+      )}
+
+      {phase === 'unlinked' && (
+        <p className="mt-2 text-[12px] text-[var(--cat-ink-3)]">
+          Available once this project is linked to a brand.
+        </p>
+      )}
+
+      {phase === 'ready' && setup && (
         <Body
           setup={setup}
-          verified={verified}
+          verified={Boolean(setup.verified)}
           submit={submit}
           result={result}
           isSubmitting={isSubmitting}

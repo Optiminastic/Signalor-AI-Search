@@ -15,22 +15,38 @@ interface CopyButtonProps {
 }
 
 function CopyButton({ value, label }: CopyButtonProps): JSX.Element {
-  const [copied, setCopied] = useState(false)
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
 
+  // The clipboard API is unavailable over plain HTTP and in some embedded
+  // webviews, and a user can decline the permission. Copying is the whole point
+  // of this panel, so a rejection has to say so rather than surface as an
+  // unhandled rejection and a button that silently does nothing.
   async function copy(): Promise<void> {
-    await navigator.clipboard.writeText(value)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('clipboard unavailable')
+      await navigator.clipboard.writeText(value)
+      setState('copied')
+    } catch {
+      setState('failed')
+    }
+    window.setTimeout(() => setState('idle'), 1600)
   }
+
+  let icon = <Copy size={12} />
+  if (state === 'copied') icon = <Check size={12} />
+
+  let text = label
+  if (state === 'copied') text = 'Copied'
+  else if (state === 'failed') text = 'Copy failed — select and copy manually'
 
   return (
     <button
       type="button"
-      onClick={copy}
+      onClick={() => void copy()}
       className="inline-flex items-center gap-1 text-[11px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
     >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
-      {copied ? 'Copied' : label}
+      {icon}
+      {text}
     </button>
   )
 }

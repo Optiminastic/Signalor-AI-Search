@@ -48,6 +48,14 @@ function EngineRow({ group }: { group: EngineGroup }): JSX.Element {
   )
 }
 
+interface HeadlineProps {
+  hasBlocked: boolean
+  blockedCount: number
+  crawlableCount: number
+  unmeasured: boolean
+  total: number
+}
+
 /** One-line verdict, so the card answers the question before anything is read. */
 function Headline({
   hasBlocked,
@@ -55,24 +63,9 @@ function Headline({
   crawlableCount,
   unmeasured,
   total,
-}: {
-  hasBlocked: boolean
-  blockedCount: number
-  crawlableCount: number
-  unmeasured: boolean
-  total: number
-}): JSX.Element {
-  if (hasBlocked) {
-    return (
-      <p className="text-[13px] text-[var(--cat-ink)]">
-        <span className="font-semibold" style={{ color: NEG }}>
-          {blockedCount} of {total} AI engines are blocked
-        </span>{' '}
-        by your robots.txt. They cannot fetch your pages, so they cannot cite you.
-      </p>
-    )
-  }
-  if (unmeasured) {
+}: HeadlineProps): JSX.Element {
+  // Blocked outranks unmeasured: a robots.txt rule is known without telemetry.
+  if (unmeasured && !hasBlocked) {
     return (
       <p className="text-[13px] text-[var(--cat-ink-2)]">
         Nothing in your robots.txt blocks AI engines. Visits cannot be confirmed yet — connect
@@ -80,12 +73,30 @@ function Headline({
       </p>
     )
   }
+
+  let color = GREEN
+  let lead = `${crawlableCount} of ${total} AI engines`
+  let rest = ' are allowed and actively crawling your site.'
+  if (hasBlocked) {
+    color = NEG
+    lead = `${blockedCount} of ${total} AI engines are blocked`
+    rest = ' by your robots.txt. They cannot fetch your pages, so they cannot cite you.'
+  } else if (crawlableCount === 0) {
+    // Measured, nothing blocked, nobody visiting. The success copy would read
+    // "0 of 5 AI engines are actively crawling" — a problem in the colour of
+    // good news.
+    color = YELLOW
+    lead = 'No AI engine has crawled you recently'
+    rest =
+      ' — none are blocked, so this is a discovery problem rather than an access one. Submitting pages below gets them looking.'
+  }
+
   return (
     <p className="text-[13px] text-[var(--cat-ink)]">
-      <span className="font-semibold" style={{ color: GREEN }}>
-        {crawlableCount} of {total} AI engines
-      </span>{' '}
-      are allowed and actively crawling your site.
+      <span className="font-semibold" style={{ color }}>
+        {lead}
+      </span>
+      {rest}
     </p>
   )
 }
