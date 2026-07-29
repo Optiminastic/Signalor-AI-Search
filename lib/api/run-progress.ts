@@ -12,6 +12,8 @@ export const latestProgressSchema = z.object({
   slug: z.string().optional(),
   status: z.string().optional(),
   progress: z.number().optional().default(0),
+  /** What the pipeline is doing right now, e.g. "Asking AI engines (3/10)". */
+  phase: z.string().optional().default(''),
 })
 
 export type LatestProgress = z.infer<typeof latestProgressSchema>
