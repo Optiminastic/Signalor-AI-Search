@@ -9,6 +9,8 @@ import { routes } from '@/lib/routes'
 
 interface AnalysisProgress {
   progress: number
+  /** Real work in flight, straight from the backend — never invented client-side. */
+  phase: string
   done: boolean
   /** The run stalled or the backend marked it failed — surface a retry, not a spinner. */
   failed: boolean
@@ -51,6 +53,7 @@ export function useAnalysisProgress(): AnalysisProgress {
   const [complete, setComplete] = useState(false)
   const [failed, setFailed] = useState(false)
   const [status, setStatus] = useState('pending')
+  const [phase, setPhase] = useState('')
   // Whether we've applied the initial value from the backend yet. On a page
   // refresh mid-run this lets us snap the bar straight to the run's real
   // progress ("resume where it was left") instead of crawling up from 0 again.
@@ -79,6 +82,7 @@ export function useAnalysisProgress(): AnalysisProgress {
         const latest = await getLatestProgress(email)
         if (!active || !latest.found) return
         setStatus(latest.status ?? 'pending')
+        if (latest.phase) setPhase(latest.phase)
         if (latest.status === 'failed') {
           setFailed(true)
           stop()
@@ -143,5 +147,5 @@ export function useAnalysisProgress(): AnalysisProgress {
     return () => clearTimeout(t)
   }, [complete, router])
 
-  return { progress: Math.round(display), done: complete, failed, status }
+  return { progress: Math.round(display), phase, done: complete, failed, status }
 }

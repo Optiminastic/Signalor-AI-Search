@@ -39,11 +39,17 @@ const STEPS = [
 
 type StepState = 'done' | 'active' | 'next'
 
-/** Map the run's raw status (+ progress inside long phases) to the active step. */
+/** Map the run's progress onto the visible step list.
+ *
+ * Thresholds mirror the backend's checkpoints, which are spaced by *time*: the
+ * crawl and on-page scoring finish by ~14, prompt firing owns 25-80 (about
+ * two-thirds of the run), and competitors plus indexing own the rest.
+ */
 function activeStepFor(status: string, progress: number, done: boolean): number {
   if (done) return STEPS.length
-  if (status === 'scoring') return 3
-  if (status === 'analyzing') return progress >= 70 ? 2 : 1
+  if (status === 'scoring' || progress >= 80) return 3
+  if (progress >= 25) return 2
+  if (progress >= 8) return 1
   return 0
 }
 
@@ -99,19 +105,22 @@ function StepRow({ label, state, last, children }: StepRowProps): JSX.Element {
   )
 }
 
-/** Rotates through the active phase's real checks so the wait feels alive. */
-function Ticker({ step }: { step: number }): JSX.Element | null {
-  const lines = STEPS[Math.min(step, STEPS.length - 1)]?.ticker ?? []
-  const [i, setI] = useState(0)
-  useEffect(() => {
-    setI(0)
-    const id = setInterval(() => setI(v => (v + 1) % lines.length), 2800)
-    return () => clearInterval(id)
-  }, [step, lines.length])
-  if (lines.length === 0) return null
+/** The work actually in flight, reported by the backend.
+ *
+ * This used to rotate invented lines on a 2.8s timer — "Querying ChatGPT,
+ * Claude and Gemini" appeared whether or not anything was querying anything.
+ * The pipeline now names its own stage and counts items as they finish
+ * ("Asking AI engines your tracked prompts (3/10)"), so a long stage visibly
+ * moves instead of looking hung. Falls back to the step's static label only
+ * before the first poll lands.
+ */
+function Ticker({ step, phase }: { step: number; phase: string }): JSX.Element | null {
+  const fallback = STEPS[Math.min(step, STEPS.length - 1)]?.ticker?.[0] ?? ''
+  const line = phase || fallback
+  if (!line) return null
   return (
     <p className="mt-1 text-[12px] text-neutral-400" aria-live="polite">
-      {lines[i]}…
+      {line}…
     </p>
   )
 }
@@ -178,7 +187,7 @@ function ProgressHeader({ progress, caption }: { progress: number; caption: stri
 }
 
 export default function LoadingPage(): JSX.Element {
-  const { progress, done, failed, status } = useAnalysisProgress()
+  const { progress, phase, done, failed, status } = useAnalysisProgress()
   const step = activeStepFor(status, progress, done)
   const caption = failed ? 'stalled' : done ? 'complete' : 'usually done in a minute or two'
 
@@ -201,7 +210,7 @@ export default function LoadingPage(): JSX.Element {
                     state={state}
                     last={i === STEPS.length - 1}
                   >
-                    {state === 'active' && !done && <Ticker step={step} />}
+                    {state === 'active' && !done && <Ticker step={step} phase={phase} />}
                   </StepRow>
                 )
               })}
