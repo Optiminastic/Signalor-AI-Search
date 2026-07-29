@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-import { getRuns } from '@/lib/api/analyzer'
+import { getLatestProgress } from '@/lib/api/run-progress'
 import { useSession } from '@/lib/auth-client'
 import { routes } from '@/lib/routes'
 
@@ -28,6 +28,10 @@ const EASE_MS = 220
 // only fires if that never reaches us — either way the UI recovers instead of
 // spinning forever.
 const CLIENT_STALL_MS = 6 * 60 * 1000
+// Consecutive failed polls before the screen gives up. At POLL_MS this is a bit
+// over a minute of the backend refusing or erroring — long enough to ride out a
+// redeploy, short enough that the user is told rather than left on a spinner.
+const MAX_CONSECUTIVE_FAILURES = 20
 
 /**
  * Drives the analysing screen: polls the user's latest run for its REAL progress
@@ -55,6 +59,7 @@ export function useAnalysisProgress(): AnalysisProgress {
   // poll can detect a run that has stopped advancing (see CLIENT_STALL_MS).
   const realRef = useRef(0)
   const lastAdvance = useRef(0)
+  const failures = useRef(0)
 
   // Poll the latest run for its real progress + phase. Stops on any terminal
   // outcome (complete / failed / stalled) so a finished or dead run doesn't keep
@@ -71,9 +76,9 @@ export function useAnalysisProgress(): AnalysisProgress {
     }
     const poll = async (): Promise<void> => {
       try {
-        const latest = (await getRuns(email))[0]
-        if (!active || !latest) return
-        setStatus(latest.status)
+        const latest = await getLatestProgress(email)
+        if (!active || !latest.found) return
+        setStatus(latest.status ?? 'pending')
         if (latest.status === 'failed') {
           setFailed(true)
           stop()
@@ -92,6 +97,7 @@ export function useAnalysisProgress(): AnalysisProgress {
           lastAdvance.current = now
           setDisplay(d => Math.max(d, Math.min(realRef.current, PRE_COMPLETE_CAP)))
         }
+        failures.current = 0
         if (isComplete) {
           setComplete(true)
           stop()
@@ -100,7 +106,14 @@ export function useAnalysisProgress(): AnalysisProgress {
           stop()
         }
       } catch {
-        // transient — keep polling
+        // A run of failures is not "transient". Swallowing them and polling on
+        // at the same cadence is what turned a 429 into a bar frozen mid-run:
+        // the reading never arrived, so the stall backstop never armed either.
+        failures.current += 1
+        if (failures.current >= MAX_CONSECUTIVE_FAILURES) {
+          setFailed(true)
+          stop()
+        }
       }
     }
     void poll()
