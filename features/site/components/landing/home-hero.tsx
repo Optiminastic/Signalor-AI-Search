@@ -135,7 +135,7 @@ function HeroScreenshot(): JSX.Element {
         <div className="border-border bg-card overflow-hidden border-x">
           <Image
             src="/carousel1.png"
-            alt="SignalorAI dashboard showing GEO score, tracked prompts, and AI citation analytics"
+            alt="SignalorAI dashboard demo showing sample GEO score, tracked prompts, and AI citation analytics for illustration"
             width={2000}
             height={2000}
             priority
@@ -152,12 +152,15 @@ function HeroScreenshot(): JSX.Element {
           className="pointer-events-none absolute top-8 left-10 z-10 hidden sm:block md:left-20"
         >
           <span
-            className="bg-card ring-border motion-safe:animate-float flex items-baseline gap-2 rounded-xl px-3 py-2 shadow-md ring-1 shadow-black/5"
+            className="bg-card ring-border motion-safe:animate-float flex flex-col gap-0.5 rounded-xl px-3 py-2 shadow-md ring-1 shadow-black/5"
             style={{ animationDuration: '7s' }}
           >
-            <span className="text-muted-foreground text-xs font-medium">GEO score</span>
-            <span className="text-foreground text-sm font-semibold tabular-nums">82</span>
-            <span className="text-success text-[11px] font-semibold tabular-nums">+6</span>
+            <span className="text-muted-foreground/60 text-[9px] font-medium uppercase tracking-wider">Demo data</span>
+            <span className="flex items-baseline gap-2">
+              <span className="text-muted-foreground text-xs font-medium">GEO score</span>
+              <span className="text-foreground text-sm font-semibold tabular-nums">82</span>
+              <span className="text-success text-[11px] font-semibold tabular-nums">+6</span>
+            </span>
           </span>
         </div>
         <div
@@ -165,13 +168,16 @@ function HeroScreenshot(): JSX.Element {
           className="pointer-events-none absolute top-8 right-10 z-10 hidden sm:block md:right-20"
         >
           <span
-            className="bg-card ring-border motion-safe:animate-float flex items-center gap-2 rounded-xl px-3 py-2 shadow-md ring-1 shadow-black/5"
+            className="bg-card ring-border motion-safe:animate-float flex flex-col gap-0.5 rounded-xl px-3 py-2 shadow-md ring-1 shadow-black/5"
             style={{ animationDelay: '1.4s', animationDuration: '6s' }}
           >
-            <span aria-hidden className="bg-success size-2 rounded-full" />
-            <span className="text-foreground text-xs font-semibold">Cited by ChatGPT</span>
-            <span className="text-muted-foreground text-[11px] font-medium tabular-nums">
-              just now
+            <span className="text-muted-foreground/60 text-[9px] font-medium uppercase tracking-wider">Demo data</span>
+            <span className="flex items-center gap-2">
+              <span aria-hidden className="bg-success size-2 rounded-full" />
+              <span className="text-foreground text-xs font-semibold">Cited by ChatGPT</span>
+              <span className="text-muted-foreground text-[11px] font-medium tabular-nums">
+                just now
+              </span>
             </span>
           </span>
         </div>
