@@ -68,6 +68,9 @@ function AutopilotIllo(): JSX.Element {
         <span className="bg-success h-2 w-2 rounded-full" aria-hidden />
         <span className="text-foreground text-xs font-medium">Run completed</span>
       </div>
+      <p className="text-muted-foreground/60 mt-2 text-center text-[9px] font-medium uppercase tracking-wider">
+        Demo data for illustration
+      </p>
       <ul className="relative mt-3 space-y-2 pl-4">
         <span
           aria-hidden
