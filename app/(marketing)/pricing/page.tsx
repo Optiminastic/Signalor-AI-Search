@@ -79,7 +79,9 @@ interface PlanConfig {
   /** Optional "Everything in X, plus:" lead-in, matching the home page cards. */
   featuresLead?: string
   comingSoonFeatures?: string[]
-  /** "checkout" → Dodo checkout (starter/pro only); "contact" → Contact Sales. */
+  /** Not sold yet — renders a disabled "Coming soon" control instead of a CTA. */
+  comingSoon?: boolean
+  /** "checkout" → Dodo checkout; "contact" → Contact Sales. */
   cta: PlanCta
   ctaLabel?: string
 }
@@ -140,23 +142,6 @@ const PLANS: PlanConfig[] = [
 // checkout); the workspace card stays a sales conversation. ──
 const AGENCY_PLANS: PlanConfig[] = [
   {
-    id: 'agency-account',
-    label: 'Agency Account',
-    price: 99.69,
-    period: '/month',
-    description: 'Manage multiple client brands from one SignalorAI workspace.',
-    icon: Crown,
-    popular: true,
-    cta: 'contact',
-    ctaLabel: 'Talk to us',
-    features: [
-      'One workspace for all your clients',
-      'Add & manage multiple client brands',
-      '15% off every brand you onboard',
-      'Consolidated visibility across clients',
-    ],
-  },
-  {
     id: 'agency-brand-10',
     label: 'Per Brand · 10 prompts',
     price: 69.99,
@@ -164,6 +149,7 @@ const AGENCY_PLANS: PlanConfig[] = [
     period: '/month',
     description: 'Each client brand you onboard, billed per brand.',
     icon: Zap,
+    popular: true,
     cta: 'checkout',
     ctaLabel: 'Buy now',
     features: [
@@ -175,6 +161,22 @@ const AGENCY_PLANS: PlanConfig[] = [
     ],
   },
   {
+    id: 'agency-account',
+    label: 'Agency Account',
+    price: 99.69,
+    period: '/month',
+    description: 'Manage multiple client brands from one SignalorAI workspace.',
+    icon: Crown,
+    comingSoon: true,
+    cta: 'contact',
+    features: [
+      'One workspace for all your clients',
+      'Add & manage multiple client brands',
+      '15% off every brand you onboard',
+      'Consolidated visibility across clients',
+    ],
+  },
+  {
     id: 'agency-brand-25',
     label: 'Per Brand · 25 prompts',
     price: 99.69,
@@ -182,8 +184,8 @@ const AGENCY_PLANS: PlanConfig[] = [
     period: '/month',
     description: 'More prompt coverage per client brand.',
     icon: Rocket,
+    comingSoon: true,
     cta: 'contact',
-    ctaLabel: 'Buy now',
     features: [
       '1 brand / domain',
       '25 prompts to rank & track',
