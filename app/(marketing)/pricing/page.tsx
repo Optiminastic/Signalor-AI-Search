@@ -84,16 +84,25 @@ interface PlanConfig {
   ctaLabel?: string
 }
 
-// Only these plan ids may start a Dodo checkout. Everything else (Enterprise,
-// every Agency card) routes to Contact Sales — no public checkout exists.
-const CHECKOUTABLE = new Set(['starter', 'pro'])
+// Card id → Dodo plan key. Only mapped ids may start a checkout; everything
+// else routes to Contact Sales.
+//
+// Exactly two plans are sold: the brand plan (£79.99, Dodo "Signalor Brand
+// Starter Plan") and the agency plan (£69.99, "Signalor Agency Starter Plan").
+// They are separate Dodo products, so the agency card no longer borrows the
+// individual product the way it did when agency pricing was a discount on it.
+const CHECKOUT_PLAN_KEY: Record<string, 'starter' | 'agency'> = {
+  starter: 'starter',
+  'agency-brand-10': 'agency',
+}
+const CHECKOUTABLE = new Set(Object.keys(CHECKOUT_PLAN_KEY))
 
 // ── Individual flow ────────────────────────────────────────────────────────
 const PLANS: PlanConfig[] = [
   {
     id: 'starter',
     label: 'Self-Serve Brand',
-    price: 69.99,
+    price: 79.99,
     period: '/month',
     description: 'Run it yourself — onboard, track, and improve your AI visibility.',
     icon: Zap,
@@ -105,24 +114,6 @@ const PLANS: PlanConfig[] = [
       'Prompt ranking across AI engines',
       'Competitor visibility tracking',
       'Recommendations & improvement guidance',
-    ],
-  },
-  {
-    id: 'pro',
-    label: 'Managed Growth Brand',
-    price: 99.69,
-    period: '/month',
-    description: 'Move faster with daily agency-style support from our team.',
-    icon: Crown,
-    popular: true,
-    cta: 'checkout',
-    featuresLead: 'Everything in Self-Serve, plus:',
-    features: [
-      '1 brand / domain',
-      '25 prompts to rank & track',
-      'Everything in Self-Serve',
-      'Daily agency-style support from our team',
-      'Guidance on recommendations, fixes & actions',
     ],
   },
   {
@@ -144,7 +135,9 @@ const PLANS: PlanConfig[] = [
   },
 ]
 
-// ── Agency flow (display only this phase — every CTA goes to Contact Sales) ──
+// ── Agency flow — per-brand cards are directly buyable (they sell the same
+// Dodo products as the Individual tiers, with the agency discount applied at
+// checkout); the workspace card stays a sales conversation. ──
 const AGENCY_PLANS: PlanConfig[] = [
   {
     id: 'agency-account',
@@ -171,8 +164,8 @@ const AGENCY_PLANS: PlanConfig[] = [
     period: '/month',
     description: 'Each client brand you onboard, billed per brand.',
     icon: Zap,
-    cta: 'contact',
-    ctaLabel: 'Talk to us',
+    cta: 'checkout',
+    ctaLabel: 'Buy now',
     features: [
       '1 brand / domain',
       '10 prompts to rank & track',
@@ -190,7 +183,7 @@ const AGENCY_PLANS: PlanConfig[] = [
     description: 'More prompt coverage per client brand.',
     icon: Rocket,
     cta: 'contact',
-    ctaLabel: 'Talk to us',
+    ctaLabel: 'Buy now',
     features: [
       '1 brand / domain',
       '25 prompts to rank & track',
@@ -221,7 +214,13 @@ function PricingPageInner() {
   const [checkoutDodoMode, setCheckoutDodoMode] = useState<DodoMode | null>(null)
   const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
   const [livePrices, setLivePrices] = useState<Record<string, DodoPlanPrice | null> | null>(null)
-  const [audience, setAudience] = useState<PricingAudience>('individual')
+  // The signup/onboarding flow passes ?audience= so the toggle opens on the
+  // account type the user picked at sign-up (no flash of the wrong plans).
+  // Without the param, the server-stored account type (fetched below) decides.
+  const audienceParam = searchParams.get('audience')
+  const explicitAudience: PricingAudience | null =
+    audienceParam === 'agency' || audienceParam === 'individual' ? audienceParam : null
+  const [audience, setAudience] = useState<PricingAudience>(explicitAudience ?? 'individual')
   const { currency, ready: currencyReady, country: detectedCountry, selectCurrency } = useCurrency()
 
   // Header prices for the comparison table. Derived from the same plan configs
@@ -290,8 +289,9 @@ function PricingPageInner() {
     getSubscriptionStatus(email)
       .then(s => {
         // Default the toggle to the user's stored account type so an agency
-        // lands on agency plans.
-        if (s.account_type) {
+        // lands on agency plans. An explicit ?audience= param wins — it is the
+        // flow's declared intent and arrives synchronously.
+        if (s.account_type && !explicitAudience) {
           setAudience(s.account_type)
         }
         if (s.is_active) {
@@ -316,14 +316,14 @@ function PricingPageInner() {
         }
       })
       .catch(() => setCurrentPlanId(null))
-  }, [isPending, session?.user?.email, router, returnTo])
+  }, [isPending, session?.user?.email, router, returnTo, explicitAudience])
 
   const handleSubscribe = useCallback(
     async (planId: string) => {
       if (loadingPlan) return
-      // Only the Individual self-serve plans are checkout-able; anything else
-      // (Enterprise, Agency cards) is a sales conversation.
-      if (!CHECKOUTABLE.has(planId)) {
+      // Unmapped cards (Enterprise, Agency workspace) are a sales conversation.
+      const checkoutKey = CHECKOUT_PLAN_KEY[planId]
+      if (!checkoutKey) {
         router.push(routes.contactSales)
         return
       }
@@ -362,7 +362,7 @@ function PricingPageInner() {
         } catch {
           /* ignore */
         }
-        const { checkout_url } = await createCheckoutSession(session.user.email, planId, {
+        const { checkout_url } = await createCheckoutSession(session.user.email, checkoutKey, {
           country: detectedCountry ?? undefined,
           currency: currency.code,
           partnerCode,
@@ -491,10 +491,15 @@ function PricingPageInner() {
                   const isCustom = plan.price === null
                   const isLoading = loadingPlan === plan.id
                   // "Current plan" only makes sense for the checkout-able tiers.
-                  const isCurrent = !isContact && currentPlanId === plan.id
+                  // Agency per-brand cards map onto starter/pro, so an agency
+                  // that bought one sees it marked current on their tab too.
+                  const checkoutKey = CHECKOUT_PLAN_KEY[plan.id]
+                  const isCurrent = !isContact && currentPlanId === (checkoutKey ?? plan.id)
 
-                  // Live Dodo prices only exist for checkout-able plans; agency /
-                  // enterprise cards use the static GBP price (or "Custom").
+                  // Live Dodo prices are fetched for the INDIVIDUAL products
+                  // only. Agency per-brand cards sell the agency-priced product
+                  // (backend swaps it in at checkout), so they keep their static
+                  // GBP price rather than borrowing the Individual live amount.
                   const live = livePrices?.[plan.id] ?? null
                   let displaySymbol: string
                   let displayCurrencyCode: string | null

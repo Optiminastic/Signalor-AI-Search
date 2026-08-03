@@ -18,7 +18,8 @@ import type { AccountType } from '@/stores/useOnboardingStore'
 
 export interface UsageMetric {
   used: number
-  max: number
+  /** Undefined means unlimited — the API reports an uncapped limit as 0. */
+  max?: number
 }
 
 export interface AccountProject {
@@ -114,8 +115,10 @@ async function settled<T>(promise: Promise<T>): Promise<T | null> {
 function usageFrom(usage: Usage | null): AccountOverview['usage'] {
   if (!usage) return SAMPLE_ACCOUNT.usage
   return {
-    projects: { used: usage.usage.projects, max: usage.limits.max_projects },
-    prompts: { used: usage.usage.prompts, max: usage.limits.max_prompts },
+    // The API sends 0 for "no cap"; drop it so the tile shows a bare count
+    // instead of a denominator (and no progress bar) — see StatTile.
+    projects: { used: usage.usage.projects, max: usage.limits.max_projects || undefined },
+    prompts: { used: usage.usage.prompts, max: usage.limits.max_prompts || undefined },
     runsThisMonth: usage.usage.runs_this_month,
   }
 }

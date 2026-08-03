@@ -85,7 +85,9 @@ function Toolbar({
 /** "3 of 6 brands · Managed Growth" — the cap is omitted when effectively unmetered. */
 function capacityLabel(count: number, capacity: BrandCapacity | undefined): string {
   const noun = count === 1 ? 'brand' : 'brands'
-  const metered = capacity && capacity.max < UNMETERED_FROM
+  // A cap of 0 means unlimited. UNMETERED_FROM still guards against a large but
+  // finite cap that isn't worth printing.
+  const metered = !!capacity && capacity.max > 0 && capacity.max < UNMETERED_FROM
   const head = metered
     ? `${count} of ${capacity.max} ${noun}`
     : `${count} ${noun} in your workspace`

@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useSession } from '@/lib/auth-client'
 import { ArrowLeft, Loader2, Rocket } from '@/lib/icons'
 import { routes } from '@/lib/routes'
-import { hasActiveSubscription, launchAnalysis } from '@/services/onboarding.service'
+import { launchAnalysis, subscriptionGate } from '@/services/onboarding.service'
 import { useOnboardingWizardStore } from '@/stores/useOnboardingWizardStore'
 import { useProjectStore } from '@/stores/useProjectStore'
 
@@ -44,9 +44,16 @@ export function LaunchStep(): JSX.Element {
     try {
       const email = session?.user?.email ?? ''
       // Non-subscribers pick a plan first; subscribers (and internal emails)
-      // go straight into the analysis.
-      if (!(await hasActiveSubscription(email))) {
-        router.push(routes.pricing)
+      // go straight into the analysis. Pricing opens on the audience matching
+      // the account type chosen at sign-up (brand vs agency), and returns here
+      // after checkout so the user can hit Launch again.
+      const gate = await subscriptionGate(email)
+      if (!gate.active) {
+        const params = new URLSearchParams({
+          audience: gate.accountType,
+          returnTo: routes.onboarding,
+        })
+        router.push(`${routes.pricing}?${params.toString()}`)
         return
       }
       const result = await launchAnalysis({

@@ -45,7 +45,8 @@ const HOME_PLANS: HomePlan[] = [
   {
     id: 'starter',
     label: 'Self-Serve Brand',
-    price: 69.99,
+    price: 79.99,
+    popular: true,
     tagline: 'Run it yourself - one brand, ten tracked prompts.',
     features: [
       '1 brand · 10 prompts',
@@ -55,22 +56,6 @@ const HOME_PLANS: HomePlan[] = [
     ],
     href: '/pricing?checkout=starter',
     cta: 'Get Self-Serve',
-  },
-  {
-    id: 'pro',
-    label: 'Managed Growth Brand',
-    price: 99.69,
-    tagline: 'One brand, 25 prompts, daily agency-style support.',
-    popular: true,
-    featuresLead: 'Everything in Self-Serve, plus:',
-    features: [
-      '1 brand · 25 prompts',
-      'Daily agency-style support',
-      'Guidance on fixes & actions',
-      'Priority recommendations',
-    ],
-    href: '/pricing?checkout=pro',
-    cta: 'Get Managed Growth',
   },
 ]
 
