@@ -6,12 +6,14 @@ import { GithubIntegrationCard } from '@/features/catalyst/components/integratio
 import { IntegrationCard } from '@/features/catalyst/components/integrations/IntegrationCard'
 import { IntegrationsSummary } from '@/features/catalyst/components/integrations/IntegrationsSummary'
 import { ShopifyConnectModal } from '@/features/catalyst/components/integrations/ShopifyConnectModal'
+import { SlackIntegrationCard } from '@/features/catalyst/components/integrations/SlackIntegrationCard'
 import { INTEGRATION_GROUPS, INTEGRATIONS } from '@/features/catalyst/integrations-data'
 import type { IntegrationGroup, IntegrationWithStatus } from '@/features/catalyst/integrations-data'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { isConnectable, useIntegrationConnect } from '@/hooks/useIntegrationConnect'
 import { useIntegrations } from '@/hooks/useIntegrations'
 import { useOrgGithubConnection, type OrgGithubConnection } from '@/hooks/useOrgGithubConnection'
+import { useSlackConnection, type SlackConnection } from '@/hooks/useSlackConnection'
 import { useSession } from '@/lib/auth-client'
 
 // Where a connected integration's manage gear links. GA opens property selection
@@ -90,6 +92,70 @@ function GithubSection({ gh }: { gh: OrgGithubConnection }): JSX.Element {
   )
 }
 
+/** Where finished analyses get delivered. Slack today; more channels later. */
+function NotificationsSection({ slack }: { slack: SlackConnection }): JSX.Element {
+  return (
+    <section>
+      <h2 className="mb-3 text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
+        Notifications
+      </h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <SlackIntegrationCard s={slack} />
+      </div>
+    </section>
+  )
+}
+
+interface CountableItem {
+  connected: boolean
+}
+
+/** GitHub and Slack are first-class connectors, counted alongside the catalog. */
+function connectorTally(
+  items: CountableItem[],
+  githubConnected: boolean,
+  slackConnected: boolean,
+): { connectedCount: number; total: number } {
+  const extras = [githubConnected, slackConnected]
+  return {
+    connectedCount: items.filter(i => i.connected).length + extras.filter(Boolean).length,
+    total: items.length + extras.length,
+  }
+}
+
+interface ConnectorSectionsProps {
+  github: OrgGithubConnection
+  slack: SlackConnection
+  items: IntegrationWithStatus[]
+  busySlug: string
+  onToggle: (slug: string, next: boolean) => void
+}
+
+/** Every section, in order: the first-class connectors, then the catalog. */
+function ConnectorSections({
+  github,
+  slack,
+  items,
+  busySlug,
+  onToggle,
+}: ConnectorSectionsProps): JSX.Element {
+  return (
+    <div className="space-y-5">
+      <GithubSection gh={github} />
+      <NotificationsSection slack={slack} />
+      {INTEGRATION_GROUPS.map(group => (
+        <GroupSection
+          key={group}
+          group={group}
+          items={items}
+          busySlug={busySlug}
+          onToggle={onToggle}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function IntegrationsView(): JSX.Element {
   const { data: session } = useSession()
   const email = session?.user?.email ?? ''
@@ -99,12 +165,10 @@ export function IntegrationsView(): JSX.Element {
   // Scope GitHub to the brand on screen — an account can own several brands,
   // each connecting a different repo.
   const github = useOrgGithubConnection({ email, orgId: activeOrg?.id })
+  const slack = useSlackConnection()
   const [shopifyOpen, setShopifyOpen] = useState(false)
   const items = INTEGRATIONS.map(i => ({ ...i, connected: connected.has(i.slug) }))
-
-  // GitHub is a first-class connector counted alongside the catalog integrations.
-  const connectedCount = items.filter(i => i.connected).length + (github.connected ? 1 : 0)
-  const total = items.length + 1
+  const { connectedCount, total } = connectorTally(items, github.connected, slack.connected)
 
   // Shopify connect opens the custom-app token modal (works without OAuth env);
   // disconnect and every other provider go through the normal toggle.
@@ -126,18 +190,13 @@ export function IntegrationsView(): JSX.Element {
 
       <IntegrationsSummary connected={connectedCount} total={total} />
 
-      <div className="space-y-5">
-        <GithubSection gh={github} />
-        {INTEGRATION_GROUPS.map(group => (
-          <GroupSection
-            key={group}
-            group={group}
-            items={items}
-            busySlug={busySlug}
-            onToggle={handleToggle}
-          />
-        ))}
-      </div>
+      <ConnectorSections
+        github={github}
+        slack={slack}
+        items={items}
+        busySlug={busySlug}
+        onToggle={handleToggle}
+      />
     </div>
   )
 }

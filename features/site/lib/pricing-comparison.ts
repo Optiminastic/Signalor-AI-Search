@@ -11,7 +11,7 @@
  */
 
 /** Column keys. Brand and agency views have different column sets. */
-export type BrandPlanId = 'free' | 'starter' | 'pro' | 'enterprise'
+export type BrandPlanId = 'starter' | 'pro' | 'enterprise'
 export type AgencyPlanId = 'agency-account' | 'agency-brand-10' | 'agency-brand-25'
 
 /** A cell is either a capability flag or a concrete value to print. */
@@ -31,7 +31,6 @@ export interface ComparisonSection {
 
 /** Column order for the brand (individual) view. */
 export const BRAND_COLUMNS: { id: BrandPlanId; label: string }[] = [
-  { id: 'free', label: 'Free' },
   { id: 'starter', label: 'Self-Serve' },
   { id: 'pro', label: 'Managed Growth' },
   { id: 'enterprise', label: 'Enterprise' },
@@ -50,32 +49,32 @@ export const BRAND_COMPARISON: ComparisonSection[] = [
       {
         label: 'Tracked prompts',
         hint: 'Prompts we ask AI engines on your behalf',
-        values: { free: '50 (one-off)', starter: '10', pro: '25', enterprise: 'Custom' },
+        values: { starter: '10', pro: '25', enterprise: 'Custom' },
       },
       {
         label: 'Brands / domains',
-        values: { free: '1', starter: '1', pro: '1', enterprise: 'Multiple' },
+        values: { starter: '1', pro: '1', enterprise: 'Multiple' },
       },
       {
         label: 'GEO score & audit',
-        values: { free: true, starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'AI visibility score',
         hint: 'How often engines mention you, tracked over time',
-        values: { free: false, starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'Prompt ranking across engines',
-        values: { free: false, starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'Competitor visibility tracking',
-        values: { free: false, starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'Choose which engines you track',
-        values: { free: false, starter: false, pro: false, enterprise: true },
+        values: { starter: false, pro: false, enterprise: true },
       },
     ],
   },
@@ -84,19 +83,19 @@ export const BRAND_COMPARISON: ComparisonSection[] = [
     rows: [
       {
         label: 'Prioritised fix list',
-        values: { free: 'Preview', starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'Recommendations & guidance',
-        values: { free: false, starter: true, pro: true, enterprise: true },
+        values: { starter: true, pro: true, enterprise: true },
       },
       {
         label: 'Priority recommendations',
-        values: { free: false, starter: false, pro: true, enterprise: true },
+        values: { starter: false, pro: true, enterprise: true },
       },
       {
         label: 'Guidance on fixes & actions',
-        values: { free: false, starter: false, pro: true, enterprise: true },
+        values: { starter: false, pro: true, enterprise: true },
       },
     ],
   },
@@ -106,19 +105,19 @@ export const BRAND_COMPARISON: ComparisonSection[] = [
       {
         label: 'Daily agency-style support',
         hint: 'Our team works your list with you',
-        values: { free: false, starter: false, pro: true, enterprise: true },
+        values: { starter: false, pro: true, enterprise: true },
       },
       {
         label: 'Dedicated support',
-        values: { free: false, starter: false, pro: false, enterprise: true },
+        values: { starter: false, pro: false, enterprise: true },
       },
       {
         label: 'Custom reporting cadence',
-        values: { free: false, starter: false, pro: false, enterprise: true },
+        values: { starter: false, pro: false, enterprise: true },
       },
       {
         label: 'Preferred currency & billing terms',
-        values: { free: false, starter: false, pro: false, enterprise: true },
+        values: { starter: false, pro: false, enterprise: true },
       },
     ],
   },

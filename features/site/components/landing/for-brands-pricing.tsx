@@ -1,8 +1,9 @@
 import Link from 'next/link'
 
 import { ArrowRight, Check } from '@/features/site/components/icons'
-import { GridCornerHandles, GridHandle } from '@/features/site/components/landing/home-grid'
 import { LANDING_PRIMARY_CTA_CLASS } from '@/features/site/components/landing/constants'
+import { GridCornerHandles, GridHandle } from '@/features/site/components/landing/home-grid'
+import { PlanBadge } from '@/features/site/components/landing/plan-badge'
 import { cn } from '@/features/site/lib/utils'
 
 type BrandPlan = {
@@ -12,11 +13,14 @@ type BrandPlan = {
   priceNote?: string
   tagline: string
   popular?: boolean
+  /** Not yet purchasable — the card shows a badge and the CTA is inert. */
+  comingSoon?: boolean
   features: string[]
 }
 
 const BRAND_PLANS: BrandPlan[] = [
   {
+    popular: true,
     id: 'brand-starter',
     label: 'Starter',
     price: '79',
@@ -37,7 +41,7 @@ const BRAND_PLANS: BrandPlan[] = [
     price: '149',
     priceNote: 'per month',
     tagline: 'Built for teams tracking more prompts and more momentum.',
-    popular: true,
+    comingSoon: true,
     features: [
       '3 brands / domains',
       '25 prompts to track',
@@ -48,6 +52,7 @@ const BRAND_PLANS: BrandPlan[] = [
     ],
   },
   {
+    comingSoon: true,
     id: 'brand-scale',
     label: 'Scale',
     price: '299',
@@ -73,52 +78,77 @@ const BRAND_ENTERPRISE_FEATURES = [
   'Connect your analytics stack and CRM workflows',
 ]
 
+/** The /pricing plan id this card sells. Only 'starter' and 'pro' are
+ *  self-serve checkout-able; everything else routes to sales. */
+const CHECKOUT_PLAN_ID = 'starter'
+
+const CTA_SECONDARY =
+  'inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-card px-5 text-sm font-semibold text-foreground ring-1 ring-border shadow-sm shadow-black/5 transition-all hover:bg-muted/60'
+
+/** A plan that cannot be bought yet gets an inert control, not a live link -
+ *  sending someone to contact sales for something we do not sell is a dead end. */
+function PlanCta({ plan }: { plan: BrandPlan }): JSX.Element {
+  if (plan.comingSoon) {
+    return (
+      <span
+        aria-disabled
+        className="bg-muted/60 text-muted-foreground ring-border inline-flex h-9 cursor-not-allowed items-center justify-center rounded-md px-5 text-sm font-semibold ring-1"
+      >
+        Coming soon
+      </span>
+    )
+  }
+  // Hands off to /pricing, which owns the real flow: sign-in gating, currency
+  // detection, affiliate discounts and checkout errors.
+  if (plan.popular) {
+    return (
+      <Link href={`/pricing?checkout=${CHECKOUT_PLAN_ID}`} className={LANDING_PRIMARY_CTA_CLASS}>
+        Buy
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+      </Link>
+    )
+  }
+  return (
+    <Link href="/contact-sales" className={CTA_SECONDARY}>
+      Talk to us
+      <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+    </Link>
+  )
+}
+
 function PlanCell({ plan }: { plan: BrandPlan }): JSX.Element {
   return (
     <div
       className={cn(
         'grid gap-8 p-8 lg:row-span-4 lg:grid-rows-subgrid',
+        plan.comingSoon && 'opacity-70',
         plan.popular &&
-          'rounded-xl bg-card shadow-md shadow-black/10 ring-2 ring-primary/60 max-lg:mx-2 max-lg:my-2 lg:my-2',
+          'bg-card ring-primary/60 rounded-xl shadow-md ring-2 shadow-black/10 max-lg:mx-2 max-lg:my-2 lg:my-2',
       )}
     >
       <div className="self-end">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-medium tracking-tight text-foreground">{plan.label}</h3>
-          {plan.popular ? (
-            <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
-              Popular
-            </span>
-          ) : null}
+          <h3 className="text-foreground text-lg font-medium tracking-tight">{plan.label}</h3>
+          <PlanBadge popular={plan.popular} comingSoon={plan.comingSoon} />
         </div>
-        <p className="mt-1 text-balance text-sm text-muted-foreground">{plan.tagline}</p>
+        <p className="text-muted-foreground mt-1 text-sm text-balance">{plan.tagline}</p>
       </div>
       <div>
-        <p className="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+        <p className="text-foreground text-3xl font-semibold tracking-tight tabular-nums">
           ${plan.price}
         </p>
-        <p className="mt-0.5 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-0.5 text-sm">
           Per month{plan.priceNote ? ` · ${plan.priceNote}` : ''}
         </p>
       </div>
-      <Link
-        href="/contact-sales"
-        className={cn(
-          plan.popular
-            ? LANDING_PRIMARY_CTA_CLASS
-            : 'inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-card px-5 text-sm font-semibold text-foreground ring-1 ring-border shadow-sm shadow-black/5 transition-all hover:bg-muted/60',
-        )}
-      >
-        Talk to us
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-      </Link>
+      <PlanCta plan={plan} />
       <ul className="space-y-3 text-sm">
-        {plan.features.map((feature) => (
+        {plan.features.map(feature => (
           <li
             key={feature}
-            className="flex items-center gap-2 text-foreground/90 first:font-medium first:text-foreground"
+            className="text-foreground/90 first:text-foreground flex items-center gap-2 first:font-medium"
           >
-            <Check className="h-3.5 w-3.5 shrink-0 text-primary" strokeWidth={2.5} aria-hidden />
+            <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
             <span>{feature}</span>
           </li>
         ))}
@@ -129,27 +159,27 @@ function PlanCell({ plan }: { plan: BrandPlan }): JSX.Element {
 
 function BrandEnterpriseRow(): JSX.Element {
   return (
-    <div className="relative border-t border-border">
+    <div className="border-border relative border-t">
       <GridHandle className="-top-[3.5px] left-1/3 -ml-[3.5px] hidden lg:block" />
-      <div className="grid lg:grid-cols-[1fr_2fr] lg:divide-x lg:divide-border">
-        <div className="p-8 max-lg:border-b max-lg:border-border">
-          <h3 className="text-lg font-medium tracking-tight text-foreground">Enterprise brand</h3>
-          <p className="mt-1 max-w-xs text-balance text-sm text-muted-foreground">
+      <div className="lg:divide-border grid lg:grid-cols-[1fr_2fr] lg:divide-x">
+        <div className="max-lg:border-border p-8 max-lg:border-b">
+          <h3 className="text-foreground text-lg font-medium tracking-tight">Enterprise brand</h3>
+          <p className="text-muted-foreground mt-1 max-w-xs text-sm text-balance">
             For bigger portfolios, more frequent launches, and multiple stakeholders who need one
             source of truth.
           </p>
           <Link
             href="/contact-sales"
-            className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-card px-5 text-sm font-semibold text-foreground ring-1 ring-border shadow-sm shadow-black/5 transition-all hover:bg-muted/60"
+            className="bg-card text-foreground ring-border hover:bg-muted/60 mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-md px-5 text-sm font-semibold shadow-sm ring-1 shadow-black/5 transition-all"
           >
             Contact sales
             <ArrowRight className="h-3.5 w-3.5" aria-hidden />
           </Link>
         </div>
         <ul className="grid content-center gap-x-10 gap-y-3 p-8 text-sm sm:grid-cols-2">
-          {BRAND_ENTERPRISE_FEATURES.map((feature) => (
-            <li key={feature} className="flex items-center gap-2 text-foreground/90">
-              <Check className="h-3.5 w-3.5 shrink-0 text-primary" strokeWidth={2.5} aria-hidden />
+          {BRAND_ENTERPRISE_FEATURES.map(feature => (
+            <li key={feature} className="text-foreground/90 flex items-center gap-2">
+              <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
               <span>{feature}</span>
             </li>
           ))}
@@ -167,38 +197,38 @@ export function ForBrandsPricing(): JSX.Element {
       aria-labelledby="for-brands-pricing-heading"
     >
       <div className="border-border mx-auto max-w-6xl border-x">
-        <div className="relative border-t border-border px-6 py-14 sm:py-16">
+        <div className="border-border relative border-t px-6 py-14 sm:py-16">
           <GridCornerHandles top />
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
               Brand pricing
             </p>
             <h2
               id="for-brands-pricing-heading"
-              className="mt-3 text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+              className="text-foreground mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
             >
               Pricing that scales with your brand story
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Start with one brand, expand when you need more coverage, and keep the work grounded in
-              the answers your customers actually see.
+            <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-base leading-relaxed text-pretty sm:text-lg">
+              Start with one brand, expand when you need more coverage, and keep the work grounded
+              in the answers your customers actually see.
             </p>
-            <p className="mt-6 text-[13px] font-medium text-muted-foreground">
-              <span className="font-semibold text-primary">Free audit available</span> · Simple plans
-              for one brand or many ·{' '}
+            <p className="text-muted-foreground mt-6 text-[13px] font-medium">
+              <span className="text-primary font-semibold">Free audit available</span> · Simple
+              plans for one brand or many ·{' '}
               <Link
                 href="/pricing"
-                className="font-semibold text-primary transition-colors hover:text-primary/80"
+                className="text-primary hover:text-primary/80 font-semibold transition-colors"
               >
                 See full comparison →
               </Link>
             </p>
           </div>
         </div>
-        <div className="relative border-t border-border">
+        <div className="border-border relative border-t">
           <GridCornerHandles top />
-          <div className="grid grid-cols-1 divide-border max-lg:divide-y lg:grid-cols-3">
-            {BRAND_PLANS.map((plan) => (
+          <div className="divide-border grid grid-cols-1 max-lg:divide-y lg:grid-cols-3">
+            {BRAND_PLANS.map(plan => (
               <PlanCell key={plan.id} plan={plan} />
             ))}
           </div>

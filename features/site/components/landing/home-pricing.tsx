@@ -28,7 +28,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 }
 
 // Plan ids must match the backend keys in /api/payments/plan-prices/ for the
-// checkout-able tiers. The free tier is static; Enterprise links to sales.
+// checkout-able tiers. Enterprise links to sales.
 type HomePlan = {
   id: string
   label: string
@@ -43,25 +43,10 @@ type HomePlan = {
 
 const HOME_PLANS: HomePlan[] = [
   {
-    id: 'free',
-    label: 'Free',
-    price: 0,
-    tagline: 'Try SignalorAI on your own site, no credit card required.',
-    features: [
-      '50 tracked prompts included',
-      'Free GEO score & audit',
-      'Prioritized fix list preview',
-      'Setup in 2 minutes',
-    ],
-    href: '/sign-up',
-    cta: 'Start for free',
-  },
-  {
     id: 'starter',
     label: 'Self-Serve Brand',
     price: 69.99,
     tagline: 'Run it yourself - one brand, ten tracked prompts.',
-    featuresLead: 'Everything in Free, plus:',
     features: [
       '1 brand · 10 prompts',
       'AI visibility score',
@@ -132,9 +117,6 @@ function planPriceLabel({ plan, live, userCcy, currency, currencyReady }: PlanPr
   amount: string
   resolved: boolean
 } {
-  if (plan.price === 0) {
-    return { symbol: currencyReady ? currency.symbol : '£', amount: '0', resolved: true }
-  }
   const localized = localizedPrice(live, userCcy)
   if (localized) {
     return {

@@ -2,7 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export type CurrencyCode = 'GBP' | 'EUR' | 'USD' | 'INR'
+// ─── GBP-only mode ──────────────────────────────────────────────────────────
+// Multi-currency display is parked until Adaptive Pricing is enabled on the
+// Dodo products. Until then the site quotes GBP only, which is what actually
+// gets charged — showing a converted figure that checkout then contradicts is
+// worse than showing one honest price.
+//
+// To bring it back: restore the commented members of `CurrencyCode`, the
+// `CURRENCIES` entries, `EUR_COUNTRIES`, `detectFromTimezone`, and the currency
+// mapping inside the ipapi handler. `CurrencyToggle` re-renders itself as soon
+// as it has more than one option.
+
+// export type CurrencyCode = 'GBP' | 'EUR' | 'USD' | 'INR'
+export type CurrencyCode = 'GBP'
 
 export type Currency = {
   code: CurrencyCode
@@ -17,74 +29,37 @@ export type Currency = {
 
 const CURRENCIES: Record<CurrencyCode, Currency> = {
   GBP: { code: 'GBP', symbol: '£', rate: 1, decimals: 2, locale: 'en-GB' },
-  EUR: { code: 'EUR', symbol: '€', rate: 1.17, decimals: 2, locale: 'en-DE' },
-  USD: { code: 'USD', symbol: '$', rate: 1.27, decimals: 2, locale: 'en-US' },
-  INR: { code: 'INR', symbol: '₹', rate: 106, decimals: 0, locale: 'en-IN' },
+  // EUR: { code: 'EUR', symbol: '€', rate: 1.17, decimals: 2, locale: 'en-DE' },
+  // USD: { code: 'USD', symbol: '$', rate: 1.27, decimals: 2, locale: 'en-US' },
+  // INR: { code: 'INR', symbol: '₹', rate: 106, decimals: 0, locale: 'en-IN' },
 }
 
 // Eurozone + broader EU/EEA countries map to EUR. GB is intentionally NOT here
 // (it maps to GBP, the canonical currency).
-const EUR_COUNTRIES = new Set([
-  'AT',
-  'BE',
-  'BG',
-  'HR',
-  'CY',
-  'CZ',
-  'DK',
-  'EE',
-  'FI',
-  'FR',
-  'DE',
-  'GR',
-  'HU',
-  'IE',
-  'IT',
-  'LV',
-  'LT',
-  'LU',
-  'MT',
-  'NL',
-  'PL',
-  'PT',
-  'RO',
-  'SK',
-  'SI',
-  'ES',
-  'SE',
-  'CH',
-  'NO',
-  'IS',
-  'AL',
-  'BA',
-  'ME',
-  'MK',
-  'RS',
-  'MD',
-  'UA',
-  'BY',
-  'LI',
-  'AD',
-  'MC',
-  'SM',
-  'VA',
-])
+// const EUR_COUNTRIES = new Set([
+//   'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR',
+//   'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK',
+//   'SI', 'ES', 'SE', 'CH', 'NO', 'IS', 'AL', 'BA', 'ME', 'MK', 'RS', 'MD',
+//   'UA', 'BY', 'LI', 'AD', 'MC', 'SM', 'VA',
+// ])
 
-function detectFromTimezone(): CurrencyCode | null {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? ''
-    if (tz === 'Asia/Kolkata' || tz === 'Asia/Calcutta') return 'INR'
-    if (tz.startsWith('America/')) return 'USD'
-  } catch {
-    // SSR / unavailable
-  }
-  return null
-}
+// function detectFromTimezone(): CurrencyCode | null {
+//   try {
+//     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? ''
+//     if (tz === 'Asia/Kolkata' || tz === 'Asia/Calcutta') return 'INR'
+//     if (tz.startsWith('America/')) return 'USD'
+//   } catch {
+//     // SSR / unavailable
+//   }
+//   return null
+// }
 
 /**
- * Detects the user's country via ipapi.co and returns the appropriate
- * currency (INR for India, USD for US, EUR for Europe and everywhere else).
- * Falls back to language hint if the API call fails or times out.
+ * Resolves the display currency (GBP-only for now) and the visitor's country.
+ *
+ * The country lookup is deliberately kept while currency selection is parked:
+ * it is passed to Dodo as the billing-address hint so checkout doesn't default
+ * to the United States. Only the currency mapping is disabled.
  */
 export function useCurrency(): {
   currency: Currency
@@ -100,12 +75,11 @@ export function useCurrency(): {
   useEffect(() => {
     // Apply timezone hint synchronously on the client before the async fetch.
     // This avoids SSR hydration mismatches while still giving instant detection.
-    const tzCode = detectFromTimezone()
-    if (tzCode && !manualOverride.current) {
-      setCurrency(CURRENCIES[tzCode])
-
-      setReady(true)
-    }
+    // const tzCode = detectFromTimezone()
+    // if (tzCode && !manualOverride.current) {
+    //   setCurrency(CURRENCIES[tzCode])
+    //   setReady(true)
+    // }
 
     let cancelled = false
     const controller = new AbortController()
@@ -117,15 +91,16 @@ export function useCurrency(): {
         if (cancelled || manualOverride.current) return
         const cc = (data.country_code ?? '').toUpperCase()
         if (cc) setCountry(cc)
-        let code: CurrencyCode = 'GBP'
-        if (cc === 'IN') code = 'INR'
-        else if (cc === 'US') code = 'USD'
-        else if (EUR_COUNTRIES.has(cc)) code = 'EUR'
-        else code = 'GBP' // GB + default rest of world → GBP (canonical)
-        setCurrency(CURRENCIES[code])
+        // Currency stays GBP regardless of country while multi-currency is off.
+        // let code: CurrencyCode = 'GBP'
+        // if (cc === 'IN') code = 'INR'
+        // else if (cc === 'US') code = 'USD'
+        // else if (EUR_COUNTRIES.has(cc)) code = 'EUR'
+        // else code = 'GBP' // GB + default rest of world → GBP (canonical)
+        // setCurrency(CURRENCIES[code])
       })
       .catch(() => {
-        /* timezone already set initial value */
+        /* GBP is already the initial value */
       })
       .finally(() => {
         clearTimeout(timeout)
@@ -139,7 +114,7 @@ export function useCurrency(): {
     }
   }, [])
 
-  function selectCurrency(code: CurrencyCode) {
+  function selectCurrency(code: CurrencyCode): void {
     manualOverride.current = true
     setCurrency(CURRENCIES[code])
   }

@@ -12,7 +12,7 @@ function HeroCtas(): JSX.Element {
         href="/sign-up"
         className="auth-cta-btn inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-md px-6 text-[15px] font-semibold text-white sm:w-auto"
       >
-        Start for free
+        Get started
         <ArrowRight size={17} strokeWidth={2.4} />
       </Link>
       <Link

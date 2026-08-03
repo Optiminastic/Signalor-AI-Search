@@ -93,7 +93,7 @@ export function AboutHero(): JSX.Element {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/sign-up" className={`${LANDING_PRIMARY_CTA_CLASS} w-full sm:w-auto`}>
-                Start for free
+                Get started
               </Link>
               <Link
                 href="/contact-sales"
