@@ -20,8 +20,8 @@ import { HomeIntegrations } from '@/features/site/components/landing/home-integr
 import { HomeLogoCloud } from '@/features/site/components/landing/home-logo-cloud'
 import { HomeSpotlights } from '@/features/site/components/landing/home-spotlights'
 import { HomeFooter } from '@/features/site/components/landing/home-footer'
-// import { HomeGutterMarks } from '@/features/site/components/landing/home-gutter-marks'
-import { HomeVsClaude } from '@/features/site/components/landing/home-vs-claude'
+import { HomeTestimonials } from '@/features/site/components/landing/home-testimonials'
+import { HomeExperience } from '@/features/site/components/landing/home-experience'
 
 const HOMEPAGE_FAQ = [
   {
@@ -109,6 +109,9 @@ export default function HomePage(): JSX.Element {
           <HomeFeatures />
           <HomeSpotlights />
           <HomeHowItWorks />
+          <HomeStats />
+          <HomeTestimonials />
+          <HomeExperience />
           <HomeIntegrations />
           <HomeFaq items={HOMEPAGE_FAQ} />
         </div>
