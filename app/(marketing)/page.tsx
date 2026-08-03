@@ -23,6 +23,7 @@ import { HomeStats } from '@/features/site/components/landing/home-stats'
 import { HomeVsClaude } from '@/features/site/components/landing/home-vs-claude'
 import { HomeFooter } from '@/features/site/components/landing/home-footer'
 import { HomeTestimonials } from '@/features/site/components/landing/home-testimonials'
+import { TESTIMONIALS } from '@/features/site/lib/landing-testimonials-content'
 
 const HOMEPAGE_FAQ = [
   {
@@ -86,6 +87,21 @@ const homeProductJsonLd = {
     url: `${SITE_URL}/pricing`,
   },
   aggregateRating: AGGREGATE_RATING,
+  review: TESTIMONIALS.map(testimonial => ({
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: testimonial.name,
+    },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: '5',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    reviewBody: testimonial.quote,
+    datePublished: '2024-12-01',
+  })),
 }
 
 export default function HomePage(): JSX.Element {
