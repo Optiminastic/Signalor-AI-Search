@@ -79,6 +79,9 @@ const AGENCY_ENTERPRISE_FEATURES = [
   'White-label, exportable client reports',
 ]
 
+/** The /pricing card this plan buys — maps to the Dodo 'agency' plan key. */
+const CHECKOUT_CARD_ID = 'agency-brand-10'
+
 const CTA_SECONDARY =
   'bg-card text-foreground ring-border hover:bg-muted/60 inline-flex h-9 items-center justify-center gap-1.5 rounded-md px-5 text-sm font-semibold shadow-sm ring-1 shadow-black/5 transition-all'
 
@@ -95,13 +98,18 @@ function PlanCta({ plan }: { plan: AgencyPlan }): JSX.Element {
       </span>
     )
   }
-  // No agency plan is self-serve: the backend only sells 'starter'/'pro', so
-  // every agency CTA is a sales conversation, highlighted plan included.
+  // Hands off to /pricing, which owns the real flow: sign-in gating, currency
+  // detection, affiliate discounts and checkout errors.
+  if (plan.popular) {
+    return (
+      <Link href={`/pricing?checkout=${CHECKOUT_CARD_ID}`} className={LANDING_PRIMARY_CTA_CLASS}>
+        Buy
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+      </Link>
+    )
+  }
   return (
-    <Link
-      href="/contact-sales"
-      className={cn(plan.popular ? LANDING_PRIMARY_CTA_CLASS : CTA_SECONDARY)}
-    >
+    <Link href="/contact-sales" className={CTA_SECONDARY}>
       Talk to us
       <ArrowRight className="h-3.5 w-3.5" aria-hidden />
     </Link>

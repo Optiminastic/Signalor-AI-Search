@@ -46,7 +46,10 @@ export function useBrandCapacity(): UseBrandCapacityResult {
         used: usage.usage.projects,
         max: usage.limits.max_projects,
         planLabel: subscription?.plan_label ?? '',
-        canCreate: usage.usage.projects < usage.limits.max_projects,
+        // 0 = unlimited. Comparing against it directly would read as "at
+        // capacity" and disable brand creation for uncapped accounts.
+        canCreate:
+          usage.limits.max_projects === 0 || usage.usage.projects < usage.limits.max_projects,
       }
     },
   })

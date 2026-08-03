@@ -23,7 +23,7 @@ const BRAND_PLANS: BrandPlan[] = [
     popular: true,
     id: 'brand-starter',
     label: 'Starter',
-    price: '79',
+    price: '79.99',
     priceNote: 'per month',
     tagline: 'One brand, one clear baseline for how AI describes you.',
     features: [
@@ -135,7 +135,7 @@ function PlanCell({ plan }: { plan: BrandPlan }): JSX.Element {
       </div>
       <div>
         <p className="text-foreground text-3xl font-semibold tracking-tight tabular-nums">
-          ${plan.price}
+          £{plan.price}
         </p>
         <p className="text-muted-foreground mt-0.5 text-sm">
           Per month{plan.priceNote ? ` · ${plan.priceNote}` : ''}

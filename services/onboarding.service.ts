@@ -197,21 +197,29 @@ export async function suggestPrompts(input: {
   }
 }
 
+export interface SubscriptionGate {
+  active: boolean
+  accountType: AccountType
+}
+
 /**
- * Whether the email has an active subscription. The backend reports internal
- * (@optiminastic.com) emails as active too, so this doubles as the paywall
- * bypass. Fails open (true) so a transient error never wrongly blocks launch —
- * the analyzer's own gate still 403s a genuine non-subscriber.
+ * Subscription state plus the server-stored account type, in one status call.
+ * The launch step uses the type to open /pricing on the right audience tab
+ * (agency signups must see agency plans, not brand plans). The backend reports
+ * internal (@optiminastic.com) emails as active, so this doubles as the
+ * paywall bypass. Fails open (active) so a transient error never wrongly
+ * blocks launch — the analyzer's own gate still 403s a genuine non-subscriber.
  */
-export async function hasActiveSubscription(email: string): Promise<boolean> {
+export async function subscriptionGate(email: string): Promise<SubscriptionGate> {
   if (USE_STUBS) {
     await delay(STUB_DELAY_MS)
-    return true
+    return { active: true, accountType: 'individual' }
   }
   try {
-    return (await getSubscriptionStatus(email)).is_active
+    const status = await getSubscriptionStatus(email)
+    return { active: status.is_active, accountType: status.account_type ?? 'individual' }
   } catch {
-    return true
+    return { active: true, accountType: 'individual' }
   }
 }
 

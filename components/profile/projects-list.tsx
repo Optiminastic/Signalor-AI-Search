@@ -25,28 +25,31 @@ function ProjectRow({ project }: { project: AccountProject }): JSX.Element {
 
 interface ProjectsListProps {
   projects: AccountProject[]
-  max: number
+  /** Undefined means unlimited. */
+  max?: number
 }
 
 /** The user's projects/organizations with an add action. */
 export function ProjectsList({ projects, max }: ProjectsListProps): JSX.Element {
+  // `max` is undefined for uncapped accounts — no denominator, and the add
+  // button must never be disabled against a limit that doesn't exist.
+  const atCapacity = max !== undefined && projects.length >= max
+  const usageLabel =
+    max === undefined
+      ? `${projects.length} ${projects.length === 1 ? 'project' : 'projects'}`
+      : `${projects.length} of ${max} used`
   const addButton = (
     <button
       type="button"
       className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[13px] font-medium text-[var(--cat-ink)] transition hover:bg-[var(--cat-hover)] disabled:opacity-50"
-      disabled={projects.length >= max}
+      disabled={atCapacity}
     >
       <Plus className="h-3.5 w-3.5" />
       New
     </button>
   )
   return (
-    <SectionCard
-      title="Projects"
-      description={`${projects.length} of ${max} used`}
-      action={addButton}
-      flush
-    >
+    <SectionCard title="Projects" description={usageLabel} action={addButton} flush>
       <ul className="divide-y divide-[var(--cat-border-soft)]">
         {projects.map(p => (
           <ProjectRow key={p.id} project={p} />
