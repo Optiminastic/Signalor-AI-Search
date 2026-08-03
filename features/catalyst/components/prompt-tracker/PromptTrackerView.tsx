@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 
 import { DataState } from '@/features/catalyst/components/DataState'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
-import { CitationTrendCard } from '@/features/catalyst/components/prompt-tracker/CitationTrendCard'
 import { FaqBuilderCard } from '@/features/catalyst/components/prompt-tracker/FaqBuilderCard'
 import { NewPromptForm } from '@/features/catalyst/components/prompt-tracker/NewPromptForm'
 import {
@@ -13,14 +12,20 @@ import {
   PromptDateFilter,
   type DateFilter,
 } from '@/features/catalyst/components/prompt-tracker/PromptDateFilter'
-import { PromptRow } from '@/features/catalyst/components/prompt-tracker/PromptRow'
+import { PromptDetailSheet } from '@/features/catalyst/components/prompt-tracker/PromptDetailSheet'
+import { PromptTable } from '@/features/catalyst/components/prompt-tracker/PromptTable'
+import {
+  matchesTagFilter,
+  NO_TAGS,
+  PromptTagFilter,
+  type TagFilter,
+} from '@/features/catalyst/components/prompt-tracker/PromptTagFilter'
+import { PromptTaxonomyBars } from '@/features/catalyst/components/prompt-tracker/PromptTaxonomyBars'
 import { PromptToolbar } from '@/features/catalyst/components/prompt-tracker/PromptToolbar'
-import { TaskStatCard } from '@/features/catalyst/components/tasks/TaskStatCard'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
-import type { StatCard } from '@/features/catalyst/tasks-data'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { usePromptMutations } from '@/hooks/usePromptMutations'
-import { buildPromptStats, usePrompts } from '@/hooks/usePrompts'
+import { usePrompts } from '@/hooks/usePrompts'
 import { Loader2, Plus } from '@/lib/icons'
 
 /** Most recent engine-check timestamp across a prompt's results (0 if none yet). */
@@ -68,16 +73,6 @@ function TrackerHeader({ onNewPrompt, filter, onFilterChange }: HeaderProps): JS
   )
 }
 
-function StatGrid({ stats }: { stats: StatCard[] }): JSX.Element {
-  return (
-    <div className="cat-stagger mb-3 grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
-      {stats.map(stat => (
-        <TaskStatCard key={stat.label} stat={stat} />
-      ))}
-    </div>
-  )
-}
-
 interface ListProps {
   prompts: TrackedPrompt[]
   slug: string
@@ -87,38 +82,39 @@ interface ListProps {
 }
 
 function PromptList({ prompts, slug, busyId, onRecheck, onRemove }: ListProps): JSX.Element {
+  const [open, setOpen] = useState<TrackedPrompt | null>(null)
   if (prompts.length === 0) {
     return (
       <p className="cat-rise rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-4 py-6 text-center text-[13px] text-[var(--cat-ink-2)]">
-        No prompts checked in this date range. Widen the range to see more.
+        No prompts match the current filters. Clear a tag or widen the date range to see more.
       </p>
     )
   }
   return (
-    <div className="cat-rise divide-y divide-[var(--cat-border)] overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
-      {prompts.map(p => (
-        <PromptRow
-          key={p.id}
-          item={p}
-          slug={slug}
-          busy={busyId === p.id}
-          onRecheck={onRecheck}
-          onRemove={onRemove}
-        />
-      ))}
-    </div>
+    <>
+      <PromptTable
+        prompts={prompts}
+        busyId={busyId}
+        onRecheck={onRecheck}
+        onRemove={onRemove}
+        onOpen={setOpen}
+      />
+      {open && <PromptDetailSheet item={open} slug={slug} onClose={() => setOpen(null)} />}
+    </>
   )
 }
 
 interface BodyProps extends ListProps {
   allCount: number
-  stats: StatCard[]
+  tags: TagFilter
+  onTagsChange: (next: TagFilter) => void
 }
 
 function PromptBody({
   prompts,
   allCount,
-  stats,
+  tags,
+  onTagsChange,
   slug,
   busyId,
   onRecheck,
@@ -127,9 +123,11 @@ function PromptBody({
   const hasPending = prompts.some(p => p.results.length === 0)
   return (
     <>
-      <PromptToolbar shown={prompts.length} total={allCount} />
-      <StatGrid stats={stats} />
-      <CitationTrendCard slug={slug} />
+      <PromptTaxonomyBars prompts={prompts} />
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <PromptToolbar shown={prompts.length} total={allCount} />
+        <PromptTagFilter value={tags} onChange={onTagsChange} />
+      </div>
       {/* <PromptInsights prompts={prompts} /> */}
       {hasPending && (
         <p className="mb-2 flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-3)]">
@@ -149,22 +147,38 @@ function PromptBody({
   )
 }
 
+interface PromptFilters {
+  date: DateFilter
+  setDate: (next: DateFilter) => void
+  tags: TagFilter
+  setTags: (next: TagFilter) => void
+  filtered: TrackedPrompt[]
+}
+
+/** Date range + taxonomy tags, the two axes the list can be narrowed by. */
+function usePromptFilters(prompts: TrackedPrompt[] | undefined): PromptFilters {
+  const [date, setDate] = useState<DateFilter>(ALL_DATES)
+  const [tags, setTags] = useState<TagFilter>(NO_TAGS)
+  const filtered = useMemo(
+    () => filterByDate(prompts ?? [], date).filter(p => matchesTagFilter(p, tags)),
+    [prompts, date, tags],
+  )
+  return { date, setDate, tags, setTags, filtered }
+}
+
 export function PromptTrackerView(): JSX.Element {
   const { slug, isLoading: projectLoading } = useActiveProject()
   const { data, isLoading, isError } = usePrompts(slug)
   const { add, recheck, remove, isAdding, busyId } = usePromptMutations(slug)
   const [composing, setComposing] = useState(false)
-  const [filter, setFilter] = useState<DateFilter>(ALL_DATES)
-
-  const filtered = useMemo(() => filterByDate(data?.prompts ?? [], filter), [data, filter])
-  const stats = useMemo(() => buildPromptStats(filtered), [filtered])
+  const { date, setDate, tags, setTags, filtered } = usePromptFilters(data?.prompts)
 
   return (
     <div className="w-full">
       <TrackerHeader
         onNewPrompt={() => setComposing(c => !c)}
-        filter={filter}
-        onFilterChange={setFilter}
+        filter={date}
+        onFilterChange={setDate}
       />
       {composing && (
         <NewPromptForm isAdding={isAdding} onSubmit={add} onClose={() => setComposing(false)} />
@@ -180,7 +194,8 @@ export function PromptTrackerView(): JSX.Element {
           <PromptBody
             prompts={filtered}
             allCount={data.prompts.length}
-            stats={stats}
+            tags={tags}
+            onTagsChange={setTags}
             slug={slug ?? ''}
             busyId={busyId}
             onRecheck={recheck}

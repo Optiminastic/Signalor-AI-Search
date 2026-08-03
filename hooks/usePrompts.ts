@@ -18,6 +18,9 @@ function toEngineResult(result: PromptResult): PromptEngineResult {
     domain: c.domain,
     isBrand: c.is_brand,
     isCompetitor: c.is_competitor,
+    title: c.title ?? '',
+    snippet: c.snippet ?? '',
+    position: c.position ?? 0,
   }))
   return {
     id: result.id,
@@ -28,6 +31,7 @@ function toEngineResult(result: PromptResult): PromptEngineResult {
     position: result.rank_position ?? null,
     snippet: result.response_text ?? '',
     checkedAt: result.checked_at ?? '',
+    confidence: result.confidence ?? null,
     citations,
     brandCited: citations.some(c => c.isBrand),
   }
@@ -50,6 +54,15 @@ function toTracked(prompt: PromptTrack): TrackedPrompt {
     cited: results.some(r => r.brandCited),
     mentions: prompt.mentions ?? 0,
     runs: prompt.total_runs ?? 0,
+    sentiment: prompt.sentiment_label ?? '',
+    createdAt: prompt.created_at ?? '',
+    factors: {
+      authority: Math.round(prompt.factor_authority ?? 0),
+      contentQuality: Math.round(prompt.factor_content_quality ?? 0),
+      structural: Math.round(prompt.factor_structural ?? 0),
+      semantic: Math.round(prompt.factor_semantic ?? 0),
+      thirdParty: Math.round(prompt.factor_third_party ?? 0),
+    },
     results,
   }
 }

@@ -4,11 +4,15 @@
 
 export type Testimonial = {
   quote: string
+  /** Exact substrings of `quote` to render bold in the home layout. */
+  emphasis: string[]
   name: string
   role: string
   company: string
   initials: string
   tint: 'orange' | 'blue' | 'emerald'
+  /** Headline outcome, shown as a stat callout beside the featured quote. */
+  metric?: { value: string; label: string }
 }
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -20,6 +24,8 @@ export const TESTIMONIALS: Testimonial[] = [
     company: 'Nimbus Commerce',
     initials: 'PM',
     tint: 'orange',
+    emphasis: ["three URLs we'd never have prioritized", '40% of our AI traffic'],
+    metric: { value: '40%', label: 'of their AI traffic now comes from one newly cited page' },
   },
   {
     quote:
@@ -29,6 +35,7 @@ export const TESTIMONIALS: Testimonial[] = [
     company: 'Ardent Labs',
     initials: 'DK',
     tint: 'blue',
+    emphasis: ['changed our content roadmap overnight'],
   },
   {
     quote:
@@ -38,5 +45,7 @@ export const TESTIMONIALS: Testimonial[] = [
     company: 'Vault Apparel',
     initials: 'SR',
     tint: 'emerald',
+    emphasis: ['GEO score jumped 14 points'],
+    metric: { value: '+14', label: 'GEO score points in the first recheck' },
   },
 ]

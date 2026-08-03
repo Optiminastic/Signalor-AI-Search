@@ -4,11 +4,11 @@ import { useState } from 'react'
 
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
-import { PromptResultsPanel } from '@/features/catalyst/components/prompt-tracker/PromptResultsPanel'
-import { AnswerBlockPanel } from '@/features/catalyst/components/prompts/AnswerBlockPanel'
+import { CitedChip, PromptTag } from '@/features/catalyst/components/prompt-tracker/PromptChips'
+import { PromptDetailSheet } from '@/features/catalyst/components/prompt-tracker/PromptDetailSheet'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
 import { scoreColor } from '@/features/catalyst/visibility-data'
-import { ChevronDown, Loader2, RefreshCw, Trash2 } from '@/lib/icons'
+import { ChevronRight, Loader2, RefreshCw, Trash2 } from '@/lib/icons'
 
 export interface PromptRowProps {
   item: TrackedPrompt
@@ -16,26 +16,6 @@ export interface PromptRowProps {
   busy: boolean
   onRecheck: (trackId: number) => void
   onRemove: (trackId: number) => void
-}
-
-function MetaChip({ children }: { children: string }): JSX.Element {
-  return (
-    <span className="rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--cat-ink-3)] capitalize">
-      {children}
-    </span>
-  )
-}
-
-function CitedChip({ cited }: { cited: boolean }): JSX.Element {
-  return cited ? (
-    <span className="rounded-sm bg-[rgba(47,190,126,0.12)] px-1.5 py-0.5 text-[10px] font-medium text-[#2FBE7E]">
-      Cited
-    </span>
-  ) : (
-    <span className="rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--cat-ink-3)]">
-      Not cited
-    </span>
-  )
 }
 
 function EngineLogos({ item }: { item: TrackedPrompt }): JSX.Element {
@@ -109,8 +89,8 @@ function RowMain({ item }: { item: TrackedPrompt }): JSX.Element {
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <TickBar value={item.score} ticks={16} showValue={false} />
           <CitedChip cited={item.cited} />
-          {item.intent && <MetaChip>{item.intent}</MetaChip>}
-          {item.promptType && <MetaChip>{item.promptType}</MetaChip>}
+          {item.intent && <PromptTag value={item.intent} />}
+          {item.promptType && <PromptTag value={item.promptType} />}
         </div>
       </div>
     </>
@@ -131,7 +111,7 @@ function RowNumbers({ item }: { item: TrackedPrompt }): JSX.Element {
   )
 }
 
-/** One tracked prompt. The header row toggles the per-engine answers panel. */
+/** One tracked prompt. The row opens the detail sheet on the right. */
 export function PromptRow(props: PromptRowProps): JSX.Element {
   const { item, slug } = props
   const [open, setOpen] = useState(false)
@@ -140,34 +120,26 @@ export function PromptRow(props: PromptRowProps): JSX.Element {
       <div
         role="button"
         tabIndex={0}
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen(true)}
         onKeyDown={e => {
-          if (e.key === 'Enter' || e.key === ' ') setOpen(o => !o)
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setOpen(true)
+          }
         }}
-        aria-expanded={open}
-        className="flex w-full cursor-pointer items-center gap-4 px-4 py-3.5 text-left transition-colors hover:bg-[var(--cat-hover)]"
+        aria-haspopup="dialog"
+        className="group flex w-full cursor-pointer items-center gap-4 px-4 py-3.5 text-left transition-colors hover:bg-[var(--cat-hover)]"
       >
         <RowMain item={item} />
         <RowNumbers item={item} />
         <EngineLogos item={item} />
         <RowActions {...props} />
-        <ChevronDown
+        <ChevronRight
           size={15}
-          className={`shrink-0 text-[var(--cat-ink-3)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className="shrink-0 text-[var(--cat-ink-3)] transition-transform duration-200 group-hover:translate-x-0.5"
         />
       </div>
-      <div
-        className={`grid transition-[grid-template-rows] duration-200 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
-      >
-        <div className="min-h-0 overflow-hidden">
-          <PromptResultsPanel results={item.results} slug={slug} trackId={item.id} />
-          {/* Drafting is a billed call, so it only runs when the row is open
-              and the user asks for it. */}
-          <div className="px-4 pb-3.5">
-            <AnswerBlockPanel slug={slug} trackId={item.id} promptText={item.prompt} />
-          </div>
-        </div>
-      </div>
+      {open && <PromptDetailSheet item={item} slug={slug} onClose={() => setOpen(false)} />}
     </div>
   )
 }

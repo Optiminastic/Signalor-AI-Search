@@ -62,6 +62,9 @@ function errText(error: unknown): string {
 function jobPhase(job: GithubJob | null, requested: boolean): FixPhase {
   if (!job) return requested ? 'working' : 'idle'
   if (job.status === 'pending' || job.status === 'running') return 'working'
+  // A decline is a hand-off to the user, not a failure — same phase as a CMS
+  // fix that has to be applied by hand.
+  if (job.status === 'declined') return 'manual'
   if (job.status === 'failed') return 'failed'
   return 'done'
 }
@@ -76,6 +79,9 @@ function announceJob(job: GithubJob, toastId: string): void {
     toast.success(`Pull request ${prLabel} opened with the fix.`, { id: toastId, action: viewPr })
   } else if (job.status === 'merged') {
     toast.success(`Pull request ${prLabel} merged.`, { id: toastId, action: viewPr })
+  } else if (job.status === 'declined') {
+    // Not an error toast: the agent did its job and correctly handed back.
+    toast('This one needs your input — see the task for what to add.', { id: toastId })
   } else if (job.status === 'failed') {
     toast.error(job.error_message || 'The fix job failed. Try again.', { id: toastId })
   } else if (job.status === 'closed') {

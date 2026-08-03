@@ -1,46 +1,54 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { GaSnapshotCard } from '@/features/catalyst/components/insights/GaSnapshotCard'
-import { MultiLineChart } from '@/features/catalyst/components/insights/MultiLineChart'
 import { TopDomainsCard } from '@/features/catalyst/components/insights/TopDomainsCard'
 import { TopEnginesCard } from '@/features/catalyst/components/insights/TopEnginesCard'
+import { sliceRecent, trendState } from '@/features/catalyst/components/insights/trend-series'
+import { TrendChart, TrendLegend } from '@/features/catalyst/components/insights/TrendChart'
+import {
+  TrendRangeTabs,
+  type TrendRange,
+} from '@/features/catalyst/components/insights/TrendRangeTabs'
 import { TaskStatCard } from '@/features/catalyst/components/tasks/TaskStatCard'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useInsights, type InsightsData } from '@/hooks/useInsights'
 
-function LegendDot({ color, children }: { color: string; children: string }): JSX.Element {
-  return (
-    <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-2)]">
-      <span className="h-2 w-2 rounded-full" style={{ background: color }} />
-      {children}
-    </span>
-  )
-}
-
+/**
+ * Weekly mention rate per engine, over a selectable window.
+ *
+ * Shares its shaping with the compact card above the prompt table — including
+ * the single-week padding, without which one week of data plotted a lone dot
+ * and no line.
+ */
 function TrendCard({ data }: { data: InsightsData }): JSX.Element {
+  const [range, setRange] = useState<TrendRange>(0)
+  const windowed = sliceRecent({ series: data.series, weeks: data.weeks }, range)
+  const state = trendState(
+    { isLoading: false, isError: false },
+    windowed.series.length,
+    windowed.weeks.length,
+  )
+
   return (
     <Card>
-      <CardHead title="AI citation activity" />
-      <div className="mb-1 flex flex-wrap items-center gap-3">
-        {data.series.map(s => (
-          <LegendDot key={s.key} color={s.color}>
-            {s.label}
-          </LegendDot>
-        ))}
-        <span className="ml-auto text-[11px] text-[var(--cat-ink-3)]">
-          Weekly brand mention rate per engine, %
-        </span>
+      {/* The series is `brand_mentioned` per week, not citations — the two are
+          deliberately different signals in this product, so the title says so. */}
+      <CardHead title="Brand mentions by model" />
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <TrendLegend series={windowed.series} />
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-[11px] text-[var(--cat-ink-3)]">
+            Weekly brand mention rate per engine
+          </span>
+          <TrendRangeTabs value={range} onChange={setRange} available={data.weeks.length} />
+        </div>
       </div>
-      {data.series.length === 0 ? (
-        <p className="py-8 text-center text-[12px] text-[var(--cat-ink-3)]">
-          Trend data appears after prompts have been checked across more than one week.
-        </p>
-      ) : (
-        <MultiLineChart series={data.series} xLabels={data.weeks} />
-      )}
+      <TrendChart state={state} series={windowed.series} weeks={windowed.weeks} />
     </Card>
   )
 }

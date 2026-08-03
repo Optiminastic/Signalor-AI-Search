@@ -44,6 +44,26 @@ function isActive(pathname: string, href: string, isIndex: boolean): boolean {
   return !isIndex && pathname.startsWith(`${href}/`)
 }
 
+interface ActiveArgs {
+  pathname: string
+  href: string
+  slug: string | undefined
+  alsoMatch?: string[]
+}
+
+/**
+ * Whether this entry represents the current page.
+ *
+ * On a slug-less page (/dashboard/brands, /dashboard/team) every brand-relative
+ * href collapses to '/dashboard', which then prefix-matched the current path and
+ * lit up the entire sidebar. Nothing brand-scoped can be active without a brand.
+ */
+function isNavActive({ pathname, href, slug, alsoMatch }: ActiveArgs): boolean {
+  if (!href.startsWith('/') && !slug) return false
+  if (isActive(pathname, resolveHref(href, slug), href === '')) return true
+  return (alsoMatch ?? []).some(sub => isActive(pathname, resolveHref(sub, slug), false))
+}
+
 function NavRight({
   collapsed,
   badge,
@@ -73,9 +93,7 @@ export function NavItem({
   const params = useParams()
   const slug = typeof params?.slug === 'string' ? params.slug : undefined
   const fullHref = resolveHref(href, slug)
-  const active =
-    isActive(pathname, fullHref, href === '') ||
-    (alsoMatch ?? []).some(sub => isActive(pathname, resolveHref(sub, slug), false))
+  const active = isNavActive({ pathname, href, slug, alsoMatch })
   // Reference-style selection: the active row lifts to an elevated white card;
   // inactive rows are muted and reveal a white pill on hover. All via surface
   // tokens so it stays correct in dark mode.

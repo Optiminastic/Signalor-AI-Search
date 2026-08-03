@@ -1,3 +1,7 @@
+'use client'
+
+import { useState } from 'react'
+
 import type { Brand, BrandStatus } from '@/features/catalyst/brands-data'
 
 export function StatusPill({ status }: { status: BrandStatus }): JSX.Element {
@@ -44,15 +48,40 @@ export function TickBar({
   )
 }
 
+/** The site's own favicon, falling back to a letter tile when it has none. */
+function BrandAvatar({ brand, tile }: { brand: Brand; tile: string }): JSX.Element {
+  const [failed, setFailed] = useState(false)
+  const domain = brand.url.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+  const base = `grid shrink-0 place-items-center overflow-hidden rounded-md ${tile}`
+
+  if (!domain || failed) {
+    return (
+      <span className={`${base} bg-[rgba(224,74,61,0.12)] font-semibold text-[#e04a3d] uppercase`}>
+        {brand.name[0]}
+      </span>
+    )
+  }
+  return (
+    <span className={`${base} bg-[var(--cat-bg)]`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+        alt=""
+        width={20}
+        height={20}
+        loading="lazy"
+        onError={() => setFailed(true)}
+        className="h-5 w-5 object-contain"
+      />
+    </span>
+  )
+}
+
 export function BrandIdentity({ brand, md = false }: { brand: Brand; md?: boolean }): JSX.Element {
   const tile = md ? 'h-10 w-10 text-[15px]' : 'h-9 w-9 text-[13px]'
   return (
     <div className="flex items-center gap-3">
-      <span
-        className={`grid shrink-0 place-items-center rounded-md bg-[rgba(224,74,61,0.12)] font-semibold text-[#e04a3d] uppercase ${tile}`}
-      >
-        {brand.name[0]}
-      </span>
+      <BrandAvatar brand={brand} tile={tile} />
       <div className="min-w-0">
         <p className="text-[13px] font-medium text-[var(--cat-ink)]">{brand.name}</p>
         <p className="text-[12px] text-[var(--cat-ink-3)]">{brand.url}</p>

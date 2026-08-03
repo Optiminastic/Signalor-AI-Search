@@ -1,22 +1,30 @@
 'use client'
 
-import NumberFlow from '@number-flow/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { MarketingShell } from '@/features/landing/components/MarketingShell'
 
 import { track } from '@/features/site/amplitude'
-import { Check, Clock, Crown, Rocket, Zap } from '@/features/site/components/icons'
+import { Clock, Crown, Rocket, Zap } from '@/features/site/components/icons'
 import { LandingFaq } from '@/features/site/components/landing/landing-faq'
 import {
-  AudienceToggle,
+  AudienceSwitch,
   type PricingAudience,
-} from '@/features/site/components/pricing/audience-toggle'
+} from '@/features/site/components/pricing/audience-switch'
+import { PlanCard } from '@/features/site/components/pricing/plan-card'
+import { PlanComparisonTable } from '@/features/site/components/pricing/plan-comparison-table'
+import {
+  AGENCY_COLUMNS,
+  AGENCY_COMPARISON,
+  BRAND_COLUMNS,
+  BRAND_COMPARISON,
+} from '@/features/site/lib/pricing-comparison'
 import { CurrencyToggle } from '@/features/site/components/pricing/currency-toggle'
 import { PricingHero } from '@/features/site/components/pricing/pricing-hero'
 import { PricingStatsSection } from '@/features/site/components/pricing/pricing-stats-section'
-import { ScreenHR } from '@/features/site/components/ui/intersection-diamonds'
+import { GridCornerHandles, GridHandle } from '@/features/site/components/landing/home-grid'
+import { HomeSectionHeader } from '@/features/site/components/landing/home-section-header'
 import { SignalorLoader } from '@/features/site/components/ui/signalor-loader'
 import { setAccountType as persistAccountType } from '@/features/site/lib/api/account'
 import { pingCheckoutStarted, pingPricingViewed } from '@/features/site/lib/api/drip'
@@ -30,7 +38,7 @@ import {
 } from '@/features/site/lib/api/payments'
 import { useSession } from '@/features/site/lib/auth-client'
 import { routes } from '@/features/site/lib/config'
-import { useCurrency, formatPrice } from '@/features/site/lib/hooks/use-currency'
+import { useCurrency } from '@/features/site/lib/hooks/use-currency'
 import {
   POST_CHECKOUT_REDIRECT_KEY,
   safeInternalReturnPath,
@@ -54,7 +62,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   ZAR: 'R',
 }
 
-type PlanCta = 'checkout' | 'contact'
+type PlanCta = 'checkout' | 'contact' | 'signup'
 
 interface PlanConfig {
   id: string
@@ -68,6 +76,8 @@ interface PlanConfig {
   icon: typeof Zap
   popular?: boolean
   features: string[]
+  /** Optional "Everything in X, plus:" lead-in, matching the home page cards. */
+  featuresLead?: string
   comingSoonFeatures?: string[]
   /** "checkout" → Dodo checkout (starter/pro only); "contact" → Contact Sales. */
   cta: PlanCta
@@ -81,6 +91,24 @@ const CHECKOUTABLE = new Set(['starter', 'pro'])
 // ── Individual flow ────────────────────────────────────────────────────────
 const PLANS: PlanConfig[] = [
   {
+    id: 'free',
+    label: 'Free',
+    price: 0,
+    period: '/month',
+    description: 'Try SignalorAI on your own site — no credit card required.',
+    icon: Clock,
+    // Not 'checkout': there is nothing to charge, and CHECKOUTABLE would send
+    // it to Contact Sales. Free goes straight to sign-up.
+    cta: 'signup',
+    ctaLabel: 'Start for free',
+    features: [
+      '50 tracked prompts included',
+      'Free GEO score & audit',
+      'Prioritized fix list preview',
+      'Setup in 2 minutes',
+    ],
+  },
+  {
     id: 'starter',
     label: 'Self-Serve Brand',
     price: 69.99,
@@ -88,6 +116,7 @@ const PLANS: PlanConfig[] = [
     description: 'Run it yourself — onboard, track, and improve your AI visibility.',
     icon: Zap,
     cta: 'checkout',
+    featuresLead: 'Everything in Free, plus:',
     features: [
       '1 brand / domain',
       '10 prompts to rank & track',
@@ -106,6 +135,7 @@ const PLANS: PlanConfig[] = [
     icon: Crown,
     popular: true,
     cta: 'checkout',
+    featuresLead: 'Everything in Self-Serve, plus:',
     features: [
       '1 brand / domain',
       '25 prompts to rank & track',
@@ -212,6 +242,29 @@ function PricingPageInner() {
   const [livePrices, setLivePrices] = useState<Record<string, DodoPlanPrice | null> | null>(null)
   const [audience, setAudience] = useState<PricingAudience>('individual')
   const { currency, ready: currencyReady, country: detectedCountry, selectCurrency } = useCurrency()
+
+  // Header prices for the comparison table. Derived from the same plan configs
+  // the cards use, so the two can never disagree; the table shows the static
+  // converted price rather than the live Dodo amount because a header is a
+  // reference point, not the thing being purchased.
+  const comparisonColumns = useMemo(() => {
+    const source = audience === 'agency' ? AGENCY_PLANS : PLANS
+    const cols = audience === 'agency' ? AGENCY_COLUMNS : BRAND_COLUMNS
+    const priceOf = (id: string): string => {
+      const plan = source.find(pl => pl.id === id)
+      if (!plan) return ''
+      if (plan.price === null) return 'Custom'
+      if (plan.price === 0) return 'Free'
+      // `decimals` and `locale` already live on the Currency object — INR wants
+      // 0 and en-IN grouping, so deriving them here would just duplicate that.
+      const amount = plan.price * currency.rate
+      return `${currency.symbol}${amount.toLocaleString(currency.locale, {
+        minimumFractionDigits: currency.decimals,
+        maximumFractionDigits: currency.decimals,
+      })} /mo`
+    }
+    return cols.map(c => ({ id: c.id, label: c.label, price: priceOf(c.id) }))
+  }, [audience, currency])
 
   useEffect(() => {
     getPlanPrices()
@@ -385,53 +438,45 @@ function PricingPageInner() {
         onboardingBanner={returnTo === routes.onboardingCompanyInfo}
       />
 
-      <ScreenHR />
-      <section className="bg-background relative px-6 py-14 lg:px-12 lg:py-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-muted-foreground text-[11px] font-medium tracking-[0.22em] uppercase">
-            [ plans ]
-          </p>
-          <h2 className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem]">
-            Pick the plan that{' '}
-            <span className="text-primary relative whitespace-nowrap">
-              matches your team
-              <span
-                className="border-primary/45 absolute right-0 -bottom-1 left-0 border-b-2 border-dashed"
-                aria-hidden
-              />
-            </span>
-          </h2>
-          <p className="text-accent-foreground mt-5 max-w-2xl text-base leading-relaxed font-light lg:text-lg">
-            See whether AI engines recommend you, ignore you, or recommend your competitors — and
-            fix it. Pick a single-brand plan, or manage every client brand as an agency.
-          </p>
-          <p className="sr-only">
-            SignalorAI measures whether ChatGPT, Gemini, Perplexity, Claude, and other AI engines
-            recommend your brand. The Self-Serve Brand plan covers one brand with ten tracked
-            prompts you run yourself. The Managed Growth Brand plan covers one brand with
-            twenty-five tracked prompts plus daily agency-style support from our team. Enterprise
-            adds custom prompt volume, multiple domains, and dedicated support. Agencies manage
-            multiple client brands from one workspace with a fifteen percent discount on every brand
-            onboarded.
-          </p>
+      <section id="plans" className="scroll-mt-20" aria-labelledby="pricing-plans-heading">
+        <div className="border-border mx-auto max-w-6xl border-x">
+          {/* Controls only — no second heading. The hero already makes this
+              exact pitch, and repeating it here ("Pick the plan that matches
+              your team") left a screen-height gap between two paragraphs
+              saying the same thing. */}
+          <div className="border-border relative border-t px-6 py-8">
+            <GridCornerHandles top />
+            <h2 id="pricing-plans-heading" className="sr-only">
+              Choose a plan
+            </h2>
+            <p className="sr-only">
+              SignalorAI measures whether ChatGPT, Gemini, Perplexity, Claude, and other AI engines
+              recommend your brand. The Self-Serve Brand plan covers one brand with ten tracked
+              prompts you run yourself. The Managed Growth Brand plan covers one brand with
+              twenty-five tracked prompts plus daily agency-style support from our team. Enterprise
+              adds custom prompt volume, multiple domains, and dedicated support. Agencies manage
+              multiple client brands from one workspace with a fifteen percent discount on every
+              brand onboarded.
+            </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-            <AudienceToggle
-              audience={audience}
-              onSelect={value => {
-                setAudience(value)
-                // Let a signed-in user switch their account type straight from
-                // the pricing toggle (best-effort; UI updates regardless).
-                const email = session?.user?.email
-                if (email) {
-                  persistAccountType(email, value).catch(() => {})
-                }
-              }}
-            />
-            <CurrencyToggle currency={currency} onSelect={selectCurrency} />
+            <div className="flex flex-col items-center gap-3">
+              <AudienceSwitch
+                audience={audience}
+                onSelect={value => {
+                  setAudience(value)
+                  // Let a signed-in user switch their account type straight from
+                  // the pricing toggle (best-effort; UI updates regardless).
+                  const email = session?.user?.email
+                  if (email) {
+                    persistAccountType(email, value).catch(() => {})
+                  }
+                }}
+              />
+              <CurrencyToggle currency={currency} onSelect={selectCurrency} />
+            </div>
           </div>
 
-          <div className="mt-8">
+          <div>
             {error ? (
               <div className="mx-auto mb-10 max-w-lg space-y-2">
                 <p className="border-destructive/25 bg-destructive/5 text-destructive rounded-none border px-4 py-3 text-center text-sm">
@@ -455,199 +500,85 @@ function PricingPageInner() {
               </div>
             ) : null}
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {(audience === 'individual' ? PLANS : AGENCY_PLANS).map(plan => {
-                const isContact = plan.cta === 'contact'
-                const isCustom = plan.price === null
-                const isLoading = loadingPlan === plan.id
-                // "Current plan" only makes sense for the checkout-able tiers.
-                const isCurrent = !isContact && currentPlanId === plan.id
+            <div className="border-border relative border-t">
+              <GridCornerHandles top />
+              <GridHandle className="-top-[3.5px] left-1/4 -ml-[3.5px] hidden xl:block" />
+              <GridHandle className="-top-[3.5px] left-2/4 -ml-[3.5px] hidden xl:block" />
+              <GridHandle className="-top-[3.5px] left-3/4 -ml-[3.5px] hidden xl:block" />
+              <div className="divide-border grid grid-cols-1 max-xl:divide-y md:grid-cols-2 md:max-xl:divide-x xl:grid-cols-4 xl:grid-rows-[auto_auto_auto_1fr] xl:divide-x">
+                {(audience === 'individual' ? PLANS : AGENCY_PLANS).map(plan => {
+                  const isContact = plan.cta === 'contact'
+                  const isCustom = plan.price === null
+                  const isLoading = loadingPlan === plan.id
+                  // "Current plan" only makes sense for the checkout-able tiers.
+                  const isCurrent = !isContact && currentPlanId === plan.id
 
-                // Live Dodo prices only exist for checkout-able plans; agency /
-                // enterprise cards use the static GBP price (or "Custom").
-                const live = livePrices?.[plan.id] ?? null
-                let displaySymbol: string
-                let displayCurrencyCode: string | null
-                let numericAmount: number
-                let isApprox: boolean
+                  // Live Dodo prices only exist for checkout-able plans; agency /
+                  // enterprise cards use the static GBP price (or "Custom").
+                  const live = livePrices?.[plan.id] ?? null
+                  let displaySymbol: string
+                  let displayCurrencyCode: string | null
+                  let numericAmount: number
+                  let isApprox: boolean
 
-                if (live) {
-                  const userCcy = currencyReady ? currency.code : null
-                  const localized =
-                    userCcy && live.prices_by_currency
-                      ? live.prices_by_currency[userCcy]
-                      : undefined
-                  const useLocal =
-                    localized !== undefined && userCcy && userCcy !== live.currency.toUpperCase()
-                  const ccy = useLocal && userCcy ? userCcy : live.currency.toUpperCase()
-                  const amount = useLocal && localized !== undefined ? localized : live.amount
-                  numericAmount = amount
-                  displaySymbol = CURRENCY_SYMBOLS[ccy] ?? ccy + ' '
-                  displayCurrencyCode = ccy
-                  isApprox = !!useLocal
-                } else {
-                  displaySymbol = currency.symbol
-                  displayCurrencyCode = currency.code
-                  numericAmount = isCustom ? 0 : (plan.price as number) * currency.rate
-                  isApprox = !isCustom && currencyReady && currency.code !== 'GBP'
-                }
+                  if (live) {
+                    const userCcy = currencyReady ? currency.code : null
+                    const localized =
+                      userCcy && live.prices_by_currency
+                        ? live.prices_by_currency[userCcy]
+                        : undefined
+                    const useLocal =
+                      localized !== undefined && userCcy && userCcy !== live.currency.toUpperCase()
+                    const ccy = useLocal && userCcy ? userCcy : live.currency.toUpperCase()
+                    const amount = useLocal && localized !== undefined ? localized : live.amount
+                    numericAmount = amount
+                    displaySymbol = CURRENCY_SYMBOLS[ccy] ?? ccy + ' '
+                    displayCurrencyCode = ccy
+                    isApprox = !!useLocal
+                  } else {
+                    displaySymbol = currency.symbol
+                    displayCurrencyCode = currency.code
+                    numericAmount = isCustom ? 0 : (plan.price as number) * currency.rate
+                    isApprox = !isCustom && currencyReady && currency.code !== 'GBP'
+                  }
 
-                const priceDecimals =
-                  displayCurrencyCode === 'INR' || displayCurrencyCode === 'JPY' ? 0 : 2
+                  const priceDecimals =
+                    displayCurrencyCode === 'INR' || displayCurrencyCode === 'JPY' ? 0 : 2
 
-                return (
-                  <div
-                    key={plan.id}
-                    className={cn(
-                      'relative flex flex-col rounded-none border p-8',
-                      isCurrent
-                        ? 'border-success/30 from-success to-success/40 ring-success/50 bg-gradient-to-br via-white shadow-[0_12px_40px_-12px_rgba(16,185,129,0.2)] ring-2'
-                        : plan.popular
-                          ? 'border-primary/20 from-primary/5 to-primary/5 ring-primary/40 bg-gradient-to-br via-white shadow-[0_12px_40px_-12px_rgba(224,74,61,0.2)] ring-2'
-                          : 'border-border bg-white',
-                    )}
-                  >
-                    {/* Plan name + badge. Reserve two lines of title height so
-                        the price row lines up across every card even when a
-                        label (e.g. "Managed Growth Brand") wraps to two lines. */}
-                    <div className="mb-3 flex min-h-[4.5rem] items-start justify-between">
-                      <h3 className="text-foreground text-3xl font-semibold tracking-tight">
-                        {plan.label}
-                      </h3>
-                      {isCurrent ? (
-                        <span className="bg-success rounded-full px-3 py-1 text-[11px] font-semibold text-white">
-                          Current Plan
-                        </span>
-                      ) : plan.popular ? (
-                        <span className="bg-success/10 text-success rounded-full px-3 py-1 text-[11px] font-semibold">
-                          Most Popular
-                        </span>
-                      ) : null}
-                    </div>
-
-                    {/* Price */}
-                    {isCustom ? (
-                      <>
-                        <div className="mb-1 flex items-baseline">
-                          <span className="text-foreground text-5xl font-bold tracking-tight">
-                            Custom
-                          </span>
-                        </div>
-                        <p className="text-muted-foreground mb-6 text-sm">
-                          Tailored to your prompt & domain needs
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <div className="mb-1 flex items-baseline gap-0.5">
-                          <span className="text-foreground text-2xl font-semibold">
-                            {displaySymbol}
-                          </span>
-                          <NumberFlow
-                            value={numericAmount}
-                            format={{
-                              minimumFractionDigits: priceDecimals,
-                              maximumFractionDigits: priceDecimals,
-                            }}
-                            className={cn(
-                              'text-5xl font-bold tracking-tight tabular-nums',
-                              live || currencyReady ? 'text-foreground' : 'text-foreground/40',
-                            )}
-                          />
-                        </div>
-                        <p className="text-muted-foreground mb-6 text-sm">
-                          /month
-                          {plan.priceNote ? ` \u00B7 ${plan.priceNote}` : ''}
-                          {live && isApprox
-                            ? ` \u00B7 approx. \u2014 billed in ${live.currency.toUpperCase()}`
-                            : isApprox && displayCurrencyCode
-                              ? ` \u00B7 approx. in ${displayCurrencyCode}`
-                              : ''}
-                        </p>
-                      </>
-                    )}
-
-                    {/* Description */}
-                    <p className="text-muted-foreground mb-6 text-[13px] leading-relaxed font-light">
-                      {plan.description}
-                    </p>
-
-                    {/* CTA button */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        isContact ? router.push(routes.contactSales) : handleSubscribe(plan.id)
-                      }
-                      disabled={(!!loadingPlan && !isContact) || isCurrent}
-                      className={cn(
-                        'mb-6 w-full rounded-none py-4 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70',
-                        isCurrent
-                          ? 'border-success from-success to-success border bg-gradient-to-t text-white shadow-lg shadow-emerald-500/25'
-                          : plan.popular
-                            ? 'border-primary/50 from-primary to-primary/80 shadow-primary/30 border bg-gradient-to-t text-white shadow-lg'
-                            : 'border-foreground from-foreground to-foreground/85 border bg-gradient-to-t text-white shadow-lg shadow-neutral-900/20',
-                      )}
-                    >
-                      {isLoading ? (
-                        <SignalorLoader size="sm" />
-                      ) : isCurrent ? (
-                        'Current Plan'
-                      ) : isContact ? (
-                        (plan.ctaLabel ?? 'Contact sales')
-                      ) : session ? (
-                        'Subscribe now'
-                      ) : (
-                        'Get started'
-                      )}
-                    </button>
-
-                    {/* Features */}
-                    <div className="border-border space-y-2.5 border-t pt-5">
-                      {plan.features.map(f => (
-                        <div key={f} className="flex items-center gap-3">
-                          <span
-                            className={cn(
-                              'grid h-5 w-5 shrink-0 place-content-center rounded-full border bg-white',
-                              isCurrent
-                                ? 'border-success'
-                                : plan.popular
-                                  ? 'border-primary'
-                                  : 'border-border',
-                            )}
-                          >
-                            <Check
-                              className={cn(
-                                'h-3 w-3',
-                                isCurrent
-                                  ? 'text-success'
-                                  : plan.popular
-                                    ? 'text-primary'
-                                    : 'text-muted-foreground',
-                              )}
-                              strokeWidth={2.5}
-                              aria-hidden
-                            />
-                          </span>
-                          <span className="text-foreground/80 text-sm">{f}</span>
-                        </div>
-                      ))}
-
-                      {plan.comingSoonFeatures && plan.comingSoonFeatures.length > 0 && (
-                        <div className="mt-2 space-y-2.5">
-                          {plan.comingSoonFeatures.map(f => (
-                            <div key={f} className="flex items-center gap-3">
-                              <span className="border-border grid h-5 w-5 shrink-0 place-content-center rounded-full border bg-white">
-                                <Clock className="text-muted-foreground h-3 w-3" aria-hidden />
-                              </span>
-                              <span className="text-muted-foreground text-sm">{f}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
+                  return (
+                    <PlanCard
+                      key={plan.id}
+                      plan={plan}
+                      displaySymbol={displaySymbol}
+                      displayCurrencyCode={displayCurrencyCode}
+                      formattedAmount={numericAmount.toLocaleString(currency.locale, {
+                        minimumFractionDigits: priceDecimals,
+                        maximumFractionDigits: priceDecimals,
+                      })}
+                      priceResolved={!!live || currencyReady}
+                      isApprox={isApprox}
+                      liveCurrency={live?.currency}
+                      isCustom={isCustom}
+                      isContact={isContact}
+                      isCurrent={isCurrent}
+                      isLoading={isLoading}
+                      anyLoading={!!loadingPlan}
+                      signedIn={!!session}
+                      onSelect={() => {
+                        if (plan.cta === 'signup') {
+                          router.push('/sign-up')
+                          return
+                        }
+                        if (isContact) {
+                          router.push(routes.contactSales)
+                          return
+                        }
+                        handleSubscribe(plan.id)
+                      }}
+                    />
+                  )
+                })}
+              </div>
             </div>
 
             <p className="text-muted-foreground mt-10 text-center text-[11px] font-medium">
@@ -661,16 +592,41 @@ function PricingPageInner() {
         </div>
       </section>
 
-      <ScreenHR />
+      {/* The comparison the homepage has always linked to. The cards answer
+          "which plan"; this answers "what exactly do I get", which is the
+          question that closes a considered purchase. */}
+      <section aria-labelledby="plan-comparison-heading" className="scroll-mt-20">
+        <div className="border-border mx-auto max-w-6xl border-x">
+          <div className="border-border relative border-t px-6 py-14 sm:py-16">
+            <GridCornerHandles top />
+            <HomeSectionHeader
+              eyebrow="Compare"
+              headingId="plan-comparison-heading"
+              title="Full plan comparison"
+              description="Every capability, side by side. A dash means the plan does not include it."
+            />
+          </div>
+          <div className="border-border bg-card border-t">
+            <PlanComparisonTable
+              columns={comparisonColumns}
+              sections={audience === 'agency' ? AGENCY_COMPARISON : BRAND_COMPARISON}
+              featuredId={audience === 'agency' ? 'agency-account' : 'pro'}
+            />
+          </div>
+        </div>
+      </section>
+
       <PricingStatsSection />
 
-      <LandingFaq
-        sectionId="pricing-faq"
-        headingId="pricing-faq-heading"
-        heading="Pricing FAQs"
-        description="Plans, billing, and what happens after you subscribe."
-        items={[...PRICING_FAQ_ITEMS]}
-      />
+      <div className="border-border mx-auto max-w-6xl border-x">
+        <LandingFaq
+          sectionId="pricing-faq"
+          headingId="pricing-faq-heading"
+          heading="Pricing FAQs"
+          description="Plans, billing, and what happens after you subscribe."
+          items={[...PRICING_FAQ_ITEMS]}
+        />
+      </div>
     </MarketingShell>
   )
 }

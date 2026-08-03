@@ -65,8 +65,44 @@ function Signals({ report }: { report: EntityResolution }): JSX.Element | null {
  *
  * Probed on click: it asks every engine live and costs one call each.
  */
+function buttonLabel(isProbing: boolean, hasReport: boolean): string {
+  if (isProbing) return 'Checking engines…'
+  return hasReport ? 'Re-check' : 'Check name recognition'
+}
+
+interface OutcomeProps {
+  report: EntityResolution | null
+  isError: boolean
+}
+
+/** Whatever the last probe has to say: an error, a silent run, or a verdict. */
+function ProbeOutcome({ report, isError }: OutcomeProps): JSX.Element | null {
+  const note = 'mt-2 text-[12px] text-[var(--cat-ink-2)]'
+  if (isError) {
+    return <p className={note}>Could not reach the engines just now. Try again in a moment.</p>
+  }
+  if (!report) return null
+  // Zero answers is a real result, not a no-op. Without this the card rendered
+  // nothing and the button looked dead.
+  if (report.responses === 0) {
+    return (
+      <p className={note}>
+        No engine answered in time. Nothing to report yet — try again in a moment.
+      </p>
+    )
+  }
+  return (
+    <>
+      <Verdict report={report} />
+      <Signals report={report} />
+    </>
+  )
+}
+
 export function EntityResolutionCard({ slug }: { slug: string | undefined }): JSX.Element {
-  const { report, probe, isProbing, isError } = useEntityResolution(slug)
+  const { report, mayProbe, isLoading, probe, isProbing, isError } = useEntityResolution(slug)
+  const cooling = Boolean(report) && !mayProbe
+  const label = buttonLabel(isProbing, Boolean(report))
 
   return (
     <Card>
@@ -78,25 +114,15 @@ export function EntityResolutionCard({ slug }: { slug: string | undefined }): JS
       <div className="mt-2">
         <PrimaryButton
           icon={isProbing ? Loader2 : Eye}
-          disabled={isProbing || !slug}
+          disabled={isProbing || isLoading || !slug || cooling}
           onClick={probe}
+          title={cooling ? 'Checked recently. Re-check available later.' : undefined}
         >
-          {isProbing ? 'Checking engines…' : 'Check name recognition'}
+          {label}
         </PrimaryButton>
       </div>
 
-      {isError && (
-        <p className="mt-2 text-[12px] text-[var(--cat-ink-2)]">
-          Could not reach the engines just now. Try again in a moment.
-        </p>
-      )}
-
-      {report && report.responses > 0 && (
-        <>
-          <Verdict report={report} />
-          <Signals report={report} />
-        </>
-      )}
+      <ProbeOutcome report={report} isError={isError} />
     </Card>
   )
 }

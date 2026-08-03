@@ -16,6 +16,8 @@ export const queryKeys = {
     competitors: (slug: string) => ['catalyst', 'competitors', slug] as const,
     brandProfile: (orgSlug: string) => ['catalyst', 'brand-profile', orgSlug] as const,
     prompts: (slug: string) => ['catalyst', 'prompts', slug] as const,
+    entityResolution: (slug: string | undefined) =>
+      ['catalyst', 'entity-resolution', slug] as const,
     promptResult: (slug: string, trackId: number, resultId: number) =>
       ['catalyst', 'prompt-result', slug, trackId, resultId] as const,
     recommendations: (slug: string) => ['catalyst', 'recommendations', slug] as const,

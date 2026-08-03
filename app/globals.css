@@ -116,6 +116,31 @@
       transform: translateY(-8px);
     }
   }
+  /* Word-by-word entrance for the hero headline (`animate-rise-in`). Each word
+     sets its own animation-delay to stagger the reveal. */
+  --animate-rise-in: rise-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.4em);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* Slow top-to-bottom drift for the homepage gutter glyph streams
+     (`animate-stream`). Works on a block containing two identical copies:
+     sliding from -50% to 0 loops seamlessly. */
+  --animate-stream: stream 90s linear infinite;
+  @keyframes stream {
+    from {
+      transform: translateY(-50%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -900,9 +925,35 @@
 .cat-stagger > *:nth-child(n + 7) {
   animation-delay: 0.32s;
 }
+/* Right-side detail sheet: the scrim fades, the panel slides in from the edge. */
+@keyframes cat-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes cat-sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.cat-scrim {
+  animation: cat-scrim-in 0.18s ease-out both;
+}
+.cat-sheet {
+  animation: cat-sheet-in 0.26s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cat-rise,
-  .cat-stagger > * {
+  .cat-stagger > *,
+  .cat-scrim,
+  .cat-sheet {
     animation: none;
   }
 }

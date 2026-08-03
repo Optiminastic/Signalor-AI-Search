@@ -15,8 +15,24 @@ import { getActions, type UserAction } from '@/lib/api/analyzer'
 import { syncActions } from '@/lib/api/tasks'
 import { FileCheck2, FileClock, FileText, Flag } from '@/lib/icons'
 
-function priorityOf(points: number | null | undefined): Priority {
-  const p = points ?? 0
+/**
+ * The recommendation's own priority when we have it, falling back to the points
+ * heuristic. Points are an XP reward, not an urgency signal, so deriving
+ * priority from them alone made almost every task read "High".
+ */
+function priorityOf(action: UserAction): Priority {
+  switch ((action.priority || '').toLowerCase()) {
+    case 'critical':
+    case 'high':
+      return 'High'
+    case 'medium':
+      return 'Medium'
+    case 'low':
+      return 'Low'
+    default:
+      break
+  }
+  const p = action.points_value ?? 0
   if (p >= 8) return 'High'
   if (p >= 4) return 'Medium'
   return 'Low'
@@ -37,9 +53,11 @@ function toTask(action: UserAction, project: ProjectRef): TaskItem {
     description: action.description,
     assigneeEmail: action.assignee_email ?? '',
     due: formatTaskDate(action.created_at),
-    priority: priorityOf(action.points_value),
+    priority: priorityOf(action),
     progress: progressOf(action.status),
     recommendationId: action.recommendation ?? undefined,
+    signal: action.attribution?.signal ?? '',
+    effect: action.attribution?.effect ?? '',
   }
 }
 

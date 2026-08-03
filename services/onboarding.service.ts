@@ -141,15 +141,33 @@ function orgIdFromConflict(data: unknown): number | undefined {
   return parsed.success ? parsed.data.organization.id : undefined
 }
 
+/**
+ * Prompts to fall back on when generation fails.
+ *
+ * Deliberately **not** branded. The previous set asked "What is <brand> and what
+ * do they do?", "How much does <brand> cost?", "<brand> reviews and reputation".
+ * Those score ~100% visibility and measure nothing: an engine handed the brand
+ * name will of course repeat it. The whole point of GEO tracking is the opposite
+ * question — when a buyer who has never heard of you describes their *problem*,
+ * do you get cited?
+ *
+ * These are problem-first and category-first, so a 0% score is real information
+ * and a rising score is real progress. Generic by necessity because a failed
+ * generation means we know nothing about the brand beyond its name — the backend
+ * generator produces far sharper, niche-specific prompts and is always preferred.
+ */
 function fallbackPrompts(brandName: string): string[] {
-  const brand = brandName.trim() || 'your brand'
-  return [
-    `What is ${brand} and what do they do?`,
-    `Is ${brand} a good choice for small businesses?`,
-    `What are the best alternatives to ${brand}?`,
-    `How much does ${brand} cost?`,
-    `${brand} reviews and reputation`,
+  const brand = brandName.trim()
+  const prompts = [
+    'What are the best tools for this in 2026?',
+    'How do I choose between the options in this category?',
+    'What should I look for when evaluating a provider?',
+    'Which platform do experts recommend for a small team?',
+    'How do I get started with this?',
   ]
+  // One branded prompt is worth keeping as a baseline — if an engine cannot even
+  // resolve the brand name, no amount of category ranking will help.
+  return brand ? [...prompts, `What is ${brand}?`] : prompts
 }
 
 /**

@@ -1,16 +1,12 @@
 import {
   IconAppsFilled,
-  IconBugFilled,
-  IconChartPieFilled,
-  IconEyeFilled,
   IconLayoutGridFilled,
   IconLinkFilled,
   IconMessageCircleFilled,
   IconPencilFilled,
-  IconRosetteDiscountCheckFilled,
+  IconRadarFilled,
   IconShoppingCartFilled,
   IconSquareRoundedCheckFilled,
-  IconUsersGroup,
 } from '@tabler/icons-react'
 import type { TablerIcon } from '@tabler/icons-react'
 
@@ -90,15 +86,20 @@ export const MAIN_NAV: NavEntry[] = [
   { icon: IconLayoutGridFilled, label: 'Overview', href: '', alsoMatch: ['pillars', 'geo'] },
 ]
 
-// Visibility now hosts Prompt Tracking, Sitemap and Analytics as in-page tabs
-// (see MonitoringTabs), so they are no longer separate sidebar entries.
-export const MONITORING_NAV: NavEntry[] = [
-  { icon: IconEyeFilled, label: 'Visibility', href: 'visibility' },
-  { icon: IconChartPieFilled, label: '360 Insights', href: 'insights' },
-  { icon: IconBugFilled, label: 'Crawler Logs', href: 'crawlers' },
-  { icon: IconUsersGroup, label: 'Competitors', href: 'competitors' },
-  { icon: IconRosetteDiscountCheckFilled, label: 'Brand Profile', href: 'brand-profile' },
-]
+/**
+ * One flat entry, not a group. Everything that used to be a child of Monitor is
+ * now a tab on the same surface (see MonitoringTabs), so the rail stays one word
+ * deep and the sub-pages are one click apart instead of behind a disclosure.
+ *
+ * `alsoMatch` keeps the item lit on the standalone routes, which still exist for
+ * deep links and for the competitor detail page.
+ */
+export const SIGNALS_NAV: NavEntry = {
+  icon: IconRadarFilled,
+  label: 'Signals',
+  href: 'visibility',
+  alsoMatch: ['insights', 'crawlers', 'competitors', 'brand-profile', 'sitemap', 'prompt-tracker'],
+}
 
 // Actions (the plan + tasks board) stays a top-level entry so its open-task
 // badge is always visible — it's the core "do the work" surface.

@@ -119,7 +119,9 @@ export function PromptCoverageCard({ slug }: { slug: string | undefined }): JSX.
           <>
             <Headline data={data} />
             <Concentration data={data} />
-            <ul className="mt-2">
+            {/* Unbounded, this list ran to every tracked prompt and set the
+                height of the whole grid row. */}
+            <ul className="mt-2 max-h-[320px] overflow-y-auto">
               {data.rows.map(row => (
                 <CoverageRow key={row.prompt_id} row={row} />
               ))}

@@ -8,6 +8,7 @@ import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
 import { ResponseText } from '@/features/catalyst/components/prompt-tracker/ResponseText'
 import type { PromptEngineResult } from '@/features/catalyst/prompt-tracker-data'
 import { formatTaskDate } from '@/features/catalyst/tasks-data'
+import { useBrandTerms } from '@/hooks/useBrandTerms'
 import { getPromptResult } from '@/lib/api/prompts'
 import { Loader2, X } from '@/lib/icons'
 import { queryKeys } from '@/lib/query-keys'
@@ -18,6 +19,22 @@ interface ResponseDialogProps {
   slug: string
   trackId: number
   onClose: () => void
+}
+
+/** Explains the two highlight tints so the colours are not a guessing game. */
+function HighlightLegend(): JSX.Element {
+  return (
+    <div className="flex items-center gap-3 text-[10px] text-[var(--cat-ink-3)]">
+      <span className="flex items-center gap-1">
+        <span className="h-2 w-2 rounded-[2px] bg-[rgba(47,190,126,0.45)]" />
+        Site cited
+      </span>
+      <span className="flex items-center gap-1">
+        <span className="h-2 w-2 rounded-[2px] bg-[rgba(224,74,61,0.3)]" />
+        Brand mentioned
+      </span>
+    </div>
+  )
 }
 
 function DialogHeader({
@@ -36,6 +53,9 @@ function DialogHeader({
             </p>
           )}
         </div>
+      </div>
+      <div className="ml-auto hidden sm:block">
+        <HighlightLegend />
       </div>
       <button
         type="button"
@@ -66,6 +86,7 @@ function DialogBody({ result, slug, trackId }: Omit<ResponseDialogProps, 'onClos
     queryFn: () => getPromptResult(slug, trackId, result.id),
     staleTime: 5 * 60_000,
   })
+  const terms = useBrandTerms(result.citations)
   const fullText = data?.response_text ?? result.snippet
 
   if (!fullText) {
@@ -75,7 +96,7 @@ function DialogBody({ result, slug, trackId }: Omit<ResponseDialogProps, 'onClos
   }
   return (
     <>
-      <ResponseText text={fullText} />
+      <ResponseText text={fullText} terms={terms} />
       {isLoading && !data && (
         <p className="mt-3 flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-3)]">
           <Loader2 size={12} className="animate-spin" />
