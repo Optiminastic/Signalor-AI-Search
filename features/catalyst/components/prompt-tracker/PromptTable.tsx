@@ -27,8 +27,8 @@ const COLUMNS: readonly Column[] = [
   { key: null, label: 'Type' },
   { key: null, label: 'Sentiment' },
   { key: 'mentions', label: 'Mentions' },
-  { key: null, label: 'Engines' },
-  { key: 'createdAt', label: 'Created' },
+  { key: null, label: 'Engines', className: 'w-px' },
+  { key: 'createdAt', label: 'Created', className: 'w-px' },
   { key: null, label: '' },
 ]
 
@@ -191,7 +191,7 @@ function PromptTableRow({ item, busy, onRecheck, onRemove, onOpen }: RowActionsP
         <SentimentCell value={item.sentiment} />
       </td>
       <td className={`${TD} text-[13px] text-[var(--cat-ink-2)] tabular-nums`}>{item.mentions}</td>
-      <td className={TD}>
+      <td className={`${TD} whitespace-nowrap`}>
         <EngineCell item={item} />
       </td>
       <td className={`${TD} text-[12px] whitespace-nowrap text-[var(--cat-ink-3)]`}>
@@ -241,7 +241,7 @@ export function PromptTable({
 
   return (
     <div className="cat-rise overflow-x-auto rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
-      <table className="w-full min-w-[900px] border-collapse">
+      <table className="w-full min-w-[980px] border-collapse">
         <TableHead sort={sort} asc={asc} onSort={handleSort} />
         <tbody>
           {rows.map(item => (

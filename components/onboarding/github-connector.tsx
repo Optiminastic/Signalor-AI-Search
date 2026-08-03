@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { GithubMark } from '@/components/GithubMark'
 import { useOrgGithubConnection } from '@/hooks/useOrgGithubConnection'
 import { CheckCircle2, Loader2, Unlink2 } from '@/lib/icons'
@@ -8,10 +10,18 @@ import { useOnboardingWizardStore } from '@/stores/useOnboardingWizardStore'
 const CARD = 'shadow-input rounded-xl border border-black/8 bg-white p-5'
 
 /** Onboarding connect flow — the shared org GitHub hook, wired to advance the
- *  wizard's "app installed" step when the connection resolves. */
+ *  wizard's "app installed" step once the connection has a target repo. */
 function useGithubConnect(email: string): ReturnType<typeof useOrgGithubConnection> {
   const setAppInstalled = useOnboardingWizardStore(s => s.setAppInstalled)
-  return useOrgGithubConnection({ email, onConnectedChange: setAppInstalled })
+  const conn = useOrgGithubConnection({ email })
+  // Connected is not enough: an install that granted every repo with no clear
+  // match has no target, so no fix PR can be opened. The step stays incomplete
+  // until a repo is picked.
+  const ready = conn.connected && !conn.needsRepoChoice && Boolean(conn.repo)
+  useEffect(() => {
+    setAppInstalled(ready)
+  }, [ready, setAppInstalled])
+  return conn
 }
 
 function LoadingCard(): JSX.Element {
@@ -52,6 +62,65 @@ function ConnectedCard({ repo, onUnlink, unlinking }: ConnectedCardProps): JSX.E
           Wrong repo? Disconnect &amp; reconnect
         </button>
       </div>
+    </div>
+  )
+}
+
+interface ChooseRepoCardProps {
+  repositories: string[]
+  reason: string
+  onSelect: (repo: string) => void
+  selecting: boolean
+}
+
+/**
+ * Shown when the install granted several repos and none clearly matches the
+ * brand — typically because the user picked "All repositories" on GitHub.
+ *
+ * The step stays incomplete until a repo is chosen. Opening a fix PR against a
+ * guessed repository is worse than opening none, so this is a hard gate rather
+ * than a suggestion.
+ */
+function ChooseRepoCard({
+  repositories,
+  reason,
+  onSelect,
+  selecting,
+}: ChooseRepoCardProps): JSX.Element {
+  return (
+    <div className={`${CARD} space-y-3`}>
+      <div className="flex items-start gap-3">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#1f2328] text-white">
+          <GithubMark size={18} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-foreground text-[13px] font-semibold">Choose the repository</p>
+          <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">
+            {reason || 'Pick the repository that holds your website, so fixes open there.'}
+          </p>
+        </div>
+      </div>
+      <select
+        defaultValue=""
+        disabled={selecting}
+        onChange={e => e.target.value && onSelect(e.target.value)}
+        aria-label="Repository for auto-fix pull requests"
+        className="text-foreground h-10 w-full rounded-md border border-black/10 bg-white px-3 text-[13px] disabled:opacity-60"
+      >
+        <option value="" disabled>
+          {selecting ? 'Saving…' : 'Select a repository…'}
+        </option>
+        {repositories.map(repo => (
+          <option key={repo} value={repo}>
+            {repo}
+          </option>
+        ))}
+      </select>
+      {repositories.length === 0 && (
+        <p className="text-xs text-neutral-500">
+          The install granted no repositories. Reconnect and grant access to at least one.
+        </p>
+      )}
     </div>
   )
 }
@@ -127,6 +196,16 @@ function ConnectCard({ onConnect, error, notConfigured }: ConnectCardProps): JSX
 export function GithubConnector({ email }: { email: string }): JSX.Element {
   const s = useGithubConnect(email)
   if (s.loading) return <LoadingCard />
+  // Connected but no target repo: force the choice before the step can complete.
+  if (s.connected && (s.needsRepoChoice || !s.repo))
+    return (
+      <ChooseRepoCard
+        repositories={s.repositories}
+        reason={s.repoReason}
+        onSelect={s.selectRepo}
+        selecting={s.selectingRepo}
+      />
+    )
   if (s.connected)
     return <ConnectedCard repo={s.repo} onUnlink={s.unlink} unlinking={s.unlinking} />
   if (s.connecting) return <ConnectingCard onCancel={s.cancel} />
