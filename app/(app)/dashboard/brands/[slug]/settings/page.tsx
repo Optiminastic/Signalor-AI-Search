@@ -1,7 +1,4 @@
-import { notFound } from 'next/navigation'
-
-import { getBrand } from '@/features/catalyst/brands-data'
-import { BrandSettingsView } from '@/features/catalyst/components/brands/BrandSettingsView'
+import { BrandSettingsLoader } from '@/features/catalyst/components/brands/BrandSettingsLoader'
 import { CatalystShell } from '@/features/catalyst/components/CatalystShell'
 
 export default async function BrandSettingsPage({
@@ -10,12 +7,13 @@ export default async function BrandSettingsPage({
   params: Promise<{ slug: string }>
 }): Promise<JSX.Element> {
   const { slug } = await params
-  const brand = getBrand(slug)
-  if (!brand) notFound()
 
+  // Brands live behind the authenticated API, so the lookup runs client-side.
+  // Resolving it here meant matching against a build-time demo list, which no
+  // real brand appeared in — every gear icon 404'd.
   return (
     <CatalystShell>
-      <BrandSettingsView brand={brand} />
+      <BrandSettingsLoader slug={slug} />
     </CatalystShell>
   )
 }

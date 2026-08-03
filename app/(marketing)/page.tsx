@@ -13,16 +13,15 @@ import {
 } from '@/features/site/lib/seo'
 import { HomeCta } from '@/features/site/components/landing/home-cta'
 import { HomeFaq } from '@/features/site/components/landing/home-faq'
-import { HomeFeatureShowcase } from '@/features/site/components/landing/home-feature-showcase'
 import { HomeFeatures } from '@/features/site/components/landing/home-features'
 import { HomeHero } from '@/features/site/components/landing/home-hero'
 import { HomeHowItWorks } from '@/features/site/components/landing/home-how-it-works'
 import { HomeIntegrations } from '@/features/site/components/landing/home-integrations'
 import { HomeLogoCloud } from '@/features/site/components/landing/home-logo-cloud'
-import { HomePricing } from '@/features/site/components/landing/home-pricing'
-import { HomeStats } from '@/features/site/components/landing/home-stats'
+import { HomeSpotlights } from '@/features/site/components/landing/home-spotlights'
 import { HomeFooter } from '@/features/site/components/landing/home-footer'
-import { HomeTestimonials } from '@/features/site/components/landing/home-testimonials'
+// import { HomeGutterMarks } from '@/features/site/components/landing/home-gutter-marks'
+import { HomeVsClaude } from '@/features/site/components/landing/home-vs-claude'
 
 const HOMEPAGE_FAQ = [
   {
@@ -100,17 +99,17 @@ export default function HomePage(): JSX.Element {
           <LandingNav />
         </div>
       </header>
-      <main>
+      <main className="relative">
+        {/* Gutter ASCII streams — temporarily off. */}
+        {/* <HomeGutterMarks /> */}
         <HomeHero />
         <div className="border-border mx-auto max-w-6xl border-x">
           <HomeLogoCloud />
+          <HomeVsClaude />
           <HomeFeatures />
-          <HomeFeatureShowcase />
+          <HomeSpotlights />
           <HomeHowItWorks />
-          <HomeStats />
-          <HomeTestimonials />
           <HomeIntegrations />
-          <HomePricing />
           <HomeFaq items={HOMEPAGE_FAQ} />
         </div>
         <HomeCta />

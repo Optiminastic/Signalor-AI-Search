@@ -97,35 +97,18 @@ function AutopilotIllo(): JSX.Element {
 }
 
 const MINI_FEATURES = [
-  {
-    icon: Zap,
-    title: 'llms.txt & crawler checks',
-    description: 'Validates llms.txt and robots directives for GPTBot, ClaudeBot, and friends.',
-  },
-  {
-    icon: Radar,
-    title: 'AI crawler analytics',
-    description: 'Watch AI bots read your pages in real time, page by page.',
-  },
-  {
-    icon: RefreshCw,
-    title: 'Scheduled re-audits',
-    description: 'Re-score on a cadence you choose and catch drift early.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'E-E-A-T signals',
-    description: 'Trust markers scored across all six GEO pillars.',
-  },
+  { icon: Zap, title: 'llms.txt & crawler checks' },
+  { icon: Radar, title: 'AI crawler analytics' },
+  { icon: RefreshCw, title: 'Scheduled re-audits' },
+  { icon: ShieldCheck, title: 'E-E-A-T signals' },
 ] as const
 
 interface SpotlightCellProps {
   title: React.ReactNode
-  description: string
   children: React.ReactNode
 }
 
-function SpotlightCell({ title, description, children }: SpotlightCellProps): JSX.Element {
+function SpotlightCell({ title, children }: SpotlightCellProps): JSX.Element {
   return (
     <div className="group bg-card flex flex-col px-6 py-12 sm:px-10">
       <div className={cn(HOME_WELL, 'flex min-h-56 flex-1 items-center justify-center')}>
@@ -134,9 +117,6 @@ function SpotlightCell({ title, description, children }: SpotlightCellProps): JS
       <h3 className="text-foreground mt-8 text-center text-base font-semibold tracking-tight sm:text-lg">
         {title}
       </h3>
-      <p className="text-muted-foreground mx-auto mt-2 max-w-sm text-center text-sm leading-relaxed">
-        {description}
-      </p>
     </div>
   )
 }
@@ -161,14 +141,10 @@ export function HomeFeatureShowcase(): JSX.Element {
                 Every engine, one view
               </>
             }
-            description="ChatGPT, Claude, Gemini, Perplexity, Copilot, and Google AI Overviews — tracked side by side, so a gap in one engine never hides behind a win in another."
           >
             <EngineCoverageIllo />
           </SpotlightCell>
-          <SpotlightCell
-            title="Runs on autopilot"
-            description="Prompts re-run weekly. Every new citation, drop, and suggested fix lands in your queue automatically — no babysitting."
-          >
+          <SpotlightCell title="Runs on autopilot">
             <AutopilotIllo />
           </SpotlightCell>
         </div>
@@ -179,15 +155,12 @@ export function HomeFeatureShowcase(): JSX.Element {
         <GridHandle className="-top-[3.5px] left-1/2 -ml-[3.5px] hidden lg:block" />
         <GridHandle className="-top-[3.5px] left-3/4 -ml-[3.5px] hidden lg:block" />
         <div className="divide-border grid grid-cols-1 max-lg:divide-y sm:max-lg:grid-cols-2 lg:grid-cols-4 lg:divide-x">
-          {MINI_FEATURES.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="bg-card px-6 py-8 sm:px-8">
+          {MINI_FEATURES.map(({ icon: Icon, title }) => (
+            <div key={title} className="bg-card px-6 py-6 sm:px-8">
               <div className="flex items-center gap-2">
                 <Icon className="text-primary h-4 w-4" strokeWidth={2} aria-hidden />
                 <h3 className="text-foreground text-sm font-semibold">{title}</h3>
               </div>
-              <p className="text-muted-foreground mt-2 text-[13px] leading-relaxed">
-                {description}
-              </p>
             </div>
           ))}
         </div>

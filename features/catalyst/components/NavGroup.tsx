@@ -62,6 +62,9 @@ export function NavGroup({ icon, label, items, collapsed }: NavGroupProps): JSX.
   const params = useParams()
   const slug = typeof params?.slug === 'string' ? params.slug : undefined
   const childActive = items.some(item => {
+    // Same guard as NavItem: without a slug these all resolve to '/dashboard'
+    // and would mark every group active on brand-less pages.
+    if (!item.href.startsWith('/') && !slug) return false
     const full = resolveHref(item.href, slug)
     return pathname === full || pathname.startsWith(`${full}/`)
   })

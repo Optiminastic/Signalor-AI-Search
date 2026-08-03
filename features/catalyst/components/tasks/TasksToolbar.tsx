@@ -1,10 +1,8 @@
-import { TaskStatusTabs } from '@/features/catalyst/components/tasks/TaskStatusTabs'
 import { TasksViewToggle } from '@/features/catalyst/components/tasks/TasksViewToggle'
 import { TaskToolbarActions } from '@/features/catalyst/components/tasks/TaskToolbarActions'
-import type { StatusTab } from '@/features/catalyst/tasks-data'
 import { Search } from '@/lib/icons'
 
-export function TasksToolbar({ tabs }: { tabs: StatusTab[] }): JSX.Element {
+export function TasksToolbar(): JSX.Element {
   return (
     <div className="cat-rise flex shrink-0 flex-wrap items-center gap-2 border-b border-[var(--cat-border)] pb-3">
       <div className="relative">
@@ -18,9 +16,6 @@ export function TasksToolbar({ tabs }: { tabs: StatusTab[] }): JSX.Element {
         />
       </div>
       <TasksViewToggle />
-      <div className="hidden lg:block">
-        <TaskStatusTabs tabs={tabs} />
-      </div>
       <div className="ml-auto">
         <TaskToolbarActions />
       </div>

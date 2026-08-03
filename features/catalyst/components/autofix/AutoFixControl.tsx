@@ -1,4 +1,5 @@
 import { GithubMark } from '@/components/GithubMark'
+import { BRAND_SOFT, BRAND_STRONG } from '@/features/catalyst/constants'
 import type { FixOutcome, FixState } from '@/hooks/useAutoFix'
 import { Check, Loader2, Zap } from '@/lib/icons'
 
@@ -53,13 +54,18 @@ function ActionButton({ state, onFix }: AutoFixControlProps): JSX.Element {
   )
 }
 
+/**
+ * Brand-soft chip, not a solid fill: this repeats on every row, and the solid
+ * brand button is reserved for the page's single primary CTA (Create Task).
+ * Same treatment as the active nav item — recognisably brand, quiet in bulk.
+ */
 function FixButton({ onFix }: { onFix: () => void }): JSX.Element {
   return (
     <button
       type="button"
       onClick={onFix}
-      className="inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white"
-      style={{ background: '#e04a3d' }}
+      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-transparent px-3 text-[12px] font-semibold transition-colors hover:border-[rgba(224,74,61,.25)]"
+      style={{ background: BRAND_SOFT, color: BRAND_STRONG }}
     >
       <Zap size={13} />
       Auto fix

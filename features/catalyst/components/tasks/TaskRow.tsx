@@ -1,87 +1,62 @@
 import { useViewTransitionNavigate } from '@/components/providers/view-transition-provider'
 import { useTaskFix } from '@/features/catalyst/components/autofix/AutoFixContext'
 import { AutoFixControl } from '@/features/catalyst/components/autofix/AutoFixControl'
-import { AssigneeStack } from '@/features/catalyst/components/tasks/AssigneeStack'
 import { PriorityTag } from '@/features/catalyst/components/tasks/PriorityTag'
-import { ProgressCell } from '@/features/catalyst/components/tasks/ProgressCell'
+import { SignalTag } from '@/features/catalyst/components/tasks/SignalTag'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
 import { useBrandPath } from '@/hooks/useBrandPath'
 
 export interface TaskRowProps {
   row: TaskItem
-  /** Admin sees the assign dropdown; others see the assignee read-only. */
-  canAssign: boolean
-  /** Emails assignable by the admin (owner + members). */
-  assignableEmails: string[]
-  onAssign: (taskId: number, assigneeEmail: string) => void
   onToggleDone: (taskId: number, done: boolean) => void
   busy: boolean
 }
 
-function AssignControl({
-  row,
-  assignableEmails,
-  onAssign,
-  busy,
-}: Pick<TaskRowProps, 'row' | 'assignableEmails' | 'onAssign' | 'busy'>): JSX.Element {
-  return (
-    <select
-      value={row.assigneeEmail}
-      disabled={busy}
-      onChange={e => onAssign(row.taskId, e.target.value)}
-      className="h-8 w-full rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-2 text-[12px] font-medium text-[var(--cat-ink-2)] outline-none disabled:opacity-60"
-    >
-      <option value="">Unassigned</option>
-      {assignableEmails.map(email => (
-        <option key={email} value={email}>
-          {email}
-        </option>
-      ))}
-    </select>
-  )
-}
-
+/**
+ * Task name with the attribution sentence beneath it — the row now answers
+ * "what does completing this do?" instead of repeating the raw finding text.
+ */
 function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
   return (
-    <span className="flex min-w-0 items-center gap-2.5" style={{ paddingLeft: row.child ? 22 : 0 }}>
-      <TaskGlyph title={row.name} description={row.description} />
-      <span
-        title={row.name}
-        className={`truncate ${row.child ? 'text-[var(--cat-ink)]' : 'font-semibold text-[var(--cat-ink)]'}`}
-      >
-        {row.name}
+    <span className="flex min-w-0 items-start gap-2.5" style={{ paddingLeft: row.child ? 22 : 0 }}>
+      <span className="mt-0.5 shrink-0">
+        <TaskGlyph title={row.name} description={row.description} />
+      </span>
+      <span className="flex min-w-0 flex-col">
+        <span
+          title={row.name}
+          className={`truncate ${row.child ? 'text-[var(--cat-ink)]' : 'font-semibold text-[var(--cat-ink)]'}`}
+        >
+          {row.name}
+        </span>
+        <span
+          title={row.effect || row.description}
+          className="truncate text-[12px] text-[var(--cat-ink-3)]"
+        >
+          {row.effect || row.description}
+        </span>
       </span>
     </span>
   )
 }
 
-function AssigneeCell({
-  row,
-  canAssign,
-  assignableEmails,
-  onAssign,
-  busy,
-}: Pick<
-  TaskRowProps,
-  'row' | 'canAssign' | 'assignableEmails' | 'onAssign' | 'busy'
->): JSX.Element {
-  if (!canAssign) return <AssigneeStack email={row.assigneeEmail} />
-  return (
-    <AssignControl row={row} assignableEmails={assignableEmails} onAssign={onAssign} busy={busy} />
-  )
-}
-
-function AutoFixCell({ recommendationId }: { recommendationId?: number }): JSX.Element {
+/** Auto-fix when the agent can do it, otherwise say plainly that it is manual. */
+function ActionCell({ recommendationId }: { recommendationId?: number }): JSX.Element {
   const fix = useTaskFix(recommendationId)
-  if (!fix) return <span className="text-[var(--cat-ink-3)]">—</span>
+  if (!fix) {
+    return (
+      <span className="inline-flex items-center rounded-md border border-[var(--cat-border)] px-2 py-1 text-[12px] font-medium text-[var(--cat-ink-2)]">
+        Manual
+      </span>
+    )
+  }
   return <AutoFixControl state={fix.state} onFix={fix.onFix} />
 }
 
 /** One task row. Clicking anywhere opens the task's detail page; the inline
- * controls (done toggle, assign, auto-fix) stop the click from navigating. */
-export function TaskRow(props: TaskRowProps): JSX.Element {
-  const { row } = props
+ * auto-fix control stops the click from navigating. */
+export function TaskRow({ row }: TaskRowProps): JSX.Element {
   const brandPath = useBrandPath()
   const navigate = useViewTransitionNavigate()
   return (
@@ -92,25 +67,14 @@ export function TaskRow(props: TaskRowProps): JSX.Element {
       <td className="px-3 py-2.5">
         <TaskNameCell row={row} />
       </td>
-      <td className="hidden px-3 py-2.5 xl:table-cell">
-        <span title={row.description} className="block truncate text-[var(--cat-ink-2)]">
-          {row.description}
-        </span>
-      </td>
-      <td className="px-3 py-2.5" onClick={e => e.stopPropagation()}>
-        <AssigneeCell {...props} />
-      </td>
-      <td className="hidden px-3 py-2.5 whitespace-nowrap text-[var(--cat-ink-2)] lg:table-cell">
-        {row.due}
+      <td className="px-3 py-2.5">
+        <SignalTag signal={row.signal} effect={row.effect} />
       </td>
       <td className="px-3 py-2.5 whitespace-nowrap">
         <PriorityTag priority={row.priority} />
       </td>
-      <td className="px-3 py-2.5 whitespace-nowrap">
-        <ProgressCell value={row.progress} />
-      </td>
       <td className="px-3 py-2.5 whitespace-nowrap" onClick={e => e.stopPropagation()}>
-        <AutoFixCell recommendationId={row.recommendationId} />
+        <ActionCell recommendationId={row.recommendationId} />
       </td>
     </tr>
   )

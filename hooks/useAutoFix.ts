@@ -72,6 +72,11 @@ function jobToState(job: GithubJob): FixState {
   if (job.status === 'pending' || job.status === 'running') {
     return { outcome: 'running', message: 'Fix in progress…' }
   }
+  // Declined is a hand-off, not a failure: the agent refused to invent data it
+  // does not have. Surface it as a manual task with the agent's reason.
+  if (job.status === 'declined') {
+    return { outcome: 'manual', message: job.error_message || 'This fix needs your input.' }
+  }
   if (job.status === 'failed') {
     return { outcome: 'failed', message: job.error_message || 'Fix failed' }
   }

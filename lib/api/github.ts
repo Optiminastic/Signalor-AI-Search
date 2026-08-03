@@ -76,7 +76,10 @@ export async function selectOrgGithubRepo(
 
 export const githubJobSchema = z.object({
   id: z.number(),
-  status: z.enum(['pending', 'running', 'open', 'merged', 'closed', 'failed']),
+  // 'declined' = the agent deliberately proposed nothing (the fix needs real
+  // data it must not invent, or there was nothing to change). It is an expected
+  // outcome, not a failure, and must never be rendered as an error.
+  status: z.enum(['pending', 'running', 'open', 'merged', 'closed', 'declined', 'failed']),
   finding_codes: z.array(z.string()).default([]),
   pr_number: z.number().nullable(),
   pr_url: z.string().optional().default(''),

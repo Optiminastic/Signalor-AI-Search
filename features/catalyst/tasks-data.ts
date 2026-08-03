@@ -24,6 +24,10 @@ export interface TaskItem {
   progress: number
   /** Linked Recommendation id — the key for Auto-fix (undefined = not fixable). */
   recommendationId?: number
+  /** Short label for the signal this task moves, e.g. "E-E-A-T", "Schema". */
+  signal: string
+  /** One sentence on what completing it actually does. */
+  effect: string
 }
 
 export interface StatCard {

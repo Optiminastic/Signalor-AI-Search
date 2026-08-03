@@ -422,6 +422,14 @@ export const userActionSchema = z.object({
   // FK to the Recommendation this task was materialised from — lets the Tasks
   // table trigger the same auto-fix (looked up by recommendation id).
   recommendation: z.number().nullable().optional(),
+  // Attribution: which signal completing this task moves, and what that does.
+  // Read off the linked Recommendation server-side (see UserActionSerializer).
+  pillar: z.string().optional().default(''),
+  finding_code: z.string().optional().default(''),
+  priority: z.string().optional().default(''),
+  attribution: z
+    .object({ signal: z.string().default(''), effect: z.string().default('') })
+    .optional(),
 })
 export type UserAction = z.infer<typeof userActionSchema>
 

@@ -7,6 +7,7 @@ import { ResponseDialog } from '@/features/catalyst/components/prompt-tracker/Re
 import { ResponseText } from '@/features/catalyst/components/prompt-tracker/ResponseText'
 import type { PromptEngineResult } from '@/features/catalyst/prompt-tracker-data'
 import { formatTaskDate } from '@/features/catalyst/tasks-data'
+import { useBrandTerms } from '@/hooks/useBrandTerms'
 import { Maximize2 } from '@/lib/icons'
 
 const GREEN_TINT = 'rgba(47,190,126,0.12)'
@@ -68,6 +69,7 @@ function ResultBody({
   result: PromptEngineResult
   onOpen: () => void
 }): JSX.Element {
+  const terms = useBrandTerms(result.citations)
   if (!result.snippet) {
     return (
       <p className="text-[12px] text-[var(--cat-ink-3)]">No answer text captured for this run.</p>
@@ -76,7 +78,7 @@ function ResultBody({
   return (
     <>
       <div className="max-h-[6.5rem] overflow-hidden">
-        <ResponseText text={result.snippet} />
+        <ResponseText text={result.snippet} terms={terms} />
       </div>
       <button
         type="button"

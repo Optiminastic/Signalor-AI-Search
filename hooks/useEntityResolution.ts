@@ -1,26 +1,52 @@
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { probeEntityResolution, type EntityResolution } from '@/lib/api/prompts'
+import {
+  getEntityResolution,
+  probeEntityResolution,
+  type EntityResolution,
+  type EntityResolutionState,
+} from '@/lib/api/prompts'
+import { queryKeys } from '@/lib/query-keys'
 
 /**
- * Entity resolution probe.
+ * Entity resolution.
  *
- * A mutation, not a query: it asks every engine live and costs one call each, so
- * it must never fire on render.
+ * The stored report is a plain query, so the card shows the last verdict as soon
+ * as the page loads instead of sitting blank until someone clicks. Re-probing
+ * stays a mutation: it asks every engine live and costs one call each, so it
+ * must never fire on render.
  */
 export function useEntityResolution(slug: string | undefined): {
-  report: EntityResolution | undefined
+  report: EntityResolution | null
+  /** False while the backend's per-run cooldown is still in effect. */
+  mayProbe: boolean
+  isLoading: boolean
   probe: () => void
   isProbing: boolean
   isError: boolean
 } {
-  const mutation = useMutation({
-    mutationFn: async (): Promise<EntityResolution> => probeEntityResolution(slug as string),
+  const queryClient = useQueryClient()
+  const key = queryKeys.catalyst.entityResolution(slug)
+
+  const query = useQuery({
+    queryKey: key,
+    queryFn: async (): Promise<EntityResolutionState> => getEntityResolution(slug as string),
+    enabled: Boolean(slug),
   })
+
+  const mutation = useMutation({
+    mutationFn: async (): Promise<EntityResolutionState> => probeEntityResolution(slug as string),
+    // Seed the cache directly — the POST already returns the fresh report, so
+    // refetching would be a second round trip for data we are already holding.
+    onSuccess: next => queryClient.setQueryData(key, next),
+  })
+
   return {
-    report: mutation.data,
+    report: query.data?.report ?? null,
+    mayProbe: query.data?.may_probe ?? true,
+    isLoading: query.isLoading,
     probe: () => {
       if (slug) mutation.mutate()
     },

@@ -4,7 +4,6 @@ import {
   IconAffiliateFilled,
   IconHelpCircleFilled,
   IconMoonFilled,
-  IconRadarFilled,
   IconSparklesFilled,
   IconSunFilled,
 } from '@tabler/icons-react'
@@ -21,8 +20,8 @@ import {
   ACTIONS_NAV,
   INTEGRATIONS_NAV,
   MAIN_NAV,
-  MONITORING_NAV,
   OPTIMIZATION_NAV,
+  SIGNALS_NAV,
   SOCIALS_NAV,
 } from '@/features/catalyst/constants'
 import { useTaskCount } from '@/hooks/useTaskCount'
@@ -77,12 +76,7 @@ function SidebarNav({ collapsed }: { collapsed: boolean }): JSX.Element {
     <div className="mt-2 -mr-1 flex min-h-0 flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto pr-1">
       <NavItem {...MAIN_NAV[0]} collapsed={collapsed} />
       <NavItem {...actionsNav} collapsed={collapsed} />
-      <NavGroup
-        icon={IconRadarFilled}
-        label="Monitor"
-        items={MONITORING_NAV}
-        collapsed={collapsed}
-      />
+      <NavItem {...SIGNALS_NAV} collapsed={collapsed} />
       <NavGroup
         icon={IconSparklesFilled}
         label="Optimize"

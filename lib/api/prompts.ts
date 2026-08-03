@@ -15,6 +15,10 @@ export const promptCitationSchema = z
     url: z.string().optional().default(''),
     domain: z.string().optional().default(''),
     title: z.string().nullable().optional(),
+    /** Excerpt of the cited page, when the engine returned one. */
+    snippet: z.string().nullable().optional(),
+    /** Rank of the source within the answer's citation list (1-based). */
+    position: z.number().nullable().optional(),
     is_brand: z.boolean().optional().default(false),
     is_competitor: z.boolean().optional().default(false),
   })
@@ -33,6 +37,8 @@ export const promptResultSchema = z
     sentiment: z.string().nullable().optional(),
     rank_position: z.number().nullable().optional(),
     checked_at: z.string().nullable().optional(),
+    /** Model's confidence in the mention/sentiment call, 0-1. */
+    confidence: z.number().nullable().optional(),
     citations: z.array(promptCitationSchema).optional().default([]),
   })
   .passthrough()
@@ -51,6 +57,13 @@ export const promptTrackSchema = z.object({
   sentiment_label: z.string().nullable().optional(),
   total_runs: z.number().nullable().optional(),
   mentions: z.number().nullable().optional(),
+  created_at: z.string().nullable().optional(),
+  // The five weighted inputs behind `score`, recomputed server-side per request.
+  factor_authority: z.number().nullable().optional(),
+  factor_content_quality: z.number().nullable().optional(),
+  factor_structural: z.number().nullable().optional(),
+  factor_semantic: z.number().nullable().optional(),
+  factor_third_party: z.number().nullable().optional(),
   results: z.array(promptResultSchema).optional().default([]),
 })
 export type PromptTrack = z.infer<typeof promptTrackSchema>
@@ -203,7 +216,12 @@ export type AnswerBlock = z.infer<typeof answerBlockSchema>
 /** POST runs/s/<slug>/prompts/<id>/answer-block/ → draft the passage. */
 export async function draftAnswerBlock(slug: string, trackId: number): Promise<AnswerBlock> {
   return answerBlockSchema.parse(
-    await apiPost<unknown>(`/api/analyzer/runs/s/${slug}/prompts/${trackId}/answer-block/`, {}),
+    await apiPost<unknown>(
+      `/api/analyzer/runs/s/${slug}/prompts/${trackId}/answer-block/`,
+      {},
+      // Live LLM draft; the 10s client default is well under what it needs.
+      { signal: AbortSignal.timeout(60_000) },
+    ),
   )
 }
 
@@ -315,9 +333,31 @@ export const entityResolutionSchema = z.object({
 })
 export type EntityResolution = z.infer<typeof entityResolutionSchema>
 
-/** POST because it probes every engine live and costs one call each. */
-export async function probeEntityResolution(slug: string): Promise<EntityResolution> {
-  return entityResolutionSchema.parse(
-    await apiPost<unknown>(`/api/analyzer/runs/s/${slug}/entity-resolution/`, {}),
+/** The stored report, plus whether a fresh probe is allowed yet. */
+export const entityResolutionStateSchema = z.object({
+  report: entityResolutionSchema.nullable().default(null),
+  may_probe: z.boolean().default(true),
+})
+export type EntityResolutionState = z.infer<typeof entityResolutionStateSchema>
+
+/** GET the cached report — cheap, no LLM call, so it can run on page load. */
+export async function getEntityResolution(slug: string): Promise<EntityResolutionState> {
+  return entityResolutionStateSchema.parse(
+    await apiGet<unknown>(`/api/analyzer/runs/s/${slug}/entity-resolution/`),
+  )
+}
+
+/** POST re-probes every engine live and costs one call each.
+ *
+ *  Needs its own budget: the backend allows INTERACTIVE_TIMEOUT_SEC (25s) per
+ *  engine, so the client's 10s default aborted the request mid-probe and the UI
+ *  reported it as an unreachable engine. */
+export async function probeEntityResolution(slug: string): Promise<EntityResolutionState> {
+  return entityResolutionStateSchema.parse(
+    await apiPost<unknown>(
+      `/api/analyzer/runs/s/${slug}/entity-resolution/`,
+      {},
+      { signal: AbortSignal.timeout(60_000) },
+    ),
   )
 }

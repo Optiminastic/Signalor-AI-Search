@@ -27,7 +27,9 @@ export function VisibilityView(): JSX.Element {
           emptyHint="Select a project with a completed analysis to see AI visibility across engines."
         >
           {data && (
-            <div className="cat-stagger grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            // items-start: without it every card stretches to the tallest in its row,
+            // which left short cards (name recognition) mostly empty space.
+            <div className="cat-stagger grid grid-cols-1 items-start gap-2 sm:grid-cols-2 xl:grid-cols-3">
               <OverallVisibilityCard data={data.overall} />
               <ShareOfVoiceCard sov={data.sov} meta={data.sovMeta} />
               <MentionsCard data={data.mentions} />
