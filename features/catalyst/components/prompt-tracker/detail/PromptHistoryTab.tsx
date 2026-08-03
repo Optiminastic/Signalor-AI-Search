@@ -14,7 +14,7 @@ const MAX_POINTS = 12
 /** Per-engine line colours; brand red is reserved for the overall line. */
 const ENGINE_COLORS = [BLUE, PURPLE, YELLOW, GREEN, '#0EA5A4']
 
-function shortDate(iso: string): string {
+function formatShortDate(iso: string): string {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
@@ -119,7 +119,7 @@ function TrendPanel({ runs }: { runs: PromptRun[] }): JSX.Element {
       ) : (
         <MultiLineChart
           series={buildSeries(plotted)}
-          xLabels={plotted.map(run => shortDate(run.at))}
+          xLabels={plotted.map(run => formatShortDate(run.at))}
           height={160}
         />
       )}

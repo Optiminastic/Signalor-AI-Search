@@ -14,12 +14,23 @@ const INTENTS = ['informational', 'transactional', 'brand']
 const TYPES = ['organic', 'branded', 'competitive']
 const TAGS = [...INTENTS, ...TYPES]
 
-/** A prompt matches if it carries every selected tag. */
+/**
+ * OR within an axis, AND across the two.
+ *
+ * A prompt has exactly one intent and one type, so requiring *every* selected
+ * tag to match made any two same-axis selections (e.g. informational +
+ * transactional) unsatisfiable: the list silently emptied with nothing to
+ * explain it. Selecting two intents now reads as "either of these".
+ */
 export function matchesTagFilter(prompt: TrackedPrompt, filter: TagFilter): boolean {
   if (filter.length === 0) return true
   const intent = (prompt.intent || '').toLowerCase()
   const type = (prompt.promptType || '').toLowerCase()
-  return filter.every(tag => tag === intent || tag === type)
+  const wantedIntents = filter.filter(tag => INTENTS.includes(tag))
+  const wantedTypes = filter.filter(tag => TYPES.includes(tag))
+  if (wantedIntents.length > 0 && !wantedIntents.includes(intent)) return false
+  if (wantedTypes.length > 0 && !wantedTypes.includes(type)) return false
+  return true
 }
 
 interface PromptTagFilterProps {

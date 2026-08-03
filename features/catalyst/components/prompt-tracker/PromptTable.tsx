@@ -6,6 +6,7 @@ import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
 import { PromptTag } from '@/features/catalyst/components/prompt-tracker/PromptChips'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
 import { scoreColor } from '@/features/catalyst/visibility-data'
+import { formatShortDate } from '@/lib/format'
 import { ChevronDown, ChevronRight, ChevronUp, Loader2, RefreshCw, Trash2 } from '@/lib/icons'
 
 const TH =
@@ -46,15 +47,6 @@ function compare(a: TrackedPrompt, b: TrackedPrompt, key: SortKey): number {
 /** Sort prompts by a column, descending first for numbers, ascending for text. */
 export function sortPrompts(prompts: TrackedPrompt[], key: SortKey, asc: boolean): TrackedPrompt[] {
   return [...prompts].sort((a, b) => (asc ? compare(a, b, key) : compare(b, a, key)))
-}
-
-/** Short date ("17 Jul"); empty when the API omitted createdAt. */
-function shortDate(iso: string): string {
-  if (!iso) return '—'
-  const d = new Date(iso)
-  return Number.isNaN(d.getTime())
-    ? '—'
-    : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
 }
 
 function SentimentCell({ value }: { value: string }): JSX.Element {
@@ -203,7 +195,7 @@ function PromptTableRow({ item, busy, onRecheck, onRemove, onOpen }: RowActionsP
         <EngineCell item={item} />
       </td>
       <td className={`${TD} text-[12px] whitespace-nowrap text-[var(--cat-ink-3)]`}>
-        {shortDate(item.createdAt)}
+        {formatShortDate(item.createdAt)}
       </td>
       <td className={TD}>
         <RowActions

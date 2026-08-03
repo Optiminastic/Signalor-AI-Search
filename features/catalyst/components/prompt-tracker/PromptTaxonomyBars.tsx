@@ -39,11 +39,13 @@ function Bar({ title, slices }: { title: string; slices: Slice[] }): JSX.Element
           ))}
         </span>
       </div>
-      <div className="mt-2.5 flex h-1.5 gap-0.5 overflow-hidden rounded-full">
+      {/* Square slices, not a rounded fill bar: the design system reserves
+          solid rounded-full meters against the segmented tick bar. */}
+      <div className="mt-2.5 flex h-1.5 gap-0.5 overflow-hidden">
         {slices.map(s => (
           <span
             key={s.value}
-            className="h-full"
+            className="h-full rounded-[1px]"
             style={{ width: `${(s.count / total) * 100}%`, backgroundColor: TAG_COLOR(s.value) }}
           />
         ))}

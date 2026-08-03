@@ -123,7 +123,7 @@ function PromptBody({
   const hasPending = prompts.some(p => p.results.length === 0)
   return (
     <>
-      {/* <PromptTaxonomyBars prompts={prompts} /> */}
+      <PromptTaxonomyBars prompts={prompts} />
       <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <PromptToolbar shown={prompts.length} total={allCount} />
         <PromptTagFilter value={tags} onChange={onTagsChange} />
