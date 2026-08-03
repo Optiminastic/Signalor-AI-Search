@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { storePendingAnalysisAfterPayment } from '@/features/site/lib/internal-nav'
 import { useSession } from '@/lib/auth-client'
 import { ArrowLeft, Loader2, Rocket } from '@/lib/icons'
 import { routes } from '@/lib/routes'
@@ -45,10 +46,23 @@ export function LaunchStep(): JSX.Element {
       const email = session?.user?.email ?? ''
       // Non-subscribers pick a plan first; subscribers (and internal emails)
       // go straight into the analysis. Pricing opens on the audience matching
-      // the account type chosen at sign-up (brand vs agency), and returns here
-      // after checkout so the user can hit Launch again.
+      // the account type chosen at sign-up (brand vs agency).
       const gate = await subscriptionGate(email)
       if (!gate.active) {
+        // Stash everything /payments/success needs to auto-start THIS brand's
+        // analysis the moment payment confirms — the user goes checkout →
+        // success → /loading without ever re-entering the wizard. The
+        // returnTo below is only the fallback for a cancelled/failed payment.
+        if (orgId) {
+          storePendingAnalysisAfterPayment({
+            url: siteUrl,
+            run_type: 'single_page',
+            email,
+            brand_name: companyName,
+            org_id: orgId,
+            prompts: prompts.filter(Boolean),
+          })
+        }
         const params = new URLSearchParams({
           audience: gate.accountType,
           returnTo: routes.onboarding,

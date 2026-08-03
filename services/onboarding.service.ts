@@ -131,6 +131,16 @@ export async function createOrganization(
     if (error instanceof ApiError && error.status === 409) {
       return { ok: true, orgId: orgIdFromConflict(error.data) }
     }
+    // Onboarding-token gate rejection ("Onboarding session required."). The
+    // token is minted fresh per attempt, so this is transient (throttle blip,
+    // expiry mid-flight) — tell the user to retry instead of echoing the raw
+    // server detail, which reads like a dead end.
+    if (error instanceof ApiError && error.status === 401) {
+      return {
+        ok: false,
+        error: 'Could not verify your onboarding session. Please click Continue again.',
+      }
+    }
     return { ok: false, error: errMessage(error, 'Failed to save company info. Please try again.') }
   }
 }

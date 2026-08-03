@@ -21,6 +21,8 @@ export interface PlanCardProps {
     featuresLead?: string
     features: string[]
     comingSoonFeatures?: string[]
+    /** Not sold yet — the CTA becomes an inert "Coming soon" control. */
+    comingSoon?: boolean
     ctaLabel?: string
   }
   /** Currency symbol and code, already resolved for display by the page. */
@@ -111,14 +113,70 @@ function PriceCell(props: PlanCardProps): JSX.Element {
  * parent's row tracks makes all four cards line up whatever the copy does,
  * which is how the for-brands and for-agencies cards already work.
  */
+const BADGE_BASE =
+  'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase'
+
+/** Precedence: what you have > what you cannot buy yet > what we promote. */
+function PlanBadge({
+  isCurrent,
+  comingSoon,
+  popular,
+}: {
+  isCurrent: boolean
+  comingSoon?: boolean
+  popular?: boolean
+}): JSX.Element | null {
+  if (isCurrent) {
+    return <span className={`bg-success/10 text-success ${BADGE_BASE}`}>Current</span>
+  }
+  if (comingSoon) {
+    return <span className={`bg-muted text-muted-foreground ${BADGE_BASE}`}>Coming soon</span>
+  }
+  if (popular) {
+    return <span className={`bg-primary text-primary-foreground ${BADGE_BASE}`}>Popular</span>
+  }
+  return null
+}
+
+/** The plan's action. Extracted so PlanCard stays readable — the disabled
+ *  state alone has four independent reasons to fire. */
+function PlanCtaButton(
+  props: PlanCardProps & { comingSoon: boolean; emphasised: boolean },
+): JSX.Element {
+  const { isCurrent, isLoading, isContact, anyLoading, onSelect, comingSoon, emphasised } = props
+  const blocked = comingSoon || (anyLoading && !isContact) || isCurrent
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      disabled={blocked}
+      className={cn(
+        'self-end disabled:cursor-not-allowed disabled:opacity-70',
+        emphasised ? `${LANDING_PRIMARY_CTA_CLASS} w-full` : SECONDARY_CTA_CLASS,
+      )}
+    >
+      {isLoading ? (
+        <SignalorLoader size="sm" />
+      ) : (
+        <>
+          {comingSoon ? 'Coming soon' : ctaLabel(props)}
+          {!isCurrent && !comingSoon && <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
+        </>
+      )}
+    </button>
+  )
+}
+
 export function PlanCard(props: PlanCardProps): JSX.Element {
-  const { plan, isCurrent, isLoading, isContact, anyLoading, onSelect } = props
-  const emphasised = plan.popular && !isCurrent
+  const { plan, isCurrent } = props
+  const comingSoon = !!plan.comingSoon
+  const emphasised = plan.popular && !isCurrent && !comingSoon
 
   return (
     <div
       className={cn(
         'bg-card grid gap-6 p-6 xl:row-span-4 xl:grid-rows-subgrid',
+        comingSoon && 'opacity-70',
         isCurrent && 'ring-success/40 m-2 rounded-xl ring-1',
         emphasised && 'ring-primary/50 m-2 rounded-xl shadow-sm ring-1 shadow-black/5',
       )}
@@ -127,15 +185,7 @@ export function PlanCard(props: PlanCardProps): JSX.Element {
       <div className="self-end">
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-foreground text-base font-semibold tracking-tight">{plan.label}</h3>
-          {isCurrent ? (
-            <span className="bg-success/10 text-success shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
-              Current
-            </span>
-          ) : plan.popular ? (
-            <span className="bg-primary text-primary-foreground shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
-              Popular
-            </span>
-          ) : null}
+          <PlanBadge isCurrent={isCurrent} comingSoon={plan.comingSoon} popular={plan.popular} />
         </div>
         <p className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
           {plan.description}
@@ -144,24 +194,7 @@ export function PlanCard(props: PlanCardProps): JSX.Element {
 
       <PriceCell {...props} />
 
-      <button
-        type="button"
-        onClick={onSelect}
-        disabled={(anyLoading && !isContact) || isCurrent}
-        className={cn(
-          'self-end disabled:cursor-not-allowed disabled:opacity-70',
-          emphasised ? `${LANDING_PRIMARY_CTA_CLASS} w-full` : SECONDARY_CTA_CLASS,
-        )}
-      >
-        {isLoading ? (
-          <SignalorLoader size="sm" />
-        ) : (
-          <>
-            {ctaLabel(props)}
-            {!isCurrent && <ArrowRight className="h-3.5 w-3.5" aria-hidden />}
-          </>
-        )}
-      </button>
+      <PlanCtaButton {...props} comingSoon={comingSoon} emphasised={!!emphasised} />
 
       <ul className="border-border space-y-2.5 border-t pt-5">
         {plan.featuresLead ? (

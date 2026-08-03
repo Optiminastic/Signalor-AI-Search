@@ -175,6 +175,30 @@ export async function getSubscriptionStatus(email: string): Promise<Subscription
   return subscriptionStatusSchema.parse(data)
 }
 
+const verifyCheckoutSchema = z.object({
+  is_active: z.boolean(),
+  status: z.string(),
+})
+
+export type VerifyCheckoutResult = z.infer<typeof verifyCheckoutSchema>
+
+/**
+ * Webhook-independent payment confirmation. Given the subscription_id Dodo
+ * appends to the return URL, the backend asks Dodo directly and activates the
+ * subscription if Dodo says it is active — so /payments/success works even
+ * when the webhook is delayed or unreachable (e.g. local dev).
+ */
+export async function verifyCheckout(
+  email: string,
+  subscriptionId?: string,
+): Promise<VerifyCheckoutResult> {
+  const { data } = await apiClient.post('/api/payments/verify-checkout/', {
+    email,
+    subscription_id: subscriptionId ?? '',
+  })
+  return verifyCheckoutSchema.parse(data)
+}
+
 export async function terminateAccount(
   email: string,
 ): Promise<{ message: string; deactivated_at?: string }> {

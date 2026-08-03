@@ -21,6 +21,8 @@ export const routes = {
   signIn: '/sign-in',
   signUp: '/sign-up',
   dashboard: '/dashboard',
+  /** Analysing screen — polls the latest run by email, lands on the dashboard. */
+  loading: '/loading',
   authCallback: '/auth/callback',
   onboardingCompanyInfo: '/onboarding/company-info',
   agencyWorkspace: '/dashboard/agency',

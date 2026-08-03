@@ -36,9 +36,10 @@ export const BRAND_COLUMNS: { id: BrandPlanId; label: string }[] = [
   { id: 'enterprise', label: 'Enterprise' },
 ]
 
+// Order mirrors the agency cards above the table: the buyable plan leads.
 export const AGENCY_COLUMNS: { id: AgencyPlanId; label: string }[] = [
-  { id: 'agency-account', label: 'Agency Account' },
   { id: 'agency-brand-10', label: 'Per Brand · 10' },
+  { id: 'agency-account', label: 'Agency Account' },
   { id: 'agency-brand-25', label: 'Per Brand · 25' },
 ]
 
