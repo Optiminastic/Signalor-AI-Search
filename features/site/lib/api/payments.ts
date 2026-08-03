@@ -28,16 +28,34 @@ const planLimitsSchema = z.object({
 
 const usageDataSchema = z.object({
   plan: z.string(),
+  account_type: z.enum(['individual', 'agency']).optional(),
+  /** Trailing window (days) the count quotas are measured over. */
+  window_days: z.number().optional(),
   limits: z.object({
     max_projects: z.number(),
     max_prompts: z.number(),
     engines: z.array(z.string()),
+    // Per-brand count quotas; 0 = unlimited. Optional so an older backend
+    // (without the quota fields) still parses.
+    max_analyses_per_month: z.number().optional(),
+    max_autofixes_per_month: z.number().optional(),
+    max_autofixes_per_day: z.number().optional(),
+    max_autofix_regens: z.number().optional(),
   }),
   usage: z.object({
     projects: z.number(),
     prompts: z.number(),
     runs_this_month: z.number(),
+    analyses_30d: z.number().optional(),
+    autofixes_30d: z.number().optional(),
+    autofixes_today: z.number().optional(),
   }),
+  ai_allowance: z
+    .object({
+      uncapped: z.boolean(),
+      used_pct: z.number(),
+    })
+    .optional(),
   at_limit: z.object({
     projects: z.boolean(),
     prompts: z.boolean(),

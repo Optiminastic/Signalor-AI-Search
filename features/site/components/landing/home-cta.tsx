@@ -44,7 +44,7 @@ export function HomeCta(): JSX.Element {
             </p>
             <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <Link href="/sign-up" className={`${LANDING_PRIMARY_CTA_CLASS} w-full sm:w-auto`}>
-                Start for free
+                Get started
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <Link

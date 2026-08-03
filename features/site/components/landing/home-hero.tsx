@@ -1,15 +1,18 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 import {
   LANDING_PRIMARY_CTA_CLASS,
   LANDING_SECONDARY_CTA_CLASS,
 } from '@/features/site/components/landing/constants'
-import { HeroVideo } from '@/features/site/components/landing/hero-video'
 import { GridCornerHandles } from '@/features/site/components/landing/home-grid'
 
 /**
- * Full-bleed demo band: the product video sits on a brand-orange painterly
+ * Full-bleed demo band: the product screenshot sits on a brand-orange painterly
  * panel whose vertical edges cross the section rules, marked with grid handles.
+ *
+ * `priority` because this is the hero's largest paint — letting it lazy-load
+ * would leave an orange void above the fold on first render.
  */
 function HeroShowcase(): JSX.Element {
   return (
@@ -22,10 +25,14 @@ function HeroShowcase(): JSX.Element {
             className="pointer-events-none absolute inset-0 bg-[url('/hero-texture.svg')] bg-cover opacity-60 mix-blend-overlay"
           />
           <div className="relative overflow-hidden rounded-sm shadow-md shadow-black/15">
-            <HeroVideo
-              src="/hero-demo.mp4"
-              poster="/hero.png"
-              label="Play the SignalorAI product demo"
+            <Image
+              src="/hero.png"
+              alt="The SignalorAI dashboard showing LLM visibility score, share of voice across AI engines, and prioritised actions"
+              width={2940}
+              height={1402}
+              priority
+              sizes="(min-width: 1152px) 1152px, 100vw"
+              className="block w-full"
             />
           </div>
         </div>
@@ -103,7 +110,7 @@ export function HomeHero(): JSX.Element {
           </h1>
           <HeroCtaButtons />
           <p className="text-muted-foreground/80 mt-4 text-[13px] font-medium">
-            Free score in ~60 seconds · No sign-up needed · Track your first 50 prompts free
+            Free score in ~60 seconds · No sign-up needed · No card required
           </p>
         </div>
       </div>

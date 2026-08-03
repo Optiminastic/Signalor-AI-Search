@@ -6,7 +6,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { MarketingShell } from '@/features/landing/components/MarketingShell'
 
 import { track } from '@/features/site/amplitude'
-import { Clock, Crown, Rocket, Zap } from '@/features/site/components/icons'
+import { Crown, Rocket, Zap } from '@/features/site/components/icons'
 import { LandingFaq } from '@/features/site/components/landing/landing-faq'
 import {
   AudienceSwitch,
@@ -62,7 +62,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   ZAR: 'R',
 }
 
-type PlanCta = 'checkout' | 'contact' | 'signup'
+type PlanCta = 'checkout' | 'contact'
 
 interface PlanConfig {
   id: string
@@ -91,24 +91,6 @@ const CHECKOUTABLE = new Set(['starter', 'pro'])
 // ── Individual flow ────────────────────────────────────────────────────────
 const PLANS: PlanConfig[] = [
   {
-    id: 'free',
-    label: 'Free',
-    price: 0,
-    period: '/month',
-    description: 'Try SignalorAI on your own site — no credit card required.',
-    icon: Clock,
-    // Not 'checkout': there is nothing to charge, and CHECKOUTABLE would send
-    // it to Contact Sales. Free goes straight to sign-up.
-    cta: 'signup',
-    ctaLabel: 'Start for free',
-    features: [
-      '50 tracked prompts included',
-      'Free GEO score & audit',
-      'Prioritized fix list preview',
-      'Setup in 2 minutes',
-    ],
-  },
-  {
     id: 'starter',
     label: 'Self-Serve Brand',
     price: 69.99,
@@ -116,7 +98,6 @@ const PLANS: PlanConfig[] = [
     description: 'Run it yourself — onboard, track, and improve your AI visibility.',
     icon: Zap,
     cta: 'checkout',
-    featuresLead: 'Everything in Free, plus:',
     features: [
       '1 brand / domain',
       '10 prompts to rank & track',
@@ -254,7 +235,6 @@ function PricingPageInner() {
       const plan = source.find(pl => pl.id === id)
       if (!plan) return ''
       if (plan.price === null) return 'Custom'
-      if (plan.price === 0) return 'Free'
       // `decimals` and `locale` already live on the Currency object — INR wants
       // 0 and en-IN grouping, so deriving them here would just duplicate that.
       const amount = plan.price * currency.rate
@@ -565,10 +545,6 @@ function PricingPageInner() {
                       anyLoading={!!loadingPlan}
                       signedIn={!!session}
                       onSelect={() => {
-                        if (plan.cta === 'signup') {
-                          router.push('/sign-up')
-                          return
-                        }
                         if (isContact) {
                           router.push(routes.contactSales)
                           return

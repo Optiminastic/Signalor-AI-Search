@@ -16,6 +16,8 @@ export const integrationStatusSchema = z.object({
   provider: z.string(),
   provider_display: z.string().optional().default(''),
   is_active: z.boolean().optional().default(false),
+  /** Provider-specific detail — Slack keeps its channel here. */
+  metadata: z.record(z.string(), z.unknown()).optional().default({}),
 })
 export type IntegrationStatus = z.infer<typeof integrationStatusSchema>
 
