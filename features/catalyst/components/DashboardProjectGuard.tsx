@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 import { useActiveProject, type ActiveProject } from '@/hooks/useActiveProject'
 import { signOut, useSession } from '@/lib/auth-client'
@@ -12,6 +12,48 @@ function GuardSpinner(): JSX.Element {
   return (
     <div className="grid min-h-svh place-items-center bg-white">
       <Loader2 className="h-5 w-5 animate-spin text-neutral-400" />
+    </div>
+  )
+}
+
+interface SessionExpiredProps {
+  /** Where to return once they are signed in again. */
+  pathname: string
+}
+
+/**
+ * Shown when the cookie outlived its session. Clearing it is the only way out:
+ * while it is set, the middleware bounces every auth route back to /dashboard,
+ * and /dashboard lands back here. That clearing happens on an explicit click,
+ * never automatically — this component must never be able to end a live session.
+ */
+function SessionExpired({ pathname }: SessionExpiredProps): JSX.Element {
+  const router = useRouter()
+  const [working, setWorking] = useState(false)
+
+  const restart = async (): Promise<void> => {
+    setWorking(true)
+    await signOut().catch(() => undefined)
+    router.replace(`${routes.signIn}?callbackUrl=${encodeURIComponent(pathname)}`)
+  }
+
+  return (
+    <div className="grid min-h-svh place-items-center bg-white px-6">
+      <div className="max-w-sm text-center">
+        <p className="text-[15px] font-semibold text-neutral-900">Your session has expired</p>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-500">
+          Sign in again to get back to your dashboard.
+        </p>
+        <button
+          type="button"
+          onClick={() => void restart()}
+          disabled={working}
+          className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-md bg-[#e04a3d] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#c93d31] disabled:opacity-60"
+        >
+          {working && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          Sign in
+        </button>
+      </div>
     </div>
   )
 }
@@ -55,31 +97,25 @@ function needsOnboarding(p: ActiveProject): boolean {
 export function DashboardProjectGuard({ children }: { children: ReactNode }): JSX.Element {
   const router = useRouter()
   const pathname = usePathname()
-  const { isPending } = useSession()
+  const { data: session, isPending } = useSession()
   const project = useActiveProject()
   const redirect = needsOnboarding(project)
-  // The middleware only checks that a session cookie EXISTS, not that it is
-  // still valid, so an expired cookie sails past it and lands here with no
-  // email. Deferring to the page in that state hung the dashboard forever:
-  // `/dashboard` waits on an orgSlug derived from a query gated on email, so it
-  // can never arrive.
-  const signedOut = !isPending && !project.email
+  // Read the session object itself, not a value derived from it. The middleware
+  // only checks that a session cookie EXISTS, never that it is still valid, so
+  // an expired cookie sails past it and arrives here with nothing behind it.
+  const expired = !isPending && session === null
 
   useEffect(() => {
-    if (signedOut) {
-      // Drop the dead cookie BEFORE navigating. Redirecting while it is still
-      // set is an unbreakable loop: the middleware bounces every auth route
-      // back to /dashboard whenever a cookie is present, and /dashboard bounces
-      // back here. Clearing it is also just correct — the session is invalid.
-      void signOut().finally(() => {
-        router.replace(`${routes.signIn}?callbackUrl=${encodeURIComponent(pathname)}`)
-      })
-      return
-    }
     if (redirect) router.replace(routes.onboarding)
-  }, [signedOut, redirect, pathname, router])
+  }, [redirect, router])
 
-  if (isPending || signedOut) return <GuardSpinner />
+  if (isPending) return <GuardSpinner />
+  // Deliberately a visible dead end rather than an automatic recovery. Signing
+  // the user out on a *derived* signed-out guess destroyed freshly-created
+  // sessions mid-login and bounced them straight back to /sign-in; a transient
+  // false positive here only flashes a panel, and only a real click clears the
+  // cookie.
+  if (expired) return <SessionExpired pathname={pathname} />
   // Hold the dashboard back until we know a launched project exists (or redirect).
   if (project.isLoading || redirect) return <GuardSpinner />
   return <>{children}</>
