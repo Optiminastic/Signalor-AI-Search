@@ -257,9 +257,7 @@ function useRememberedKey(): [string, (value: string) => void] {
 function PageHeading(): JSX.Element {
   return (
     <>
-      <h1 className="text-[24px] font-semibold tracking-tight text-neutral-900">
-        Outreach benchmark
-      </h1>
+      <h1 className="text-[24px] font-semibold tracking-tight text-neutral-900">Benchmark</h1>
       <p className="mt-1 text-[14px] text-neutral-600">
         Measures a domain against buyer prompts on ChatGPT, Claude and Perplexity, then writes the
         email around it.
