@@ -71,10 +71,51 @@ function reportCrawlerHit(request: NextRequest, event: NextFetchEvent): void {
   )
 }
 
+/**
+ * Does the cookie we were sent still resolve to a live session?
+ *
+ * `getSessionCookie` only proves a cookie was *sent*, never that it is still
+ * valid. A cookie that outlived its session therefore used to sail straight
+ * through to /dashboard, where `get-session` returns null, `email` is undefined,
+ * and every data query is gated on that email — so the page span forever with
+ * no way out: /sign-in bounced back to /dashboard because a cookie existed.
+ *
+ * `/api/*` is excluded by this file's matcher, so calling the auth route here
+ * cannot re-enter the middleware.
+ */
+async function hasLiveSession(request: NextRequest): Promise<boolean> {
+  try {
+    const res = await fetch(new URL('/api/auth/get-session', request.nextUrl.origin), {
+      headers: { cookie: request.headers.get('cookie') ?? '' },
+      cache: 'no-store',
+    })
+    if (!res.ok) return true // Treated as "unknown" — see the catch below.
+    const body = (await res.text()).trim()
+    return body !== '' && body !== 'null'
+  } catch {
+    // Fail OPEN. If the auth service blips, letting a real user through to a
+    // page that handles its own empty state is recoverable; bouncing every
+    // signed-in user to /sign-in is not.
+    return true
+  }
+}
+
+/** Send the user to sign in, remembering where they were headed. */
+function redirectToSignIn(request: NextRequest, pathname: string): NextResponse {
+  const signInUrl = new URL('/sign-in', request.url)
+  signInUrl.searchParams.set('callbackUrl', pathname)
+  const response = NextResponse.redirect(signInUrl)
+  // Drop the dead cookie so the next request skips the validation round-trip.
+  // Deleting a name that isn't set is a no-op, so covering both the plain and
+  // the __Secure- prefixed form is safe.
+  response.cookies.delete('better-auth.session_token')
+  response.cookies.delete('__Secure-better-auth.session_token')
+  return response
+}
+
 // Every authenticated app route, so an unauthenticated user is bounced before
-// the page loads. This is defense-in-depth UX only — a session cookie's mere
-// presence is checked here, NOT its signature; real access control is enforced
-// by the backend on every data request.
+// the page loads. This is defense-in-depth UX only — real access control is
+// enforced by the backend on every data request.
 const protectedRoutes = [
   '/dashboard',
   '/creator-dashboard',
@@ -100,13 +141,17 @@ export async function middleware(
   const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
 
-  if (isProtected && !sessionCookie) {
-    const signInUrl = new URL('/sign-in', request.url)
-    signInUrl.searchParams.set('callbackUrl', pathname)
-    return NextResponse.redirect(signInUrl)
+  if (isProtected) {
+    if (!sessionCookie) return redirectToSignIn(request, pathname)
+    // A cookie is not a session. Verifying here is what stops an expired one
+    // from stranding the user on a dashboard that can never finish loading.
+    if (!(await hasLiveSession(request))) return redirectToSignIn(request, pathname)
   }
 
-  if (isAuthRoute && sessionCookie) {
+  // Only bounce a genuinely signed-in user away from the auth pages. Bouncing
+  // on cookie presence alone was the other half of the trap: a stale cookie
+  // could not reach /sign-in, so there was no way back into the app at all.
+  if (isAuthRoute && sessionCookie && (await hasLiveSession(request))) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 

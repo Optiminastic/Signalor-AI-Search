@@ -18,5 +18,9 @@ export default defineConfig({
     environment: 'node',
     include: ['**/*.test.ts', '**/*.test.tsx'],
     exclude: ['node_modules/**', '.next/**'],
+    // lib/env.ts validates on import and throws without a full secret set, so
+    // importing anything that touches it (middleware, auth) would fail here.
+    // Tests supply their own doubles for whatever they exercise.
+    env: { SKIP_ENV_VALIDATION: '1' },
   },
 })
