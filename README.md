@@ -9,6 +9,10 @@ Track and improve how AI engines — ChatGPT, Gemini, Perplexity, Claude and Goo
 [![CI](https://github.com/Optiminastic/signalor-web/actions/workflows/ci.yml/badge.svg)](https://github.com/Optiminastic/signalor-web/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 
+<br>
+
+<img src="./public/hero.png" width="900" alt="The Signalor dashboard showing LLM visibility score, share of voice across AI engines, and prioritised actions">
+
 </div>
 
 ---

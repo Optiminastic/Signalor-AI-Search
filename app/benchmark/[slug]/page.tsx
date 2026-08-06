@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { BenchmarkBuilder } from '@/features/outreach/components/BenchmarkBuilder'
 
 export const metadata: Metadata = {
-  title: 'Outreach benchmark',
+  title: 'Benchmark',
   robots: { index: false, follow: false },
 }
 

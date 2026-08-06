@@ -4,7 +4,7 @@ import { BenchmarkBuilder } from '@/features/outreach/components/BenchmarkBuilde
 
 // Internal sales tool, not a marketing page: keep it out of the index.
 export const metadata: Metadata = {
-  title: 'Outreach benchmark',
+  title: 'Benchmark',
   robots: { index: false, follow: false },
 }
 
