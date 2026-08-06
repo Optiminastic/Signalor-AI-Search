@@ -100,8 +100,8 @@ function SentimentSpotlight(): JSX.Element {
         alt="Each AI engine's answer for a tracked prompt, showing where the brand is mentioned and cited"
         width={2940}
         height={1360}
-        // Breaks out of the section padding so the panel meets the rails.
-        className="-mx-6 mt-10 rounded-none sm:-mx-10"
+        // Centred, constrained-width showcase so it doesn't bleed full-width.
+        className="mx-auto mt-10 w-full max-w-6xl"
       />
     </div>
   )
@@ -148,7 +148,7 @@ export function HomeSpotlights(): JSX.Element {
     <section aria-labelledby="home-spotlights-heading">
       <div className="border-border relative border-t px-6 py-14 sm:px-10 lg:py-20">
         <GridCornerHandles top />
-        <SentimentSpotlight />
+        {/* <SentimentSpotlight /> */}
         <TrackingSpotlight />
       </div>
     </section>

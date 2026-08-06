@@ -80,14 +80,11 @@ export const INTEGRATIONS: Integration[] = [
     accent: '#458CF5',
   },
   // ── Automation & alerts ────────────────────────────────────
-  {
-    slug: 'slack',
-    name: 'Slack',
-    group: 'Automation & alerts',
-    logo: '/logos/slack.svg',
-    description: 'Get visibility drops and task updates in your channels.',
-    accent: '#4A154B',
-  },
+  // Slack is NOT a catalog entry. It connects through the dedicated OAuth
+  // connector in the Notifications section (SlackIntegrationCard), which owns
+  // the workspace link and the channel picker. A catalog card here rendered a
+  // second, inert Slack tile on the same page — its switch did nothing, since
+  // 'slack' was never in CONNECTABLE — and double-counted in the connected tally.
   {
     slug: 'zapier',
     name: 'Zapier',

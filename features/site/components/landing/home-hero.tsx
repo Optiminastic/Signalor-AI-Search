@@ -17,9 +17,9 @@ import { GridCornerHandles } from '@/features/site/components/landing/home-grid'
 function HeroShowcase(): JSX.Element {
   return (
     <div className="border-border border-b">
-      <div className="border-border relative mx-auto max-w-6xl border-x">
+      <div className="border-border max-w-8xl relative mx-auto border-x">
         <GridCornerHandles top bottom />
-        <div className="bg-primary relative overflow-hidden p-2 sm:p-2.5">
+        <div className="bg-primary relative mx-auto max-w-6xl overflow-hidden rounded-md p-2 sm:p-2.5">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[url('/hero-texture.svg')] bg-cover opacity-60 mix-blend-overlay"
@@ -78,15 +78,15 @@ function HeroCtaButtons(): JSX.Element {
 export function HomeHero(): JSX.Element {
   return (
     <section aria-labelledby="home-hero-heading">
-      <div className="border-border relative mx-auto max-w-6xl border-x border-b px-6 pt-16 pb-14 md:pt-12 md:pb-10">
+      <div className="border-border max-w-8xl relative mx-auto border-x border-b px-6 pt-14 pb-12 sm:pt-16 sm:pb-14 lg:pt-20 lg:pb-16">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_65%_at_50%_0%,rgba(224,74,61,0.05),transparent_70%)]"
         />
-        <div className="relative mx-auto max-w-5xl text-center">
+        <div className="relative mx-auto max-w-4xl text-center">
           <h1
             id="home-hero-heading"
-            className="text-foreground text-4xl leading-[1.08] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+            className="text-foreground text-4xl leading-[1.08] font-semibold tracking-tight sm:text-5xl lg:text-[3.5rem] lg:leading-[1.06]"
           >
             {HEADLINE.map((word, index) => (
               <span
@@ -108,6 +108,10 @@ export function HomeHero(): JSX.Element {
               </span>
             )).flatMap((node, index) => (index === 0 ? [node] : [' ', node]))}
           </h1>
+          <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-base leading-relaxed text-pretty sm:text-lg">
+            Score how citable your site is across ChatGPT, Claude, Gemini, and Perplexity — then
+            ship the fixes that get you cited in AI answers.
+          </p>
           <HeroCtaButtons />
           <p className="text-muted-foreground/80 mt-4 text-[13px] font-medium">
             Free score in ~60 seconds · No sign-up needed · No card required

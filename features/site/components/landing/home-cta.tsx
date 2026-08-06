@@ -17,7 +17,7 @@ import {
 export function HomeCta(): JSX.Element {
   return (
     <section className="border-border border-t" aria-labelledby="home-cta-heading">
-      <div className="border-border relative mx-auto max-w-6xl border-x">
+      <div className="border-border max-w-8xl relative mx-auto border-x">
         <GridCornerHandles top />
         <GridHandle className="-top-[3.5px] left-[53.5%] -ml-[3.5px] hidden lg:block" />
         <div

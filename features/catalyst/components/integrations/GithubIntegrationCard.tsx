@@ -1,11 +1,18 @@
 'use client'
 
 import { GithubMark } from '@/components/GithubMark'
+import {
+  CancelButton,
+  ConnectButton,
+  ConnectedBadge,
+  ConnectorCard,
+  ConnectorFooter,
+  ConnectorSelect,
+  ConnectorSpinner,
+  ConnectorValue,
+  type ConnectorTone,
+} from '@/features/catalyst/components/integrations/ConnectorCard'
 import type { OrgGithubConnection } from '@/hooks/useOrgGithubConnection'
-import { Check, Loader2, Unlink2 } from '@/lib/icons'
-
-const CARD_BASE =
-  'group relative flex flex-col rounded-md border p-3.5 transition-all duration-200 hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(16,24,40,.07)]'
 
 function description(gh: OrgGithubConnection): string {
   if (gh.notConfigured) return "GitHub connect isn't enabled on this server yet."
@@ -18,120 +25,72 @@ function description(gh: OrgGithubConnection): string {
   return 'Connect your repo so SignalorAI can open fix PRs. Works with any framework.'
 }
 
-function TopAction({ gh }: { gh: OrgGithubConnection }): JSX.Element | null {
-  if (gh.loading || gh.connecting)
-    return <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
-  if (gh.connected) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(47,190,126,0.12)] px-2 py-0.5 text-[11px] font-semibold text-[#1e8a5c]">
-        <Check size={12} strokeWidth={3} />
-        Connected
-      </span>
-    )
-  }
-  if (gh.notConfigured) return null
-  return (
-    <button
-      type="button"
-      onClick={gh.connect}
-      className="inline-flex h-8 items-center gap-1.5 rounded-md bg-[#1f2328] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#32383f]"
-    >
-      <GithubMark size={13} />
-      Connect
-    </button>
-  )
+function tone(gh: OrgGithubConnection): ConnectorTone {
+  if (gh.needsRepoChoice) return 'attention'
+  return gh.connected ? 'connected' : 'idle'
 }
 
-function Footer({ gh }: { gh: OrgGithubConnection }): JSX.Element | null {
-  if (gh.connecting) {
-    return (
-      <button
-        type="button"
-        onClick={gh.cancel}
-        className="mt-2.5 self-start text-[11.5px] font-medium text-neutral-500 transition-colors hover:text-[var(--cat-ink)]"
-      >
-        Cancel
-      </button>
-    )
-  }
-  if (!gh.connected) return null
+function Action({ gh }: { gh: OrgGithubConnection }): JSX.Element | null {
+  if (gh.loading || gh.connecting) return <ConnectorSpinner />
+  if (gh.connected) return gh.needsRepoChoice ? null : <ConnectedBadge />
+  if (gh.notConfigured) return null
   return (
-    <div className="mt-2.5 flex items-center justify-between gap-2">
-      <RepoPicker gh={gh} />
-      <button
-        type="button"
-        onClick={gh.unlink}
-        disabled={gh.unlinking}
-        title="Wrong repo? Disconnect &amp; reconnect"
-        className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-neutral-500 transition-colors hover:text-[var(--cat-ink)] disabled:opacity-60"
-      >
-        {gh.unlinking ? (
-          <Loader2 className="h-3 w-3 animate-spin" />
-        ) : (
-          <Unlink2 className="h-3 w-3" />
-        )}
-        Disconnect
-      </button>
-    </div>
+    <ConnectButton
+      onClick={gh.connect}
+      mark={<GithubMark size={13} />}
+      className="bg-[#1f2328] hover:bg-[#32383f]"
+    />
   )
 }
 
 /** When the App granted several repos, let the user pick which one fixes target;
  *  otherwise just show the single connected repo. */
-function RepoPicker({ gh }: { gh: OrgGithubConnection }): JSX.Element {
+function RepoControl({ gh }: { gh: OrgGithubConnection }): JSX.Element {
   if (gh.repositories.length <= 1) {
-    if (!gh.repo) return <span className="min-w-0 flex-1" />
-    return (
-      <span
-        title={gh.repoReason}
-        className="min-w-0 flex-1 truncate rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]"
-      >
-        {gh.repo}
-      </span>
-    )
+    return <ConnectorValue value={gh.repo || '—'} title={gh.repoReason} mono />
   }
-  const edge = gh.needsRepoChoice ? 'border-[#e04a3d]' : 'border-[var(--cat-border)]'
   return (
-    <label className="flex min-w-0 flex-1 items-center gap-1.5">
-      <span className="shrink-0 text-[11px] text-[var(--cat-ink-3)]">Repo</span>
-      <select
-        value={gh.repo}
-        disabled={gh.selectingRepo}
-        onChange={e => gh.selectRepo(e.target.value)}
-        aria-label="Repository for auto-fix PRs"
-        title={gh.repoReason}
-        className={`min-w-0 flex-1 truncate rounded-md border ${edge} bg-[var(--cat-card)] px-1.5 py-1 font-mono text-[11px] text-[var(--cat-ink-2)] outline-none disabled:opacity-60`}
-      >
-        {/* No target yet: force a deliberate pick rather than defaulting to
-            whichever repo happens to be first in the list. */}
-        {gh.needsRepoChoice && <option value="">Select a repository…</option>}
-        {gh.repositories.map(repo => (
-          <option key={repo} value={repo}>
-            {repo}
-          </option>
-        ))}
-      </select>
-    </label>
+    <ConnectorSelect
+      value={gh.repo}
+      options={gh.repositories.map(repo => ({ value: repo, label: repo }))}
+      onChange={gh.selectRepo}
+      disabled={gh.selectingRepo}
+      needsChoice={gh.needsRepoChoice}
+      placeholder="Select a repository…"
+      ariaLabel="Repository for auto-fix PRs"
+      title={gh.repoReason}
+      mono
+    />
+  )
+}
+
+function Footer({ gh }: { gh: OrgGithubConnection }): JSX.Element | null {
+  if (gh.connecting) return <CancelButton onClick={gh.cancel} />
+  if (!gh.connected) return null
+  return (
+    <ConnectorFooter
+      name="GitHub"
+      label="Repo"
+      control={<RepoControl gh={gh} />}
+      onDisconnect={gh.unlink}
+      disconnecting={gh.unlinking}
+      disconnectTitle="Wrong repo? Disconnect & reconnect"
+    />
   )
 }
 
 /** The dedicated GitHub connector: one org-level connection that opens auto-fix
  *  PRs on any repo, replacing the misleading per-framework "Next.js" card. */
 export function GithubIntegrationCard({ gh }: { gh: OrgGithubConnection }): JSX.Element {
-  const border = gh.connected
-    ? 'border-[rgba(47,190,126,0.4)] bg-[rgba(47,190,126,0.035)]'
-    : 'border-[var(--cat-border)] bg-[var(--cat-card)]'
   return (
-    <div className={`${CARD_BASE} ${border}`}>
-      <div className="flex items-start justify-between gap-2">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[#1f2328] text-white">
-          <GithubMark size={18} />
-        </span>
-        <TopAction gh={gh} />
-      </div>
-      <p className="mt-3 text-[13.5px] font-semibold text-[var(--cat-ink)]">GitHub</p>
-      <p className="mt-1 text-[12px] leading-snug text-[var(--cat-ink-2)]">{description(gh)}</p>
-      <Footer gh={gh} />
-    </div>
+    <ConnectorCard
+      name="GitHub"
+      description={description(gh)}
+      mark={<GithubMark size={18} />}
+      markClassName="bg-[#1f2328]"
+      tone={tone(gh)}
+      action={<Action gh={gh} />}
+      footer={<Footer gh={gh} />}
+    />
   )
 }

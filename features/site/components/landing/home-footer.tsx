@@ -190,7 +190,7 @@ function FooterLegalBar(): JSX.Element {
 export function HomeFooter(): JSX.Element {
   return (
     <footer className="border-border border-t">
-      <div className="border-border relative mx-auto max-w-6xl border-x">
+      <div className="border-border max-w-8xl relative mx-auto border-x">
         <GridCornerHandles top />
         <div className="lg:divide-border grid lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] lg:divide-x">
           <FooterBrandCell />

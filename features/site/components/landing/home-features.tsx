@@ -1,55 +1,13 @@
-import Image from 'next/image'
-
 import { GridCornerHandles } from '@/features/site/components/landing/home-grid'
 import { cn } from '@/features/site/lib/utils'
+import { FeatureScene } from '@/features/site/components/landing/home-feature-scene'
+import { HomeAutofixCard } from '@/features/site/components/landing/home-autofix-card'
+import { HomeCompetitorCard } from '@/features/site/components/landing/home-competitor-card'
+import { HomeMeasureCard } from '@/features/site/components/landing/home-measure-card'
 import { HomePromptCard } from '@/features/site/components/landing/home-prompt-card'
 import { HomeSectionHeader } from '@/features/site/components/landing/home-section-header'
 import { HomeTaskCard } from '@/features/site/components/landing/home-task-card'
 import { HomeVisibilityCard } from '@/features/site/components/landing/home-visibility-card'
-
-/** Auto-fix toggle: the switch flips on and the badge confirms on hover. */
-function AutoFixIllo(): JSX.Element {
-  return (
-    <div className="bg-card ring-border w-full max-w-[260px] rounded-xl p-4 shadow-sm ring-1 shadow-black/5">
-      <div className="flex items-center gap-2.5">
-        <Image
-          src="/logos/shopify.svg"
-          alt="Shopify"
-          width={22}
-          height={22}
-          className="h-[22px] w-[22px]"
-        />
-        <Image
-          src="/logos/wordpress.svg"
-          alt="WordPress"
-          width={22}
-          height={22}
-          className="h-[22px] w-[22px]"
-        />
-        <span className="bg-success/10 text-success ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase opacity-0 transition-opacity duration-300 motion-safe:group-hover:opacity-100">
-          Applied
-        </span>
-      </div>
-      <div className="bg-muted/60 ring-border/70 mt-3 flex items-center justify-between rounded-lg px-3 py-2.5 ring-1">
-        <div>
-          <p className="text-foreground text-xs font-semibold">Auto-fix schema</p>
-          <p className="text-muted-foreground mt-0.5 font-mono text-[10px]">
-            Organization · FAQ · Product
-          </p>
-        </div>
-        <span
-          aria-hidden
-          className="motion-safe:group-hover:bg-primary relative inline-flex h-5 w-9 shrink-0 rounded-full bg-neutral-300 transition-colors duration-300"
-        >
-          <span className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300 motion-safe:group-hover:translate-x-4" />
-        </span>
-      </div>
-      <p className="text-muted-foreground mt-2.5 text-[11px] leading-relaxed">
-        Fixes ship straight to your theme. No engineer needed.
-      </p>
-    </div>
-  )
-}
 
 type Feature = {
   number: string
@@ -58,35 +16,50 @@ type Feature = {
   illo: JSX.Element
 }
 
-// One feature per row, read top to bottom like a spec sheet.
+// One step per row, read top to bottom like a closed loop: score -> watch ->
+// compare -> prioritise -> ship -> measure. The loop is the story, so each row
+// is an active verb, not a feature name.
 const FEATURES: Feature[] = [
   {
     number: '01',
-    title: 'Prompt tracking',
+    title: 'Audit',
+    description: 'Paste any URL and get a 0-100 GEO score across six pillars in about 60 seconds.',
+    illo: <HomeVisibilityCard />,
+  },
+  {
+    number: '02',
+    title: 'Monitor',
     description:
       'Watch how ChatGPT, Claude, Gemini and Perplexity answer the questions your buyers actually ask.',
     illo: <HomePromptCard />,
   },
   {
-    number: '02',
-    title: 'GEO score',
-    description:
-      'One 0-100 score for how citable your site is, plus where you rank against the brands AI names instead.',
-    illo: <HomeVisibilityCard />,
-  },
-  {
     number: '03',
-    title: 'Tasks',
+    title: 'Compete',
     description:
-      'A ranked queue of fixes, each one tied to the prompt or signal completing it improves.',
-    illo: <HomeTaskCard />,
+      'Compare your share of AI citations with the brands engines name instead. Close gaps before they widen.',
+    illo: <HomeCompetitorCard />,
   },
   {
     number: '04',
-    title: 'Auto-fix',
+    title: 'Prioritise',
     description:
-      'Push schema and meta changes straight to your site, or hand the diff to your team as a pull request.',
-    illo: <AutoFixIllo />,
+      'A ranked fix queue, each one tied to the prompt or signal completing it improves.',
+    illo: <HomeTaskCard />,
+  },
+  {
+    number: '05',
+    title: 'Ship',
+    description:
+      'Push schema and meta changes straight to your site in one click, or hand the diff to your team as a pull request.',
+    illo: <HomeAutofixCard />,
+  },
+  {
+    number: '06',
+    title: 'Measure',
+    description:
+      'See citations and AI referral traffic climb after your fixes ship, then loop back and do it again.',
+    illo: <HomeMeasureCard />,
   },
 ]
 
@@ -97,10 +70,14 @@ const FEATURES: Feature[] = [
  */
 function FeatureRow({ feature, flipped }: { feature: Feature; flipped: boolean }): JSX.Element {
   return (
-    <div className="group relative">
+    <div className="group border-border relative border-t">
+      {/* The hairline above spans the full rail; the content sits on the
+          narrower max-w-6xl measure the sibling sections use. Without it the
+          row stretches the whole 1440px rail, stranding the copy on the far
+          left and the card on the far right with a dead gap between them. */}
       <div
         className={cn(
-          'flex flex-col gap-10 px-6 py-14 sm:px-10 lg:items-center lg:gap-20 lg:py-20',
+          'mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14 sm:px-10 lg:items-center lg:gap-20 lg:py-20',
           flipped ? 'lg:flex-row-reverse' : 'lg:flex-row',
         )}
       >
@@ -115,7 +92,9 @@ function FeatureRow({ feature, flipped }: { feature: Feature; flipped: boolean }
             {feature.description}
           </p>
         </div>
-        <div className="flex shrink-0 lg:justify-center">{feature.illo}</div>
+        <div className="flex shrink-0 lg:justify-center">
+          <FeatureScene>{feature.illo}</FeatureScene>
+        </div>
       </div>
     </div>
   )
@@ -123,16 +102,21 @@ function FeatureRow({ feature, flipped }: { feature: Feature; flipped: boolean }
 
 function FeaturesHeader(): JSX.Element {
   return (
-    <div className="border-border relative border-t px-6 py-20 sm:px-10 sm:py-24">
+    <div className="border-border relative border-t py-20 sm:py-24">
       <GridCornerHandles top />
-      <HomeSectionHeader
-        eyebrow="Platform"
-        headingId="home-features-heading"
-        title="Everything you need to win in AI search"
-        align="left"
-        size="lg"
-        highlight="win in AI search"
-      />
+      {/* Same measure and padding as FeatureRow, so the heading starts on the
+          same left edge as the numbered steps below it. */}
+      <div className="mx-auto w-full max-w-6xl px-6 sm:px-10">
+        <HomeSectionHeader
+          eyebrow="Platform"
+          headingId="home-features-heading"
+          title="Everything you need to win in AI search"
+          description="Track prompts, score your GEO readiness, and ship fixes — all from one dashboard."
+          align="left"
+          size="lg"
+          highlight="win in AI search"
+        />
+      </div>
     </div>
   )
 }

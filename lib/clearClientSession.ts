@@ -1,5 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 
+import { clearAuthToken } from '@/lib/auth-token'
 import { useOnboardingStore } from '@/stores/useOnboardingStore'
 import { useOnboardingWizardStore } from '@/stores/useOnboardingWizardStore'
 import { useProjectStore } from '@/stores/useProjectStore'
@@ -52,6 +53,10 @@ export function clearClientSession(queryClient: QueryClient): void {
   useProjectStore.setState({ activeOrgId: null })
   useOnboardingStore.getState().reset()
   useOnboardingWizardStore.getState().reset()
+
+  // The bearer token outlives the cookie by up to 15 minutes, so without this
+  // the next request would still be signed as the account that just left.
+  clearAuthToken()
 
   // Orgs and runs are cached by email; clearing prevents the next account from
   // reading the previous user's data (which drives the onboarding guard).
