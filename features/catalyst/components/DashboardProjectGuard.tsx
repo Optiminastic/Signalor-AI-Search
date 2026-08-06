@@ -1,10 +1,10 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, type ReactNode } from 'react'
 
 import { useActiveProject, type ActiveProject } from '@/hooks/useActiveProject'
-import { useSession } from '@/lib/auth-client'
+import { signOut, useSession } from '@/lib/auth-client'
 import { Loader2 } from '@/lib/icons'
 import { routes } from '@/lib/routes'
 
@@ -54,16 +54,32 @@ function needsOnboarding(p: ActiveProject): boolean {
  */
 export function DashboardProjectGuard({ children }: { children: ReactNode }): JSX.Element {
   const router = useRouter()
+  const pathname = usePathname()
   const { isPending } = useSession()
   const project = useActiveProject()
   const redirect = needsOnboarding(project)
+  // The middleware only checks that a session cookie EXISTS, not that it is
+  // still valid, so an expired cookie sails past it and lands here with no
+  // email. Deferring to the page in that state hung the dashboard forever:
+  // `/dashboard` waits on an orgSlug derived from a query gated on email, so it
+  // can never arrive.
+  const signedOut = !isPending && !project.email
 
   useEffect(() => {
+    if (signedOut) {
+      // Drop the dead cookie BEFORE navigating. Redirecting while it is still
+      // set is an unbreakable loop: the middleware bounces every auth route
+      // back to /dashboard whenever a cookie is present, and /dashboard bounces
+      // back here. Clearing it is also just correct — the session is invalid.
+      void signOut().finally(() => {
+        router.replace(`${routes.signIn}?callbackUrl=${encodeURIComponent(pathname)}`)
+      })
+      return
+    }
     if (redirect) router.replace(routes.onboarding)
-  }, [redirect, router])
+  }, [signedOut, redirect, pathname, router])
 
-  // Middleware guards auth; if we somehow have no email, defer to the page.
-  if (!project.email) return isPending ? <GuardSpinner /> : <>{children}</>
+  if (isPending || signedOut) return <GuardSpinner />
   // Hold the dashboard back until we know a launched project exists (or redirect).
   if (project.isLoading || redirect) return <GuardSpinner />
   return <>{children}</>
