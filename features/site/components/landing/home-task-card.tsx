@@ -1,16 +1,9 @@
 import { ArrowRight, Check, Zap } from '@/features/site/components/icons'
 import { cn } from '@/features/site/lib/utils'
+import { signalColor } from '@/lib/signal-colors'
 
 // The dashboard's Actions table, rebuilt for the marketing page. Fixed values,
 // so it renders on the server.
-
-/** Kept in sync with SIGNAL_COLOR in the dashboard's SignalTag. */
-const SIGNAL_COLOR: Record<string, string> = {
-  Prompt: '#e04a3d',
-  Schema: '#2563EB',
-  'E-E-A-T': '#7C3AED',
-  Technical: '#475569',
-}
 
 const PRIORITY_COLOR: Record<string, string> = {
   Critical: '#BE123C',
@@ -52,7 +45,7 @@ const TASKS: readonly Task[] = [
 ]
 
 function SignalTag({ signal }: { signal: string }): JSX.Element {
-  const color = SIGNAL_COLOR[signal] ?? '#6B7280'
+  const color = signalColor(signal)
   return (
     <span
       className="inline-flex items-center gap-1 rounded-full px-1.5 py-px text-[9.5px] font-semibold whitespace-nowrap"

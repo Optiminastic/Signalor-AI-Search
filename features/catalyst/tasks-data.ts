@@ -28,6 +28,9 @@ export interface TaskItem {
   signal: string
   /** One sentence on what completing it actually does. */
   effect: string
+  /** Tracked prompt this task targets (undefined when it isn't prompt-derived).
+   *  Lets the row deep-link to that prompt in the tracker. */
+  promptTrackId?: number
 }
 
 export interface StatCard {

@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import { Check, ChevronDown, Loader2, Unlink2 } from '@/lib/icons'
 
@@ -35,7 +35,9 @@ export interface ConnectorCardProps {
   /** Brand glyph, rendered inside the tinted tile. */
   mark: ReactNode
   /** Background for the 36px logo tile, e.g. `bg-[#4A154B]`. */
-  markClassName: string
+  markClassName?: string
+  /** Tile background when the brand colour is data, not a class (catalog accents). */
+  markStyle?: CSSProperties
   tone: ConnectorTone
   /** Top-right slot: the Connect button, a spinner, or the connected badge. */
   action: ReactNode
@@ -49,7 +51,8 @@ export function ConnectorCard({
   name,
   description,
   mark,
-  markClassName,
+  markClassName = '',
+  markStyle,
   tone,
   action,
   footer,
@@ -59,7 +62,8 @@ export function ConnectorCard({
     <div className={`${CARD_BASE} ${TONE_BORDER[tone]}`}>
       <div className="flex items-start justify-between gap-2">
         <span
-          className={`grid h-9 w-9 shrink-0 place-items-center rounded-md text-white ${markClassName}`}
+          style={markStyle}
+          className={`grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-md text-white ${markClassName}`}
         >
           {mark}
         </span>
@@ -89,21 +93,68 @@ export function ConnectedBadge(): JSX.Element {
 export function ConnectButton({
   onClick,
   mark,
-  className,
+  className = '',
+  style,
+  label = 'Connect',
 }: {
   onClick: () => void
-  mark: ReactNode
+  mark?: ReactNode
   /** Brand background + hover, e.g. `bg-[#4A154B] hover:bg-[#611f69]`. */
-  className: string
+  className?: string
+  /** Brand background when the colour is data rather than a class. */
+  style?: CSSProperties
+  label?: string
 }): JSX.Element {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white transition-colors ${className}`}
+      style={style}
+      className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white transition-opacity hover:opacity-90 ${className}`}
     >
       {mark}
-      Connect
+      {label}
+    </button>
+  )
+}
+
+/**
+ * The hairline-separated row every connected card ends with. Shared so the
+ * catalog cards and the OAuth connectors line up pixel for pixel in one grid.
+ */
+export function ConnectorFooterRow({ children }: { children: ReactNode }): JSX.Element {
+  return (
+    <div className="mt-3 flex items-center gap-2 border-t border-[var(--cat-border-soft)] pt-2.5">
+      {children}
+    </div>
+  )
+}
+
+export function DisconnectButton({
+  onClick,
+  busy,
+  name,
+  title,
+}: {
+  onClick: () => void
+  busy?: boolean
+  name: string
+  title?: string
+}): JSX.Element {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={busy}
+      aria-label={`Disconnect ${name}`}
+      title={title ?? `Disconnect ${name}`}
+      className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[#E5484D] disabled:opacity-60"
+    >
+      {busy ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <Unlink2 className="h-3.5 w-3.5" />
+      )}
     </button>
   )
 }
@@ -141,24 +192,16 @@ export function ConnectorFooter({
   name: string
 }): JSX.Element {
   return (
-    <div className="mt-3 flex items-center gap-2 border-t border-[var(--cat-border-soft)] pt-2.5">
+    <ConnectorFooterRow>
       <span className="w-[52px] shrink-0 text-[11px] text-[var(--cat-ink-3)]">{label}</span>
       {control}
-      <button
-        type="button"
+      <DisconnectButton
         onClick={onDisconnect}
-        disabled={disconnecting}
-        aria-label={`Disconnect ${name}`}
-        title={disconnectTitle ?? `Disconnect ${name}`}
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[#E5484D] disabled:opacity-60"
-      >
-        {disconnecting ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        ) : (
-          <Unlink2 className="h-3.5 w-3.5" />
-        )}
-      </button>
-    </div>
+        busy={disconnecting}
+        name={name}
+        title={disconnectTitle}
+      />
+    </ConnectorFooterRow>
   )
 }
 

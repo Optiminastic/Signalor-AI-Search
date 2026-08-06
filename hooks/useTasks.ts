@@ -58,6 +58,7 @@ function toTask(action: UserAction, project: ProjectRef): TaskItem {
     recommendationId: action.recommendation ?? undefined,
     signal: action.attribution?.signal ?? '',
     effect: action.attribution?.effect ?? '',
+    promptTrackId: action.prompt_track_id ?? undefined,
   }
 }
 

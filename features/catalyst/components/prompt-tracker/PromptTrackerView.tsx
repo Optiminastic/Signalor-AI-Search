@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { DataState } from '@/features/catalyst/components/DataState'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
@@ -22,6 +23,7 @@ import {
 } from '@/features/catalyst/components/prompt-tracker/PromptTagFilter'
 import { PromptTaxonomyBars } from '@/features/catalyst/components/prompt-tracker/PromptTaxonomyBars'
 import { PromptToolbar } from '@/features/catalyst/components/prompt-tracker/PromptToolbar'
+import { PROMPT_PARAM } from '@/features/catalyst/constants'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { usePromptMutations } from '@/hooks/usePromptMutations'
@@ -81,8 +83,34 @@ interface ListProps {
   onRemove: (trackId: number) => void
 }
 
+/**
+ * Open the prompt named by `?prompt=<id>`, once its row has loaded.
+ *
+ * Prompts arrive asynchronously, so this cannot run only on mount — the list is
+ * empty then. It fires when the id first resolves to a real prompt and then
+ * stays out of the way, so closing the sheet doesn't immediately reopen it.
+ */
+function useDeepLinkedPrompt(
+  prompts: TrackedPrompt[],
+  onOpen: (prompt: TrackedPrompt) => void,
+): void {
+  const params = useSearchParams()
+  const wanted = Number(params.get(PROMPT_PARAM) ?? '')
+  const openedRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!wanted || openedRef.current === wanted) return
+    const match = prompts.find(p => p.id === wanted)
+    if (!match) return
+    openedRef.current = wanted
+    onOpen(match)
+  }, [wanted, prompts, onOpen])
+}
+
 function PromptList({ prompts, slug, busyId, onRecheck, onRemove }: ListProps): JSX.Element {
   const [open, setOpen] = useState<TrackedPrompt | null>(null)
+  useDeepLinkedPrompt(prompts, setOpen)
+
   if (prompts.length === 0) {
     return (
       <p className="cat-rise rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-4 py-6 text-center text-[13px] text-[var(--cat-ink-2)]">

@@ -169,3 +169,9 @@ export const CURRENT_USER = {
   email: 'james@signalor.com',
   avatar: 'https://i.pravatar.cc/80?img=12',
 }
+
+/** Query param that deep-links the prompt tracker to a single prompt, e.g.
+ *  `/dashboard/<slug>/prompt-tracker?prompt=42`. Lives here rather than in the
+ *  tracker component so a task row can link to it without importing the whole
+ *  view into its bundle. */
+export const PROMPT_PARAM = 'prompt'

@@ -1,60 +1,82 @@
+'use client'
+
 import Link from 'next/link'
 
-import { ConnectSwitch } from '@/features/catalyst/components/integrations/ConnectSwitch'
+import {
+  ConnectButton,
+  ConnectedBadge,
+  ConnectorCard,
+  ConnectorFooterRow,
+  ConnectorSpinner,
+  DisconnectButton,
+} from '@/features/catalyst/components/integrations/ConnectorCard'
 import type { IntegrationWithStatus } from '@/features/catalyst/integrations-data'
 import { Settings2 } from '@/lib/icons'
 
+/**
+ * A catalog integration, rendered with the same shell as the first-class
+ * connectors (GitHub, Slack).
+ *
+ * These cards used to signal "connected" with a red toggle switch while the
+ * connectors used a green "Connected" badge, so one page showed two different
+ * connected states — and a red control next to green cards reads as an error.
+ * Everything now shares `ConnectorCard`: a badge for state, an explicit Connect
+ * button to start, and a disconnect control in the footer.
+ */
+
 interface IntegrationCardProps {
   item: IntegrationWithStatus
-  /** Omitted for providers with no self-serve flow — the switch renders inert. */
+  /** Omitted for providers with no self-serve flow — no Connect button is shown. */
   onToggle?: (next: boolean) => void
   busy?: boolean
-  /** When connected, where the manage gear links (e.g. GA property selection). */
+  /** When connected, where the manage link points (e.g. GA property selection). */
   manageHref?: string
 }
 
-function CardActions({ item, onToggle, busy, manageHref }: IntegrationCardProps): JSX.Element {
+function Action({ item, onToggle, busy }: IntegrationCardProps): JSX.Element | null {
+  if (busy) return <ConnectorSpinner />
+  if (item.connected) return <ConnectedBadge />
+  // No self-serve flow (WordPress plugin, Framer plugin, an SDK snippet): the
+  // description already explains the setup, so show no button rather than a dead
+  // control — the old inert switch just looked broken.
+  if (!onToggle) return null
+  return <ConnectButton onClick={() => onToggle(true)} style={{ background: item.accent }} />
+}
+
+function Footer({ item, onToggle, busy, manageHref }: IntegrationCardProps): JSX.Element | null {
+  if (!item.connected) return null
   return (
-    <div className="flex items-center gap-1">
-      {item.connected && manageHref && (
+    <ConnectorFooterRow>
+      {manageHref ? (
         <Link
           href={manageHref}
-          aria-label={`Manage ${item.name}`}
-          title={`Manage ${item.name}`}
-          className="grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
+          className="inline-flex min-w-0 flex-1 items-center gap-1.5 text-[11.5px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
         >
-          <Settings2 size={15} strokeWidth={2} />
+          <Settings2 size={13} strokeWidth={2} />
+          Manage
         </Link>
+      ) : (
+        <span className="min-w-0 flex-1" />
       )}
-      <ConnectSwitch checked={item.connected} label={item.name} onToggle={onToggle} busy={busy} />
-    </div>
+      {onToggle && (
+        <DisconnectButton onClick={() => onToggle(false)} busy={busy} name={item.name} />
+      )}
+    </ConnectorFooterRow>
   )
 }
 
 export function IntegrationCard(props: IntegrationCardProps): JSX.Element {
   const { item } = props
-  const { connected, accent } = item
   return (
-    <div
-      className={`group relative flex flex-col rounded-md border bg-[var(--cat-card)] p-3.5 transition-all duration-200 hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(16,24,40,.07)] ${
-        connected
-          ? 'border-[rgba(47,190,126,0.4)] bg-[rgba(47,190,126,0.035)]'
-          : 'border-[var(--cat-border)]'
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <span
-          className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-md"
-          style={{ background: `${accent}14` }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item.logo} alt="" className="h-5 w-5 object-contain" />
-        </span>
-        <CardActions {...props} />
-      </div>
-
-      <p className="mt-3 text-[13.5px] font-semibold text-[var(--cat-ink)]">{item.name}</p>
-      <p className="mt-1 text-[12px] leading-snug text-[var(--cat-ink-2)]">{item.description}</p>
-    </div>
+    <ConnectorCard
+      name={item.name}
+      description={item.description}
+      // eslint-disable-next-line @next/next/no-img-element
+      mark={<img src={item.logo} alt="" className="h-5 w-5 object-contain" />}
+      markStyle={{ background: `${item.accent}14` }}
+      tone={item.connected ? 'connected' : 'idle'}
+      action={<Action {...props} />}
+      footer={<Footer {...props} />}
+    />
   )
 }
