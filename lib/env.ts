@@ -16,6 +16,12 @@ export const env = createEnv({
     // declared in this schema.
     RESEND_API_KEY: z.string().optional(),
     FROM_EMAIL: z.string().optional(),
+    // Org-scoped signed token from the dashboard's Crawler Logs page. Read by
+    // middleware.ts to report AI-crawler visits to the backend. Server-only on
+    // purpose: it authorizes writing crawler hits for one organization, so a
+    // NEXT_PUBLIC_ name would hand that capability to every browser. Unset =
+    // crawler reporting stays dormant.
+    SIGNALOR_CRAWLER_INGEST_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -39,6 +45,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,
+    SIGNALOR_CRAWLER_INGEST_TOKEN: process.env.SIGNALOR_CRAWLER_INGEST_TOKEN,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_USE_STUBS: process.env.NEXT_PUBLIC_USE_STUBS,
