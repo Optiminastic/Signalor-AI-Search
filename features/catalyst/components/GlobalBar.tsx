@@ -7,6 +7,7 @@ import { AgentChatTrigger } from '@/features/catalyst/components/agent-chat/Agen
 import { ICON_TILE } from '@/features/catalyst/components/control-styles'
 import { FeedbackPopover } from '@/features/catalyst/components/FeedbackPopover'
 import { GlobalSearch } from '@/features/catalyst/components/GlobalSearch'
+import { LiveVisitorsChip } from '@/features/catalyst/components/LiveVisitorsChip'
 import { MobileMenuButton } from '@/features/catalyst/components/MobileMenuButton'
 import { SidebarToggle } from '@/features/catalyst/components/SidebarToggle'
 import { ThemeToggleButton } from '@/features/catalyst/components/ThemeToggleButton'
@@ -35,6 +36,7 @@ export function GlobalBar(): JSX.Element {
         )}
         {/* Agent sits with the app-level chrome (theme/help/bell), not the page actions. */}
         <AgentChatTrigger />
+        <LiveVisitorsChip />
         <ThemeToggleButton />
         {/* Lowest-priority chrome: dropped on narrow viewports so the fixed-width
             right cluster can never outgrow the bar. */}

@@ -1,5 +1,6 @@
 import { BRAND, GREEN } from '@/features/catalyst/constants'
 import type { OutreachReport } from '@/lib/api/outreach'
+import { ENGINE_DOMAINS } from '@/lib/geo/engine-domains'
 
 import { lostPrompts } from './format'
 
@@ -49,20 +50,8 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, s
  * Every logo still sits beside its name in text, so a client with images
  * disabled loses decoration, never meaning.
  */
-const ENGINE_DOMAINS: Record<string, string> = {
-  chatgpt: 'chatgpt.com',
-  gpt: 'chatgpt.com',
-  claude: 'claude.ai',
-  perplexity: 'perplexity.ai',
-  gemini: 'gemini.google.com',
-  google: 'google.com',
-  bing: 'bing.com',
-  copilot: 'copilot.microsoft.com',
-  deepseek: 'deepseek.com',
-  grok: 'x.ai',
-  llama: 'meta.ai',
-  metallama: 'meta.ai',
-}
+// Moved to lib/ so the dashboard can run the same map backwards (referrer host
+// → engine) without importing across features.
 
 /**
  * A site's mark, via Google's public favicon service.
