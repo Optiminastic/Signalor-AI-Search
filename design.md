@@ -90,7 +90,7 @@ Every section you build must commit to one of them - mixing them in one section 
 
 ### A. "Rail" (home page + global chrome)
 
-- Content sits inside a `mx-auto max-w-6xl border-x border-border` rail, so vertical hairlines run the full page.
+- Content sits inside a `mx-auto max-w-8xl border-x border-border` rail, so vertical hairlines run the full page (the landing rail is `max-w-8xl` ~ 1440px, matching the nav; sub-pages keep `max-w-6xl`).
 - Cards are soft: `rounded-xl bg-card ring-1 ring-border shadow-sm shadow-black/5` (use `HOME_CARD` from `features/site/components/landing/home-styles.ts`).
 - Decorations: `GridCornerHandles` / `GridHandle` dots at rail intersections (`home-grid.tsx`).
 - Used by: `/` sections, `HomeCta`, `HomeFooter`.

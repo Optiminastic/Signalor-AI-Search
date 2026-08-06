@@ -53,6 +53,14 @@
 }
 
 @theme inline {
+  /* The marketing rail. DESIGN.md Part A: "Content sits inside a
+     mx-auto max-w-8xl border-x border-border rail ... the landing rail is
+     max-w-8xl ~ 1440px, matching the nav".
+     Tailwind v4's container scale stops at --container-7xl (80rem), so until
+     this existed `max-w-8xl` matched no theme key, generated no CSS, and was
+     silently a no-op: the nav, hero, mid-page rail, CTA and footer all had NO
+     max-width and ran full-bleed. */
+  --container-8xl: 90rem; /* 1440px */
   --font-sans: var(--font-inter);
   --font-serif: var(--font-instrument-serif);
   --font-mono:

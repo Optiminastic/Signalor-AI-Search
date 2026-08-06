@@ -1,7 +1,13 @@
 'use client'
 
+import Image from 'next/image'
+
 import { Check } from '@/features/site/components/icons'
-import type { CellValue, ComparisonSection } from '@/features/site/lib/pricing-comparison'
+import {
+  TRACKED_MODEL_LOGOS,
+  type CellValue,
+  type ComparisonSection,
+} from '@/features/site/lib/pricing-comparison'
 import { cn } from '@/features/site/lib/utils'
 
 interface Column {
@@ -18,8 +24,28 @@ interface PlanComparisonTableProps {
   featuredId?: string
 }
 
+/** The AI engine logos shared by every plan, as a compact cluster. */
+function ModelLogos(): JSX.Element {
+  return (
+    <span className="inline-flex flex-wrap items-center justify-center gap-2 py-0.5">
+      {TRACKED_MODEL_LOGOS.map(model => (
+        <Image
+          key={model.name}
+          src={model.src}
+          alt={model.name}
+          width={18}
+          height={18}
+          title={model.name}
+          className="h-[18px] w-[18px] object-contain"
+        />
+      ))}
+    </span>
+  )
+}
+
 /** A tick, an em dash, or a literal value. */
 function Cell({ value }: { value: CellValue }): JSX.Element {
+  if (value === 'models') return <ModelLogos />
   if (value === true) {
     return (
       <>
@@ -57,9 +83,7 @@ export function PlanComparisonTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[720px] border-collapse text-left">
-        <caption className="sr-only">
-          Feature comparison across every SignalorAI plan
-        </caption>
+        <caption className="sr-only">Feature comparison across every SignalorAI plan</caption>
         <thead>
           <tr>
             <th scope="col" className="border-border w-[34%] border-b px-4 py-4 align-bottom">
@@ -78,6 +102,11 @@ export function PlanComparisonTable({
                 <span className="text-muted-foreground block text-[12px] tabular-nums">
                   {col.price}
                 </span>
+                {col.id === featuredId ? (
+                  <span className="bg-primary text-primary-foreground mt-2 inline-block rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase">
+                    Popular
+                  </span>
+                ) : null}
               </th>
             ))}
           </tr>

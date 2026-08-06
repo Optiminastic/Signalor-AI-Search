@@ -134,6 +134,24 @@ function VsCard({ column, highlight = false }: VsCardProps): JSX.Element {
   )
 }
 
+/**
+ * Overlapping "VS" marker centred on the seam between the two columns. It sits
+ * on both cards' edges (a fixed 44px circle across the 16px grid gap) so the
+ * two panels read as a single head-to-head, not two unrelated cards.
+ */
+function VsMedallion(): JSX.Element {
+  return (
+    <span
+      aria-hidden
+      className="absolute top-1/2 left-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 md:block"
+    >
+      <span className="bg-card text-primary ring-border flex size-11 items-center justify-center rounded-full text-[13px] font-bold tracking-[0.06em] shadow-sm ring-1 shadow-black/10">
+        VS
+      </span>
+    </span>
+  )
+}
+
 export function HomeVsClaude(): JSX.Element {
   return (
     <section aria-labelledby="home-vs-claude-heading">
@@ -143,10 +161,12 @@ export function HomeVsClaude(): JSX.Element {
           eyebrow="Signalor vs Claude"
           headingId="home-vs-claude-heading"
           title="Why not just ask Claude?"
+          description="Claude answers one question at a time. SignalorAI watches your brand across every major AI engine, every day."
           size="lg"
           highlight="just ask Claude?"
         />
-        <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:mt-20 md:grid-cols-2">
+        <div className="relative mx-auto mt-16 grid max-w-4xl gap-4 sm:mt-20 md:grid-cols-2">
+          <VsMedallion />
           <VsCard column={SIGNALOR_COLUMN} highlight />
           <VsCard column={CLAUDE_COLUMN} />
         </div>

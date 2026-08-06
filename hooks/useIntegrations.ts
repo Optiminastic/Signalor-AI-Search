@@ -17,7 +17,9 @@ const PROVIDER_SLUG: Record<string, string> = {
   shopify: 'shopify',
   wordpress: 'wordpress',
   woocommerce: 'wordpress',
-  slack: 'slack',
+  // No `slack` mapping: Slack has no catalog card, so nothing reads it. Its
+  // connection state comes from useSlackConnection, which needs the channel
+  // metadata this hook discards.
   zapier: 'zapier',
 }
 

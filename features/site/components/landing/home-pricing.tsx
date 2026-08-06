@@ -41,7 +41,22 @@ type HomePlan = {
   cta: string
 }
 
+const FREE_PLAN: HomePlan = {
+  id: 'free',
+  label: 'Free GEO audit',
+  price: 0,
+  tagline: 'Paste any public URL — score in ~60 seconds, no sign-up.',
+  features: [
+    'Full GEO score across 6 pillars',
+    'Citation signals & prioritized fix list',
+    'No account or card required',
+  ],
+  href: '/tools/url-analyzer',
+  cta: 'Analyze free',
+}
+
 const HOME_PLANS: HomePlan[] = [
+  FREE_PLAN,
   {
     id: 'starter',
     label: 'Self-Serve Brand',
@@ -124,6 +139,7 @@ interface PlanCellProps {
 }
 
 function PlanContent({ plan, symbol, amount, resolved }: PlanCellProps): JSX.Element {
+  const isFree = plan.price === 0
   return (
     <>
       <div>
@@ -140,16 +156,22 @@ function PlanContent({ plan, symbol, amount, resolved }: PlanCellProps): JSX.Ele
         </p>
       </div>
       <div className="mt-5 flex items-start">
-        <span className="text-foreground mt-1 text-base font-semibold">{symbol}</span>
-        <span
-          className={cn(
-            'text-foreground text-4xl font-semibold tracking-tight tabular-nums transition-opacity duration-300',
-            !resolved && 'opacity-40',
-          )}
-        >
-          {amount}
-        </span>
-        <span className="text-muted-foreground mt-4 ml-1.5 text-xs font-medium">/ month</span>
+        {isFree ? (
+          <span className="text-foreground text-4xl font-semibold tracking-tight">Free</span>
+        ) : (
+          <>
+            <span className="text-foreground mt-1 text-base font-semibold">{symbol}</span>
+            <span
+              className={cn(
+                'text-foreground text-4xl font-semibold tracking-tight tabular-nums transition-opacity duration-300',
+                !resolved && 'opacity-40',
+              )}
+            >
+              {amount}
+            </span>
+            <span className="text-muted-foreground mt-4 ml-1.5 text-xs font-medium">/ month</span>
+          </>
+        )}
       </div>
       <Link
         href={plan.href}
@@ -264,17 +286,19 @@ export function HomePricing(): JSX.Element {
       </div>
       <div className="border-border relative border-t">
         <GridCornerHandles top />
-        <GridHandle className="-top-[3.5px] left-1/3 -ml-[3.5px] hidden lg:block" />
-        <GridHandle className="-top-[3.5px] left-2/3 -ml-[3.5px] hidden lg:block" />
-        <div className="divide-border grid grid-cols-1 max-lg:divide-y lg:grid-cols-3 lg:divide-x">
+        <GridHandle className="-top-[3.5px] left-1/2 -ml-[3.5px] hidden lg:block" />
+        <div className="divide-border grid grid-cols-1 max-lg:divide-y lg:grid-cols-2 lg:divide-x">
           {HOME_PLANS.map(plan => {
-            const price = planPriceLabel({
-              plan,
-              live: livePrices?.[plan.id] ?? null,
-              userCcy,
-              currency,
-              currencyReady,
-            })
+            const isFree = plan.price === 0
+            const price = isFree
+              ? { symbol: '', amount: '0', resolved: true }
+              : planPriceLabel({
+                  plan,
+                  live: livePrices?.[plan.id] ?? null,
+                  userCcy,
+                  currency,
+                  currencyReady,
+                })
             return (
               <div
                 key={plan.id}

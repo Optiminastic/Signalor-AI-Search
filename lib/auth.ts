@@ -1,5 +1,5 @@
 import { betterAuth } from 'better-auth'
-import { emailOTP } from 'better-auth/plugins'
+import { emailOTP, jwt } from 'better-auth/plugins'
 import { Pool } from 'pg'
 
 import { sendOtpEmail } from '@/lib/email'
@@ -58,6 +58,26 @@ export const auth = betterAuth({
       expiresIn: 10 * 60, // 10 minutes
       async sendVerificationOTP({ email, otp }) {
         await sendOtpEmail(email, otp)
+      },
+    }),
+    // Issues the short-lived, JWKS-verifiable token the Django backend needs to
+    // know *who* is calling. Every account endpoint there is still keyed on a
+    // client-supplied `email`, which anyone can spoof; the backend already ships
+    // the verifier (core/auth/jwt.py) and an identity seam gated on
+    // REQUIRE_VERIFIED_IDENTITY, but it was dormant because nothing ever sent a
+    // token. Exposes GET /api/auth/token and GET /api/auth/jwks.
+    //
+    // Requires the `jwks` table: run `npx @better-auth/cli migrate` (or apply
+    // the equivalent SQL) before deploying, or /api/auth/token 500s.
+    jwt({
+      jwt: {
+        // Pinned rather than left to default so the backend can enforce both.
+        issuer: env.BETTER_AUTH_URL,
+        audience: env.BETTER_AUTH_URL,
+        expirationTime: '15m',
+        // A JWT is readable by anyone holding it, so it carries only the two
+        // claims the backend actually scopes on - not the whole user record.
+        definePayload: ({ user }) => ({ id: user.id, email: user.email }),
       },
     }),
   ],

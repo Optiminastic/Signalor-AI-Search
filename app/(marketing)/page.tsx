@@ -21,7 +21,6 @@ import { HomeLogoCloud } from '@/features/site/components/landing/home-logo-clou
 import { HomeSpotlights } from '@/features/site/components/landing/home-spotlights'
 import { HomeVsClaude } from '@/features/site/components/landing/home-vs-claude'
 import { HomeFooter } from '@/features/site/components/landing/home-footer'
-import { TESTIMONIALS } from '@/features/site/lib/landing-testimonials-content'
 
 const HOMEPAGE_FAQ = [
   {
@@ -85,21 +84,10 @@ const homeProductJsonLd = {
     url: `${SITE_URL}/pricing`,
   },
   aggregateRating: AGGREGATE_RATING,
-  review: TESTIMONIALS.map(testimonial => ({
-    '@type': 'Review',
-    author: {
-      '@type': 'Person',
-      name: testimonial.name,
-    },
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: '5',
-      bestRating: '5',
-      worstRating: '1',
-    },
-    reviewBody: testimonial.quote,
-    datePublished: '2024-12-01',
-  })),
+  // No `review` array: it was built from TESTIMONIALS, and the testimonials
+  // section no longer renders on this page. Review markup must describe content
+  // the visitor can actually see, so emitting it without the quotes on the page
+  // is structured-data spam rather than an oversight.
 }
 
 export default function HomePage(): JSX.Element {
@@ -110,7 +98,7 @@ export default function HomePage(): JSX.Element {
       <JsonLd id="ld-home-product" data={homeProductJsonLd} />
 
       <header className="border-border border-b">
-        <div className="border-border mx-auto max-w-6xl border-x">
+        <div className="border-border max-w-8xl mx-auto border-x">
           <LandingNav />
         </div>
       </header>
@@ -118,7 +106,7 @@ export default function HomePage(): JSX.Element {
         {/* Gutter ASCII streams — temporarily off. */}
         {/* <HomeGutterMarks /> */}
         <HomeHero />
-        <div className="border-border mx-auto max-w-6xl border-x">
+        <div className="border-border max-w-8xl mx-auto border-x">
           <HomeLogoCloud />
           <HomeVsClaude />
           <HomeFeatures />

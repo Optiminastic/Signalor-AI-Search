@@ -1,4 +1,4 @@
-import { Zap } from '@/features/site/components/icons'
+import { ArrowRight, Check, Zap } from '@/features/site/components/icons'
 import { cn } from '@/features/site/lib/utils'
 
 // The dashboard's Actions table, rebuilt for the marketing page. Fixed values,
@@ -64,9 +64,58 @@ function SignalTag({ signal }: { signal: string }): JSX.Element {
   )
 }
 
+const PRIORITY_LEVEL: Record<string, number> = { Critical: 3, High: 2, Medium: 1 }
+
+/** Slim segmented meter for a task's priority level. */
+function PriorityTicks({ priority }: { priority: string }): JSX.Element {
+  const level = PRIORITY_LEVEL[priority] ?? 1
+  return (
+    <span className="flex items-center gap-[2px]">
+      {Array.from({ length: 3 }, (_, i) => (
+        <span
+          key={i}
+          className={cn('h-3 w-[2px] rounded-[1px]', i < level ? 'bg-primary' : 'bg-neutral-200')}
+        />
+      ))}
+    </span>
+  )
+}
+
+/** Action toggle: auto-fix flips to "Shipped" when the row is hovered. */
+function TaskAction({ autoFix }: { autoFix: boolean }): JSX.Element {
+  return (
+    <span className="relative inline-grid shrink-0 text-[10.5px] font-semibold">
+      <span
+        className={cn(
+          'col-start-1 row-start-1 inline-flex items-center gap-1 rounded-sm px-2 py-1 transition-opacity duration-300 motion-safe:group-hover:opacity-0',
+          autoFix ? 'bg-primary/10 text-primary' : 'ring-border text-muted-foreground ring-1',
+        )}
+      >
+        {autoFix && <Zap className="h-3 w-3" aria-hidden />}
+        {autoFix ? 'Auto fix' : 'Manual'}
+      </span>
+      {autoFix ? (
+        <span className="bg-success/10 text-success col-start-1 row-start-1 inline-flex items-center gap-1 rounded-sm px-2 py-1 text-center opacity-0 transition-opacity duration-300 motion-safe:group-hover:opacity-100">
+          <Check className="h-3 w-3" aria-hidden />
+          Shipped
+        </span>
+      ) : null}
+    </span>
+  )
+}
+
 function TaskRow({ task }: { task: Task }): JSX.Element {
   return (
-    <div className="border-border/70 flex items-center gap-3 border-t px-4 py-2.5">
+    <li className="border-border/70 flex items-center gap-3 border-t px-4 py-3">
+      <span className="flex w-12 shrink-0 flex-col items-start gap-1.5">
+        <span
+          className="text-[10.5px] font-semibold"
+          style={{ color: PRIORITY_COLOR[task.priority] ?? '#6B7280' }}
+        >
+          {task.priority}
+        </span>
+        <PriorityTicks priority={task.priority} />
+      </span>
       <span className="min-w-0 flex-1">
         <span className="text-foreground block truncate text-[12px] font-medium">{task.title}</span>
         <span className="text-muted-foreground mt-0.5 block truncate text-[10.5px]">
@@ -76,22 +125,8 @@ function TaskRow({ task }: { task: Task }): JSX.Element {
       <span className="hidden shrink-0 sm:block">
         <SignalTag signal={task.signal} />
       </span>
-      <span
-        className="w-12 shrink-0 text-[10.5px] font-semibold"
-        style={{ color: PRIORITY_COLOR[task.priority] ?? '#6B7280' }}
-      >
-        {task.priority}
-      </span>
-      <span
-        className={cn(
-          'inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1 text-[10.5px] font-semibold',
-          task.autoFix ? 'bg-primary/10 text-primary' : 'text-muted-foreground ring-border ring-1',
-        )}
-      >
-        {task.autoFix && <Zap className="h-3 w-3" aria-hidden />}
-        {task.autoFix ? 'Auto fix' : 'Manual'}
-      </span>
-    </div>
+      <TaskAction autoFix={task.autoFix} />
+    </li>
   )
 }
 
@@ -111,14 +146,26 @@ export function HomeTaskCard(): JSX.Element {
         </span>
       </div>
       <div className="text-muted-foreground flex items-center gap-3 px-4 pb-2 text-[9.5px] font-semibold tracking-wide uppercase">
+        <span className="w-12 shrink-0">Priority</span>
         <span className="flex-1">Task</span>
         <span className="hidden sm:block">Improves</span>
-        <span className="w-12">Priority</span>
-        <span className="w-[62px]">Action</span>
+        <span className="w-[76px] shrink-0 text-right">Action</span>
       </div>
-      {TASKS.map(task => (
-        <TaskRow key={task.title} task={task} />
-      ))}
+      <ul>
+        {TASKS.map(task => (
+          <TaskRow key={task.title} task={task} />
+        ))}
+      </ul>
+      <p className="border-border text-muted-foreground flex items-center justify-between border-t px-4 py-2.5 text-[10.5px]">
+        <span className="flex items-center gap-1.5">
+          <span className="bg-primary h-1.5 w-1.5 rounded-full" aria-hidden />
+          Highest impact first
+        </span>
+        <span className="text-primary inline-flex items-center gap-1 font-semibold">
+          View all
+          <ArrowRight className="h-3 w-3" aria-hidden />
+        </span>
+      </p>
     </div>
   )
 }

@@ -23,7 +23,7 @@ import {
 import { CurrencyToggle } from '@/features/site/components/pricing/currency-toggle'
 import { PricingHero } from '@/features/site/components/pricing/pricing-hero'
 import { PricingStatsSection } from '@/features/site/components/pricing/pricing-stats-section'
-import { GridCornerHandles, GridHandle } from '@/features/site/components/landing/home-grid'
+import { GridCornerHandles } from '@/features/site/components/landing/home-grid'
 import { HomeSectionHeader } from '@/features/site/components/landing/home-section-header'
 import { SignalorLoader } from '@/features/site/components/ui/signalor-loader'
 import { setAccountType as persistAccountType } from '@/features/site/lib/api/account'
@@ -407,56 +407,50 @@ function PricingPageInner() {
     return <PricingPageFallback />
   }
 
-  const showBackLink = !!(returnTo || session)
-  const backHref = returnTo || routes.dashboard
-  const backLabel = returnTo ? 'Back to setup' : 'Back to dashboard'
+  // Only render as many plan columns as there are plans, so the grid never
+  // leaves empty cells beside the cards (individual = 2, agency = 3).
+  const activePlans = audience === 'individual' ? PLANS : AGENCY_PLANS
+  const planGridCols =
+    activePlans.length === 2
+      ? 'xl:grid-cols-2'
+      : activePlans.length === 3
+        ? 'xl:grid-cols-3'
+        : 'xl:grid-cols-4'
 
   return (
     <MarketingShell>
-      <PricingHero
-        showBackLink={showBackLink}
-        backHref={backHref}
-        backLabel={backLabel}
-        onboardingBanner={returnTo === routes.onboardingCompanyInfo}
-      />
+      <PricingHero onboardingBanner={returnTo === routes.onboardingCompanyInfo}>
+        <div className="flex flex-col items-center gap-4">
+          <AudienceSwitch
+            audience={audience}
+            onSelect={value => {
+              setAudience(value)
+              // Let a signed-in user switch their account type straight from
+              // the pricing toggle (best-effort; UI updates regardless).
+              const email = session?.user?.email
+              if (email) {
+                persistAccountType(email, value).catch(() => {})
+              }
+            }}
+          />
+          <CurrencyToggle currency={currency} onSelect={selectCurrency} />
+        </div>
+      </PricingHero>
 
       <section id="plans" className="scroll-mt-20" aria-labelledby="pricing-plans-heading">
         <div className="border-border mx-auto max-w-6xl border-x">
-          {/* Controls only — no second heading. The hero already makes this
-              exact pitch, and repeating it here ("Pick the plan that matches
-              your team") left a screen-height gap between two paragraphs
-              saying the same thing. */}
-          <div className="border-border relative border-t px-6 py-8">
-            <GridCornerHandles top />
-            <h2 id="pricing-plans-heading" className="sr-only">
-              Choose a plan
-            </h2>
-            <p className="sr-only">
-              SignalorAI measures whether ChatGPT, Gemini, Perplexity, Claude, and other AI engines
-              recommend your brand. The Self-Serve Brand plan covers one brand with ten tracked
-              prompts you run yourself. The Managed Growth Brand plan covers one brand with
-              twenty-five tracked prompts plus daily agency-style support from our team. Enterprise
-              adds custom prompt volume, multiple domains, and dedicated support. Agencies manage
-              multiple client brands from one workspace with a fifteen percent discount on every
-              brand onboarded.
-            </p>
-
-            <div className="flex flex-col items-center gap-3">
-              <AudienceSwitch
-                audience={audience}
-                onSelect={value => {
-                  setAudience(value)
-                  // Let a signed-in user switch their account type straight from
-                  // the pricing toggle (best-effort; UI updates regardless).
-                  const email = session?.user?.email
-                  if (email) {
-                    persistAccountType(email, value).catch(() => {})
-                  }
-                }}
-              />
-              <CurrencyToggle currency={currency} onSelect={selectCurrency} />
-            </div>
-          </div>
+          <h2 id="pricing-plans-heading" className="sr-only">
+            Choose a plan
+          </h2>
+          <p className="sr-only">
+            SignalorAI measures whether ChatGPT, Gemini, Perplexity, Claude, and other AI engines
+            recommend your brand. The Self-Serve Brand plan covers one brand with ten tracked
+            prompts you run yourself. The Managed Growth Brand plan covers one brand with
+            twenty-five tracked prompts plus daily agency-style support from our team. Enterprise
+            adds custom prompt volume, multiple domains, and dedicated support. Agencies manage
+            multiple client brands from one workspace with a fifteen percent discount on every brand
+            onboarded.
+          </p>
 
           <div>
             {error ? (
@@ -484,11 +478,15 @@ function PricingPageInner() {
 
             <div className="border-border relative border-t">
               <GridCornerHandles top />
-              <GridHandle className="-top-[3.5px] left-1/4 -ml-[3.5px] hidden xl:block" />
-              <GridHandle className="-top-[3.5px] left-2/4 -ml-[3.5px] hidden xl:block" />
-              <GridHandle className="-top-[3.5px] left-3/4 -ml-[3.5px] hidden xl:block" />
-              <div className="divide-border grid grid-cols-1 max-xl:divide-y md:grid-cols-2 md:max-xl:divide-x xl:grid-cols-4 xl:grid-rows-[auto_auto_auto_1fr] xl:divide-x">
-                {(audience === 'individual' ? PLANS : AGENCY_PLANS).map(plan => {
+              <div
+                className={cn(
+                  // Five explicit row tracks — name, price, description, CTA,
+                  // features — shared by every card's subgrid (see PlanCard).
+                  'divide-border grid grid-cols-1 max-xl:divide-y md:grid-cols-2 md:max-xl:divide-x xl:grid-rows-[auto_auto_auto_auto_1fr] xl:divide-x',
+                  planGridCols,
+                )}
+              >
+                {activePlans.map(plan => {
                   const isContact = plan.cta === 'contact'
                   const isCustom = plan.price === null
                   const isLoading = loadingPlan === plan.id
@@ -593,7 +591,7 @@ function PricingPageInner() {
             <PlanComparisonTable
               columns={comparisonColumns}
               sections={audience === 'agency' ? AGENCY_COMPARISON : BRAND_COMPARISON}
-              featuredId={audience === 'agency' ? 'agency-account' : 'pro'}
+              featuredId={audience === 'agency' ? 'agency-brand-10' : 'starter'}
             />
           </div>
         </div>

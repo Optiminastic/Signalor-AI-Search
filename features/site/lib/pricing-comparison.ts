@@ -5,17 +5,19 @@
  * had no table at all. This is that table's content.
  *
  * Every value here is derived from the plan definitions already in the codebase
- * (`HOME_PLANS` and `PLANS` / `AGENCY_PLANS` in the pricing page) — nothing is
- * invented. Where a capability genuinely isn't defined for a tier the cell is
- * `false`, which renders as an em dash rather than an optimistic tick.
+ * (`PLANS` / `AGENCY_PLANS` in the pricing page) — nothing is invented. Where a
+ * capability genuinely isn't defined for a tier the cell is `false`, which
+ * renders as an em dash rather than an optimistic tick.
+ *
+ * Column keys mirror the plan cards above so the two can never disagree.
  */
 
 /** Column keys. Brand and agency views have different column sets. */
-export type BrandPlanId = 'starter' | 'pro' | 'enterprise'
-export type AgencyPlanId = 'agency-account' | 'agency-brand-10' | 'agency-brand-25'
+export type BrandPlanId = 'starter' | 'enterprise'
+export type AgencyPlanId = 'agency-brand-10' | 'agency-account' | 'agency-brand-25'
 
-/** A cell is either a capability flag or a concrete value to print. */
-export type CellValue = boolean | string
+/** A cell is either a capability flag, a concrete value, or a logo cluster. */
+export type CellValue = boolean | string | 'models'
 
 export interface ComparisonRow {
   label: string
@@ -26,13 +28,17 @@ export interface ComparisonRow {
 
 export interface ComparisonSection {
   title: string
+  /**
+   * `models` sections render the tracked AI engine logos in every plan cell
+   * instead of a tick (mirrors the reference pricing table).
+   */
+  kind?: 'models'
   rows: ComparisonRow[]
 }
 
 /** Column order for the brand (individual) view. */
 export const BRAND_COLUMNS: { id: BrandPlanId; label: string }[] = [
   { id: 'starter', label: 'Self-Serve' },
-  { id: 'pro', label: 'Managed Growth' },
   { id: 'enterprise', label: 'Enterprise' },
 ]
 
@@ -43,39 +49,59 @@ export const AGENCY_COLUMNS: { id: AgencyPlanId; label: string }[] = [
   { id: 'agency-brand-25', label: 'Per Brand · 25' },
 ]
 
+/** The AI engines every plan tracks, shown as logos in the table. */
+export const TRACKED_MODEL_LOGOS = [
+  { name: 'ChatGPT', src: '/logos/chatgpt.svg' },
+  { name: 'Claude', src: '/logos/claude.svg' },
+  { name: 'Gemini', src: '/logos/gemini.svg' },
+  { name: 'Perplexity', src: '/logos/perplexity.svg' },
+  { name: 'Copilot', src: '/logos/copilot.svg' },
+] as const
+
 export const BRAND_COMPARISON: ComparisonSection[] = [
+  {
+    title: 'Available models',
+    kind: 'models',
+    rows: [
+      {
+        label: 'AI engines tracked',
+        hint: 'Every plan watches your brand across all engines',
+        values: { starter: 'models', enterprise: 'models' },
+      },
+    ],
+  },
   {
     title: 'Tracking & coverage',
     rows: [
       {
         label: 'Tracked prompts',
         hint: 'Prompts we ask AI engines on your behalf',
-        values: { starter: '10', pro: '25', enterprise: 'Custom' },
+        values: { starter: '10', enterprise: 'Custom' },
       },
       {
         label: 'Brands / domains',
-        values: { starter: '1', pro: '1', enterprise: 'Multiple' },
+        values: { starter: '1', enterprise: 'Multiple' },
       },
       {
         label: 'GEO score & audit',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'AI visibility score',
         hint: 'How often engines mention you, tracked over time',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'Prompt ranking across engines',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'Competitor visibility tracking',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'Choose which engines you track',
-        values: { starter: false, pro: false, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
     ],
   },
@@ -84,19 +110,19 @@ export const BRAND_COMPARISON: ComparisonSection[] = [
     rows: [
       {
         label: 'Prioritised fix list',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'Recommendations & guidance',
-        values: { starter: true, pro: true, enterprise: true },
+        values: { starter: true, enterprise: true },
       },
       {
         label: 'Priority recommendations',
-        values: { starter: false, pro: true, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
       {
         label: 'Guidance on fixes & actions',
-        values: { starter: false, pro: true, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
     ],
   },
@@ -106,25 +132,40 @@ export const BRAND_COMPARISON: ComparisonSection[] = [
       {
         label: 'Daily agency-style support',
         hint: 'Our team works your list with you',
-        values: { starter: false, pro: true, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
       {
         label: 'Dedicated support',
-        values: { starter: false, pro: false, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
       {
         label: 'Custom reporting cadence',
-        values: { starter: false, pro: false, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
       {
         label: 'Preferred currency & billing terms',
-        values: { starter: false, pro: false, enterprise: true },
+        values: { starter: false, enterprise: true },
       },
     ],
   },
 ]
 
 export const AGENCY_COMPARISON: ComparisonSection[] = [
+  {
+    title: 'Available models',
+    kind: 'models',
+    rows: [
+      {
+        label: 'AI engines tracked',
+        hint: 'Every plan watches your brand across all engines',
+        values: {
+          'agency-account': 'models',
+          'agency-brand-10': 'models',
+          'agency-brand-25': 'models',
+        },
+      },
+    ],
+  },
   {
     title: 'Workspace',
     rows: [

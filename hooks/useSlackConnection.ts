@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useActiveProject } from '@/hooks/useActiveProject'
+import { ApiError } from '@/lib/api/client'
 import { getIntegrationStatus } from '@/lib/api/integrations'
 import {
   disconnectSlack,
@@ -17,6 +18,14 @@ import {
 // connection — same approach as the GitHub App flow.
 const CONNECTING_POLL_MS = 2000
 const POPUP_POLL_MS = 700
+
+const GENERIC_AUTH_ERROR = "Couldn't start the Slack connection. Try again in a moment."
+
+/** Prefer the backend's explanation; fall back only when there isn't one. */
+function authErrorMessage(error: unknown): string {
+  const message = error instanceof ApiError ? error.message.trim() : ''
+  return message || GENERIC_AUTH_ERROR
+}
 
 /** Open Slack's authorize screen centred over the current window. */
 function openCenteredPopup(url: string): Window | null {
@@ -40,7 +49,8 @@ export interface SlackConnection {
   channels: SlackChannel[]
   channelsLoading: boolean
   connecting: boolean
-  error: boolean
+  /** Why the authorize step failed, ready to show, or null when it hasn't. */
+  error: string | null
   connect: () => void
   cancel: () => void
   selectChannel: (channel: SlackChannel) => void
@@ -150,7 +160,10 @@ export function useSlackConnection(): SlackConnection {
     channels: channelsQuery.data ?? [],
     channelsLoading: channelsQuery.isLoading,
     connecting: connecting || authMutation.isPending,
-    error: authMutation.isError,
+    // The backend's own message ("Slack is not configured on this server.")
+    // is the useful one — a generic retry prompt hides a permanent
+    // misconfiguration behind advice that will never work.
+    error: authMutation.isError ? authErrorMessage(authMutation.error) : null,
     connect: () => {
       if (email && orgId) authMutation.mutate()
     },
