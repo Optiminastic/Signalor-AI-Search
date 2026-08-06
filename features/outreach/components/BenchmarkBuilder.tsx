@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { emailSubjects, formatEmailHtml, hostOf } from '@/features/outreach/email-html'
 import { formatEmail, formatReport } from '@/features/outreach/format'
@@ -300,11 +300,10 @@ export function BenchmarkBuilder({ initialSlug = '' }: { initialSlug?: string })
   })
 
   const mutation = useMutation({
+    // The key is persisted as it is typed (see useRememberedKey), so there is
+    // nothing to save here — only the run to start watching.
     mutationFn: () => startOutreachBenchmark(url, accessKey),
-    onSuccess: run => {
-      window.localStorage.setItem(KEY_STORAGE, accessKey)
-      setSlug(run.slug)
-    },
+    onSuccess: run => setSlug(run.slug),
   })
 
   const run = runQuery.data
