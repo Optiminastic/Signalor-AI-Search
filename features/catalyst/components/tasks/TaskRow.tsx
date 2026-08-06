@@ -1,11 +1,14 @@
 import { useViewTransitionNavigate } from '@/components/providers/view-transition-provider'
+import { TransitionLink } from '@/components/TransitionLink'
 import { useTaskFix } from '@/features/catalyst/components/autofix/AutoFixContext'
 import { AutoFixControl } from '@/features/catalyst/components/autofix/AutoFixControl'
 import { PriorityTag } from '@/features/catalyst/components/tasks/PriorityTag'
 import { SignalTag } from '@/features/catalyst/components/tasks/SignalTag'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
+import { PROMPT_PARAM } from '@/features/catalyst/constants'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
 import { useBrandPath } from '@/hooks/useBrandPath'
+import { MessageSquare } from '@/lib/icons'
 
 export interface TaskRowProps {
   row: TaskItem
@@ -21,7 +24,7 @@ function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
   return (
     <span className="flex min-w-0 items-start gap-2.5" style={{ paddingLeft: row.child ? 22 : 0 }}>
       <span className="mt-0.5 shrink-0">
-        <TaskGlyph title={row.name} description={row.description} />
+        <TaskGlyph title={row.name} description={row.description} signal={row.signal} />
       </span>
       <span className="flex min-w-0 flex-col">
         <span
@@ -54,6 +57,24 @@ function ActionCell({ recommendationId }: { recommendationId?: number }): JSX.El
   return <AutoFixControl state={fix.state} onFix={fix.onFix} />
 }
 
+/** Jump straight to the tracked prompt a task targets.
+ *
+ * Only rendered for prompt-derived tasks — every other row would point nowhere.
+ * Stops propagation so it opens the prompt rather than the task detail page. */
+function PromptLink({ promptTrackId }: { promptTrackId: number }): JSX.Element {
+  const brandPath = useBrandPath()
+  return (
+    <TransitionLink
+      href={`${brandPath('prompt-tracker')}?${PROMPT_PARAM}=${promptTrackId}`}
+      onClick={e => e.stopPropagation()}
+      className="mt-1 inline-flex items-center gap-1 text-[12px] font-medium text-[var(--cat-ink-2)] underline-offset-2 hover:text-[var(--cat-ink)] hover:underline"
+    >
+      <MessageSquare size={12} />
+      View prompt
+    </TransitionLink>
+  )
+}
+
 /** One task row. Clicking anywhere opens the task's detail page; the inline
  * auto-fix control stops the click from navigating. */
 export function TaskRow({ row }: TaskRowProps): JSX.Element {
@@ -69,6 +90,7 @@ export function TaskRow({ row }: TaskRowProps): JSX.Element {
       </td>
       <td className="px-3 py-2.5">
         <SignalTag signal={row.signal} effect={row.effect} />
+        {row.promptTrackId !== undefined && <PromptLink promptTrackId={row.promptTrackId} />}
       </td>
       <td className="px-3 py-2.5 whitespace-nowrap">
         <PriorityTag priority={row.priority} />

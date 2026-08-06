@@ -430,6 +430,9 @@ export const userActionSchema = z.object({
   attribution: z
     .object({ signal: z.string().default(''), effect: z.string().default('') })
     .optional(),
+  /** The tracked prompt this task targets, when it has one — lets the row link
+   *  straight to that prompt instead of making the user hunt for it. */
+  prompt_track_id: z.number().nullable().optional(),
 })
 export type UserAction = z.infer<typeof userActionSchema>
 
