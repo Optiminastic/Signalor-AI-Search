@@ -84,7 +84,22 @@ const protectedRoutes = [
   '/profile',
   '/settings',
 ]
-const authRoutes = ['/sign-in', '/sign-up']
+// /sign-in and /sign-up are deliberately NOT gated, and a visitor who already
+// holds a session cookie is deliberately NOT redirected away from them.
+//
+// `getSessionCookie` proves a cookie was sent, never that it is still valid.
+// Bouncing on presence alone locked out every user whose session had expired:
+// the dead cookie sent them from /sign-in to /dashboard, where the page waits
+// on data gated behind a session that no longer exists — so it span forever,
+// and returning to /sign-in bounced them straight back. There was no way to
+// sign in again at all, short of hand-clearing an httpOnly cookie.
+//
+// Signing in while already signed in is harmless (better-auth just issues a
+// fresh session), so a login page that is always reachable is worth far more
+// than the convenience redirect. Validating the session here instead was tried
+// and reverted: a server-to-server call to get-session carries cookies without
+// a matching Origin, which fails better-auth's CSRF check (see lib/auth.ts),
+// so every genuine fresh login came back as "expired".
 
 export async function middleware(
   request: NextRequest,
@@ -98,16 +113,11 @@ export async function middleware(
   const { pathname } = request.nextUrl
 
   const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
-  const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
 
   if (isProtected && !sessionCookie) {
     const signInUrl = new URL('/sign-in', request.url)
     signInUrl.searchParams.set('callbackUrl', pathname)
     return NextResponse.redirect(signInUrl)
-  }
-
-  if (isAuthRoute && sessionCookie) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return NextResponse.next()
