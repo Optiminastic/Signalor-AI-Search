@@ -1,5 +1,7 @@
 import type { OutreachReport } from '@/lib/api/outreach'
 
+import { thirtyDayWins } from './thirty-day-wins'
+
 /**
  * Plain-text renderings of a benchmark, for pasting into an email client.
  *
@@ -103,7 +105,7 @@ export function formatEmail(report: OutreachReport, senderName = ''): string {
       ? `I checked ${report.prompts_measured} buyer prompts across ChatGPT, Claude and Perplexity. ${brand} wasn't cited in ${report.prompts_lost} of them.`
       : ''
 
-  const actions = report.opportunities.slice(0, 3)
+  const wins = thirtyDayWins(report)
 
   return [
     `Subject: ${brand} isn't showing up in AI answers for your category`,
@@ -114,9 +116,9 @@ export function formatEmail(report: OutreachReport, senderName = ''): string {
     ...(scope ? ['', scope] : []),
     '',
     'Buyers increasingly ask ChatGPT, Claude and Perplexity which providers to consider before they ever reach Google. Whoever gets named in those answers makes the shortlist first.',
-    ...(actions.length > 0
-      ? ['', 'Three things that would move it:', ...actions.map(a => `  - ${a}`)]
-      : []),
+    '',
+    'What we can help you achieve in the next 30 days:',
+    ...wins.map(w => `  - ${w}`),
     '',
     "I've put the full benchmark below — the prompts, who gets cited instead, and what to do about it. Happy to walk through it if useful.",
     '',

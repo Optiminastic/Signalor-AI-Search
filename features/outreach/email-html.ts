@@ -3,6 +3,7 @@ import type { OutreachReport } from '@/lib/api/outreach'
 import { ENGINE_DOMAINS } from '@/lib/geo/engine-domains'
 
 import { lostPrompts } from './format'
+import { thirtyDayWins } from './thirty-day-wins'
 
 /**
  * The benchmark rendered as email-safe HTML, for pasting into Gmail/Outlook.
@@ -266,8 +267,8 @@ function rivalSection(report: OutreachReport): string {
   return `${section('Who gets cited instead')}<tr><td><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${rows}</table></td></tr>`
 }
 
-function opportunitySection(report: OutreachReport): string {
-  const rows = report.opportunities
+function nextThirtyDaysSection(report: OutreachReport): string {
+  const rows = thirtyDayWins(report)
     .map(
       (text, i) =>
         `<tr><td style="padding:6px 0;font-family:${FONT};font-size:13px;line-height:19px;color:${INK_2};">
@@ -275,8 +276,7 @@ function opportunitySection(report: OutreachReport): string {
         </td></tr>`,
     )
     .join('')
-  if (!rows) return ''
-  return `${section('What would move it')}<tr><td><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${rows}</table></td></tr>`
+  return `${section('What we can help you achieve in the next 30 days')}<tr><td><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${rows}</table></td></tr>`
 }
 
 /** Which engines were asked, with their marks — the report's provenance. */
@@ -334,7 +334,7 @@ ${preheader(report)}
 
   ${rivalSection(report)}
 
-  ${opportunitySection(report)}
+  ${nextThirtyDaysSection(report)}
 
   <tr><td style="padding:22px 0 0 0;font-family:${FONT};font-size:14px;line-height:21px;color:${INK};">
     Happy to walk through it if useful.<br><br>
