@@ -6,6 +6,7 @@ import { LandingFaq } from '@/features/site/components/landing/landing-faq'
 import { PromptTrackingFeaturesGrid } from '@/features/site/components/landing/prompt-tracking-features-grid'
 import { PromptTrackingHero } from '@/features/site/components/landing/prompt-tracking-hero'
 import { PromptTrackingWhySection } from '@/features/site/components/landing/prompt-tracking-why-section'
+import { PromptTrackingComparisonTable } from '@/features/site/components/landing/prompt-tracking-comparison-table'
 import { JsonLd } from '@/features/site/components/seo/json-ld'
 import { PROMPT_TRACKING_HUB_FAQ } from '@/features/site/lib/landing-prompt-tracking-content'
 import { breadcrumbJsonLd, buildMetadata, faqJsonLd, SITE_URL } from '@/features/site/lib/seo'
@@ -106,6 +107,7 @@ export default function PromptTrackingPage() {
       <PromptTrackingHero />
       <PromptTrackingFeaturesGrid />
       <PromptTrackingWhySection />
+      <PromptTrackingComparisonTable />
       <LandingFaq
         sectionId="prompt-tracking-faq"
         headingId="prompt-tracking-faq-heading"
