@@ -33,7 +33,7 @@ function engineCoverage(prompts: TrackedPrompt[]): EngineCoverage[] {
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }): JSX.Element {
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <h3 className="mb-3 text-[13px] font-semibold text-[var(--cat-ink)]">{title}</h3>
       {children}
     </div>

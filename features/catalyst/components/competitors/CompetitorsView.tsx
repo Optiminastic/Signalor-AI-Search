@@ -31,7 +31,7 @@ export function CompetitorsView(): JSX.Element {
         </div>
         <CompetitorsToolbar />
       </div>
-      <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}

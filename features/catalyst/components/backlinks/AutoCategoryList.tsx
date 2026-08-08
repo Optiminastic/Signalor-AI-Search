@@ -19,7 +19,7 @@ export function AutoCategoryList({ rows }: AutoCategoryListProps): JSX.Element {
   const toggle = (value: string): void => setOpen(prev => ({ ...prev, [value]: !prev[value] }))
 
   return (
-    <div className="cat-rise overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-rise cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       {groups.map(({ site, rows: siteRows }) => (
         <CategoryAccordion
           key={site.value}

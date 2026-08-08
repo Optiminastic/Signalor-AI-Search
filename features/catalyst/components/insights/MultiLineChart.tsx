@@ -1,3 +1,4 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
 import type { TrendSeries } from '@/hooks/useInsights'
 
 const W = 680
@@ -99,7 +100,7 @@ function SeriesLine({ s, height }: { s: TrendSeries; height: number }): JSX.Elem
           cx={xOf(i, s.points.length)}
           cy={yOf(v, height)}
           r={2.5}
-          fill="var(--cat-card)"
+          fill="var(--color-background-primary-default)"
           stroke={s.color}
           strokeWidth={1.5}
         />
@@ -122,12 +123,14 @@ export function MultiLineChart({
   height = DEFAULT_H,
 }: MultiLineChartProps): JSX.Element {
   return (
-    <svg viewBox={`0 0 ${W} ${height}`} className="w-full">
-      <GridLines height={height} />
-      <XLabels labels={xLabels} height={height} />
-      {series.map(s => (
-        <SeriesLine key={s.key} s={s} height={height} />
-      ))}
-    </svg>
+    <ChartFrame>
+      <svg viewBox={`0 0 ${W} ${height}`} className="w-full">
+        <GridLines height={height} />
+        <XLabels labels={xLabels} height={height} />
+        {series.map(s => (
+          <SeriesLine key={s.key} s={s} height={height} />
+        ))}
+      </svg>
+    </ChartFrame>
   )
 }

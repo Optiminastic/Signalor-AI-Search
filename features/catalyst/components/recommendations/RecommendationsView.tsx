@@ -88,7 +88,7 @@ export function RecommendationsView(): JSX.Element {
             <div className="mb-5">
               <DashStatRow stats={data.stats} />
             </div>
-            <div className="divide-y divide-[var(--cat-border)] overflow-hidden rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)]">
+            <div className="cat-card-edge divide-y divide-[var(--cat-border)] overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
               {data.recommendations.map(r => (
                 <RecRow
                   key={r.id}

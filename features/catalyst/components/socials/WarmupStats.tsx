@@ -27,7 +27,7 @@ export function WarmupStats(): JSX.Element {
   const remaining = WARMUP.total - WARMUP.completed
   const pct = Math.round((WARMUP.completed / WARMUP.total) * 100)
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
+    <div className="rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-4 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
       <div className="flex flex-wrap gap-x-12 gap-y-4">
         <Stat
           eyebrow="Days completed"

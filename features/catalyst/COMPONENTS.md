@@ -41,6 +41,7 @@ Overview grid convention: 3 equal columns (`grid sm:grid-cols-2 xl:grid-cols-3`,
 
 | Need                                | Use                                                                  | Path                                                   |
 | ----------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
+| White surface a graph sits on       | `ChartFrame` (already baked into every chart below except Sparkline) | `components/ChartFrame.tsx`                            |
 | Sparkline (mini area+line)          | `Sparkline`                                                          | `components/visibility/Sparkline.tsx`                  |
 | Hero trend line (red→blue gradient) | `GeoTrendLine`                                                       | `components/cards/GeoTrendLine.tsx`                    |
 | Simple line / area                  | `LineChart`, `AreaChart`                                             | `components/LineChart.tsx`, `components/AreaChart.tsx` |

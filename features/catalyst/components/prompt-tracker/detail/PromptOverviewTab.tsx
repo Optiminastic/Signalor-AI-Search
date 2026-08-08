@@ -18,7 +18,7 @@ const FACTOR_AXES = ['Authority', 'Content', 'Structure', 'Semantic', '3rd party
 /** Headline score with its tick meter. */
 function ScoreBlock({ item }: { item: TrackedPrompt }): JSX.Element {
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3.5">
+    <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3.5">
       <div className="flex items-baseline gap-2">
         <span
           className="text-[26px] font-bold tracking-tight tabular-nums"

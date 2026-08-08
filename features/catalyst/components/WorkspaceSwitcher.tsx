@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { domainOf } from '@/features/catalyst/competitors-data'
 import { BrandFavicon } from '@/features/catalyst/components/competitors/BrandFavicon'
 import { useActiveProject } from '@/hooks/useActiveProject'
-import { Building2, Check, ChevronsUpDown, Plus } from '@/lib/icons'
+import { Building2, Check, ChevronDown, Plus } from '@/lib/icons'
 
 const LOGO_BG = 'conic-gradient(from 210deg at 50% 50%, #F2A79E, #e04a3d, #b9382d, #F2A79E)'
 
@@ -31,7 +31,7 @@ interface MenuProps {
 
 function MenuFooter(): JSX.Element {
   const item =
-    'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]'
+    'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-background-secondary-default'
   return (
     <>
       <div className="my-1 h-px bg-[var(--cat-border)]" />
@@ -49,7 +49,7 @@ function MenuFooter(): JSX.Element {
 
 function ProjectMenu({ projects, activeId, onSelect }: MenuProps): JSX.Element {
   return (
-    <div className="absolute top-[calc(100%+4px)] right-0 left-0 z-30 overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-1 shadow-lg">
+    <div className="bg-background-primary-default absolute top-[calc(100%+4px)] right-0 left-0 z-30 overflow-hidden rounded-2xl border border-[var(--cat-border-soft)] p-1 shadow-lg">
       <p className="px-2 py-1.5 text-[10px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
         Switch project
       </p>
@@ -58,7 +58,7 @@ function ProjectMenu({ projects, activeId, onSelect }: MenuProps): JSX.Element {
           key={p.id}
           type="button"
           onClick={() => onSelect(p.id)}
-          className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-[var(--cat-hover)]"
+          className="hover:bg-background-secondary-default flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors"
         >
           <Tile name={p.name} url={p.url} />
           <span className="min-w-0 flex-1">
@@ -85,11 +85,13 @@ function SwitcherTrigger({
   project: Project
   onToggle: () => void
 }): JSX.Element {
+  // BoardUI's org card: a soft rounded surface with the brand avatar, two lines,
+  // and a chevron in its own small boxed button on the right.
   return (
     <button
       type="button"
       onClick={onToggle}
-      className="flex w-full items-center gap-2.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-2 py-1.5 text-left transition-colors hover:bg-[var(--cat-hover)]"
+      className="bg-background-primary-default hover:bg-background-secondary-hover flex w-full items-center gap-2.5 rounded-2xl border border-[var(--cat-border-soft)] p-2 text-left transition-colors"
     >
       <Tile name={project.name} url={project.url} />
       <span className="min-w-0 flex-1">
@@ -98,7 +100,9 @@ function SwitcherTrigger({
         </span>
         <span className="block truncate text-[11px] text-[var(--cat-ink-3)]">{project.url}</span>
       </span>
-      <ChevronsUpDown size={15} className="shrink-0 text-[var(--cat-ink-3)]" />
+      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[var(--cat-card)] text-[var(--cat-ink-3)] shadow-xs">
+        <ChevronDown size={14} />
+      </span>
     </button>
   )
 }

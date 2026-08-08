@@ -30,6 +30,10 @@ const config = [
       // Sanity Studio config/schemas (generated/tool-owned, default exports etc.)
       'sanity.cli.ts',
       'sanity/**',
+      // BoardUI (ui.boardui.com) copy-in components. Vendored source in its own
+      // style (double quotes, semicolons); still type-checked by tsc, just not
+      // reformatted to this project's rules. Our brand-retint edits live here too.
+      'components/base/**',
     ],
   },
 

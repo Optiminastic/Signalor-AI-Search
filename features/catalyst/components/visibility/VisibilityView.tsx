@@ -18,7 +18,7 @@ export function VisibilityView(): JSX.Element {
   return (
     <>
       <VisibilityHeader />
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 min-h-0 flex-1 overflow-y-auto px-3">
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}
@@ -27,9 +27,10 @@ export function VisibilityView(): JSX.Element {
           emptyHint="Select a project with a completed analysis to see AI visibility across engines."
         >
           {data && (
-            // items-start: without it every card stretches to the tallest in its row,
-            // which left short cards (name recognition) mostly empty space.
-            <div className="cat-stagger grid grid-cols-1 items-start gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            // Equal-height rows: cards stretch to the tallest in their row and each
+            // card anchors its footer with mt-auto, so a row reads as one clean band
+            // instead of ragged card bottoms.
+            <div className="cat-stagger grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 xl:grid-cols-3">
               <OverallVisibilityCard data={data.overall} />
               <ShareOfVoiceCard sov={data.sov} meta={data.sovMeta} />
               <MentionsCard data={data.mentions} />
@@ -40,8 +41,11 @@ export function VisibilityView(): JSX.Element {
                   question that precedes every other visibility metric here. */}
               <PromptCoverageCard slug={slug} />
               {/* Whether engines resolve the name at all — a zero here explains
-                  a zero everywhere else. */}
-              <EntityResolutionCard slug={slug} />
+                  a zero everywhere else. self-start keeps this deliberately short
+                  card from stretching into empty space in an equal-height row. */}
+              <div className="self-start">
+                <EntityResolutionCard slug={slug} />
+              </div>
             </div>
           )}
         </DataState>

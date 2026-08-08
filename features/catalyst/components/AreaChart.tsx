@@ -1,3 +1,4 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
 import { BRAND } from '@/features/catalyst/constants'
 
 const W = 340
@@ -20,25 +21,31 @@ function toLayer(values: number[], scale: number): { poly: string; path: string 
 
 export function AreaChart({ data }: { data: number[] }): JSX.Element {
   if (data.length === 0) {
-    return <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-20 w-full" />
+    return (
+      <ChartFrame>
+        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-20 w-full" />
+      </ChartFrame>
+    )
   }
   const band = toLayer(data, 1.25)
   const main = toLayer(data, 1)
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-20 w-full">
-      <defs>
-        <linearGradient id="cv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={BRAND} stopOpacity="0.35" />
-          <stop offset="1" stopColor={BRAND} stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="cv2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={BRAND} stopOpacity="0.12" />
-          <stop offset="1" stopColor={BRAND} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={band.path} fill="url(#cv2)" />
-      <path d={main.path} fill="url(#cv)" />
-      <polyline points={main.poly} fill="none" stroke={BRAND} strokeWidth={2} />
-    </svg>
+    <ChartFrame>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="h-20 w-full">
+        <defs>
+          <linearGradient id="cv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={BRAND} stopOpacity="0.35" />
+            <stop offset="1" stopColor={BRAND} stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="cv2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={BRAND} stopOpacity="0.12" />
+            <stop offset="1" stopColor={BRAND} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={band.path} fill="url(#cv2)" />
+        <path d={main.path} fill="url(#cv)" />
+        <polyline points={main.poly} fill="none" stroke={BRAND} strokeWidth={2} />
+      </svg>
+    </ChartFrame>
   )
 }

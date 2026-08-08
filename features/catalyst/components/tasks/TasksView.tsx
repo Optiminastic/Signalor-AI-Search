@@ -30,7 +30,7 @@ function TaskBoard({ data, isLoading, isError, mut }: TaskBoardProps): JSX.Eleme
         emptyHint="Run an analysis on this brand to auto-generate GEO improvement tasks here."
       >
         {data && (
-          <div className="cat-rise overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+          <div className="cat-rise cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
             <TaskTable rows={data.rows} onToggleDone={mut.onToggleDone} busy={mut.busy} />
           </div>
         )}

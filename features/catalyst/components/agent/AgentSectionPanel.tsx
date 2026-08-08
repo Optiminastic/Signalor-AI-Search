@@ -28,7 +28,7 @@ export function AgentSectionPanel({
         <span className="text-[11px] text-[var(--cat-ink-3)] tabular-nums">{count}</span>
         {hint && <span className="ml-auto text-[11px] text-[var(--cat-ink-3)]">{hint}</span>}
       </div>
-      <div className="overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+      <div className="cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
         {children}
       </div>
     </section>

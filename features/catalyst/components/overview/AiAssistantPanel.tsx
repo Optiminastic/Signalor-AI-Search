@@ -45,28 +45,35 @@ interface PanelHeaderProps {
 
 function PanelHeader({ count, tasksHref, open, onToggle }: PanelHeaderProps): JSX.Element {
   return (
-    <div className="flex items-center gap-2.5">
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[rgba(224,74,61,0.1)] text-[#e04a3d] ring-1 ring-[rgba(224,74,61,0.16)] ring-inset">
-        <Sparkles size={14} strokeWidth={2.2} />
+    <div className="flex items-center gap-3">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[rgba(224,74,61,0.12)] text-[#e04a3d] ring-1 ring-[rgba(224,74,61,0.16)] ring-inset">
+        <Sparkles size={16} strokeWidth={2.2} />
       </span>
-      <p className="min-w-0 truncate text-[13px] text-[var(--cat-ink-2)]">
-        <span className="font-semibold text-[var(--cat-ink)]">Priority Actions</span>
-        <span className="mx-2 text-[var(--cat-ink-3)]">·</span>
-        There {count === 1 ? 'is 1 suggestion' : `are ${count} suggestions`} to lift your AI
-        visibility.
-        <TransitionLink
-          href={tasksHref}
-          className="ml-2 font-medium text-[#e04a3d] underline decoration-[rgba(224,74,61,0.35)] underline-offset-2 transition-colors hover:decoration-[#e04a3d]"
-        >
-          View all tasks
-        </TransitionLink>
-      </p>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="text-[13.5px] font-semibold text-[var(--cat-ink)]">
+            Priority Actions
+          </span>
+          <span className="rounded-full bg-[rgba(224,74,61,0.12)] px-1.5 py-px text-[10px] font-semibold text-[#e04a3d] tabular-nums">
+            {count}
+          </span>
+        </div>
+        <p className="truncate text-[11.5px] text-[var(--cat-ink-3)]">
+          Quick wins to lift your AI visibility
+        </p>
+      </div>
+      <TransitionLink
+        href={tasksHref}
+        className="hidden shrink-0 text-[12px] font-medium text-[#e04a3d] transition-colors hover:text-[#c53f34] sm:block"
+      >
+        View all tasks
+      </TransitionLink>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-label={open ? 'Collapse suggestions' : 'Expand suggestions'}
-        className="ml-auto grid h-7 w-7 shrink-0 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
+        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
       >
         <ChevronDown
           size={16}
@@ -77,38 +84,27 @@ function PanelHeader({ count, tasksHref, open, onToggle }: PanelHeaderProps): JS
   )
 }
 
-function CardTopRow({ action }: { action: AgentAction }): JSX.Element {
-  const type = taskTypeOf(action)
-  return (
-    <div className="flex items-center justify-between gap-2">
-      <span
-        title={TASK_TYPE_LABEL[type]}
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[var(--cat-hover)] text-[var(--cat-ink-2)] transition-colors group-hover:bg-[rgba(224,74,61,0.1)] group-hover:text-[#e04a3d]"
-      >
-        <TaskTypeIcon type={type} size={15} />
-      </span>
-      <PriorityPill priority={action.priority} />
-    </div>
-  )
-}
-
+/** A polished suggestion card: a bare type icon and priority pill up top, the
+ *  title, then a CTA + effort footer. The white top-line (cat-card-edge) and a
+ *  soft hover-lift give it the same finish as the rest of the dashboard cards. */
 function SuggestionCard({ action }: { action: AgentAction }): JSX.Element {
   const brandPath = useBrandPath()
+  const type = taskTypeOf(action)
   return (
-    <div className="group relative flex flex-col gap-2 rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--cat-ink-3)] hover:shadow-[0_4px_14px_rgba(16,24,40,0.08)]">
-      <CardTopRow action={action} />
+    <div className="cat-card-edge group relative flex flex-col gap-2.5 rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--cat-ink-3)]">
+      <div className="flex items-center justify-between gap-2">
+        <span title={TASK_TYPE_LABEL[type]} className="shrink-0 text-[var(--cat-ink-3)]">
+          <TaskTypeIcon type={type} size={16} />
+        </span>
+        <PriorityPill priority={action.priority} />
+      </div>
       <TransitionLink
         href={brandPath(`tasks/${action.action_id}`)}
-        className="line-clamp-2 text-[13px] leading-snug font-semibold text-[var(--cat-ink)] decoration-[var(--cat-ink-3)] underline-offset-2 group-hover:underline after:absolute after:inset-0"
+        className="line-clamp-2 text-[13px] leading-snug font-semibold text-[var(--cat-ink)] group-hover:underline after:absolute after:inset-0"
       >
         {action.title}
       </TransitionLink>
-      {action.description && (
-        <p className="line-clamp-2 text-[12px] leading-relaxed text-[var(--cat-ink-3)]">
-          {action.description}
-        </p>
-      )}
-      <div className="relative mt-auto flex items-center justify-between gap-2 border-t border-[var(--cat-border-soft)] pt-2.5">
+      <div className="relative mt-auto flex items-center justify-between gap-2 pt-1">
         <ActionCtaButton action={action} quiet />
         {action.effort.minutes > 0 && (
           <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[var(--cat-ink-3)] tabular-nums">
@@ -135,7 +131,7 @@ export function AiAssistantPanel(): JSX.Element | null {
   if (cards.length === 0) return null
 
   return (
-    <section className="col-span-full rounded-md border border-[rgba(224,74,61,0.16)] bg-[rgba(224,74,61,0.04)] p-3">
+    <section className="col-span-full rounded-2xl border border-[rgba(224,74,61,0.16)] bg-[rgba(224,74,61,0.04)] p-3.5">
       <PanelHeader
         count={count}
         tasksHref={brandPath('tasks')}
@@ -145,8 +141,8 @@ export function AiAssistantPanel(): JSX.Element | null {
       <div
         className={`grid transition-[grid-template-rows] duration-200 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
       >
-        <div className="min-h-0 overflow-hidden">
-          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="-mx-3 min-h-0 overflow-hidden px-3 pb-1">
+          <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
             {cards.map(action => (
               <SuggestionCard key={action.action_id} action={action} />
             ))}

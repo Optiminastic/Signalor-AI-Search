@@ -150,7 +150,7 @@ function TeamRoster({ agencyEmail }: { agencyEmail: string }): JSX.Element {
         busy={isMutating}
       />
       {error && <p className="text-[12px] font-medium text-[#E5484D]">{error}</p>}
-      <div className="divide-y divide-[var(--cat-border)] overflow-hidden rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)]">
+      <div className="cat-card-edge divide-y divide-[var(--cat-border)] overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
         {rosterRows(agencyEmail, members).map(row => (
           <MemberRow key={row.email} row={row} onRemove={remove} />
         ))}

@@ -1,9 +1,9 @@
 'use client'
 
-import { Loader2 } from '@/lib/icons'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import { VercelSpinner } from '@/features/catalyst/components/VercelSpinner'
 import { useActiveProject } from '@/hooks/useActiveProject'
 
 /**
@@ -21,8 +21,8 @@ export default function DashboardIndexPage(): JSX.Element {
   }, [orgSlug, router])
 
   return (
-    <div className="grid min-h-svh place-items-center bg-white">
-      <Loader2 className="h-5 w-5 animate-spin text-neutral-400" />
+    <div className="grid min-h-svh place-items-center bg-[var(--cat-canvas)]">
+      <VercelSpinner size={22} />
     </div>
   )
 }

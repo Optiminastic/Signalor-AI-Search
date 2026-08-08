@@ -22,7 +22,7 @@ export function TaskSection({
 }: TaskSectionProps): JSX.Element {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="flex flex-col rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-card-edge flex flex-col rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}

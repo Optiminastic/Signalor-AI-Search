@@ -11,7 +11,7 @@ export function TasksViewToggle(): JSX.Element {
   const view = useTasksViewStore(s => s.view)
   const setView = useTasksViewStore(s => s.setView)
   return (
-    <div className="hidden items-center gap-0.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-0.5 sm:flex">
+    <div className="cat-card-edge hidden items-center gap-0.5 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-0.5 sm:flex">
       <button
         type="button"
         aria-label="List view"

@@ -90,7 +90,7 @@ export function BrandProfileView(): JSX.Element {
         </p>
       </div>
 
-      <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}
@@ -166,7 +166,7 @@ function ReviewBar({
   onReject: () => void
 }): JSX.Element {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] px-4 py-3">
+    <div className="cat-card-edge flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-4 py-3">
       <StatusMeta profile={profile} />
       <div className="flex items-center gap-2">
         <button
@@ -214,7 +214,7 @@ function SectionEditor({
   onChange: (value: string) => void
 }): JSX.Element {
   return (
-    <section className="rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <section className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <label className="mb-2 block text-[13px] font-semibold text-[var(--cat-ink)]">{label}</label>
       <textarea
         value={value}
@@ -229,7 +229,7 @@ function SectionEditor({
 
 function SourcesCard({ sources }: { sources: Record<string, unknown> }): JSX.Element {
   return (
-    <section className="rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <section className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <p className="mb-2 text-[13px] font-semibold text-[var(--cat-ink)]">Sources (read-only)</p>
       <pre className="overflow-x-auto rounded-md bg-[var(--cat-canvas)] p-2.5 font-mono text-[12px] text-[var(--cat-ink-2)]">
         {JSON.stringify(sources ?? {}, null, 2)}

@@ -12,6 +12,7 @@ import {
   IconAffiliateFilled,
   IconAlertTriangleFilled,
   IconAppsFilled,
+  IconBellFilled,
   IconBoltFilled,
   IconBulbFilled,
   IconBrandFacebookFilled,
@@ -33,6 +34,7 @@ import {
   IconFolderFilled,
   IconGaugeFilled,
   IconGiftFilled,
+  IconHelpCircleFilled,
   IconInfoCircleFilled,
   IconLayoutFilled,
   IconLayoutGridFilled,
@@ -74,6 +76,7 @@ export const SlidersHorizontal = f(IconAdjustmentsHorizontalFilled)
 export const User = f(IconUserFilled)
 export const BadgeCheck = f(IconRosetteDiscountCheckFilled)
 export const BarChart3 = f(IconChartAreaFilled)
+export const Bell = f(IconBellFilled)
 export const Blocks = f(IconAppsFilled)
 export const CalendarClock = f(IconCalendarFilled)
 export const CalendarDays = f(IconCalendarFilled)
@@ -93,6 +96,7 @@ export const Gift = f(IconGiftFilled)
 export const Github = f(IconBrandGithubFilled)
 export const Globe = f(IconWorldFilled)
 export const Globe2 = f(IconWorldFilled)
+export const HelpCircle = f(IconHelpCircleFilled)
 export const Info = f(IconInfoCircleFilled)
 export const Layers = f(IconStackFilled)
 export const Layout = f(IconLayoutFilled)

@@ -55,7 +55,7 @@ export function NewPromptForm({ isAdding, onSubmit, onClose }: NewPromptFormProp
   }
 
   return (
-    <div className="cat-rise mb-3 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3">
+    <div className="cat-rise cat-card-edge mb-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <textarea
         value={text}
         onChange={e => setText(e.target.value.slice(0, MAX_PROMPT_LENGTH))}

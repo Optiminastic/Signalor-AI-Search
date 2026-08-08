@@ -7,7 +7,7 @@ export interface DashStatData {
 
 function DashStat({ label, value, delta, positive }: DashStatData): JSX.Element {
   return (
-    <div className="rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-4 shadow-sm">
+    <div className="rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-4 shadow-sm">
       <p className="text-[11px] tracking-wide text-[var(--cat-ink-3)] uppercase">{label}</p>
       <div className="mt-2 flex items-baseline gap-2">
         <span className="text-2xl font-semibold tracking-tight text-[var(--cat-ink)] tabular-nums">

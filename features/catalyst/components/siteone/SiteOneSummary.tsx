@@ -27,7 +27,7 @@ function formatMs(ms: number): string {
 
 function StatTile({ label, value, tone }: StatTileProps): JSX.Element {
   return (
-    <div className="flex flex-col gap-1 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3">
+    <div className="cat-card-edge flex flex-col gap-1 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <span className="text-[11px] font-medium tracking-wide text-[var(--cat-ink-3)] uppercase">
         {label}
       </span>

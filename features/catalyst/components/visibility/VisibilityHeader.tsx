@@ -14,7 +14,7 @@ export function VisibilityHeader(): JSX.Element {
       </div>
       <div className="ml-auto flex items-center gap-2">
         <PrimaryButton icon={BarChart3}>Connect Analytics</PrimaryButton>
-        <button className="inline-flex h-[34px] items-center gap-2 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[13px] font-medium text-[var(--cat-ink)] shadow-sm transition-colors hover:bg-[var(--cat-hover)]">
+        <button className="bg-background-primary-default hover:bg-background-secondary-default inline-flex h-[34px] items-center gap-2 rounded-md border border-[var(--cat-border)] px-3 text-[13px] font-medium text-[var(--cat-ink)] shadow-sm transition-colors">
           <Search size={15} className="text-[var(--cat-ink-2)]" /> Connect Search Console
         </button>
       </div>

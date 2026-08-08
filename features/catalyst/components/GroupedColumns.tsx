@@ -1,3 +1,5 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
+
 const W = 340
 const H = 150
 const PAD_L = 26
@@ -79,18 +81,20 @@ export function GroupedColumns({
   className = 'w-full',
 }: GroupedColumnsProps): JSX.Element {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className={className}>
-      <GridLines />
-      {groups.map((group, i) => (
-        <BarGroup
-          key={group.label}
-          group={group}
-          index={i}
-          count={groups.length}
-          colorA={colorA}
-          colorB={colorB}
-        />
-      ))}
-    </svg>
+    <ChartFrame className={className}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+        <GridLines />
+        {groups.map((group, i) => (
+          <BarGroup
+            key={group.label}
+            group={group}
+            index={i}
+            count={groups.length}
+            colorA={colorA}
+            colorB={colorB}
+          />
+        ))}
+      </svg>
+    </ChartFrame>
   )
 }

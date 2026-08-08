@@ -195,7 +195,7 @@ export function ShopifyConnectModal({ onClose }: ShopifyConnectModalProps): JSX.
   const s = useShopifyConnect(onClose)
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-5 shadow-xl">
+      <div className="w-full max-w-md rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-5 shadow-xl">
         <ModalHeader onClose={onClose} />
         <div className="mt-4 flex flex-col gap-3">
           <Field

@@ -13,7 +13,7 @@ export function StatTile({
   hint?: string
 }): JSX.Element {
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3">
+    <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <p className="text-[11px] text-[var(--cat-ink-3)]">{label}</p>
       <p className="mt-1 text-[18px] font-bold text-[var(--cat-ink)] tabular-nums">{value}</p>
       {hint && <p className="mt-0.5 text-[10px] text-[var(--cat-ink-3)]">{hint}</p>}
@@ -32,7 +32,7 @@ export function Panel({
   children: ReactNode
 }): JSX.Element {
   return (
-    <section className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3.5">
+    <section className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3.5">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h3 className="text-[12px] font-semibold text-[var(--cat-ink)]">{title}</h3>
         {aside}

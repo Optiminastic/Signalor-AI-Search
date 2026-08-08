@@ -3,7 +3,7 @@
 import Link from 'next/link'
 
 import { useSession } from '@/lib/auth-client'
-import { ChevronRight } from '@/lib/icons'
+import { ChevronDown } from '@/lib/icons'
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/)
@@ -37,24 +37,23 @@ export function SidebarUser({ collapsed }: { collapsed?: boolean }): JSX.Element
     )
   }
 
+  // BoardUI's "team" card: the same tertiary grey as the project switcher, with
+  // the chevron in its own small boxed button.
   return (
-    <div className="mt-3.5 border-t border-[var(--cat-border-soft)] pt-2.5">
-      <Link
-        href="/profile"
-        className="group flex items-center gap-2.5 rounded-md p-1.5 transition-colors hover:bg-[var(--cat-hover)] focus-visible:ring-2 focus-visible:ring-[rgba(224,74,61,0.4)] focus-visible:outline-none"
-      >
-        <UserAvatar name={name} />
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[13px] font-semibold text-[var(--cat-ink)]">
-            {name}
-          </span>
-          <span className="block truncate text-xs text-[var(--cat-ink-3)]">{email}</span>
+    <Link
+      href="/profile"
+      className="bg-background-primary-default hover:bg-background-secondary-hover mt-3.5 flex items-center gap-2.5 rounded-2xl border border-[var(--cat-border-soft)] p-2 transition-colors focus-visible:ring-2 focus-visible:ring-[rgba(224,74,61,0.4)] focus-visible:outline-none"
+    >
+      <UserAvatar name={name} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[13px] font-semibold text-[var(--cat-ink)]">
+          {name}
         </span>
-        <ChevronRight
-          size={16}
-          className="shrink-0 text-[var(--cat-ink-3)] transition-transform duration-200 group-hover:translate-x-0.5"
-        />
-      </Link>
-    </div>
+        <span className="block truncate text-xs text-[var(--cat-ink-3)]">{email}</span>
+      </span>
+      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[var(--cat-card)] text-[var(--cat-ink-3)] shadow-xs">
+        <ChevronDown size={14} />
+      </span>
+    </Link>
   )
 }

@@ -118,7 +118,6 @@ export function VisibilityBreakdownCard(): JSX.Element {
     <Card>
       <div className="mb-1">
         <CardHead title="Visibility Score Breakdown" />
-        <p className="-mt-0.5 text-[12px] text-[var(--cat-ink-3)]">How your score is calculated</p>
       </div>
 
       {pillars.length === 0 ? (

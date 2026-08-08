@@ -24,7 +24,7 @@ export function AgentChatTrigger(): JSX.Element {
     'inline-flex h-[34px] w-full items-center justify-center gap-2 rounded-md px-3 text-[13px] font-medium transition-colors'
   const state = open
     ? 'bg-[#e04a3d]/10 text-[#e04a3d] ring-1 ring-[#e04a3d]/25 shadow-sm'
-    : `bg-[var(--cat-card)] text-[var(--cat-ink)] hover:bg-[var(--cat-hover)] ${CONTROL_RING}`
+    : `bg-background-primary-default text-[var(--cat-ink)] hover:bg-background-secondary-default ${CONTROL_RING}`
 
   return (
     <BorderBeam

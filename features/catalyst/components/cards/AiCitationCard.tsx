@@ -99,9 +99,6 @@ export function AiCitationCard(): JSX.Element {
     <Card>
       <div className="mb-1">
         <CardHead title="Citation Coverage" action="Report" href={brandPath('visibility')} />
-        <p className="-mt-0.5 text-[12px] text-[var(--cat-ink-3)]">
-          % of AI answers that cite your brand
-        </p>
       </div>
 
       <CoverageSummary {...coverage} />

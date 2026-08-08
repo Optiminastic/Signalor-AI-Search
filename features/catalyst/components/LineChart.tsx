@@ -1,3 +1,4 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
 import { BRAND } from '@/features/catalyst/constants'
 
 const W = 340
@@ -29,18 +30,20 @@ interface LineChartProps {
 export function LineChart({ data, heightClass = 'h-[90px]' }: LineChartProps): JSX.Element {
   const points = buildPoints(data)
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className={`${heightClass} w-full`}>
-      {points && (
-        <polyline
-          points={points}
-          fill="none"
-          stroke={BRAND}
-          strokeWidth={2}
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      )}
-    </svg>
+    <ChartFrame>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className={`${heightClass} w-full`}>
+        {points && (
+          <polyline
+            points={points}
+            fill="none"
+            stroke={BRAND}
+            strokeWidth={2}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+      </svg>
+    </ChartFrame>
   )
 }

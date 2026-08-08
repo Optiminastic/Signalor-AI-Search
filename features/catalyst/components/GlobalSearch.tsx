@@ -93,7 +93,8 @@ function SearchInput({
         placeholder="Search pages, competitors…"
         className={SEARCH_FIELD}
       />
-      <kbd className="absolute top-1/2 right-2 -translate-y-1/2 rounded border border-[var(--cat-border)] bg-[var(--cat-hover)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--cat-ink-3)]">
+      {/* BoardUI's Quick Search shortcut chip: a boxed kbd on the surface colour. */}
+      <kbd className="bg-background-secondary-default absolute top-1/2 right-2 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-[var(--cat-ink-3)] shadow-xs">
         ⌘K
       </kbd>
     </>

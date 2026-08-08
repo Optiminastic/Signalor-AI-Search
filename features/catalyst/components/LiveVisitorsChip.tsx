@@ -9,7 +9,7 @@ import { useLiveVisitors } from '@/hooks/useLiveVisitors'
 
 // Wider than the 190px menu default: this panel carries three labelled columns,
 // not a list of one-word options.
-const PANEL = `absolute right-0 z-50 mt-2 w-[300px] rounded-md bg-[var(--cat-card)] p-1 shadow-lg ${CONTROL_RING}`
+const PANEL = `absolute right-0 z-50 mt-2 w-[300px] rounded-md bg-background-primary-default p-1 shadow-lg ${CONTROL_RING}`
 
 /**
  * Who is on the site right now, in the top bar.

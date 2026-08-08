@@ -1,3 +1,4 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
 import type { CrawlerDay } from '@/hooks/useCrawlerLogs'
 
 const W = 680
@@ -115,12 +116,21 @@ export function CrawlerActivityChart({
   max,
 }: CrawlerActivityChartProps): JSX.Element {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
-      <GridLines max={max} />
-      <XLabels days={days} />
-      {days.map((day, i) => (
-        <DayBar key={day.date} day={day} index={i} count={days.length} max={max} colors={colors} />
-      ))}
-    </svg>
+    <ChartFrame>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+        <GridLines max={max} />
+        <XLabels days={days} />
+        {days.map((day, i) => (
+          <DayBar
+            key={day.date}
+            day={day}
+            index={i}
+            count={days.length}
+            max={max}
+            colors={colors}
+          />
+        ))}
+      </svg>
+    </ChartFrame>
   )
 }

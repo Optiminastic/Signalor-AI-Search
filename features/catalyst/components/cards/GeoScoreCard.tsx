@@ -50,7 +50,7 @@ function ScoreReasonInfo({ reason, positive }: { reason: string; positive: boole
       </button>
       <span
         role="tooltip"
-        className="pointer-events-none absolute top-full left-0 z-50 mt-1.5 w-64 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-2.5 text-[11.5px] leading-relaxed text-[var(--cat-ink-2)] opacity-0 shadow-xl transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100"
+        className="pointer-events-none absolute top-full left-0 z-50 mt-1.5 w-64 rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-2.5 text-[11.5px] leading-relaxed text-[var(--cat-ink-2)] opacity-0 shadow-xl transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100"
       >
         {reason}
       </span>
@@ -65,14 +65,11 @@ function CardHeader({ rank }: { rank: number | null }): JSX.Element {
         <h3 className="text-[13.5px] font-semibold text-[var(--cat-ink)]">
           LLM Visibility Score &amp; Ranking
         </h3>
-        <p className="mt-0.5 text-[11.5px] text-[var(--cat-ink-3)]">
-          Your visibility and rank across AI answers
-        </p>
       </div>
       {rank !== null && (
         <div className="shrink-0 text-right">
           <span className="text-[15px] font-bold text-[var(--cat-ink)]">#{rank}</span>
-          <p className="text-[10px] tracking-wide text-[var(--cat-ink-3)] uppercase">Your rank</p>
+          {/* <p className="text-[10px] tracking-wide text-[var(--cat-ink-3)] uppercase">Your rank</p> */}
         </div>
       )}
     </div>
@@ -81,7 +78,7 @@ function CardHeader({ rank }: { rank: number | null }): JSX.Element {
 
 function ScoreRow({ data }: { data: GeoScore | undefined }): JSX.Element {
   return (
-    <div className="mt-2 flex items-center gap-1.5">
+    <div className="et-2 flex items-center gap-1.5">
       <AnimatedScore value={data?.score} />
       {data && <span className="text-[18px] font-bold text-[var(--cat-ink-2)]">%</span>}
       <Badge positive={data?.positive ?? true}>{data ? data.delta : '—'}</Badge>

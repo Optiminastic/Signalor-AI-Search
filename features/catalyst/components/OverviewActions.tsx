@@ -29,7 +29,7 @@ import {
   SlidersHorizontal,
 } from '@/lib/icons'
 
-const PANEL = `absolute right-0 z-50 mt-2 min-w-[190px] rounded-md bg-[var(--cat-card)] p-1 shadow-lg ${CONTROL_RING}`
+const PANEL = `absolute right-0 z-50 mt-2 min-w-[190px] rounded-md bg-background-primary-default p-1 shadow-lg ${CONTROL_RING}`
 
 /** Lightweight dropdown: a trigger + a click-away backdrop + a panel. */
 function Dropdown({
@@ -73,7 +73,7 @@ function MenuItem({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)]"
+      className="hover:bg-background-secondary-default flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors"
     >
       <Check size={13} className={active ? 'text-[#e04a3d]' : 'opacity-0'} />
       {children}

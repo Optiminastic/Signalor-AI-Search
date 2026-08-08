@@ -113,9 +113,6 @@ export function TopSourcesCard(): JSX.Element {
           action="View all sources"
           href={brandPath('visibility')}
         />
-        <p className="-mt-0.5 text-[12px] text-[var(--cat-ink-3)]">
-          Where your brand is being mentioned
-        </p>
       </div>
 
       {sources.length === 0 ? (

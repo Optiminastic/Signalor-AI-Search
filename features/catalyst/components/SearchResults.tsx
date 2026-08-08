@@ -18,7 +18,7 @@ function ResultRow({ item, index, activeRow, onPick, onHover }: ResultRowProps):
         onPick(item.href)
       }}
       className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors ${
-        activeRow ? 'bg-[var(--cat-hover)]' : ''
+        activeRow ? 'bg-background-secondary-default' : ''
       }`}
     >
       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[var(--cat-hover)] text-[var(--cat-ink-2)]">
@@ -55,7 +55,7 @@ export function SearchResults({
   onHover,
 }: SearchResultsProps): JSX.Element {
   return (
-    <div className="absolute top-[calc(100%+6px)] left-0 z-50 w-[360px] max-w-[80vw] overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-1 shadow-xl">
+    <div className="bg-background-primary-default absolute top-[calc(100%+6px)] left-0 z-50 w-[360px] max-w-[80vw] overflow-hidden rounded-2xl border border-[var(--cat-border-soft)] p-1 shadow-xl">
       {results.map((item, i) => (
         <ResultRow
           key={`${item.type}-${item.label}`}

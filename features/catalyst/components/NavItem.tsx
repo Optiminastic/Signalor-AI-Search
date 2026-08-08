@@ -3,8 +3,8 @@
 import type { TablerIcon } from '@tabler/icons-react'
 import { useParams, usePathname } from 'next/navigation'
 
+import { Badge } from '@/components/base/badges/badge'
 import { TransitionLink } from '@/components/TransitionLink'
-import { BRAND } from '@/features/catalyst/constants'
 
 interface NavItemProps {
   icon: TablerIcon
@@ -25,16 +25,11 @@ export function resolveHref(href: string, slug: string | undefined): string {
   return href ? `/dashboard/${slug}/${href}` : `/dashboard/${slug}`
 }
 
-function Trailing({ badge }: { badge?: number }): JSX.Element | null {
+function Trailing({ badge, active }: { badge?: number; active: boolean }): JSX.Element | null {
   if (!badge) return null
-  return (
-    <span
-      className="ml-auto grid h-[18px] min-w-[18px] place-items-center rounded-sm px-1 text-[10px] font-semibold text-white"
-      style={{ background: BRAND }}
-    >
-      {badge}
-    </span>
-  )
+  // BoardUI's own Badge, so the count matches the kit exactly (primary when the
+  // row is selected, neutral otherwise).
+  return <Badge color={active ? 'primary' : 'neutral'}>{badge}</Badge>
 }
 
 function isActive(pathname: string, href: string, isIndex: boolean): boolean {
@@ -67,18 +62,15 @@ function isNavActive({ pathname, href, slug, alsoMatch }: ActiveArgs): boolean {
 function NavRight({
   collapsed,
   badge,
+  active,
 }: {
   collapsed?: boolean
   badge?: number
+  active: boolean
 }): JSX.Element | null {
-  if (!collapsed) return <Trailing badge={badge} />
+  if (!collapsed) return <Trailing badge={badge} active={active} />
   if (!badge) return null
-  return (
-    <span
-      className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full"
-      style={{ background: BRAND }}
-    />
-  )
+  return <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-[#e04a3d]" />
 }
 
 export function NavItem({
@@ -94,22 +86,34 @@ export function NavItem({
   const slug = typeof params?.slug === 'string' ? params.slug : undefined
   const fullHref = resolveHref(href, slug)
   const active = isNavActive({ pathname, href, slug, alsoMatch })
-  // Reference-style selection: the active row lifts to an elevated white card;
-  // inactive rows are muted and reveal a white pill on hover. All via surface
-  // tokens so it stays correct in dark mode.
+  // BoardUI's exact nav-item treatment: rounded-2lg (10px), a top-to-bottom
+  // brand gradient with the `shadow-nav-selected` ring for the selected row,
+  // and a `background/secondary/hover` wash otherwise. Retinted from BoardUI's
+  // blue to Signalor red; every other value is theirs.
   const stateClass = active
-    ? 'border-[var(--cat-border-soft)] bg-[var(--cat-card)] font-semibold text-[var(--cat-ink)] shadow-[0_1px_2px_rgba(16,24,40,.06)]'
-    : 'border-transparent text-[var(--cat-ink-2)] hover:bg-[var(--cat-card)] hover:text-[var(--cat-ink)]'
+    ? 'bg-linear-to-b from-[#e04a3d] to-[#c53f34] shadow-nav-selected'
+    : 'hover:bg-background-secondary-hover'
 
   return (
     <TransitionLink
       href={fullHref}
       title={collapsed ? label : undefined}
-      className={`ring-foreground/10 relative flex items-center rounded-md border py-2 text-[14px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[rgba(224,74,61,0.4)] focus-visible:outline-none ${collapsed ? 'justify-center px-0' : 'gap-3 px-2.5'} ${stateClass}`}
+      className={`rounded-2lg relative flex items-center justify-between overflow-hidden p-2 transition-[background-color] duration-300 ease-in-out ${collapsed ? 'w-9 justify-center' : 'w-full'} ${stateClass}`}
     >
-      <Icon size={18} className="shrink-0" />
-      {!collapsed && label}
-      <NavRight collapsed={collapsed} badge={badge} />
+      <span className="flex min-w-0 items-center gap-2">
+        <Icon
+          size={20}
+          className={`shrink-0 ${active ? 'text-white' : 'text-foreground-icon-secondary'}`}
+        />
+        {!collapsed && (
+          <span
+            className={`text-body-medium truncate whitespace-nowrap ${active ? 'text-white' : 'text-text-secondary'}`}
+          >
+            {label}
+          </span>
+        )}
+      </span>
+      <NavRight collapsed={collapsed} badge={badge} active={active} />
     </TransitionLink>
   )
 }

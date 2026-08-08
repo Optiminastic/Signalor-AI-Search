@@ -12,7 +12,7 @@ export function TasksToolbar(): JSX.Element {
         />
         <input
           placeholder="Search..."
-          className="h-[36px] w-[200px] rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] pr-3 pl-9 text-[13px] text-[var(--cat-ink)] placeholder:text-[var(--cat-ink-3)] focus:border-[#e04a3d] focus:outline-none"
+          className="h-[36px] w-[200px] rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] pr-3 pl-9 text-[13px] text-[var(--cat-ink)] placeholder:text-[var(--cat-ink-3)] focus:border-[#e04a3d] focus:outline-none"
         />
       </div>
       <TasksViewToggle />

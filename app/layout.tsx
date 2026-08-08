@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Instrument_Serif, Geist } from 'next/font/google'
+import { Instrument_Serif, Geist, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 import { Suspense } from 'react'
 import type React from 'react'
@@ -34,6 +34,14 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
+
+// BoardUI's typeface — Inter (400/500/600/700). Exposed as --font-boardui and
+// applied to the /dashboard (catalyst) surface; the marketing site keeps Mona Sans.
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-boardui',
+  weight: ['400', '500', '600', '700'],
+})
 
 // Mona Sans (GitHub) as the global sans font — variable weight 200–900.
 const monaSans = localFont({
@@ -80,6 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
         instrumentSerif.variable,
         'font-sans',
         geist.variable,
+        inter.variable,
       )}
     >
       <head>

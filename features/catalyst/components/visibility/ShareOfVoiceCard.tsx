@@ -7,7 +7,7 @@ import { TrendingUp } from '@/lib/icons'
 
 export function ShareOfVoiceCard({ sov, meta }: { sov: SovBar[]; meta: SovMeta }): JSX.Element {
   return (
-    <div className="flex flex-col gap-3 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <VisCardHead icon={TrendingUp} title="Share of Voice" iconColor={BRAND} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -19,7 +19,7 @@ export function ShareOfVoiceCard({ sov, meta }: { sov: SovBar[]; meta: SovMeta }
         </span>
       </div>
       <MiniBars bars={sov} color={BRAND} />
-      <div className="text-[12px] text-[var(--cat-ink-3)]">{meta.prompts} tracked</div>
+      <div className="mt-auto text-[12px] text-[var(--cat-ink-3)]">{meta.prompts} tracked</div>
     </div>
   )
 }

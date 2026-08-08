@@ -75,7 +75,7 @@ export function PlanProjection({ plan }: { plan: AgentPlan | undefined }): JSX.E
   const current = plan.brief.score ?? 0
 
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3">
+    <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <div>
         <p className="text-[13px] font-semibold text-[var(--cat-ink)]">GEO Score</p>
         <p className="mt-0.5 text-[12px] text-[var(--cat-ink-3)]">
