@@ -83,7 +83,7 @@ function SentimentSpotlight(): JSX.Element {
           id="home-spotlights-heading"
           className="text-foreground text-3xl font-semibold tracking-tight text-pretty sm:text-4xl"
         >
-          Showing up isn&apos;t enough. See what AI says about your brand.
+          What does AI say about your brand?
         </h2>
         <div className="max-w-md">
           <p className="text-muted-foreground text-base leading-relaxed">
@@ -113,7 +113,7 @@ function TrackingSpotlight(): JSX.Element {
     <div className="mt-16 grid items-center gap-10 lg:mt-24 lg:grid-cols-2 lg:gap-14">
       <div>
         <h2 className="text-foreground text-3xl font-semibold tracking-tight text-pretty sm:text-4xl">
-          And track how your visibility grows over time
+          How does Signalor track AI search visibility?
         </h2>
         <p className="text-muted-foreground mt-4 max-w-md text-base leading-relaxed">
           Your tracked prompts run every day. Share of voice, citations, and competitor benchmarks
