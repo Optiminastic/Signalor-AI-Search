@@ -1,7 +1,7 @@
 import { ArrowDown, ChevronDown, Search } from '@/lib/icons'
 
 const DROP =
-  'inline-flex h-[38px] items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[13px] font-medium text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)]'
+  'inline-flex h-[38px] items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-background-primary-default px-3 text-[13px] font-medium text-[var(--cat-ink)] transition-colors hover:bg-background-secondary-default'
 
 export function AuditToolbar(): JSX.Element {
   return (
@@ -13,7 +13,7 @@ export function AuditToolbar(): JSX.Element {
         />
         <input
           placeholder="Search URLs..."
-          className="h-[38px] w-full rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] pr-3 pl-9 text-[13px] text-[var(--cat-ink)] placeholder:text-[var(--cat-ink-3)] focus:border-[#e04a3d] focus:outline-none"
+          className="h-[38px] w-full rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] pr-3 pl-9 text-[13px] text-[var(--cat-ink)] placeholder:text-[var(--cat-ink-3)] focus:border-[#e04a3d] focus:outline-none"
         />
       </div>
       <button className={DROP}>

@@ -4,19 +4,17 @@
  */
 
 /**
- * The hairline edge + lift carried by every control.
- *
- * Ringed rather than bordered so the edge paints outside the box and controls
- * keep their exact 34px height. The explicit dark ring is required: `--foreground`
- * is defined only in `:root` and is never redefined under `.dark`, so
- * `ring-foreground/10` on its own renders 10% black on a near-black card.
+ * Control chrome: a single flat 1px border (`--cat-control-border`, a touch
+ * stronger than --cat-border) on a white surface — no shadow, for a clean,
+ * inset "Linear-like" feel rather than a raised chip. One definition so every
+ * select, dropdown trigger and icon tile shares the same edge.
  */
-export const CONTROL_RING = 'shadow-sm ring-1 ring-foreground/10 dark:ring-white/10'
+export const CONTROL_RING = 'border border-[var(--cat-control-border)]'
 
 /** Square, icon-only control — theme toggle, feedback, help, notifications. */
 export const ICON_TILE =
-  `grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-[var(--cat-card)] ` +
-  `text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)] ` +
+  `grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-background-primary-default ` +
+  `text-[var(--cat-ink-2)] transition-colors hover:bg-background-secondary-default ` +
   `hover:text-[var(--cat-ink)] ${CONTROL_RING}`
 
 /**
@@ -27,16 +25,17 @@ export const ICON_TILE =
  * its 34px height.
  */
 export const CONTROL_CHIP =
-  `inline-flex h-[34px] shrink-0 items-center gap-2 rounded-md bg-[var(--cat-card)] px-3 ` +
+  `inline-flex h-[34px] shrink-0 items-center gap-2 rounded-md bg-background-primary-default px-3 ` +
   `text-[13px] font-medium whitespace-nowrap text-[var(--cat-ink)] transition-colors ` +
-  `hover:bg-[var(--cat-hover)] ${CONTROL_RING}`
+  `hover:bg-background-secondary-default ${CONTROL_RING}`
 
 /**
- * The ⌘K search field. Focus deliberately restates the brand ring for both
- * themes: `focus:` and `dark:` carry equal specificity, so the dark focus ring
- * must be spelled out to beat `dark:ring-white/10` rather than rely on source order.
+ * The ⌘K search field. Sits on the one shared elevated surface
+ * (background/primary — the same fill as the chart frame, icon tiles and
+ * dropdowns) with a hairline border so it stays visible on the white main in
+ * light mode, and the brand ring only on focus.
  */
 export const SEARCH_FIELD =
-  `h-[34px] w-full rounded-md bg-[var(--cat-card)] pr-10 pl-9 text-[13px] ` +
+  `h-[34px] w-full rounded-lg border border-[var(--cat-control-border)] bg-background-primary-default pr-12 pl-9 text-[13px] ` +
   `text-[var(--cat-ink)] outline-none placeholder:text-[var(--cat-ink-3)] ` +
-  `focus:ring-2 focus:ring-[#e04a3d] dark:focus:ring-2 dark:focus:ring-[#e04a3d] ${CONTROL_RING}`
+  `focus:ring-2 focus:ring-[#e04a3d]`

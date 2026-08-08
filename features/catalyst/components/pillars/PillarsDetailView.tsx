@@ -102,7 +102,7 @@ export function PillarsDetailView(): JSX.Element {
           </p>
         </div>
       </div>
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 min-h-0 flex-1 overflow-y-auto px-3">
         <DataState
           isLoading={projectLoading || isLoading}
           isError={isError}

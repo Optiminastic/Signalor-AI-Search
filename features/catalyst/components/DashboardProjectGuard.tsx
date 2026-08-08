@@ -3,15 +3,15 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, type ReactNode } from 'react'
 
+import { VercelSpinner } from '@/features/catalyst/components/VercelSpinner'
 import { useActiveProject, type ActiveProject } from '@/hooks/useActiveProject'
 import { useSession } from '@/lib/auth-client'
-import { Loader2 } from '@/lib/icons'
 import { routes } from '@/lib/routes'
 
 function GuardSpinner(): JSX.Element {
   return (
-    <div className="grid min-h-svh place-items-center bg-white">
-      <Loader2 className="h-5 w-5 animate-spin text-neutral-400" />
+    <div className="grid min-h-svh place-items-center bg-[var(--cat-canvas)]">
+      <VercelSpinner size={22} />
     </div>
   )
 }

@@ -93,7 +93,7 @@ export function CrawlerLogsView(): JSX.Element {
           </p>
         </div>
       </div>
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 min-h-0 flex-1 overflow-y-auto px-3">
         {/* Outside the DataState on purpose. Neither card reads crawler-logs
             data, and both are most useful exactly when there are no logs: one
             says whether robots.txt is the reason nothing arrived, the other is

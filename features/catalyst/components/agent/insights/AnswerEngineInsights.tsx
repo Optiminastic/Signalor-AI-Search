@@ -10,11 +10,8 @@ function Header(): JSX.Element {
     <div className="mb-2 flex items-center justify-between gap-2">
       <div>
         <h2 className="text-[15px] font-semibold text-[var(--cat-ink)]">Answer Engine Insights</h2>
-        <p className="text-[11px] text-[var(--cat-ink-3)]">
-          How your brand shows up across AI answers
-        </p>
       </div>
-      <span className="hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-2.5 py-1 text-[11px] font-medium text-[var(--cat-ink-2)] sm:inline">
+      <span className="cat-card-edge hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-2.5 py-1 text-[11px] font-medium text-[var(--cat-ink-2)] sm:inline">
         Latest run
       </span>
     </div>

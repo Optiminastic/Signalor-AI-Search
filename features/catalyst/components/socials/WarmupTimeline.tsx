@@ -80,7 +80,7 @@ function TimelineCol({ day, above }: { day: RoadDay; above: boolean }): JSX.Elem
 
 export function WarmupTimeline(): JSX.Element {
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
+    <div className="rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-4 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
       <h3 className="text-[13px] font-semibold text-[var(--cat-ink)]">Your warmup plan</h3>
       <div className="mt-1 overflow-x-auto pb-2">
         <div className="flex min-w-max">

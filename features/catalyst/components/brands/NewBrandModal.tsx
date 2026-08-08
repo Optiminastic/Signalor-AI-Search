@@ -138,7 +138,7 @@ export function NewBrandModal({ onClose }: NewBrandModalProps): JSX.Element {
         aria-modal="true"
         aria-labelledby="new-brand-title"
         onClick={e => e.stopPropagation()}
-        className="w-full max-w-md rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-5 shadow-xl"
+        className="w-full max-w-md rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-5 shadow-xl"
       >
         <ModalHeader onClose={onClose} />
         <BrandForm onCreated={onClose} />

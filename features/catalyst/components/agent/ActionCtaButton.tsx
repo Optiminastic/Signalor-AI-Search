@@ -45,10 +45,9 @@ export function ActionCtaButton({ action, quiet = false }: ActionCtaButtonProps)
       onClick={() => setStatus(action.action_id, 'in_progress')}
       className={
         brand
-          ? 'inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white disabled:opacity-60'
+          ? 'shadow-nav-selected inline-flex h-8 items-center gap-1.5 rounded-md bg-linear-to-b from-[#e04a3d] to-[#c53f34] px-3 text-[12px] font-medium text-white disabled:opacity-60'
           : 'inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)] disabled:opacity-60'
       }
-      style={brand ? { background: '#e04a3d' } : undefined}
     >
       {busy ? <Loader2 size={13} className="animate-spin" /> : <cta.icon size={13} />}
       {cta.label}

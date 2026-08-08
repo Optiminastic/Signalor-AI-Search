@@ -1,3 +1,4 @@
+import { ChartFrame } from '@/features/catalyst/components/ChartFrame'
 import { BRAND } from '@/features/catalyst/constants'
 
 const ROWS = 7
@@ -24,5 +25,9 @@ export function Heatmap({ intensities }: { intensities?: number[] }): JSX.Elemen
       <span key={idx} className="aspect-square rounded-sm" style={{ background: BRAND, opacity }} />
     )
   })
-  return <div className="my-3 grid grid-cols-12 gap-1">{cells}</div>
+  return (
+    <ChartFrame className="my-3">
+      <div className="grid grid-cols-12 gap-1">{cells}</div>
+    </ChartFrame>
+  )
 }

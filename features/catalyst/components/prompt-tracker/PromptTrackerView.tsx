@@ -113,7 +113,7 @@ function PromptList({ prompts, slug, busyId, onRecheck, onRemove }: ListProps): 
 
   if (prompts.length === 0) {
     return (
-      <p className="cat-rise rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-4 py-6 text-center text-[13px] text-[var(--cat-ink-2)]">
+      <p className="cat-rise cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-4 py-6 text-center text-[13px] text-[var(--cat-ink-2)]">
         No prompts match the current filters. Clear a tag or widen the date range to see more.
       </p>
     )

@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react'
 import { Toaster } from 'sonner'
 
 import { useCatalystTheme } from '@/features/catalyst/components/CatalystThemeProvider'
+import { AlertTriangle, CheckCircle2, Info, Loader2 } from '@/lib/icons'
 
 /**
  * Sonner host mounted inside the dashboard so toasts follow the catalyst
@@ -75,6 +76,21 @@ function toastVars(p: ToastPalette): CSSProperties {
   } as CSSProperties
 }
 
+/**
+ * Type icons from the app's own icon set, coloured per palette — replacing
+ * Sonner's default heavy filled glyphs, which read as off-theme (a black circle
+ * on a light toast). One accent colour per type; the toast body stays neutral.
+ */
+function toastIcons(p: ToastPalette): Record<string, JSX.Element> {
+  return {
+    success: <CheckCircle2 size={17} style={{ color: p.success }} />,
+    error: <AlertTriangle size={17} style={{ color: p.error }} />,
+    warning: <AlertTriangle size={17} style={{ color: '#f59e0b' }} />,
+    info: <Info size={17} style={{ color: BRAND }} />,
+    loading: <Loader2 size={16} className="animate-spin" style={{ color: p.muted }} />,
+  }
+}
+
 export function DashboardToaster(): JSX.Element {
   const { dark } = useCatalystTheme()
   const palette = dark ? DARK : LIGHT
@@ -83,12 +99,14 @@ export function DashboardToaster(): JSX.Element {
       theme={dark ? 'dark' : 'light'}
       position="bottom-right"
       gap={10}
+      icons={toastIcons(palette)}
       style={toasterVars(palette)}
       toastOptions={{
         // Structure comes from classes (global, so they survive the portal);
         // colour comes from the CSS vars above.
         classNames: {
-          toast: 'rounded-md border shadow-[0_4px_14px_rgba(16,24,40,.10)] text-[13px] font-medium',
+          toast:
+            'rounded-xl border shadow-[0_8px_24px_rgba(16,24,40,.12)] text-[13px] font-medium gap-2.5',
           description: 'text-[12px] opacity-80',
           actionButton: 'rounded-md text-[12px] font-semibold',
           cancelButton: 'rounded-md text-[12px] font-medium',

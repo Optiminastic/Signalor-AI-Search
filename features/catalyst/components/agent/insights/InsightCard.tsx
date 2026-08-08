@@ -10,7 +10,7 @@ interface InsightCardProps {
 /** Tight, titled analytics card — the shared shell of the Answer Engine Insights grid. */
 export function InsightCard({ title, subtitle, right, children }: InsightCardProps): JSX.Element {
   return (
-    <div className="flex flex-col rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] p-3.5 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-3.5 shadow-sm">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="text-[13px] font-semibold text-[var(--cat-ink)]">{title}</h3>

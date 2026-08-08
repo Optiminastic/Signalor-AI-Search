@@ -8,7 +8,7 @@ interface WebVitalCardProps {
 export function WebVitalCard({ vital }: WebVitalCardProps): JSX.Element {
   const { icon: Icon, label, value, unit, marker, status, valueColor } = vital
   return (
-    <div className="flex flex-col rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <div className="cat-card-edge flex flex-col rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">
           {label}

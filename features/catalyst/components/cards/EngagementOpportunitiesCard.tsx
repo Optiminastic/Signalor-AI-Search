@@ -52,7 +52,7 @@ function OpportunityRow({ opp }: { opp: Opportunity }): JSX.Element {
   const tone = impactTone(opp.impact)
   const backlinksHref = useBrandPath()('backlinks')
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-2.5 transition-colors hover:bg-[var(--cat-hover)]">
+    <div className="bg-background-primary-default hover:bg-background-secondary-default rounded-2xl border border-[var(--cat-border-soft)] p-2.5 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-start gap-2.5">
           <span className="grid h-5 w-5 shrink-0 place-items-center text-[var(--cat-ink-2)]">
@@ -96,9 +96,6 @@ export function EngagementOpportunitiesCard(): JSX.Element {
     <Card>
       <div className="mb-1">
         <CardHead title="Engagement Opportunities" />
-        <p className="-mt-0.5 text-[12px] text-[var(--cat-ink-3)]">
-          Engage here to boost your AI visibility
-        </p>
       </div>
 
       {rows.length === 0 ? (

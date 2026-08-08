@@ -84,7 +84,7 @@ function CardFoot({ stats }: { stats: EngineStats }): JSX.Element {
 
 function EngineCard({ stats }: { stats: EngineStats }): JSX.Element {
   return (
-    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3.5">
+    <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3.5">
       <CardHead stats={stats} />
       <div className="mt-3 space-y-2.5">
         <MetricRow

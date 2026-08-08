@@ -35,7 +35,7 @@ function MenuItem({ icon, title, sub, href, onClick }: ItemProps): JSX.Element {
     </>
   )
   const cls =
-    'flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-[var(--cat-hover)]'
+    'flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-background-secondary-default'
   if (href) {
     return (
       <a href={href} target="_blank" rel="noreferrer" className={cls} onClick={onClick}>
@@ -96,7 +96,7 @@ interface ShareItemsProps {
 
 function ShareMenuItems({ prompt, onCopy, onClose }: ShareItemsProps): JSX.Element {
   return (
-    <div className="absolute top-[calc(100%+4px)] right-0 z-30 w-[290px] rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-1 shadow-lg">
+    <div className="bg-background-primary-default absolute top-[calc(100%+4px)] right-0 z-30 w-[290px] rounded-2xl border border-[var(--cat-border-soft)] p-1 shadow-lg">
       <MenuItem
         icon={<Copy size={14} className="text-[var(--cat-ink-2)]" />}
         title="Copy task"

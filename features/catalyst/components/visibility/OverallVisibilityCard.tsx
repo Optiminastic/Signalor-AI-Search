@@ -7,7 +7,7 @@ import { Eye } from '@/lib/icons'
 
 export function OverallVisibilityCard({ data }: { data: OverallVis }): JSX.Element {
   return (
-    <div className="flex flex-col gap-3 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <VisCardHead icon={Eye} title="Overall Visibility" iconColor={BRAND} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -19,7 +19,7 @@ export function OverallVisibilityCard({ data }: { data: OverallVis }): JSX.Eleme
         </span>
       </div>
       <BarMeter value={data.score} color={BRAND} />
-      <div className="text-[12px] text-[var(--cat-ink-3)]">
+      <div className="mt-auto text-[12px] text-[var(--cat-ink-3)]">
         {data.detected} of {data.total} platforms detected · SignalorAI
       </div>
     </div>

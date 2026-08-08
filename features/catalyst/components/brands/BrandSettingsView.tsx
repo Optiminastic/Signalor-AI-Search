@@ -20,7 +20,7 @@ function Section({
   children: ReactNode
 }): JSX.Element {
   return (
-    <section className="overflow-hidden rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <section className="cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <header className="border-b border-[var(--cat-border)] px-5 py-4">
         <h2 className="text-[15px] font-semibold text-[var(--cat-ink)]">{title}</h2>
         {description && <p className="mt-0.5 text-[12px] text-[var(--cat-ink-3)]">{description}</p>}

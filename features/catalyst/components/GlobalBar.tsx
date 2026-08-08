@@ -1,6 +1,5 @@
 'use client'
 
-import { IconBellFilled, IconHelpCircleFilled } from '@tabler/icons-react'
 import Link from 'next/link'
 
 import { AgentChatTrigger } from '@/features/catalyst/components/agent-chat/AgentChatTrigger'
@@ -12,7 +11,11 @@ import { MobileMenuButton } from '@/features/catalyst/components/MobileMenuButto
 import { SidebarToggle } from '@/features/catalyst/components/SidebarToggle'
 import { ThemeToggleButton } from '@/features/catalyst/components/ThemeToggleButton'
 import { TopbarUser } from '@/features/catalyst/components/TopbarUser'
+import { Bell, HelpCircle } from '@/lib/icons'
 import { useTopbarSlot } from '@/stores/useTopbarSlot'
+
+/** One icon size + weight for every top-bar tile, so the cluster reads as a set. */
+const TILE_ICON = 17
 
 /**
  * The single app-level top bar shown on every page: universal ⌘K search, the
@@ -44,10 +47,10 @@ export function GlobalBar(): JSX.Element {
           <FeedbackPopover />
         </span>
         <Link href="/help" aria-label="Help & docs" className={`hidden lg:grid ${ICON_TILE}`}>
-          <IconHelpCircleFilled size={17} />
+          <HelpCircle size={TILE_ICON} />
         </Link>
         <button type="button" aria-label="Notifications" className={`relative ${ICON_TILE}`}>
-          <IconBellFilled size={17} />
+          <Bell size={TILE_ICON} />
           <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[#e04a3d] ring-2 ring-[var(--cat-card)]" />
         </button>
         <span className="mx-1 h-5 w-px bg-[var(--cat-border)]" />

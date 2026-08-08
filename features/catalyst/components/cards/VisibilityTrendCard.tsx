@@ -21,9 +21,6 @@ export function VisibilityTrendCard(): JSX.Element {
       <div className="flex items-start justify-between">
         <div>
           <CardHead title="Visibility Score Trend" />
-          <p className="-mt-0.5 text-[12px] text-[var(--cat-ink-3)]">
-            Your visibility score over time
-          </p>
         </div>
         <span className="rounded-md bg-[var(--cat-track)] px-2.5 py-1 text-[12px] font-medium text-[var(--cat-ink-2)]">
           {rangeLabel}

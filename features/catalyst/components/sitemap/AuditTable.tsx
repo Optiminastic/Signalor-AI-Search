@@ -18,7 +18,7 @@ const COLS = [
 
 export function AuditTable({ rows }: { rows: Row[] }): JSX.Element {
   return (
-    <div className="cat-rise overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-rise cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[1160px] border-collapse text-left">
           <thead>

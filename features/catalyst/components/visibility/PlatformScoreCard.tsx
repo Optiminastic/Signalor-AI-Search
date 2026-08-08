@@ -28,7 +28,7 @@ function Head({ platform }: { platform: PlatformVis }): JSX.Element {
 
 function SubStats({ stats }: { stats: SubStat[] }): JSX.Element {
   return (
-    <div className="grid grid-cols-3 gap-2 border-t border-[var(--cat-border-soft)] pt-3">
+    <div className="mt-auto grid grid-cols-3 gap-2 border-t border-[var(--cat-border-soft)] pt-3">
       {stats.map(stat => (
         <div key={stat.label}>
           <div className="text-[15px] font-bold text-[var(--cat-ink)]">{stat.value}</div>
@@ -41,7 +41,7 @@ function SubStats({ stats }: { stats: SubStat[] }): JSX.Element {
 
 export function PlatformScoreCard({ platform }: { platform: PlatformVis }): JSX.Element {
   return (
-    <div className="flex flex-col gap-3 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-4">
+    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
       <Head platform={platform} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">

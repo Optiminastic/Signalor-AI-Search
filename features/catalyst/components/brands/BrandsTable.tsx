@@ -64,7 +64,7 @@ function BrandRow({ brand }: { brand: Brand }): JSX.Element {
 
 export function BrandsTable({ brands }: { brands: Brand[] }): JSX.Element {
   return (
-    <div className="overflow-x-auto rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-card-edge overflow-x-auto rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <table className="w-full min-w-[640px] border-collapse">
         <thead>
           <tr>

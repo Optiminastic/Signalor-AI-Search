@@ -33,6 +33,24 @@ export function CatalystThemeProvider({ children }: ProviderProps): JSX.Element 
     }
   }, [])
 
+  // Paint <html>/<body> with the themed canvas so the browser's overscroll
+  // rubber-band and the loading screen follow the theme instead of flashing the
+  // default white body (the `.dark` class only reaches the wrapper below).
+  // `--cat-canvas`: #09090b dark / #ffffff light. Restored on unmount so the
+  // marketing site keeps its own white background.
+  useEffect(() => {
+    const canvas = dark ? '#09090b' : '#ffffff'
+    const root = document.documentElement
+    const prevRoot = root.style.backgroundColor
+    const prevBody = document.body.style.backgroundColor
+    root.style.backgroundColor = canvas
+    document.body.style.backgroundColor = canvas
+    return () => {
+      root.style.backgroundColor = prevRoot
+      document.body.style.backgroundColor = prevBody
+    }
+  }, [dark])
+
   const toggle = useCallback((): void => {
     setDark(prev => {
       const next = !prev

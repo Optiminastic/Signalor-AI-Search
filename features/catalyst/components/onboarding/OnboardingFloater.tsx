@@ -157,7 +157,7 @@ function OnboardingCard({
 }: CardProps): JSX.Element {
   const activeId = steps.find(s => !s.done)?.id
   return (
-    <div className="w-[330px] max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-xl bg-[var(--cat-card)] shadow-[0_20px_50px_-16px_rgba(0,0,0,0.35)] ring-1 ring-black/10 dark:ring-white/10">
+    <div className="bg-background-primary-default w-[330px] max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-xl shadow-[0_20px_50px_-16px_rgba(0,0,0,0.35)] ring-1 ring-black/10 dark:ring-white/10">
       <CardHeader completed={completed} total={total} onCollapse={onCollapse} drag={drag} />
       <div className="px-4 pt-3">
         <TickBar value={(completed / total) * 100} ticks={total * 4} showValue={false} />

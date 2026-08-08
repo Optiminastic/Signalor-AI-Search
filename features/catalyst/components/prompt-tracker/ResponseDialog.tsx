@@ -117,7 +117,7 @@ function DialogPanel({ result, slug, trackId, onClose }: ResponseDialogProps): J
       onClick={onClose}
     >
       <div
-        className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)] shadow-xl"
+        className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] shadow-xl"
         onClick={e => e.stopPropagation()}
       >
         <DialogHeader result={result} onClose={onClose} />

@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+/* BoardUI (ui.boardui.com) design tokens — copy-in components under
+ * components/base. Tokens are namespaced (--color-background-primary-default …)
+ * and dark mode keys off the same `.dark` class our theme toggle sets, so both
+ * follow the app switch. BoardUI's own `styles/globals.css` (a competing grey
+ * theme) was deleted; its blue primary was retinted to Signalor red in
+ * theme.css + the switch/checkbox sources. */
+@import '../styles/theme.css';
+@import '../styles/typography.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -160,27 +168,34 @@
   }
 }
 
-/* Signalor brand CTA button — ported from signalor.ai auth screens */
+/* Signalor brand CTA — matches the shared PrimaryButton verbatim: the warm-red
+   top-to-bottom gradient plus shadow-nav-selected (1px brand ring + inset white
+   top-line highlight), so every legacy `.auth-cta-btn` reads as one theme. */
 .auth-cta-btn {
   color: #ffffff;
-  background-color: var(--primary);
-  border: 1px solid rgba(120, 36, 28, 0.24);
-  box-shadow:
-    inset 0 0 1px 1px rgba(255, 255, 255, 0.414),
-    0 1px 2px rgb(120 36 28 / 0.28);
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+  background-image: linear-gradient(to bottom, #e04a3d, #c53f34);
+  box-shadow: var(--shadow-nav-selected);
+  transition: filter 0.15s ease;
 }
 .auth-cta-btn:hover {
-  background-color: #c53f34;
+  filter: brightness(1.06);
 }
 .auth-cta-btn:active {
-  background-color: #b9382d;
+  filter: brightness(0.95);
 }
 .auth-cta-btn:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+/* Vercel/Geist spinner spoke fade — see VercelSpinner.tsx. */
+@keyframes vercel-spin {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
 }
 
 /* Warm "sand paper" wash behind the hero: a richer sandy/beige gradient that
@@ -867,31 +882,63 @@
    Consumed only by the /catalyst feature (bg-[var(--cat-*)] etc.).
    Dark values apply inside the `.dark` wrapper the theme toggle sets.
    ============================================================ */
+/* Remapped to BoardUI's neutral palette (ui.boardui.com) so the whole dashboard
+   speaks its greys — light and dark. The ladder mirrors BoardUI's: page →
+   sidebar (background/secondary) → cards (background/primary, the elevated
+   surface) → inputs (background/tertiary); text/icons at neutral 500 / 400. */
 :root {
-  --cat-canvas: #f1f1f0;
-  --cat-content: #f5f5f5;
-  --cat-card: #ffffff;
-  --cat-track: #f0f0f0;
-  --cat-hover: #fafafa;
-  --cat-border: #e5e5e5;
-  --cat-border-soft: #f0f0f0;
-  --cat-grid: #ededed;
-  --cat-ink: #171717;
-  --cat-ink-2: #6b7280;
-  --cat-ink-3: #9ca3af;
+  /* BoardUI light ladder: the main content is WHITE, cards are a soft grey, the
+     sidebar is grey. (Dark inverts: darkest main, lighter cards.) */
+  --cat-canvas: #ffffff; /* page / main content — white */
+  --cat-content: #ffffff;
+  --cat-card: #f4f4f5; /* cards — soft grey on the white main */
+  --cat-track: #e5e5e5; /* meter tracks */
+  --cat-hover: #ebebeb; /* row hover on a grey card */
+  --cat-border: #e5e5e5; /* neutral-200 */
+  /* Slightly stronger than --cat-border: the flat (shadow-less) border that
+     defines selects, dropdowns and icon tiles on the white page. */
+  --cat-control-border: #e0e0e0;
+  --cat-border-soft: #ededed;
+  /* Floating cards match the sidebar, whose border is white (invisible on the
+     near-white fill) so only the shadow defines the edge. Nested elements keep
+     the visible --cat-border-soft. */
+  --cat-card-border: #ffffff;
+  --cat-grid: #e5e5e5;
+  --cat-ink: #0a0a0a; /* text/primary */
+  --cat-ink-2: #737373; /* text/secondary + icon/secondary (neutral-500) */
+  --cat-ink-3: #a3a3a3; /* text/tertiary (neutral-400) */
+  /* Cards wear the sidebar's exact edge — white (invisible) border + the layered
+     `--shadow-sidebar`. The scroll containers that hold cards are given matching
+     horizontal room (px-3 / -mx-3, absorbed by the panel padding) so this soft
+     shadow no longer clips at their edges. */
+  --cat-card-edge: var(--shadow-sidebar);
 }
 .dark {
-  --cat-canvas: #09090b;
-  --cat-content: #101012;
-  --cat-card: #1c1c1f;
-  --cat-track: #161619;
-  --cat-hover: #26262b;
-  --cat-border: #2b2b31;
-  --cat-border-soft: #222226;
-  --cat-grid: #2b2b31;
-  --cat-ink: #f4f4f5;
-  --cat-ink-2: #a1a1aa;
-  --cat-ink-3: #71717a;
+  /* Cool/zinc-toned to match BoardUI, whose dark greys lean blue (their border
+     is zinc-800 #27272a). Pure-neutral greys read warm beside them. */
+  --cat-canvas: #09090b; /* zinc-950 — darkest, the page */
+  --cat-content: #09090b;
+  --cat-card: #18181b; /* zinc-900 — same darkness as #171717 but cool, not warm */
+  --cat-track: #1c1c1f;
+  --cat-hover: #26262a;
+  --cat-border: #27272a; /* zinc-800, BoardUI's border tone */
+  --cat-control-border: #2e2e33; /* dark: a touch stronger than --cat-border */
+  --cat-border-soft: #1c1c1f;
+  --cat-card-border: #1c1c1f; /* dark keeps the visible card seam */
+  --cat-grid: #27272a;
+  --cat-ink: #fafafa; /* zinc-50 */
+  --cat-ink-2: #a1a1aa; /* zinc-400 */
+  --cat-ink-3: #71717a; /* zinc-500 */
+  /* BoardUI's card top-line: a 1px light highlight along the top edge, as if lit
+     from above. On a dark card a plain border reads as a flat seam; this gives
+     the surface the "sits on the page" lift BoardUI cards have. */
+  --cat-card-edge: inset 0 1px 0 0 rgb(255 255 255 / 0.11);
+}
+
+/* Applied by the shared Card + any card-like surface so the highlight is one
+   token everywhere. box-shadow (not border) so it paints inside the radius. */
+.cat-card-edge {
+  box-shadow: var(--cat-card-edge);
 }
 
 /* Subtle entrance — cards/metrics rise + fade on mount (replays on refresh /
@@ -971,6 +1018,12 @@
    page's cat-rise / cat-stagger supplies the entrance motion. */
 .cat-vt-panel {
   view-transition-name: cat-panel;
+}
+/* During a theme switch, drop the panel's own transition name so it falls into
+   the root snapshot and the circular colour reveal covers it too (otherwise the
+   main content would cross-fade separately). See features/catalyst/theme-transition.ts. */
+html.theme-transitioning .cat-vt-panel {
+  view-transition-name: none;
 }
 ::view-transition-old(cat-panel),
 ::view-transition-new(cat-panel) {

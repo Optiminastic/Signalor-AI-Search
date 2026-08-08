@@ -80,7 +80,7 @@ function outcomeOf(result: PromptEngineResult): Outcome {
 
 function RunCard({ run, index }: { run: PromptRun; index: number }): JSX.Element {
   return (
-    <li className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3">
+    <li className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <div className="flex items-center gap-2">
         <span className="text-[12px] font-semibold text-[var(--cat-ink)]">Run {index}</span>
         <span className="text-[11px] text-[var(--cat-ink-3)]">{formatTaskDate(run.at)}</span>

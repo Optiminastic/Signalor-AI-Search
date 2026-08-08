@@ -11,7 +11,7 @@ export function AgentChatSuggestions(): JSX.Element {
         <button
           key={label}
           type="button"
-          className="group flex w-full items-center gap-2.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 py-2.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)]"
+          className="group bg-background-primary-default hover:bg-background-secondary-default flex w-full items-center gap-2.5 rounded-2xl border border-[var(--cat-border-soft)] px-3 py-2.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors"
         >
           <Icon size={15} strokeWidth={1.9} className="shrink-0 text-[var(--cat-ink-3)]" />
           <span className="min-w-0 flex-1 truncate">{label}</span>

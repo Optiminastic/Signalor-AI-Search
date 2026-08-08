@@ -301,6 +301,10 @@ export function BenchmarkBuilder({ initialSlug = '' }: { initialSlug?: string })
     // The key is persisted as it is typed (see useRememberedKey), so there is
     // nothing to save here — only the run to start watching.
     mutationFn: () => startOutreachBenchmark(url, accessKey),
+    // Drop the previous run the instant a new build starts, so the old domain's
+    // report can never linger on screen while the new one is generated — that
+    // stale view was what made the input and the result look mismatched.
+    onMutate: () => setSlug(''),
     onSuccess: run => setSlug(run.slug),
   })
 

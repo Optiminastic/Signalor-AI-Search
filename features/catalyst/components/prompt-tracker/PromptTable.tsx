@@ -240,7 +240,7 @@ export function PromptTable({
   }
 
   return (
-    <div className="cat-rise overflow-x-auto rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-rise cat-card-edge overflow-x-auto rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <table className="w-full min-w-[980px] border-collapse">
         <TableHead sort={sort} asc={asc} onSort={handleSort} />
         <tbody>

@@ -14,7 +14,7 @@ export function SiteOneView(): JSX.Element {
   const { data, isLoading, isError } = useSiteOne(slug)
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-0.5 pb-6">
+    <div className="-mx-3 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 pb-6">
       <DataState
         isLoading={projectLoading || isLoading}
         isError={isError}

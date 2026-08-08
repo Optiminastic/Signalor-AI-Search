@@ -23,7 +23,7 @@ function tally(prompts: TrackedPrompt[], pick: (p: TrackedPrompt) => string): Sl
 function Bar({ title, slices }: { title: string; slices: Slice[] }): JSX.Element {
   const total = slices.reduce((sum, s) => sum + s.count, 0)
   return (
-    <div className="flex-1 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] p-3.5">
+    <div className="cat-card-edge flex-1 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-[13px] font-semibold text-[var(--cat-ink)]">{title}</span>
         <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1">

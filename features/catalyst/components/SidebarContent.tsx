@@ -13,7 +13,6 @@ import { useCatalystTheme } from '@/features/catalyst/components/CatalystThemePr
 import { NavGroup } from '@/features/catalyst/components/NavGroup'
 import { NavItem } from '@/features/catalyst/components/NavItem'
 import { SidebarLogo } from '@/features/catalyst/components/SidebarLogo'
-import { SidebarPlanCard } from '@/features/catalyst/components/SidebarPlanCard'
 import { SidebarUser } from '@/features/catalyst/components/SidebarUser'
 import { WorkspaceSwitcher } from '@/features/catalyst/components/WorkspaceSwitcher'
 import {
@@ -42,19 +41,15 @@ function DarkModeToggle(): JSX.Element {
 
 /** Plan card + utility links (dark mode, help), pinned above the user card. */
 function SidebarFooter({ collapsed }: { collapsed: boolean }): JSX.Element {
+  if (collapsed) return <></>
   return (
-    <>
-      <SidebarPlanCard collapsed={collapsed} />
-      {!collapsed && (
-        <div className="mt-2 flex flex-col gap-0.5">
-          <DarkModeToggle />
-          <Link href="/help" className={FOOTER_ROW}>
-            <IconHelpCircleFilled size={17} />
-            Help
-          </Link>
-        </div>
-      )}
-    </>
+    <div className="flex flex-col gap-0.5">
+      <DarkModeToggle />
+      <Link href="/help" className={FOOTER_ROW}>
+        <IconHelpCircleFilled size={17} />
+        Help
+      </Link>
+    </div>
   )
 }
 
@@ -72,8 +67,10 @@ function SidebarNav({ collapsed }: { collapsed: boolean }): JSX.Element {
   const taskCount = useTaskCount()
   // Real open-task count on the Actions item (hidden when 0), not a hardcoded badge.
   const actionsNav = { ...ACTIONS_NAV, badge: taskCount || undefined }
+  // The whole sidebar scrolls (see Sidebar.tsx), so the nav is a plain column;
+  // px-1 keeps the selected item's ring/rounded corners clear of the scroll clip.
   return (
-    <div className="mt-2 -mr-1 flex min-h-0 flex-1 flex-col gap-0.5 overflow-x-hidden overflow-y-auto pr-1">
+    <div className="mt-4 flex flex-col gap-0.5 px-1">
       <NavItem {...MAIN_NAV[0]} collapsed={collapsed} />
       <NavItem {...actionsNav} collapsed={collapsed} />
       <NavItem {...SIGNALS_NAV} collapsed={collapsed} />
@@ -95,25 +92,34 @@ function SidebarNav({ collapsed }: { collapsed: boolean }): JSX.Element {
 }
 
 export function SidebarContent({ collapsed, onClose }: SidebarContentProps): JSX.Element {
+  // shrink-0 on the header + footer so a tall sidebar (high zoom) compresses the
+  // scrolling nav, never the pinned brand card / user — that compression was
+  // clipping the brand card's top content.
   return (
     <>
-      <div className="flex items-center pb-0.5">
-        <SidebarLogo collapsed={collapsed} />
-        {onClose && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close menu"
-            className="ml-auto grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)] lg:hidden"
-          >
-            <X size={16} />
-          </button>
-        )}
+      <div className="shrink-0">
+        <div className="flex items-center pb-0.5">
+          <SidebarLogo collapsed={collapsed} />
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close menu"
+              className="ml-auto grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)] lg:hidden"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+        <WorkspaceSwitcher collapsed={collapsed} />
       </div>
-      <WorkspaceSwitcher collapsed={collapsed} />
       <SidebarNav collapsed={collapsed} />
-      <SidebarFooter collapsed={collapsed} />
-      <SidebarUser collapsed={collapsed} />
+      {/* mt-auto pins the footer to the bottom when the sidebar has room; when
+          content is taller than the panel the whole sidebar scrolls instead. */}
+      <div className="mt-auto shrink-0 pt-2">
+        <SidebarFooter collapsed={collapsed} />
+        <SidebarUser collapsed={collapsed} />
+      </div>
     </>
   )
 }

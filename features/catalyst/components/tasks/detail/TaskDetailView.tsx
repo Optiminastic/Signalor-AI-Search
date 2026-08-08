@@ -62,7 +62,7 @@ function VerifyButton({ task }: { task: TaskDetail }): JSX.Element | null {
       disabled={verifying}
       onClick={verify}
       title="Re-crawl your live site and confirm this fix is actually done"
-      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)] disabled:opacity-60"
+      className="bg-background-primary-default hover:bg-background-secondary-default inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors disabled:opacity-60"
     >
       {verifying ? <Loader2 size={13} className="animate-spin" /> : <BadgeCheck size={13} />}
       {verifying ? 'Verifying…' : 'Verify'}
@@ -79,7 +79,7 @@ function CompleteButton({ task }: { task: TaskDetail }): JSX.Element | null {
       type="button"
       disabled={busy}
       onClick={() => setStatus(task.id, 'completed')}
-      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)] disabled:opacity-60"
+      className="bg-background-primary-default hover:bg-background-secondary-default inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors disabled:opacity-60"
     >
       <Check size={13} />
       Mark complete
@@ -153,7 +153,7 @@ export function TaskDetailView(): JSX.Element {
       <div className="cat-rise relative z-20 shrink-0 border-b border-[var(--cat-border)] pb-4">
         {task ? <DetailHeader task={task} /> : <BackLink />}
       </div>
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 min-h-0 flex-1 overflow-y-auto px-3">
         <DataState
           isLoading={isLoading}
           isError={isError}

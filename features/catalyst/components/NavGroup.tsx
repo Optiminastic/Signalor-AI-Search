@@ -24,23 +24,24 @@ interface GroupButtonProps {
 }
 
 function GroupButton({ icon: Icon, label, active, open, onToggle }: GroupButtonProps): JSX.Element {
-  // A group whose child page is active reads bold-ink (the active child itself
-  // gets the white card); otherwise it's muted with the same white-pill hover.
+  // Matches BoardUI's nav-item shell (rounded-2lg, p-2, background/secondary
+  // hover). A group whose child is active reads bold without the filled row —
+  // the active child itself carries the gradient.
   const stateClass = active
-    ? 'font-semibold text-[var(--cat-ink)]'
-    : 'text-[var(--cat-ink-2)] hover:bg-[var(--cat-card)] hover:text-[var(--cat-ink)]'
+    ? 'text-text-primary'
+    : 'text-text-secondary hover:bg-background-secondary-hover'
   return (
     <button
       type="button"
       onClick={onToggle}
       aria-expanded={open}
-      className={`flex w-full items-center gap-3 rounded-lg border border-transparent px-2.5 py-2 text-[14px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[rgba(224,74,61,0.4)] focus-visible:outline-none ${stateClass}`}
+      className={`rounded-2lg flex w-full items-center gap-2 p-2 transition-[background-color] duration-300 ease-in-out focus-visible:ring-2 focus-visible:ring-[rgba(224,74,61,0.4)] focus-visible:outline-none ${stateClass}`}
     >
-      <Icon size={18} className="shrink-0" />
-      {label}
+      <Icon size={20} className="text-foreground-icon-secondary shrink-0" />
+      <span className="text-body-medium">{label}</span>
       <ChevronDown
-        size={15}
-        className={`ml-auto text-[var(--cat-ink-3)] transition-transform ${open ? 'rotate-180' : ''}`}
+        size={16}
+        className={`text-foreground-icon-secondary ml-auto transition-transform ${open ? 'rotate-180' : ''}`}
       />
     </button>
   )

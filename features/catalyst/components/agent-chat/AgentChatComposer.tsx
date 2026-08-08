@@ -11,7 +11,7 @@ export function AgentChatComposer(): JSX.Element {
 
   return (
     <div className="shrink-0 px-3 pt-2 pb-3">
-      <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 pt-2.5 pb-2 focus-within:ring-2 focus-within:ring-[#e04a3d]/40">
+      <div className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-3 pt-2.5 pb-2 focus-within:ring-2 focus-within:ring-[#e04a3d]/40">
         <textarea
           rows={1}
           value={value}

@@ -11,7 +11,7 @@ export function AgentChatEmptyState(): JSX.Element {
   return (
     <div className="cat-rise flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 py-5">
       <div
-        className="grid h-28 shrink-0 place-items-center rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]"
+        className="cat-card-edge grid h-28 shrink-0 place-items-center rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]"
         style={{ backgroundImage: DOT_FIELD }}
       >
         <span className="grid h-11 w-11 place-items-center rounded-md bg-[#e04a3d]/10 text-[#e04a3d] ring-1 ring-[#e04a3d]/20">

@@ -47,8 +47,8 @@ const defaults = getDefaultClassNames()
 const CALENDAR_CLASSNAMES = {
   month_caption: `${defaults.month_caption} h-7`,
   caption_label: `${defaults.caption_label} text-[12px] font-semibold text-[var(--cat-ink)]`,
-  button_previous: `${defaults.button_previous} inline-grid h-6 w-6 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]`,
-  button_next: `${defaults.button_next} inline-grid h-6 w-6 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]`,
+  button_previous: `${defaults.button_previous} inline-grid h-6 w-6 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-background-secondary-default`,
+  button_next: `${defaults.button_next} inline-grid h-6 w-6 place-items-center rounded-md text-[var(--cat-ink-2)] transition-colors hover:bg-background-secondary-default`,
   chevron: `${defaults.chevron} !fill-[var(--cat-ink-2)]`,
   weekday: `${defaults.weekday} text-[10px] font-medium text-[var(--cat-ink-3)]`,
   day: `${defaults.day} text-[11px] text-[var(--cat-ink-2)]`,
@@ -57,9 +57,9 @@ const CALENDAR_CLASSNAMES = {
 
 // Matches the dropdown convention in OverviewActions rather than introducing a
 // second popover style.
-const PANEL = `absolute right-0 z-50 mt-1.5 rounded-md bg-[var(--cat-card)] p-1 shadow-lg ${CONTROL_RING}`
+const PANEL = `absolute right-0 z-50 mt-1.5 rounded-md bg-background-primary-default p-1 shadow-lg ${CONTROL_RING}`
 const ROW =
-  'flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)]'
+  'flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors hover:bg-background-secondary-default'
 
 export function dateFilterLabel(filter: DateFilter): string {
   if (filter.mode === 'since') return `Last ${filter.days} days`

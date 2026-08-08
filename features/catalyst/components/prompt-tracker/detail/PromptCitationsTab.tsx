@@ -64,7 +64,7 @@ function CitationRow({ entry }: { entry: CitationEntry }): JSX.Element {
 
 function DomainGroup({ group }: { group: CitationGroup }): JSX.Element {
   return (
-    <div className="overflow-hidden rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <div className="flex items-center gap-2 border-b border-[var(--cat-border)] bg-[var(--cat-content)] px-3 py-2">
         <span className="truncate text-[12px] font-semibold text-[var(--cat-ink)]">
           {group.domain || 'Unknown source'}

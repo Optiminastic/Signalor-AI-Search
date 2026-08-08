@@ -29,7 +29,7 @@ export function DashboardContent(): JSX.Element {
 
   return (
     <OverviewFiltersProvider>
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
+      <div className="-mx-3 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-3">
         <DashboardGreeting />
         <ProjectionPanel />
 

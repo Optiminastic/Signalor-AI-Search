@@ -13,7 +13,7 @@ interface OppTableProps {
 /** The flat Source / Category / DR / Status opportunities table (Free & Paid tabs). */
 export function OppTable({ items }: OppTableProps): JSX.Element {
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--cat-border)] bg-[var(--cat-card)]">
+    <div className="cat-card-edge overflow-x-auto rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <table className="w-full min-w-[600px] border-collapse">
         <thead>
           <tr>

@@ -110,7 +110,7 @@ export function ActionsView(): JSX.Element {
         )}
       </div>
       <TabBar current={current} />
-      <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto pr-0.5">
+      <div className="-mx-3 mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
         {current === 'plan' && <PlanTab />}
         {current === 'tasks' && <TasksView />}
         {current === 'intel' && <IntelTab />}
