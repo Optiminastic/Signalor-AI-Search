@@ -65,13 +65,22 @@ function IntegrationsHeader(): JSX.Element {
           <strong className="text-foreground font-semibold">Shopify and WordPress</strong>, pull
           search data from Google, and pipe alerts into Slack. More on the way.
         </p>
-        <Link
-          href="/integration"
-          className="text-primary hover:text-primary/80 mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
-        >
-          Browse integrations
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-        </Link>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+          <Link
+            href="/integration"
+            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
+          >
+            Browse integrations
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
+          <Link
+            href="/prompt-tracking#comparison"
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-medium transition-colors"
+          >
+            Compare to brand monitoring tools
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
+        </div>
       </div>
     </div>
   )
