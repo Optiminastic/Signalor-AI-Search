@@ -82,7 +82,7 @@ export function HomeHowItWorks(): JSX.Element {
                 id="home-how-it-works-heading"
                 className="text-foreground mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
               >
-                From pasted URL to shipped fix
+                How does Signalor work?
               </h2>
             </div>
             <Link
