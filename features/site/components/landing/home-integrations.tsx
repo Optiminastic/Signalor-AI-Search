@@ -56,7 +56,7 @@ function IntegrationsHeader(): JSX.Element {
           id="home-integrations-heading"
           className="text-foreground mt-3 max-w-md text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
         >
-          Works where your team already ships
+          What integrations does Signalor support?
         </h2>
       </div>
       <div className="max-w-md lg:self-end lg:justify-self-end">
