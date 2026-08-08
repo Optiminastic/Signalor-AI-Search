@@ -14,9 +14,9 @@ import { VisibilityBreakdownCard } from '@/features/catalyst/components/cards/Vi
 import { VisibilityTrendCard } from '@/features/catalyst/components/cards/VisibilityTrendCard'
 import { VisitorsChannelsCard } from '@/features/catalyst/components/cards/VisitorsChannelsCard'
 import { DashboardSkeleton } from '@/features/catalyst/components/DashboardSkeleton'
-import { AiAssistantPanel } from '@/features/catalyst/components/overview/AiAssistantPanel'
 import { DashboardGreeting } from '@/features/catalyst/components/overview/DashboardGreeting'
 import { OverviewFiltersProvider } from '@/features/catalyst/components/overview/OverviewFilters'
+import { ProjectionPanel } from '@/features/catalyst/components/overview/ProjectionPanel'
 import { WorldPresenceCard } from '@/features/catalyst/components/overview/WorldPresenceCard'
 import { useDashboardReady } from '@/hooks/useDashboardReady'
 
@@ -31,7 +31,7 @@ export function DashboardContent(): JSX.Element {
     <OverviewFiltersProvider>
       <div className="-mx-3 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-3">
         <DashboardGreeting />
-        <AiAssistantPanel />
+        <ProjectionPanel />
 
         <PrimaryCards />
         <WideRows />
