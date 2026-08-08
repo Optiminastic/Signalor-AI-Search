@@ -285,6 +285,14 @@ function errorMessage(startError: unknown, run: OutreachRun | undefined): string
   return ''
 }
 
+/** The report to display: only for the domain currently in the field, so a
+ *  previous domain's result can never appear under a new one. Null hides it. */
+function visibleReport(run: OutreachRun | undefined, url: string): OutreachReport | null {
+  if (!run || !hasReport(run)) return null
+  const typed = url.trim()
+  return typed && hostOf(run.report.url) !== hostOf(typed) ? null : run.report
+}
+
 export function BenchmarkBuilder({ initialSlug = '' }: { initialSlug?: string }): JSX.Element {
   const [accessKey, setAccessKey] = useRememberedKey()
   const [url, setUrl] = useState('')
@@ -301,12 +309,17 @@ export function BenchmarkBuilder({ initialSlug = '' }: { initialSlug?: string })
     // The key is persisted as it is typed (see useRememberedKey), so there is
     // nothing to save here — only the run to start watching.
     mutationFn: () => startOutreachBenchmark(url, accessKey),
+    // Drop the previous run the instant a new build starts, so the old domain's
+    // report can never linger on screen while the new one is generated — that
+    // stale view was what made the input and the result look mismatched.
+    onMutate: () => setSlug(''),
     onSuccess: run => setSlug(run.slug),
   })
 
   const run = runQuery.data
   const running = Boolean(slug) && !TERMINAL.has(run?.status ?? '')
   const error = errorMessage(mutation.error, run)
+  const report = visibleReport(run, url)
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
@@ -316,14 +329,19 @@ export function BenchmarkBuilder({ initialSlug = '' }: { initialSlug?: string })
         state={{ accessKey, url, busy: mutation.isPending || running }}
         onChange={next => {
           if (next.accessKey !== undefined) setAccessKey(next.accessKey)
-          if (next.url !== undefined) setUrl(next.url)
+          if (next.url !== undefined) {
+            setUrl(next.url)
+            // Editing the domain clears the previous report immediately, so a past
+            // domain's result can never sit under the one you just typed.
+            setSlug('')
+          }
         }}
         onSubmit={() => mutation.mutate()}
       />
 
       {error && <p className="mt-4 text-[13px] font-medium text-red-600">{error}</p>}
       {running && <RunStatus run={run} />}
-      {run && hasReport(run) && <Report run={run} report={run.report} />}
+      {run && report && <Report run={run} report={report} />}
     </main>
   )
 }
