@@ -2,10 +2,12 @@ import { useViewTransitionNavigate } from '@/components/providers/view-transitio
 import { TransitionLink } from '@/components/TransitionLink'
 import { useTaskFix } from '@/features/catalyst/components/autofix/AutoFixContext'
 import { AutoFixControl } from '@/features/catalyst/components/autofix/AutoFixControl'
+import { BrandFavicon } from '@/features/catalyst/components/competitors/BrandFavicon'
 import { PriorityTag } from '@/features/catalyst/components/tasks/PriorityTag'
 import { SignalTag } from '@/features/catalyst/components/tasks/SignalTag'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { PROMPT_PARAM } from '@/features/catalyst/constants'
+import { sourceOf } from '@/features/catalyst/task-source'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import { MessageSquare } from '@/lib/icons'
@@ -14,6 +16,21 @@ export interface TaskRowProps {
   row: TaskItem
   onToggleDone: (taskId: number, done: boolean) => void
   busy: boolean
+}
+
+/** Tiny provenance mark: which system measured this task into existence. */
+function SourceMark({ source }: { source: string }): JSX.Element | null {
+  const meta = sourceOf(source)
+  if (!meta) return null
+  return (
+    <span
+      title={`Source: ${meta.label}`}
+      className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-[var(--cat-ink-3)]"
+    >
+      <BrandFavicon domain={meta.domain} name={meta.label} color="#e04a3d" size={12} />
+      {meta.label}
+    </span>
+  )
 }
 
 /**
@@ -33,11 +50,19 @@ function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
         >
           {row.name}
         </span>
-        <span
-          title={row.effect || row.description}
-          className="truncate text-[12px] text-[var(--cat-ink-3)]"
-        >
-          {row.effect || row.description}
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span
+            title={row.effect || row.description}
+            className="truncate text-[12px] text-[var(--cat-ink-3)]"
+          >
+            {row.effect || row.description}
+          </span>
+          {row.source && (
+            <>
+              <span className="shrink-0 text-[var(--cat-border)]">·</span>
+              <SourceMark source={row.source} />
+            </>
+          )}
         </span>
       </span>
     </span>
@@ -45,8 +70,14 @@ function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
 }
 
 /** Auto-fix when the agent can do it, otherwise say plainly that it is manual. */
-function ActionCell({ recommendationId }: { recommendationId?: number }): JSX.Element {
-  const fix = useTaskFix(recommendationId)
+function ActionCell({
+  recommendationId,
+  findingCode,
+}: {
+  recommendationId?: number
+  findingCode?: string
+}): JSX.Element {
+  const fix = useTaskFix(recommendationId, findingCode)
   if (!fix) {
     return (
       <span className="inline-flex items-center rounded-md border border-[var(--cat-border)] px-2 py-1 text-[12px] font-medium text-[var(--cat-ink-2)]">
@@ -96,7 +127,7 @@ export function TaskRow({ row }: TaskRowProps): JSX.Element {
         <PriorityTag priority={row.priority} />
       </td>
       <td className="px-3 py-2.5 whitespace-nowrap" onClick={e => e.stopPropagation()}>
-        <ActionCell recommendationId={row.recommendationId} />
+        <ActionCell recommendationId={row.recommendationId} findingCode={row.findingCode} />
       </td>
     </tr>
   )

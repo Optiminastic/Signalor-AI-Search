@@ -150,7 +150,12 @@ function InstallButton({
   onClick: () => void
 }): JSX.Element {
   return (
-    <PrimaryButton className="w-full justify-center" disabled={disabled} onClick={onClick}>
+    <PrimaryButton
+      wrapperClassName="w-full"
+      className="w-full justify-center"
+      disabled={disabled}
+      onClick={onClick}
+    >
       {busy ? (
         <>
           <Loader2 size={14} className="animate-spin" /> Redirecting to Shopify…

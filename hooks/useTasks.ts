@@ -56,6 +56,8 @@ function toTask(action: UserAction, project: ProjectRef): TaskItem {
     priority: priorityOf(action),
     progress: progressOf(action.status),
     recommendationId: action.recommendation ?? undefined,
+    findingCode: action.finding_code || undefined,
+    source: action.task_source ?? '',
     signal: action.attribution?.signal ?? '',
     effect: action.attribution?.effect ?? '',
     promptTrackId: action.prompt_track_id ?? undefined,

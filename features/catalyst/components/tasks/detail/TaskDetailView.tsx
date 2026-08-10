@@ -12,6 +12,7 @@ import { TaskDetailStats } from '@/features/catalyst/components/tasks/detail/Tas
 import { TaskFixGuideBody } from '@/features/catalyst/components/tasks/detail/TaskFixGuide'
 import { TaskSection } from '@/features/catalyst/components/tasks/detail/TaskSection'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
+import { TaskSourceCard } from '@/features/catalyst/components/tasks/detail/TaskSourceCard'
 import { TaskStepsBody } from '@/features/catalyst/components/tasks/detail/TaskStepsCard'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { LOGO_SIZE } from '@/features/catalyst/constants'
@@ -117,13 +118,15 @@ function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.El
       <TaskDetailStats task={task} />
       <div className="grid grid-cols-1 items-start gap-2 xl:grid-cols-3">
         <div className="flex flex-col gap-2 xl:col-span-2">
+          {/* Provenance first: the measurement is what makes the instruction credible. */}
+          <TaskSourceCard task={task} />
           <TaskSection title="Why this matters">
             <TaskDescriptionBody task={task} />
           </TaskSection>
           {(task.steps.length > 0 || task.actionGuide) && (
             <TaskSection title="How to fix it">
               {task.steps.length > 0 ? (
-                <TaskStepsBody steps={task.steps} />
+                <TaskStepsBody taskId={task.id} steps={task.steps} />
               ) : (
                 <TaskFixGuideBody guide={task.actionGuide} />
               )}

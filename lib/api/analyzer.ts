@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { apiGet, apiPost } from './client'
+import { recommendationSchema } from './recommendations'
 
 /**
  * Analyzer API — the signalor backend's per-project (AnalysisRun) data. Every
@@ -281,33 +282,13 @@ export async function getCompetitors(slug: string): Promise<Competitor[]> {
 
 /* ─────────────────────────────────────────────────────────── recommendations */
 
-/** One numbered step of a task's "how to do it" guide (from the backend
- *  STEP_META / GEO task playbooks). */
-export const recommendationStepSchema = z.object({
-  n: z.number().optional().default(0),
-  title: z.string().optional().default(''),
-  detail: z.string().optional().default(''),
-  xp: z.number().optional().default(0),
-})
-
-export const recommendationSchema = z.object({
-  id: z.number(),
-  pillar: z.string().optional().default(''),
-  priority: z.string().optional().default(''),
-  title: z.string(),
-  description: z.string().optional().default(''),
-  action: z.string().optional().default(''),
-  category: z.string().optional().default(''),
-  steps: z.array(recommendationStepSchema).optional().default([]),
-  // Analyzer finding code (e.g. "no_llms_txt", "no_jsonld") — needed to trigger
-  // the GitHub PR auto-fix, which keys off finding codes.
-  finding_code: z.string().optional().default(''),
-  can_auto_fix: z.boolean().optional().default(false),
-  code_fixable: z.boolean().optional().default(false),
-  difficulty: z.string().nullable().optional(),
-  estimated_minutes: z.number().nullable().optional(),
-})
-export type Recommendation = z.infer<typeof recommendationSchema>
+// Extracted to their own module when this file hit the size cap; re-exported
+// so existing imports keep working.
+export {
+  recommendationSchema,
+  recommendationStepSchema,
+  type Recommendation,
+} from './recommendations'
 
 const runDetailSchema = z
   .object({
@@ -427,6 +408,8 @@ export const userActionSchema = z.object({
   pillar: z.string().optional().default(''),
   finding_code: z.string().optional().default(''),
   priority: z.string().optional().default(''),
+  /** Provenance of the source recommendation: "analyzer" | "ai_insight" | "geo_signal". */
+  task_source: z.string().optional().default(''),
   attribution: z
     .object({ signal: z.string().default(''), effect: z.string().default('') })
     .optional(),
