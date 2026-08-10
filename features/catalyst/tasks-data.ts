@@ -24,6 +24,13 @@ export interface TaskItem {
   progress: number
   /** Linked Recommendation id — the key for Auto-fix (undefined = not fixable). */
   recommendationId?: number
+  /** The finding this task came from, e.g. "no_llms_txt". Survives re-analysis,
+   *  unlike recommendationId: Recommendation rows are per-run, so a task raised
+   *  by an earlier run points at an id the current run no longer has. This is
+   *  what lets Auto-fix re-resolve the task to the current run's equivalent. */
+  findingCode?: string
+  /** Provenance: "analyzer" | "ai_insight" | "geo_signal" ('' when unlinked). */
+  source: string
   /** Short label for the signal this task moves, e.g. "E-E-A-T", "Schema". */
   signal: string
   /** One sentence on what completing it actually does. */

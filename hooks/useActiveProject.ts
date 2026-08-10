@@ -19,6 +19,10 @@ export interface ActiveProject {
   activeOrg: Organization | undefined
   /** Latest analysis run for the active org (prefers a completed run). */
   run: RunSummary | undefined
+  /** Newest run of ANY status, so an in-flight one is visible. ``run`` above
+   *  prefers a completed run, which hides a running analysis whenever the brand
+   *  already has results — exactly the case the progress toast has to detect. */
+  latestRun: RunSummary | undefined
   /** Run slug — the key for all `runs/s/<slug>/…` data endpoints. */
   slug: string | undefined
   /** Org slug — the stable, unguessable key for `/dashboard/<orgSlug>/…` URLs. */
@@ -78,13 +82,15 @@ export function useActiveProject(): ActiveProject {
     enabled: Boolean(email && activeOrg),
   })
 
-  const run = pickRun(runsQuery.data ?? [])
+  const runs = runsQuery.data ?? []
+  const run = pickRun(runs)
 
   return {
     email,
     projects,
     activeOrg,
     run,
+    latestRun: runs[0],
     slug: run?.slug,
     orgSlug: activeOrg?.slug,
     isLoading: orgsQuery.isLoading || runsQuery.isLoading,

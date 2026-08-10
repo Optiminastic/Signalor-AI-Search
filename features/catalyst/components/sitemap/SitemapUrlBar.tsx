@@ -17,7 +17,7 @@ export function SitemapUrlBar({ url }: { url: string }): JSX.Element {
         </div>
         <div className="truncate text-[15px] font-semibold text-[var(--cat-ink)]">{url || '—'}</div>
       </div>
-      <PrimaryButton icon={Play} className="ml-auto">
+      <PrimaryButton icon={Play} wrapperClassName="ml-auto">
         Re-run audit
       </PrimaryButton>
     </div>

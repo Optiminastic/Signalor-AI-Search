@@ -69,7 +69,12 @@ function SubmitButton({
   onClick: () => void
 }): JSX.Element {
   return (
-    <PrimaryButton className="mt-1 w-full justify-center" disabled={disabled} onClick={onClick}>
+    <PrimaryButton
+      wrapperClassName="mt-1 w-full"
+      className="w-full justify-center"
+      disabled={disabled}
+      onClick={onClick}
+    >
       {isPending ? (
         <>
           <Loader2 size={14} className="animate-spin" /> Creating…
