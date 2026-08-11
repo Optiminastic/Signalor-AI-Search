@@ -11,7 +11,7 @@ export function TaskToolbarActions(): JSX.Element {
         Priority
         <ChevronDown size={14} className="text-[var(--cat-ink-3)]" />
       </button>
-      <PrimaryButton icon={Plus}>Create Task</PrimaryButton>
+      <PrimaryButton icon={Plus}>Create action</PrimaryButton>
     </div>
   )
 }

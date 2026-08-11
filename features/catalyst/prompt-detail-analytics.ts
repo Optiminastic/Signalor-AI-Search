@@ -241,3 +241,46 @@ export function filterResults(
 ): PromptEngineResult[] {
   return prompt.results.filter(r => !r.checkedAt || keep(time(r.checkedAt)))
 }
+
+/** Named sites an engine leaned on for one answer, brand and rivals first. */
+export interface MentionedSite {
+  domain: string
+  isBrand: boolean
+  isCompetitor: boolean
+}
+
+/**
+ * The brands visible in a single answer.
+ *
+ * Derived from the answer's own citations rather than from a text scan: the
+ * backend flags each citation as the brand's or a competitor's, which is the
+ * only per-answer brand signal that exists. An engine can name a company
+ * without linking it, so this reads as "brands this answer sourced", and a
+ * brand the model merely mentioned in passing will not appear.
+ */
+export function brandsInAnswer(result: PromptEngineResult): MentionedSite[] {
+  const byDomain = new Map<string, MentionedSite>()
+  for (const citation of result.citations) {
+    if (!citation.domain || (!citation.isBrand && !citation.isCompetitor)) continue
+    const existing = byDomain.get(citation.domain)
+    if (existing) {
+      existing.isBrand = existing.isBrand || citation.isBrand
+      existing.isCompetitor = existing.isCompetitor || citation.isCompetitor
+      continue
+    }
+    byDomain.set(citation.domain, {
+      domain: citation.domain,
+      isBrand: citation.isBrand,
+      isCompetitor: citation.isCompetitor,
+    })
+  }
+  return [...byDomain.values()].sort((a, b) => Number(b.isBrand) - Number(a.isBrand))
+}
+
+/** How many of an answer's sources were the brand's own pages. */
+export function citationSplit(result: PromptEngineResult): { brand: number; total: number } {
+  return {
+    brand: result.citations.filter(c => c.isBrand).length,
+    total: result.citations.length,
+  }
+}

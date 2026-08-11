@@ -3,6 +3,7 @@ import { Download } from '@/lib/icons'
 import type { AccountInvoice } from '@/services/account.service'
 
 import { SectionCard } from './section-card'
+import { SectionEmpty, SectionUnavailable } from './section-state'
 
 function InvoiceRow({ invoice }: { invoice: AccountInvoice }): JSX.Element {
   return (
@@ -29,7 +30,24 @@ function InvoiceRow({ invoice }: { invoice: AccountInvoice }): JSX.Element {
 }
 
 /** Past invoices with download actions. */
-export function BillingHistory({ invoices }: { invoices: AccountInvoice[] }): JSX.Element {
+export function BillingHistory({
+  invoices,
+  unavailable = false,
+}: {
+  invoices: AccountInvoice[]
+  unavailable?: boolean
+}): JSX.Element {
+  if (unavailable || invoices.length === 0) {
+    return (
+      <SectionCard title="Billing history" description="Download your past invoices.">
+        {unavailable ? (
+          <SectionUnavailable what="billing history" />
+        ) : (
+          <SectionEmpty message="No invoices yet. They appear here after your first payment." />
+        )}
+      </SectionCard>
+    )
+  }
   return (
     <SectionCard title="Billing history" description="Download your past invoices." flush>
       <ul className="divide-y divide-[var(--cat-border-soft)]">

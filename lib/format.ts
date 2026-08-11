@@ -14,6 +14,15 @@ export function formatShortDate(iso: string): string {
   return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
 }
 
+/** Abbreviate a count for a dense cell, e.g. 12400 → "12.4K". Fixed locale so
+ *  the server and client render the same string. */
+export function formatCompactNumber(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(value)
+}
+
 /** Format a money amount, e.g. formatMoney(79, 'USD') → "$79". */
 export function formatMoney(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {

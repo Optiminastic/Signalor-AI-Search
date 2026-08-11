@@ -13,11 +13,11 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
+  { value: 'answers', label: 'Responses', icon: Layers },
   { value: 'overview', label: 'Overview', icon: LayoutGrid },
   { value: 'models', label: 'Models', icon: BarChart3 },
   { value: 'history', label: 'History', icon: Timer },
   { value: 'citations', label: 'Citations', icon: Quote },
-  { value: 'answers', label: 'Answers', icon: Layers },
 ]
 
 interface PromptDetailTabsProps {

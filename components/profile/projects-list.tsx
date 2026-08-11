@@ -4,6 +4,7 @@ import type { AccountProject } from '@/services/account.service'
 
 import { DeleteProjectButton } from './delete-project-button'
 import { SectionCard } from './section-card'
+import { SectionEmpty, SectionUnavailable } from './section-state'
 
 function ProjectRow({ project }: { project: AccountProject }): JSX.Element {
   return (
@@ -27,10 +28,16 @@ interface ProjectsListProps {
   projects: AccountProject[]
   /** Undefined means unlimited. */
   max?: number
+  /** The organizations call failed — say so rather than implying zero projects. */
+  unavailable?: boolean
 }
 
 /** The user's projects/organizations with an add action. */
-export function ProjectsList({ projects, max }: ProjectsListProps): JSX.Element {
+export function ProjectsList({
+  projects,
+  max,
+  unavailable = false,
+}: ProjectsListProps): JSX.Element {
   // `max` is undefined for uncapped accounts — no denominator, and the add
   // button must never be disabled against a limit that doesn't exist.
   const atCapacity = max !== undefined && projects.length >= max
@@ -48,6 +55,17 @@ export function ProjectsList({ projects, max }: ProjectsListProps): JSX.Element 
       New
     </button>
   )
+  if (unavailable || projects.length === 0) {
+    return (
+      <SectionCard title="Projects" description={unavailable ? '' : usageLabel} action={addButton}>
+        {unavailable ? (
+          <SectionUnavailable what="projects" />
+        ) : (
+          <SectionEmpty message="No brands yet. Add one to start measuring its AI visibility." />
+        )}
+      </SectionCard>
+    )
+  }
   return (
     <SectionCard title="Projects" description={usageLabel} action={addButton} flush>
       <ul className="divide-y divide-[var(--cat-border-soft)]">

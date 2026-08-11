@@ -10,6 +10,7 @@ import {
 import { PromptHistoryTab } from '@/features/catalyst/components/prompt-tracker/detail/PromptHistoryTab'
 import { PromptModelsTab } from '@/features/catalyst/components/prompt-tracker/detail/PromptModelsTab'
 import { PromptOverviewTab } from '@/features/catalyst/components/prompt-tracker/detail/PromptOverviewTab'
+import { ResponseTable } from '@/features/catalyst/components/prompt-tracker/detail/ResponseTable'
 import { CitedChip, PromptTag } from '@/features/catalyst/components/prompt-tracker/PromptChips'
 import {
   ALL_DATES,
@@ -17,7 +18,7 @@ import {
   PromptDateFilter,
   type DateFilter,
 } from '@/features/catalyst/components/prompt-tracker/PromptDateFilter'
-import { PromptResultsPanel } from '@/features/catalyst/components/prompt-tracker/PromptResultsPanel'
+import { ResponseDialog } from '@/features/catalyst/components/prompt-tracker/ResponseDialog'
 import { AnswerBlockPanel } from '@/features/catalyst/components/prompts/AnswerBlockPanel'
 import { SideSheet } from '@/features/catalyst/components/SideSheet'
 import {
@@ -85,22 +86,48 @@ function useDetailAnalytics(item: TrackedPrompt, filter: DateFilter): DetailAnal
   }, [item, filter])
 }
 
-/** The latest answers plus the drafting tool — the original expanded view. */
-function AnswersTab({ item, slug }: { item: TrackedPrompt; slug: string }): JSX.Element {
+/**
+ * Every answer collected for this prompt, plus the drafting tool.
+ *
+ * The answers are a table rather than a stack of cards: they are compared
+ * against each other (which engine mentioned us, whose sources it used), and
+ * that only reads at a glance in columns. The full text is one click away.
+ */
+function AnswersTab({
+  item,
+  slug,
+  results,
+}: {
+  item: TrackedPrompt
+  slug: string
+  results: PromptEngineResult[]
+}): JSX.Element {
+  const [open, setOpen] = useState<PromptEngineResult | null>(null)
   return (
     <div className="space-y-4">
-      {/* The panel pads itself for the row layout; cancel that here. */}
-      <div className="-mx-4 -mb-3.5">
-        <PromptResultsPanel results={item.results} slug={slug} trackId={item.id} />
+      {/* The table manages its own horizontal padding; cancel the tab's. */}
+      <div className="-mx-4">
+        <ResponseTable results={results} onOpen={setOpen} />
       </div>
       {/* Drafting is a billed call, so it only runs when the user asks. */}
       <AnswerBlockPanel slug={slug} trackId={item.id} promptText={item.prompt} />
+      {open && (
+        <ResponseDialog
+          result={open}
+          slug={slug}
+          trackId={item.id}
+          promptText={item.prompt}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </div>
   )
 }
 
 export function PromptDetailSheet({ item, slug, onClose }: PromptDetailSheetProps): JSX.Element {
-  const [tab, setTab] = useState<PromptDetailTab>('overview')
+  // Opens on the responses: the question a user brings to this sheet is "what
+  // did the engines actually say", and the roll-ups only mean something after.
+  const [tab, setTab] = useState<PromptDetailTab>('answers')
   const [filter, setFilter] = useState<DateFilter>(ALL_DATES)
   const { results, runs, engines, citations, totals } = useDetailAnalytics(item, filter)
   const citationCount = citations.reduce((sum, group) => sum + group.entries.length, 0)
@@ -109,7 +136,12 @@ export function PromptDetailSheet({ item, slug, onClose }: PromptDetailSheetProp
     <SideSheet label="Prompt details" header={<SheetHeader item={item} />} onClose={onClose}>
       <PromptDetailTabs
         active={tab}
-        counts={{ models: engines.length, history: runs.length, citations: citationCount }}
+        counts={{
+          models: engines.length,
+          history: runs.length,
+          citations: citationCount,
+          answers: results.length,
+        }}
         onChange={setTab}
       />
       {/* The API has no per-prompt date params, so filtering is client-side over
@@ -126,7 +158,7 @@ export function PromptDetailSheet({ item, slug, onClose }: PromptDetailSheetProp
         {tab === 'models' && <PromptModelsTab engines={engines} />}
         {tab === 'history' && <PromptHistoryTab runs={runs} />}
         {tab === 'citations' && <PromptCitationsTab groups={citations} />}
-        {tab === 'answers' && <AnswersTab item={item} slug={slug} />}
+        {tab === 'answers' && <AnswersTab item={item} slug={slug} results={results} />}
       </div>
     </SideSheet>
   )

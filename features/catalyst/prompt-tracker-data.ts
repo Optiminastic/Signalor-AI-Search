@@ -47,6 +47,8 @@ export interface TrackedPrompt {
   cited: boolean
   mentions: number
   runs: number
+  /** Estimated monthly search demand; null when the API does not supply it. */
+  volume: number | null
   /** Aggregate tone across engine answers: positive | neutral | negative. */
   sentiment: string
   /** When the prompt was first tracked; '' when the API omits it. */

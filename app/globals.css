@@ -913,7 +913,18 @@
      shadow no longer clips at their edges. */
   --cat-card-edge: var(--shadow-sidebar);
 }
-.dark {
+/* `.cat-dark` carries the identical token set and is set on <html> by
+   CatalystThemeProvider. React portals (side sheets, dialogs, toasts) mount on
+   document.body, which is OUTSIDE the provider's `.dark` wrapper div, so they
+   resolved the light `:root` values and rendered a white sheet over a dark app.
+   A root-level class fixes every portal at once.
+
+   Deliberately NOT reusing `.dark` on <html>: the Tailwind variant is defined as
+   `&:is(.dark *)`, so putting `.dark` on the root would switch on every `dark:`
+   utility across shared components too. This changes catalyst surface tokens
+   only, which is the actual bug. */
+.dark,
+.cat-dark {
   /* Cool/zinc-toned to match BoardUI, whose dark greys lean blue (their border
      is zinc-800 #27272a). Pure-neutral greys read warm beside them. */
   --cat-canvas: #09090b; /* zinc-950 — darkest, the page */

@@ -57,6 +57,11 @@ export const promptTrackSchema = z.object({
   sentiment_label: z.string().nullable().optional(),
   total_runs: z.number().nullable().optional(),
   mentions: z.number().nullable().optional(),
+  // Estimated monthly search demand for the prompt. Optional because no
+  // backend currently populates it — PromptTrack has no such column. The field
+  // is parsed here so the column lights up the moment the API starts sending
+  // it, with no frontend change.
+  search_volume: z.number().nullable().optional(),
   created_at: z.string().nullable().optional(),
   // The five weighted inputs behind `score`, recomputed server-side per request.
   factor_authority: z.number().nullable().optional(),

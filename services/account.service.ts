@@ -70,6 +70,20 @@ export interface AccountOverview {
   engines: string[]
   projects: AccountProject[]
   invoices: AccountInvoice[]
+  /**
+   * Sections whose backend call failed.
+   *
+   * Every section used to fall back to SAMPLE_ACCOUNT, so a billing outage
+   * rendered an invented plan and invoices as though they were the user's own.
+   * A section that could not load must say so — an empty list and a failed
+   * request are different facts, and only one of them is the user's.
+   */
+  unavailable: {
+    plan: boolean
+    usage: boolean
+    projects: boolean
+    invoices: boolean
+  }
 }
 
 export const SAMPLE_ACCOUNT: AccountOverview = {
@@ -95,6 +109,7 @@ export const SAMPLE_ACCOUNT: AccountOverview = {
     atLimit: { projects: false, prompts: false },
   },
   engines: ['ChatGPT', 'Gemini', 'Perplexity', 'Claude', 'Google', 'Bing'],
+  unavailable: { plan: false, usage: false, projects: false, invoices: false },
   projects: [
     { id: 1, name: 'Optiminastic', url: 'optiminastic.com', createdAt: '2026-05-12' },
     { id: 2, name: 'SignalorAI', url: 'signalor.ai', createdAt: '2026-06-01' },
@@ -161,12 +176,12 @@ function usageFrom(usage: Usage | null): AccountOverview['usage'] {
 }
 
 function projectsFrom(orgs: Organization[] | null): AccountProject[] {
-  if (!orgs) return SAMPLE_ACCOUNT.projects
+  if (!orgs) return []
   return orgs.map(o => ({ id: o.id, name: o.name, url: o.url, createdAt: o.created_at }))
 }
 
 function invoicesFrom(invoices: Invoice[] | null): AccountInvoice[] {
-  if (!invoices) return SAMPLE_ACCOUNT.invoices
+  if (!invoices) return []
   return invoices.map(i => ({
     id: i.payment_id,
     date: i.created_at ?? '',
@@ -177,8 +192,11 @@ function invoicesFrom(invoices: Invoice[] | null): AccountInvoice[] {
 }
 
 /**
- * Compose the profile overview from the real backend (server-side). Runs the
- * calls in parallel; any section that fails uses the SAMPLE_ACCOUNT value.
+ * Compose the profile overview from the real backend (server-side).
+ *
+ * Calls run in parallel and each is independent. A section that fails is
+ * reported as unavailable rather than replaced with sample data: the page
+ * should say "we could not load your billing", never show someone else's.
  */
 /** A display name from the address when the session carries none.
  *
@@ -207,6 +225,12 @@ export async function loadAccountOverview(email: string, name?: string): Promise
     user: { name: name?.trim() || nameFromEmail(email), email, accountType },
     plan: sub ? planFrom(sub) : SAMPLE_ACCOUNT.plan,
     usage: usageFrom(usage),
+    unavailable: {
+      plan: sub === null,
+      usage: usage === null,
+      projects: orgs === null,
+      invoices: invoices === null,
+    },
     engines,
     projects: projectsFrom(orgs),
     invoices: invoicesFrom(invoices),

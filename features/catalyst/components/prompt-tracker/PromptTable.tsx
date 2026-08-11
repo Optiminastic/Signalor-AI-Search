@@ -2,18 +2,21 @@
 
 import { useMemo, useState } from 'react'
 
-import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
-import { PromptTag } from '@/features/catalyst/components/prompt-tracker/PromptChips'
+import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
+import {
+  PromptTag,
+  sentimentColor,
+} from '@/features/catalyst/components/prompt-tracker/PromptChips'
 import type { TrackedPrompt } from '@/features/catalyst/prompt-tracker-data'
 import { scoreColor } from '@/features/catalyst/visibility-data'
-import { formatShortDate } from '@/lib/format'
+import { formatCompactNumber, formatShortDate } from '@/lib/format'
 import { ChevronDown, ChevronRight, ChevronUp, Loader2, RefreshCw, Trash2 } from '@/lib/icons'
 
 const TH =
   'px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--cat-ink-3)] whitespace-nowrap'
 const TD = 'px-3 py-2.5 align-middle'
 
-export type SortKey = 'visibility' | 'prompt' | 'mentions' | 'createdAt'
+export type SortKey = 'visibility' | 'prompt' | 'volume' | 'mentions' | 'createdAt'
 
 interface Column {
   key: SortKey | null
@@ -25,22 +28,19 @@ const COLUMNS: readonly Column[] = [
   { key: 'visibility', label: 'Avg. vis.' },
   { key: 'prompt', label: 'Prompt', className: 'w-full' },
   { key: null, label: 'Type' },
+  { key: 'volume', label: 'Volume', className: 'w-px' },
   { key: null, label: 'Sentiment' },
-  { key: 'mentions', label: 'Mentions' },
-  { key: null, label: 'Engines', className: 'w-px' },
+  { key: 'mentions', label: 'Brand mentions' },
   { key: 'createdAt', label: 'Created', className: 'w-px' },
   { key: null, label: '' },
 ]
 
-const SENTIMENT_COLOR: Record<string, string> = {
-  positive: '#1e8a5c',
-  negative: '#BE123C',
-  neutral: '#6B7280',
-}
-
 function compare(a: TrackedPrompt, b: TrackedPrompt, key: SortKey): number {
   if (key === 'prompt') return a.prompt.localeCompare(b.prompt)
   if (key === 'createdAt') return a.createdAt.localeCompare(b.createdAt)
+  // Unmeasured volume sorts as lower than any real figure, so "no data" never
+  // outranks a genuine zero at the top of a descending sort.
+  if (key === 'volume') return (a.volume ?? -1) - (b.volume ?? -1)
   return a[key] - b[key]
 }
 
@@ -51,26 +51,34 @@ export function sortPrompts(prompts: TrackedPrompt[], key: SortKey, asc: boolean
 
 function SentimentCell({ value }: { value: string }): JSX.Element {
   const key = value.toLowerCase()
-  if (!SENTIMENT_COLOR[key]) return <span className="text-[var(--cat-ink-3)]">—</span>
+  const color = sentimentColor(key)
+  if (!color) return <span className="text-[var(--cat-ink-3)]">-</span>
   return (
-    <span className="text-[12px] font-medium capitalize" style={{ color: SENTIMENT_COLOR[key] }}>
+    <span className="text-[12px] font-medium capitalize" style={{ color }}>
       {key}
     </span>
   )
 }
 
-/** The engines that answered, capped so a wide panel does not push the table. */
-function EngineCell({ item }: { item: TrackedPrompt }): JSX.Element {
-  const shown = item.results.slice(0, 8)
-  const extra = item.results.length - shown.length
+/**
+ * Search demand, as a meter scaled against the busiest prompt in the table.
+ *
+ * Relative rather than absolute because the question this column answers is
+ * "which of these is worth winning first", and raw monthly figures span orders
+ * of magnitude — a shared scale makes the row comparison readable at a glance.
+ * The exact figure stays available on hover.
+ */
+function VolumeCell({ value, max }: { value: number | null; max: number }): JSX.Element {
+  if (value === null) return <span className="text-[13px] text-[var(--cat-ink-3)]">-</span>
   return (
-    <span className="flex items-center gap-1">
-      {shown.map(r => (
-        <span key={r.id} title={r.engineLabel} className="shrink-0 opacity-90">
-          <EngineLogo name={r.engine} size={16} />
-        </span>
-      ))}
-      {extra > 0 && <span className="text-[11px] text-[var(--cat-ink-3)]">+{extra}</span>}
+    <span
+      className="flex items-center gap-2"
+      title={`${value.toLocaleString('en-US')} searches / month`}
+    >
+      <TickBar value={max > 0 ? (value / max) * 100 : 0} ticks={5} showValue={false} />
+      <span className="text-[12px] text-[var(--cat-ink-2)] tabular-nums">
+        {formatCompactNumber(value)}
+      </span>
     </span>
   )
 }
@@ -172,42 +180,65 @@ function PromptCell({ item, onOpen }: { item: TrackedPrompt; onOpen: RowOpen }):
   )
 }
 
-function PromptTableRow({ item, busy, onRecheck, onRemove, onOpen }: RowActionsProps): JSX.Element {
+/** Prompt category and intent, side by side. */
+function TypeCell({ item }: { item: TrackedPrompt }): JSX.Element {
+  return (
+    <span className="flex items-center gap-1">
+      <PromptTag value={item.promptType} />
+      <PromptTag value={item.intent} />
+    </span>
+  )
+}
+
+interface RowProps extends RowActionsProps {
+  /** Largest volume in the table, for the meter's shared scale. */
+  volumeMax: number
+}
+
+function PromptTableRow({ item, volumeMax, ...actions }: RowProps): JSX.Element {
   return (
     <tr className="border-t border-[var(--cat-border)] transition-colors hover:bg-[var(--cat-hover)]">
       <td className={TD}>
         <VisibilityCell value={item.visibility} />
       </td>
       <td className={TD}>
-        <PromptCell item={item} onOpen={onOpen} />
+        <PromptCell item={item} onOpen={actions.onOpen} />
       </td>
       <td className={TD}>
-        <span className="flex items-center gap-1">
-          <PromptTag value={item.promptType} />
-          <PromptTag value={item.intent} />
-        </span>
+        <TypeCell item={item} />
+      </td>
+      <td className={`${TD} whitespace-nowrap`}>
+        <VolumeCell value={item.volume} max={volumeMax} />
       </td>
       <td className={TD}>
         <SentimentCell value={item.sentiment} />
       </td>
       <td className={`${TD} text-[13px] text-[var(--cat-ink-2)] tabular-nums`}>{item.mentions}</td>
-      <td className={`${TD} whitespace-nowrap`}>
-        <EngineCell item={item} />
-      </td>
       <td className={`${TD} text-[12px] whitespace-nowrap text-[var(--cat-ink-3)]`}>
         {formatShortDate(item.createdAt)}
       </td>
       <td className={TD}>
-        <RowActions
-          item={item}
-          busy={busy}
-          onRecheck={onRecheck}
-          onRemove={onRemove}
-          onOpen={onOpen}
-        />
+        <RowActions item={item} {...actions} />
       </td>
     </tr>
   )
+}
+
+/** Which column the table is sorted by. Text sorts A-Z first, numbers high-first. */
+function useSortState(): { sort: SortKey; asc: boolean; onSort: (key: SortKey) => void } {
+  const [sort, setSort] = useState<SortKey>('visibility')
+  const [asc, setAsc] = useState(false)
+
+  const onSort = (key: SortKey): void => {
+    if (key === sort) {
+      setAsc(v => !v)
+      return
+    }
+    setSort(key)
+    setAsc(key === 'prompt')
+  }
+
+  return { sort, asc, onSort }
 }
 
 export interface PromptTableProps {
@@ -226,29 +257,24 @@ export function PromptTable({
   onRemove,
   onOpen,
 }: PromptTableProps): JSX.Element {
-  const [sort, setSort] = useState<SortKey>('visibility')
-  const [asc, setAsc] = useState(false)
+  const { sort, asc, onSort } = useSortState()
   const rows = useMemo(() => sortPrompts(prompts, sort, asc), [prompts, sort, asc])
-
-  const handleSort = (key: SortKey): void => {
-    if (key === sort) {
-      setAsc(v => !v)
-      return
-    }
-    setSort(key)
-    setAsc(key === 'prompt')
-  }
+  const volumeMax = useMemo(
+    () => prompts.reduce((max, p) => Math.max(max, p.volume ?? 0), 0),
+    [prompts],
+  )
 
   return (
     <div className="cat-rise cat-card-edge overflow-x-auto rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
       <table className="w-full min-w-[980px] border-collapse">
-        <TableHead sort={sort} asc={asc} onSort={handleSort} />
+        <TableHead sort={sort} asc={asc} onSort={onSort} />
         <tbody>
           {rows.map(item => (
             <PromptTableRow
               key={item.id}
               item={item}
               busy={busyId === item.id}
+              volumeMax={volumeMax}
               onRecheck={onRecheck}
               onRemove={onRemove}
               onOpen={onOpen}

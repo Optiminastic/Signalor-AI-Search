@@ -33,11 +33,17 @@ export function CatalystThemeProvider({ children }: ProviderProps): JSX.Element 
     }
   }, [])
 
-  // Paint <html>/<body> with the themed canvas so the browser's overscroll
-  // rubber-band and the loading screen follow the theme instead of flashing the
-  // default white body (the `.dark` class only reaches the wrapper below).
-  // `--cat-canvas`: #09090b dark / #ffffff light. Restored on unmount so the
-  // marketing site keeps its own white background.
+  // Two jobs, both about things that live OUTSIDE the wrapper below.
+  //
+  // 1. Paint <html>/<body> with the themed canvas so the browser's overscroll
+  //    rubber-band and the loading screen follow the theme instead of flashing
+  //    the default white body.
+  // 2. Put `cat-dark` on <html> so the catalyst tokens resolve for React
+  //    portals. Side sheets, dialogs and toasts mount on document.body, outside
+  //    the `.dark` wrapper, so they were reading the light `:root` values and
+  //    rendering a white sheet over a dark app.
+  //
+  // Both are restored on unmount so the marketing site keeps its own theme.
   useEffect(() => {
     const canvas = dark ? '#09090b' : '#ffffff'
     const root = document.documentElement
@@ -45,9 +51,11 @@ export function CatalystThemeProvider({ children }: ProviderProps): JSX.Element 
     const prevBody = document.body.style.backgroundColor
     root.style.backgroundColor = canvas
     document.body.style.backgroundColor = canvas
+    root.classList.toggle('cat-dark', dark)
     return () => {
       root.style.backgroundColor = prevRoot
       document.body.style.backgroundColor = prevBody
+      root.classList.remove('cat-dark')
     }
   }, [dark])
 
