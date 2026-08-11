@@ -15,6 +15,10 @@ interface ActionCtaButtonProps {
   action: AgentAction
   /** Outlined neutral style for calm surfaces (e.g. AI Assistant cards). */
   quiet?: boolean
+  /** Force the filled brand style regardless of kind. The action detail page
+   *  is the one surface where this button IS the page's primary action, so it
+   *  must not render at the same weight as Verify / Mark complete beside it. */
+  primary?: boolean
 }
 
 /**
@@ -22,12 +26,16 @@ interface ActionCtaButtonProps {
  * is a status transition (pending → in_progress), not a create — which is why it
  * shows up on the Tasks page too. Replaces the old localStorage-only button.
  */
-export function ActionCtaButton({ action, quiet = false }: ActionCtaButtonProps): JSX.Element {
+export function ActionCtaButton({
+  action,
+  quiet = false,
+  primary = false,
+}: ActionCtaButtonProps): JSX.Element {
   const { setStatus, busyActionId } = useAgentMutations()
   const cta = KIND_CTA[action.kind]
   const inProgress = action.status === 'in_progress'
   const busy = busyActionId === action.action_id
-  const brand = !quiet && action.kind !== 'open'
+  const brand = primary || (!quiet && action.kind !== 'open')
 
   if (inProgress) {
     return (

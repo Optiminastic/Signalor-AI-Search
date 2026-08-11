@@ -67,24 +67,31 @@ function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.El
   ]
 
   return (
-    <div className="cat-stagger grid grid-cols-1 items-start gap-x-8 gap-y-4 xl:grid-cols-[minmax(0,1fr)_300px]">
-      <div className="flex min-w-0 flex-col gap-4">
-        <JumpTo targets={targets} />
-        <TaskSection id="highlights" title="Highlights">
-          <TaskHighlights task={task} />
-        </TaskSection>
-        <TaskSection id="why" title="Why this matters">
-          <TaskDescriptionBody task={task} />
-        </TaskSection>
-        {hasSteps && (
-          <TaskSection id="fix" title={task.canAutoFix ? 'Or fix it yourself' : 'How to fix it'}>
-            {task.steps.length > 0 ? (
-              <TaskStepsBody taskId={task.id} steps={task.steps} />
-            ) : (
-              <TaskFixGuideBody guide={task.actionGuide} />
-            )}
+    <div className="cat-stagger grid grid-cols-1 items-start gap-x-6 gap-y-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+      {/* The evidence lives on one elevated panel — the issue-page idiom, where
+          the event body is a surface and the page canvas shows around it. Flat
+          hairline sections directly on the dark canvas read as unfinished. */}
+      <div className="cat-card-edge min-w-0 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
+        <div className="border-b border-[var(--cat-border)] px-4 py-2.5">
+          <JumpTo targets={targets} />
+        </div>
+        <div className="flex flex-col gap-4 p-4">
+          <TaskSection id="highlights" title="Highlights">
+            <TaskHighlights task={task} />
           </TaskSection>
-        )}
+          <TaskSection id="why" title="Why this matters">
+            <TaskDescriptionBody task={task} />
+          </TaskSection>
+          {hasSteps && (
+            <TaskSection id="fix" title={task.canAutoFix ? 'Or fix it yourself' : 'How to fix it'}>
+              {task.steps.length > 0 ? (
+                <TaskStepsBody taskId={task.id} steps={task.steps} />
+              ) : (
+                <TaskFixGuideBody guide={task.actionGuide} />
+              )}
+            </TaskSection>
+          )}
+        </div>
       </div>
       <TaskSidebar task={task} fix={fix} />
     </div>
