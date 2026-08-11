@@ -223,6 +223,8 @@ export async function loadAccountOverview(email: string, name?: string): Promise
 
   return {
     user: { name: name?.trim() || nameFromEmail(email), email, accountType },
+    // The plan shape still needs values to render; the `unavailable` flag is
+    // what tells the UI not to present them as the user's real subscription.
     plan: sub ? planFrom(sub) : SAMPLE_ACCOUNT.plan,
     usage: usageFrom(usage),
     unavailable: {
