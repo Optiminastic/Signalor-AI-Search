@@ -3,6 +3,7 @@ import { ArrowUpRight, CreditCard } from '@/lib/icons'
 import type { AccountOverview } from '@/services/account.service'
 
 import { SectionCard } from './section-card'
+import { SectionUnavailable } from './section-state'
 
 const STATUS_STYLES: Record<string, string> = {
   active: 'bg-[#047857]/10 text-[#047857]',
@@ -12,7 +13,25 @@ const STATUS_STYLES: Record<string, string> = {
 }
 
 /** Current plan, price, status and billing actions. */
-export function PlanBilling({ plan }: { plan: AccountOverview['plan'] }): JSX.Element {
+export function PlanBilling({
+  plan,
+  unavailable = false,
+}: {
+  plan: AccountOverview['plan']
+  unavailable?: boolean
+}): JSX.Element {
+  // Never render plan numbers we could not confirm — an invented price and
+  // renewal date are indistinguishable from real ones once they are on screen.
+  if (unavailable) {
+    return (
+      <SectionCard
+        title="Plan & billing"
+        description="Manage your subscription and payment method."
+      >
+        <SectionUnavailable what="plan and billing details" />
+      </SectionCard>
+    )
+  }
   return (
     <SectionCard title="Plan & billing" description="Manage your subscription and payment method.">
       <div className="flex flex-wrap items-center justify-between gap-4">

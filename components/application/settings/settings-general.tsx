@@ -129,7 +129,7 @@ export function SettingsGeneral({ planArtSrc }: { planArtSrc?: string }) {
           </SettingsRow>
           <SettingsRow
             label="System notifications"
-            description="Show fundamental notifications when an agent completes a task"
+            description="Show fundamental notifications when an agent completes an action"
           >
             <Switch
               aria-label="System notifications"
@@ -137,7 +137,10 @@ export function SettingsGeneral({ planArtSrc }: { planArtSrc?: string }) {
               onChange={setToggle('system')}
             />
           </SettingsRow>
-          <SettingsRow label="Completion sound" description="Sound effect a task is completed">
+          <SettingsRow
+            label="Completion sound"
+            description="Sound effect when an action is completed"
+          >
             <Switch
               aria-label="Completion sound"
               isSelected={toggles.sound}

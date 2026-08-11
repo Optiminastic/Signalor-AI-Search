@@ -81,7 +81,7 @@ function announceJob(job: GithubJob, toastId: string): void {
     toast.success(`Pull request ${prLabel} merged.`, { id: toastId, action: viewPr })
   } else if (job.status === 'declined') {
     // Not an error toast: the agent did its job and correctly handed back.
-    toast('This one needs your input — see the task for what to add.', { id: toastId })
+    toast('This one needs your input - see the action for what to add.', { id: toastId })
   } else if (job.status === 'failed') {
     toast.error(job.error_message || 'The fix job failed. Try again.', { id: toastId })
   } else if (job.status === 'closed') {

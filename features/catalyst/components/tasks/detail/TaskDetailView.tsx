@@ -3,32 +3,25 @@
 import { useParams } from 'next/navigation'
 
 import { TransitionLink } from '@/components/TransitionLink'
-import { ActionCtaButton } from '@/features/catalyst/components/agent/ActionCtaButton'
 import { DataState } from '@/features/catalyst/components/DataState'
-import { TaskAutoFixPanel } from '@/features/catalyst/components/tasks/detail/TaskAutoFixPanel'
 import { TaskDescriptionBody } from '@/features/catalyst/components/tasks/detail/TaskDescriptionCard'
-import { TaskDetailInfo } from '@/features/catalyst/components/tasks/detail/TaskDetailInfo'
-import { TaskDetailStats } from '@/features/catalyst/components/tasks/detail/TaskDetailStats'
+import { TaskDetailHeader } from '@/features/catalyst/components/tasks/detail/TaskDetailHeader'
 import { TaskFixGuideBody } from '@/features/catalyst/components/tasks/detail/TaskFixGuide'
+import { TaskHighlights } from '@/features/catalyst/components/tasks/detail/TaskHighlights'
 import { TaskSection } from '@/features/catalyst/components/tasks/detail/TaskSection'
-import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
-import { TaskSourceCard } from '@/features/catalyst/components/tasks/detail/TaskSourceCard'
+import { TaskSidebar } from '@/features/catalyst/components/tasks/detail/TaskSidebar'
 import { TaskStepsBody } from '@/features/catalyst/components/tasks/detail/TaskStepsCard'
-import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
-import { LOGO_SIZE } from '@/features/catalyst/constants'
-import { formatStatus } from '@/features/catalyst/tasks-data'
-import { useAgentMutations } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import { useTaskAutoFix, type TaskAutoFix } from '@/hooks/useTaskAutoFix'
 import { useTaskDetail, type TaskDetail } from '@/hooks/useTaskDetail'
-import { useTaskVerify } from '@/hooks/useTaskVerify'
-import { BadgeCheck, Check, ChevronLeft, Loader2 } from '@/lib/icons'
+import { ChevronLeft } from '@/lib/icons'
 
-function BackLink(): JSX.Element {
+/** Back link for the states where there is no action to head. */
+function BackToActions(): JSX.Element {
   const brandPath = useBrandPath()
   return (
     <TransitionLink
-      href={brandPath('tasks')}
+      href={brandPath('actions')}
       className="inline-flex items-center gap-0.5 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
     >
       <ChevronLeft size={14} />
@@ -37,112 +30,68 @@ function BackLink(): JSX.Element {
   )
 }
 
-const STATUS_PILL: Record<string, string> = {
-  completed: 'bg-[#E7F7EF] text-[#1e8a5c]',
-  verified: 'bg-[#E7F7EF] text-[#1e8a5c]',
-  in_progress: 'bg-[rgba(246,185,59,0.15)] text-[#a06f0a]',
-}
-
-function StatusPill({ status }: { status: string }): JSX.Element {
-  const tone = STATUS_PILL[status] ?? 'bg-[var(--cat-hover)] text-[var(--cat-ink-2)]'
+/** In-page nav. Earns its place because the sections are collapsible and long —
+ *  it is a table of contents, not decoration. */
+function JumpTo({ targets }: { targets: { id: string; label: string }[] }): JSX.Element {
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone}`}
-    >
-      {formatStatus(status)}
-    </span>
+    <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-[var(--cat-ink-3)]">
+      <span>Jump to:</span>
+      {targets.map(t => (
+        <a
+          key={t.id}
+          href={`#${t.id}`}
+          className="text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)]"
+        >
+          {t.label}
+        </a>
+      ))}
+    </p>
   )
 }
 
-function VerifyButton({ task }: { task: TaskDetail }): JSX.Element | null {
-  const { verify, verifying } = useTaskVerify(task.id)
-  if (task.status === 'verified') return null
-  return (
-    <button
-      type="button"
-      disabled={verifying}
-      onClick={verify}
-      title="Re-crawl your live site and confirm this fix is actually done"
-      className="bg-background-primary-default hover:bg-background-secondary-default inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors disabled:opacity-60"
-    >
-      {verifying ? <Loader2 size={13} className="animate-spin" /> : <BadgeCheck size={13} />}
-      {verifying ? 'Verifying…' : 'Verify'}
-    </button>
-  )
-}
-
-function CompleteButton({ task }: { task: TaskDetail }): JSX.Element | null {
-  const { setStatus, busyActionId } = useAgentMutations()
-  if (task.status === 'completed' || task.status === 'verified') return null
-  const busy = busyActionId === task.id
-  return (
-    <button
-      type="button"
-      disabled={busy}
-      onClick={() => setStatus(task.id, 'completed')}
-      className="bg-background-primary-default hover:bg-background-secondary-default inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors disabled:opacity-60"
-    >
-      <Check size={13} />
-      Mark complete
-    </button>
-  )
-}
-
-function DetailHeader({ task }: { task: TaskDetail }): JSX.Element {
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div className="min-w-0 flex-1">
-        <BackLink />
-        <h1 className="mt-1 flex items-center gap-2.5 text-[19px] font-bold tracking-tight text-[var(--cat-ink)]">
-          <TaskGlyph title={task.title} description={task.description} size={LOGO_SIZE.header} />
-          {task.isTopFix && <span className="shrink-0 text-[#e04a3d]">★</span>}
-          <span className="truncate">{task.title}</span>
-        </h1>
-      </div>
-      <div className="flex shrink-0 items-center gap-2">
-        <StatusPill status={task.status} />
-        <TaskShareMenu task={task} />
-        {task.planAction && <ActionCtaButton action={task.planAction} />}
-        <VerifyButton task={task} />
-        <CompleteButton task={task} />
-      </div>
-    </div>
-  )
-}
-
-/** Sentry-issue body: collapsible detail on the left, the auto-fix panel (Seer
- *  position) and rich metadata on the right sidebar. */
+/**
+ * The body: evidence on the left, the agent and state on the right.
+ *
+ * Structured as an issue page because that is what an action is — one finding,
+ * its evidence, and what to do about it. Facts first as a key/value grid you
+ * look things up in, then the prose, then the steps. Nothing is boxed inside a
+ * box: sections are separated by rules, so the page has one visual weight for
+ * content and another for chrome instead of five nested card borders.
+ */
 function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.Element {
+  const hasSteps = task.steps.length > 0 || Boolean(task.actionGuide)
+  const targets = [
+    { id: 'highlights', label: 'Highlights' },
+    { id: 'why', label: 'Why this matters' },
+    ...(hasSteps ? [{ id: 'fix', label: 'How to fix it' }] : []),
+  ]
+
   return (
-    <div className="cat-stagger flex flex-col gap-2">
-      <TaskDetailStats task={task} />
-      <div className="grid grid-cols-1 items-start gap-2 xl:grid-cols-3">
-        <div className="flex flex-col gap-2 xl:col-span-2">
-          {/* Provenance first: the measurement is what makes the instruction credible. */}
-          <TaskSourceCard task={task} />
-          <TaskSection title="Why this matters">
-            <TaskDescriptionBody task={task} />
+    <div className="cat-stagger grid grid-cols-1 items-start gap-x-8 gap-y-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="flex min-w-0 flex-col gap-4">
+        <JumpTo targets={targets} />
+        <TaskSection id="highlights" title="Highlights">
+          <TaskHighlights task={task} />
+        </TaskSection>
+        <TaskSection id="why" title="Why this matters">
+          <TaskDescriptionBody task={task} />
+        </TaskSection>
+        {hasSteps && (
+          <TaskSection id="fix" title={task.canAutoFix ? 'Or fix it yourself' : 'How to fix it'}>
+            {task.steps.length > 0 ? (
+              <TaskStepsBody taskId={task.id} steps={task.steps} />
+            ) : (
+              <TaskFixGuideBody guide={task.actionGuide} />
+            )}
           </TaskSection>
-          {(task.steps.length > 0 || task.actionGuide) && (
-            <TaskSection title="How to fix it">
-              {task.steps.length > 0 ? (
-                <TaskStepsBody taskId={task.id} steps={task.steps} />
-              ) : (
-                <TaskFixGuideBody guide={task.actionGuide} />
-              )}
-            </TaskSection>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <TaskAutoFixPanel fix={fix} />
-          <TaskDetailInfo task={task} />
-        </div>
+        )}
       </div>
+      <TaskSidebar task={task} fix={fix} />
     </div>
   )
 }
 
-/** Full-page view of a single task, routed at /dashboard/[slug]/tasks/[taskId]. */
+/** Full-page view of one action, routed at /dashboard/[slug]/tasks/[taskId]. */
 export function TaskDetailView(): JSX.Element {
   const params = useParams()
   const taskId = Number(typeof params?.taskId === 'string' ? params.taskId : NaN)
@@ -153,10 +102,10 @@ export function TaskDetailView(): JSX.Element {
     <>
       {/* z-20: the cat-rise transform creates a stacking context, so without an
           explicit z-index the header's dropdowns paint under the body cards. */}
-      <div className="cat-rise relative z-20 shrink-0 border-b border-[var(--cat-border)] pb-4">
-        {task ? <DetailHeader task={task} /> : <BackLink />}
+      <div className="cat-rise relative z-20 shrink-0 border-b border-[var(--cat-border)] pb-3.5">
+        {task ? <TaskDetailHeader task={task} /> : <BackToActions />}
       </div>
-      <div className="-mx-3 mt-3 min-h-0 flex-1 overflow-y-auto px-3">
+      <div className="-mx-3 mt-4 min-h-0 flex-1 overflow-y-auto px-3">
         <DataState
           isLoading={isLoading}
           isError={isError}

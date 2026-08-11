@@ -54,6 +54,7 @@ function toTracked(prompt: PromptTrack): TrackedPrompt {
     cited: results.some(r => r.brandCited),
     mentions: prompt.mentions ?? 0,
     runs: prompt.total_runs ?? 0,
+    volume: prompt.search_volume ?? null,
     sentiment: prompt.sentiment_label ?? '',
     createdAt: prompt.created_at ?? '',
     factors: {

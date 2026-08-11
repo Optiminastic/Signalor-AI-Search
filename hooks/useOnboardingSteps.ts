@@ -97,11 +97,11 @@ function growthSteps(ctx: StepContext): OnboardingStep[] {
       done: ctx.fixConnected,
     },
     {
-      id: 'first-task',
-      title: 'Complete your first task',
-      description: 'Knock out one Growth Agent task and bank its score points.',
-      cta: 'Open tasks',
-      href: ctx.brandPath('tasks'),
+      id: 'first-action',
+      title: 'Complete your first action',
+      description: 'Knock out one Growth Agent action and bank its score points.',
+      cta: 'Open actions',
+      href: ctx.brandPath('actions'),
       done: ctx.taskDone,
     },
   ]
@@ -109,7 +109,7 @@ function growthSteps(ctx: StepContext): OnboardingStep[] {
     steps.push({
       id: 'invite',
       title: 'Invite a teammate',
-      description: 'Assign tasks to teammates and share the workload.',
+      description: 'Assign actions to teammates and share the workload.',
       cta: 'Manage team',
       href: '/profile',
       done: ctx.hasMembers,

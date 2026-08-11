@@ -33,7 +33,7 @@ const STEPS = [
   },
   {
     label: 'Building your action plan',
-    ticker: ['Ranking fixes by score impact', 'Estimating effort per task'],
+    ticker: ['Ranking fixes by score impact', 'Estimating effort per action'],
   },
 ]
 

@@ -40,14 +40,18 @@ export default async function ProfilePage(): Promise<JSX.Element> {
         <ProfileTopBar />
         <div className="mx-auto max-w-5xl space-y-5 px-5 py-8">
           <ProfileHeader user={data.user} planLabel={data.plan.label} />
-          <StatTiles usage={data.usage} />
+          <StatTiles usage={data.usage} unavailable={data.unavailable.usage} />
           <div className="grid gap-5 lg:grid-cols-2">
             <div className="space-y-5">
-              <PlanBilling plan={data.plan} />
-              <BillingHistory invoices={data.invoices} />
+              <PlanBilling plan={data.plan} unavailable={data.unavailable.plan} />
+              <BillingHistory invoices={data.invoices} unavailable={data.unavailable.invoices} />
             </div>
             <div className="space-y-5">
-              <ProjectsList projects={data.projects} max={data.usage.projects.max} />
+              <ProjectsList
+                projects={data.projects}
+                max={data.usage.projects.max}
+                unavailable={data.unavailable.projects}
+              />
               <EnginesCard engines={data.engines} />
             </div>
           </div>

@@ -61,7 +61,7 @@ export function useAgentMutations(): UseAgentMutationsResult {
     },
     onSuccess: plan => {
       invalidate()
-      toast.success(`Plan refreshed — ${plan.counts.backlog} open task(s).`, {
+      toast.success(`Plan refreshed - ${plan.counts.backlog} open action(s).`, {
         id: 'agent-refresh',
       })
     },
@@ -81,7 +81,7 @@ export function useAgentMutations(): UseAgentMutationsResult {
     mutationFn: ({ actionId, status }: { actionId: number; status: string }) =>
       updateActionStatus(actionId, status, email),
     onSuccess: invalidate,
-    onError: () => toast.error('Could not update the task. Please try again.'),
+    onError: () => toast.error('Could not update the action. Please try again.'),
   })
 
   return {
