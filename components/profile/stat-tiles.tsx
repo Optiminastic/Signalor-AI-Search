@@ -2,6 +2,8 @@ import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import { Activity, FolderKanban, MessageSquare, Sparkles, Wrench, Zap } from '@/lib/icons'
 import type { AccountOverview } from '@/services/account.service'
 
+import { SectionUnavailable } from './section-state'
+
 interface StatTileProps {
   label: string
   value: number
@@ -100,7 +102,17 @@ function AllowanceTile({ pct }: { pct: number | null }): JSX.Element {
  * the analysis cap and the auto-fix caps — the numbers that actually explain why
  * a run gets refused — so they are shown too.
  */
-export function StatTiles({ usage }: { usage: AccountOverview['usage'] }): JSX.Element {
+export function StatTiles({
+  usage,
+  unavailable = false,
+}: {
+  usage: AccountOverview['usage']
+  unavailable?: boolean
+}): JSX.Element {
+  // Usage numbers we could not confirm must not be shown at all: a stale or
+  // invented "3 of 10 projects" is the kind of number people make decisions on.
+  if (unavailable) return <SectionUnavailable what="usage" />
+
   const window = `Last ${usage.windowDays} days`
   const tiles: (StatTileProps | null)[] = [
     {
