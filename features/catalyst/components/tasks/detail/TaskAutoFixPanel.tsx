@@ -1,8 +1,6 @@
 'use client'
 
 import { TransitionLink } from '@/components/TransitionLink'
-import { Card } from '@/features/catalyst/components/Card'
-import { CardHead } from '@/features/catalyst/components/CardHead'
 import { TaskAutoFixButton } from '@/features/catalyst/components/tasks/detail/TaskAutoFixButton'
 import { TaskFixResultCard } from '@/features/catalyst/components/tasks/detail/TaskFixResultCard'
 import { useBrandPath } from '@/hooks/useBrandPath'
@@ -20,11 +18,11 @@ const STEPS: { icon: LucideIcon; text: string }[] = [
 const ACTION =
   'inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium transition-colors'
 
-/** Idle state: what auto-fix will do (Seer-style explainer) + the trigger. */
+/** Idle state: what auto-fix will do (Seer-style explainer) + the trigger.
+ *  Bare content — the sidebar's Auto-fix block provides the box and title. */
 function AutoFixExplainer({ fix }: { fix: TaskAutoFix }): JSX.Element {
   return (
-    <Card>
-      <CardHead title="Auto-fix" />
+    <div>
       <p className="text-[12.5px] leading-relaxed text-[var(--cat-ink-2)]">
         SignalorAI can resolve this for you:
       </p>
@@ -44,7 +42,7 @@ function AutoFixExplainer({ fix }: { fix: TaskAutoFix }): JSX.Element {
       <div className="mt-3.5">
         <TaskAutoFixButton fix={fix} />
       </div>
-    </Card>
+    </div>
   )
 }
 
@@ -82,8 +80,7 @@ function AutoFixIntegrationIssue({
   rawError: string
 }): JSX.Element {
   return (
-    <Card>
-      <CardHead title="Auto-fix" />
+    <div>
       <div className="flex gap-2.5 rounded-md border border-[#E5484D]/25 bg-[#E5484D]/[0.07] p-3">
         <AlertTriangle size={16} className="mt-0.5 shrink-0 text-[#E5484D]" />
         <div className="min-w-0">
@@ -103,7 +100,7 @@ function AutoFixIntegrationIssue({
         <p className="mt-1 font-mono text-[11px] break-words text-[var(--cat-ink-3)]">{rawError}</p>
       </details>
       <IntegrationActions fix={fix} />
-    </Card>
+    </div>
   )
 }
 
