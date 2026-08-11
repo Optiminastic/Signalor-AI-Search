@@ -113,7 +113,7 @@ function EvidenceBody({
 }
 
 export function TaskSourceCard({ task }: { task: TaskDetail }): JSX.Element | null {
-  const source = sourceOf(task.source)
+  const source = sourceOf(task.source, task.findingCode)
   const metrics = extractMetrics(task)
   const prompt = typeof task.evidence.prompt === 'string' ? task.evidence.prompt.trim() : ''
   const hasBody = metrics.length > 0 || Boolean(prompt) || task.affectedPages.length > 0

@@ -73,13 +73,13 @@ function SplitButton({ copied, open, onCopy, onToggle }: SplitButtonProps): JSX.
         className="inline-flex items-center gap-1.5 px-2.5 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
       >
         {copied ? <Check size={13} className="text-[#2FBE7E]" /> : <Copy size={13} />}
-        {copied ? 'Copied' : 'Copy task'}
+        {copied ? 'Copied' : 'Copy action'}
       </button>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        aria-label="More ways to use this task"
+        aria-label="More ways to use this action"
         className="grid w-7 place-items-center border-l border-[var(--cat-border)] text-[var(--cat-ink-3)] transition-colors hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
       >
         <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -99,21 +99,21 @@ function ShareMenuItems({ prompt, onCopy, onClose }: ShareItemsProps): JSX.Eleme
     <div className="bg-background-primary-default absolute top-[calc(100%+4px)] right-0 z-30 w-[290px] rounded-2xl border border-[var(--cat-border-soft)] p-1 shadow-lg">
       <MenuItem
         icon={<Copy size={14} className="text-[var(--cat-ink-2)]" />}
-        title="Copy task"
+        title="Copy action"
         sub="Copy as Markdown for LLMs"
         onClick={onCopy}
       />
       <MenuItem
         icon={<EngineIcon engine="chatgpt" />}
         title="Open in ChatGPT"
-        sub="Ask it to implement this task"
+        sub="Ask it to implement this action"
         href={`https://chatgpt.com/?q=${prompt}`}
         onClick={onClose}
       />
       <MenuItem
         icon={<EngineIcon engine="claude" />}
         title="Open in Claude"
-        sub="Ask it to implement this task"
+        sub="Ask it to implement this action"
         href={`https://claude.ai/new?q=${prompt}`}
         onClick={onClose}
       />

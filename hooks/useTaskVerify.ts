@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { useActiveProject } from '@/hooks/useActiveProject'
 import { verifyAction } from '@/lib/api/tasks'
 
 interface UseTaskVerifyResult {
@@ -17,10 +18,11 @@ interface UseTaskVerifyResult {
  */
 export function useTaskVerify(taskId: number): UseTaskVerifyResult {
   const queryClient = useQueryClient()
+  const { email } = useActiveProject()
   const toastId = `verify-${taskId}`
 
   const mutation = useMutation({
-    mutationFn: () => verifyAction(taskId),
+    mutationFn: () => verifyAction(taskId, email),
     onMutate: () => {
       toast.loading('Checking your live site to confirm the fix…', { id: toastId })
     },

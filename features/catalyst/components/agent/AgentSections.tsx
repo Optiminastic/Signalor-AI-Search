@@ -27,7 +27,7 @@ export function AgentSections({ plan, isLoading, isError }: AgentSectionsProps):
         isError={isError}
         isEmpty={groups.length === 0}
         emptyTitle="You’re all caught up"
-        emptyHint="No open tasks for this brand. Run an analysis or refresh the plan to surface new work."
+        emptyHint="No open actions for this brand. Run an analysis or refresh the plan to surface new work."
       >
         {groups.map(g => (
           <ActionTable key={g.pillar} group={g.pillar} actions={g.actions} />

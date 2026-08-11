@@ -17,7 +17,7 @@ export function TeamCard(): JSX.Element | null {
   return (
     <SectionCard
       title="Team"
-      description="Invite up to 2 teammates. Members work on tasks you assign to them across your brands."
+      description="Invite up to 2 teammates. Members work on actions you assign to them across your brands."
     >
       <MembersTable />
     </SectionCard>

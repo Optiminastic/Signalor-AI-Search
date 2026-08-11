@@ -16,6 +16,7 @@ import { BrandProfileView } from '@/features/catalyst/components/brand-profile/B
 import { CompetitorsView } from '@/features/catalyst/components/competitors/CompetitorsView'
 import { CrawlerLogsView } from '@/features/catalyst/components/crawlers/CrawlerLogsView'
 import { InsightsView } from '@/features/catalyst/components/insights/InsightsView'
+import { MarketIntelView } from '@/features/catalyst/components/monitoring/MarketIntelView'
 import { PromptTrackerView } from '@/features/catalyst/components/prompt-tracker/PromptTrackerView'
 import { SitemapView } from '@/features/catalyst/components/sitemap/SitemapView'
 import { SiteOneView } from '@/features/catalyst/components/siteone/SiteOneView'
@@ -59,6 +60,8 @@ const GROUPS: MonitoringGroup[] = [
       { key: 'overview', label: 'Overview', View: VisibilityView },
       { key: 'insights', label: 'Trends', View: InsightsView },
       { key: 'competitors', label: 'Competitors', View: CompetitorsView },
+      // Moved off Actions: it is evidence to read, not work to start.
+      { key: 'intel', label: 'Market Intel', View: MarketIntelView },
     ],
   },
   {

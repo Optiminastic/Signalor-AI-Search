@@ -88,7 +88,7 @@ const PAGE_ITEMS: SearchItem[] = [
   },
   {
     type: 'Page',
-    label: 'Tasks',
+    label: 'Actions',
     sublabel: 'Your work queue',
     href: 'tasks',
     icon: ListChecks,

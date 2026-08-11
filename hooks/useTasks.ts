@@ -89,9 +89,9 @@ function buildStats(tasks: TaskItem[]): StatCard[] {
       value: String(byPriority('High')),
       fill: true,
     },
-    { icon: FileText, color: BLUE, label: 'Total Tasks', value: String(tasks.length) },
-    { icon: FileCheck2, color: GREEN, label: 'Task Done', value: String(done) },
-    { icon: FileClock, color: BRAND, label: 'Task Ongoing', value: String(tasks.length - done) },
+    { icon: FileText, color: BLUE, label: 'Total actions', value: String(tasks.length) },
+    { icon: FileCheck2, color: GREEN, label: 'Actions done', value: String(done) },
+    { icon: FileClock, color: BRAND, label: 'Actions ongoing', value: String(tasks.length - done) },
   ]
 }
 

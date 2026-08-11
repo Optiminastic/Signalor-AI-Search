@@ -46,6 +46,8 @@ export interface StatCard {
   label: string
   value: string
   fill?: boolean
+  /** Sub-line explaining a value that is legitimately empty ("Verify to measure"). */
+  hint?: string
 }
 
 export interface StatusTab {
