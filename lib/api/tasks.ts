@@ -34,9 +34,26 @@ export async function assignAction(
   )
 }
 
-/** POST /api/analyzer/actions/<id>/ → update a task's status (e.g. mark completed). */
-export async function updateActionStatus(actionId: number, status: string): Promise<void> {
-  await apiPost<unknown>(`/api/analyzer/actions/${actionId}/`, { status })
+/**
+ * POST /api/analyzer/actions/<id>/ — move an action between pending /
+ * in_progress / completed. This is what Start and Mark complete call.
+ *
+ * ``email`` is required in practice, not optional. The endpoint resolves the
+ * caller from a verified JWT first, but the API client never sends an
+ * Authorization header, so that path can never succeed — leaving the body's
+ * `email` as the only identity the server can use. Omitting it made every
+ * status change fail with "Email is required", which is why the database held
+ * 110 actions and not one had ever left `pending`.
+ */
+export async function updateActionStatus(
+  actionId: number,
+  status: string,
+  email?: string,
+): Promise<void> {
+  await apiPost<unknown>(`/api/analyzer/actions/${actionId}/`, {
+    status,
+    email: (email ?? '').toLowerCase().trim() || undefined,
+  })
 }
 
 const verifyActionSchema = z.object({
@@ -51,9 +68,18 @@ export type VerifyActionResult = z.infer<typeof verifyActionSchema>
  * POST /api/analyzer/actions/<id>/verify/ → re-crawl the live site and confirm
  * the task's finding is actually resolved. On a pass the backend flips the task
  * to `verified`; either way it returns the human-readable reason.
+ *
+ * ``email`` is sent for the same reason every other call in this module sends
+ * it. The endpoint resolves the caller from a verified JWT first and falls back
+ * to this field; posting an empty body made the whole feature depend on JWT
+ * auth alone, so wherever that is unavailable (e.g. BETTER_AUTH_JWKS_URL unset)
+ * the backend answered "Email is required" and the UI could only say "Could not
+ * verify right now".
  */
-export async function verifyAction(actionId: number): Promise<VerifyActionResult> {
+export async function verifyAction(actionId: number, email?: string): Promise<VerifyActionResult> {
   return verifyActionSchema.parse(
-    await apiPost<unknown>(`/api/analyzer/actions/${actionId}/verify/`, {}),
+    await apiPost<unknown>(`/api/analyzer/actions/${actionId}/verify/`, {
+      email: (email ?? '').toLowerCase().trim() || undefined,
+    }),
   )
 }

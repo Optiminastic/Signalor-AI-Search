@@ -50,7 +50,23 @@ export interface AccountOverview {
     status: PlanStatus
     renewsOn: string | null
   }
-  usage: { projects: UsageMetric; prompts: UsageMetric; runsThisMonth: number }
+  usage: {
+    projects: UsageMetric
+    prompts: UsageMetric
+    runsThisMonth: number
+    /** Analyses run in the rolling window, against the plan cap. */
+    analyses: UsageMetric
+    /** Auto-fixes in the rolling window, against the plan cap. */
+    autofixes: UsageMetric
+    /** Auto-fixes used today, against the per-day cap. */
+    autofixesToday: UsageMetric
+    /** LLM spend as % of the plan's allowance; null when the plan is uncapped. */
+    aiAllowancePct: number | null
+    /** Days the counts cover, straight from the server. */
+    windowDays: number
+    /** The server's own at-limit verdict — never re-derived here. */
+    atLimit: { projects: boolean; prompts: boolean }
+  }
   engines: string[]
   projects: AccountProject[]
   invoices: AccountInvoice[]
@@ -71,6 +87,12 @@ export const SAMPLE_ACCOUNT: AccountOverview = {
     projects: { used: 3, max: 10 },
     prompts: { used: 42, max: 150 },
     runsThisMonth: 18,
+    analyses: { used: 12, max: 30 },
+    autofixes: { used: 4, max: 20 },
+    autofixesToday: { used: 1, max: 5 },
+    aiAllowancePct: 38,
+    windowDays: 30,
+    atLimit: { projects: false, prompts: false },
   },
   engines: ['ChatGPT', 'Gemini', 'Perplexity', 'Claude', 'Google', 'Bing'],
   projects: [
@@ -114,12 +136,27 @@ async function settled<T>(promise: Promise<T>): Promise<T | null> {
 
 function usageFrom(usage: Usage | null): AccountOverview['usage'] {
   if (!usage) return SAMPLE_ACCOUNT.usage
+  // The API sends 0 for "no cap"; drop it so the tile shows a bare count
+  // instead of a denominator (and no progress bar) — see StatTile.
   return {
-    // The API sends 0 for "no cap"; drop it so the tile shows a bare count
-    // instead of a denominator (and no progress bar) — see StatTile.
     projects: { used: usage.usage.projects, max: usage.limits.max_projects || undefined },
     prompts: { used: usage.usage.prompts, max: usage.limits.max_prompts || undefined },
     runsThisMonth: usage.usage.runs_this_month,
+    analyses: {
+      used: usage.usage.analyses_30d,
+      max: usage.limits.max_analyses_per_month || undefined,
+    },
+    autofixes: {
+      used: usage.usage.autofixes_30d,
+      max: usage.limits.max_autofixes_per_month || undefined,
+    },
+    autofixesToday: {
+      used: usage.usage.autofixes_today,
+      max: usage.limits.max_autofixes_per_day || undefined,
+    },
+    aiAllowancePct: usage.ai_allowance.uncapped ? null : usage.ai_allowance.used_pct,
+    windowDays: usage.window_days,
+    atLimit: usage.at_limit,
   }
 }
 
@@ -143,6 +180,18 @@ function invoicesFrom(invoices: Invoice[] | null): AccountInvoice[] {
  * Compose the profile overview from the real backend (server-side). Runs the
  * calls in parallel; any section that fails uses the SAMPLE_ACCOUNT value.
  */
+/** A display name from the address when the session carries none.
+ *
+ * Falling back to SAMPLE_ACCOUNT here put the literal placeholder "Jane Doe" on
+ * a real signed-in user's profile whenever better-auth had no name for them —
+ * sample data is a rendering aid for an unreachable backend, never an identity.
+ */
+function nameFromEmail(email: string): string {
+  const local = (email.split('@')[0] ?? '').replace(/[._-]+/g, ' ').trim()
+  if (!local) return 'Your account'
+  return local.replace(/\b\w/g, c => c.toUpperCase())
+}
+
 export async function loadAccountOverview(email: string, name?: string): Promise<AccountOverview> {
   const [usage, sub, orgs, invoices] = await Promise.all([
     settled(getUsage(email)),
@@ -155,7 +204,7 @@ export async function loadAccountOverview(email: string, name?: string): Promise
   const engines = usage?.limits.engines ?? sub?.limits.engines ?? SAMPLE_ACCOUNT.engines
 
   return {
-    user: { name: name?.trim() || SAMPLE_ACCOUNT.user.name, email, accountType },
+    user: { name: name?.trim() || nameFromEmail(email), email, accountType },
     plan: sub ? planFrom(sub) : SAMPLE_ACCOUNT.plan,
     usage: usageFrom(usage),
     engines,

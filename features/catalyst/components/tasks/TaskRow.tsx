@@ -19,8 +19,14 @@ export interface TaskRowProps {
 }
 
 /** Tiny provenance mark: which system measured this task into existence. */
-function SourceMark({ source }: { source: string }): JSX.Element | null {
-  const meta = sourceOf(source)
+function SourceMark({
+  source,
+  findingCode,
+}: {
+  source: string
+  findingCode?: string
+}): JSX.Element | null {
+  const meta = sourceOf(source, findingCode ?? '')
   if (!meta) return null
   return (
     <span
@@ -60,7 +66,7 @@ function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
           {row.source && (
             <>
               <span className="shrink-0 text-[var(--cat-border)]">·</span>
-              <SourceMark source={row.source} />
+              <SourceMark source={row.source} findingCode={row.findingCode} />
             </>
           )}
         </span>

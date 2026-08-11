@@ -1,30 +1,19 @@
 'use client'
 
-import {
-  IconBinocularsFilled,
-  IconSparklesFilled,
-  IconSquareRoundedCheckFilled,
-  type TablerIcon,
-} from '@tabler/icons-react'
 import { useSearchParams } from 'next/navigation'
 
-import { TransitionLink } from '@/components/TransitionLink'
+import {
+  ActionFilters,
+  type ActionFilter,
+  type ActionFilterCount,
+} from '@/features/catalyst/components/actions/ActionFilters'
 import { AgentSections } from '@/features/catalyst/components/agent/AgentSections'
-import { CompetitorIntel } from '@/features/catalyst/components/agent/CompetitorIntel'
-import { AnswerEngineInsights } from '@/features/catalyst/components/agent/insights/AnswerEngineInsights'
 import { PlanProjection } from '@/features/catalyst/components/agent/PlanProjection'
 import { RunPlanButton } from '@/features/catalyst/components/agent/RunPlanButton'
 import { TasksView } from '@/features/catalyst/components/tasks/TasksView'
+import { useActionCounts } from '@/hooks/useActionCounts'
 import { useAgentPlan } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
-
-type TabKey = 'plan' | 'tasks' | 'intel'
-
-const TABS: { key: TabKey; label: string; icon: TablerIcon }[] = [
-  { key: 'plan', label: "Today's Plan", icon: IconSparklesFilled },
-  { key: 'tasks', label: 'All Tasks', icon: IconSquareRoundedCheckFilled },
-  { key: 'intel', label: 'Market Intel', icon: IconBinocularsFilled },
-]
 
 function NoRun(): JSX.Element {
   return (
@@ -37,8 +26,14 @@ function NoRun(): JSX.Element {
   )
 }
 
-/** Today's ranked plan: the numbers up top, the ranked task groups below. */
-function PlanTab(): JSX.Element {
+/**
+ * Today: the ranked, grouped plan.
+ *
+ * Deliberately not the flat table. The ranking and the pillar grouping are the
+ * product's actual opinion about what to do first — that is what "today" means
+ * here, and a plain list would throw it away.
+ */
+function TodayView(): JSX.Element {
   const { plan, isLoading, isError, noRun } = useAgentPlan()
   if (noRun) return <NoRun />
   return (
@@ -49,50 +44,34 @@ function PlanTab(): JSX.Element {
   )
 }
 
-function IntelTab(): JSX.Element {
-  return (
-    <div className="cat-stagger flex flex-col gap-4">
-      <AnswerEngineInsights />
-      <CompetitorIntel />
-    </div>
-  )
-}
-
-function TabBar({ current }: { current: TabKey }): JSX.Element {
-  const brandPath = useBrandPath()
-  return (
-    <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-[var(--cat-border)]">
-      {TABS.map(tab => {
-        const on = tab.key === current
-        return (
-          <TransitionLink
-            key={tab.key}
-            href={`${brandPath('actions')}?tab=${tab.key}`}
-            className={`-mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-3.5 py-2.5 text-[13px] font-medium transition-colors ${
-              on
-                ? 'border-[#e04a3d] text-[var(--cat-ink)]'
-                : 'border-transparent text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)]'
-            }`}
-          >
-            <tab.icon size={15} />
-            {tab.label}
-          </TransitionLink>
-        )
-      })}
-    </div>
-  )
+function isFilter(value: string | null): value is ActionFilter {
+  return value === 'today' || value === 'backlog' || value === 'done' || value === 'all'
 }
 
 /**
- * Actions — the Growth Agent plan and the Tasks board on one surface:
- * "Today's Plan" (ranked, scored work), "All Tasks" (the full board with
- * assignment and auto-fix) and "Market Intel" (answer-engine + competitor
- * evidence behind the plan). Tab is linkable via `?tab=`.
+ * Actions — one surface, one list, four filters.
+ *
+ * Previously three tabs: "Today's Plan", "All actions" and "Market Intel". The
+ * first two were the same objects under different filters (the plan tab printed
+ * a Backlog count for a backlog that lived on the other tab), and Market Intel
+ * was evidence to read rather than work to start, so it now sits under Signals
+ * beside the measurements it is made of.
+ *
+ * The filter is in the URL (`?view=`) so a filtered board stays shareable.
  */
 export function ActionsView(): JSX.Element {
   const params = useSearchParams()
-  const raw = params.get('tab')
-  const current: TabKey = raw === 'tasks' || raw === 'intel' ? raw : 'plan'
+  const raw = params.get('view')
+  const current: ActionFilter = isFilter(raw) ? raw : 'today'
+  const brandPath = useBrandPath()
+  const counts = useActionCounts()
+
+  const filters: ActionFilterCount[] = [
+    { key: 'today', label: 'Today', count: counts.today },
+    { key: 'backlog', label: 'Backlog', count: counts.backlog },
+    { key: 'done', label: 'Done', count: counts.done },
+    { key: 'all', label: 'All', count: counts.all },
+  ]
 
   return (
     <>
@@ -100,20 +79,18 @@ export function ActionsView(): JSX.Element {
         <div className="min-w-0">
           <h1 className="text-[19px] font-bold tracking-tight text-[var(--cat-ink)]">Actions</h1>
           <p className="text-[13px] text-[var(--cat-ink-2)]">
-            Today&apos;s ranked plan, every task, and the intel behind them
+            What to do next for this brand, ranked by impact
           </p>
         </div>
-        {current === 'plan' && (
+        {current === 'today' && (
           <div className="ml-auto">
             <RunPlanButton />
           </div>
         )}
       </div>
-      <TabBar current={current} />
+      <ActionFilters current={current} counts={filters} basePath={brandPath('actions')} />
       <div className="-mx-3 mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
-        {current === 'plan' && <PlanTab />}
-        {current === 'tasks' && <TasksView />}
-        {current === 'intel' && <IntelTab />}
+        {current === 'today' ? <TodayView /> : <TasksView filter={current} />}
       </div>
     </>
   )

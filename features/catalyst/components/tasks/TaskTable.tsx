@@ -15,7 +15,7 @@ import { ChevronsUpDown } from '@/lib/icons'
  * stay in sync with TaskRow's cells, which truncate to fit.
  */
 const COLS: { label: string; className: string }[] = [
-  { label: 'Task', className: 'px-3' },
+  { label: 'Action', className: 'px-3' },
   { label: 'Improves', className: 'px-3 w-[150px]' },
   { label: 'Priority', className: 'px-3 w-[128px]' },
 ]

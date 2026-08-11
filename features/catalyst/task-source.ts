@@ -16,10 +16,23 @@ export interface TaskSource {
 
 /**
  * The system a finding came from, presented as its own product mark.
- * Accepts the raw provenance string so the tasks table rows (which have no
- * TaskDetail) resolve through the same map as the detail page.
+ *
+ * ``source`` alone is not enough to identify it. LLM-discovered page findings
+ * are stored with source="ai_insight" as well (site_findings.py sets that
+ * deliberately, to keep them out of the prompt that produced them), so keying
+ * on it alone labelled a sitemap crawl finding "Google Search Console" — an
+ * invented provenance, which is the one thing this card exists to prevent.
+ * Discovered findings carry the "site:" finding-code prefix, which separates
+ * them. Takes raw strings so the tasks table rows, which have no TaskDetail,
+ * resolve through the same map as the detail page.
  */
-export function sourceOf(source: string): TaskSource | null {
+export function sourceOf(source: string, findingCode = ''): TaskSource | null {
+  const siteAnalysis: TaskSource = {
+    label: 'Site analysis',
+    detail: 'Found on your live pages during the last crawl',
+    domain: 'signalor.ai',
+  }
+  if (findingCode.startsWith('site:')) return siteAnalysis
   if (source === 'ai_insight') {
     return {
       label: 'Google Search Console',
@@ -34,13 +47,7 @@ export function sourceOf(source: string): TaskSource | null {
       domain: 'signalor.ai',
     }
   }
-  if (source === 'analyzer') {
-    return {
-      label: 'Site analysis',
-      detail: 'Detected on your live pages during the last crawl',
-      domain: 'signalor.ai',
-    }
-  }
+  if (source === 'analyzer') return siteAnalysis
   return null
 }
 

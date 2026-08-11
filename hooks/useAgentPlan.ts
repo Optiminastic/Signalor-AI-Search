@@ -79,7 +79,7 @@ export function useAgentMutations(): UseAgentMutationsResult {
 
   const statusMutation = useMutation({
     mutationFn: ({ actionId, status }: { actionId: number; status: string }) =>
-      updateActionStatus(actionId, status),
+      updateActionStatus(actionId, status, email),
     onSuccess: invalidate,
     onError: () => toast.error('Could not update the task. Please try again.'),
   })

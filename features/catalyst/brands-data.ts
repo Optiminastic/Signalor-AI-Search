@@ -24,5 +24,5 @@ export const ROLE_STYLES: Record<Role, string> = {
 export const ROLES: ReadonlyArray<{ role: Role; desc: string }> = [
   { role: 'Owner', desc: 'Full access, including billing and deleting the brand.' },
   { role: 'Admin', desc: 'Manage brand settings, integrations and members.' },
-  { role: 'Member', desc: 'View reports and work through assigned tasks.' },
+  { role: 'Member', desc: 'View reports and work through assigned actions.' },
 ]

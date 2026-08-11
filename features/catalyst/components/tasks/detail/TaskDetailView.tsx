@@ -32,7 +32,7 @@ function BackLink(): JSX.Element {
       className="inline-flex items-center gap-0.5 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
     >
       <ChevronLeft size={14} />
-      All tasks
+      All actions
     </TransitionLink>
   )
 }
@@ -161,8 +161,8 @@ export function TaskDetailView(): JSX.Element {
           isLoading={isLoading}
           isError={isError}
           isEmpty={notFound || !task}
-          emptyTitle="Task not found"
-          emptyHint="This task does not exist for your account. It may have been removed when the plan was refreshed."
+          emptyTitle="Action not found"
+          emptyHint="This action does not exist for your account. It may have been removed when the plan was refreshed."
         >
           {task && <TaskBody task={task} fix={fix} />}
         </DataState>
