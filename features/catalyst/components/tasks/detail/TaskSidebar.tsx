@@ -11,9 +11,8 @@ import type { TaskAutoFix } from '@/hooks/useTaskAutoFix'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
 import { BadgeCheck, ChevronDown, ExternalLink } from '@/lib/icons'
 
-/** A sidebar block: chevron + label, content in a bordered inset card below —
- *  the issue-page idiom, where the heading floats and the body is boxed. The
- *  timeline above stays flat on purpose; it is a pair of facts, not a section. */
+/** A sidebar block: chevron + label, content below. No card border — the rail
+ *  is already a column, and boxing every block flattens the hierarchy. */
 function Block({
   title,
   children,
@@ -38,11 +37,7 @@ function Block({
         />
         <span className="text-[14px] font-semibold text-[var(--cat-ink)]">{title}</span>
       </button>
-      {open && (
-        <div className="cat-card-edge mt-2.5 rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
-          {children}
-        </div>
-      )}
+      {open && <div className="mt-2.5">{children}</div>}
     </section>
   )
 }
@@ -74,17 +69,15 @@ function Timeline({ task }: { task: TaskDetail }): JSX.Element {
   )
 }
 
-/** The pillar this action moves, and where it stands today. Renders its own
- *  Block so a task with no scored pillar drops the section entirely instead of
- *  leaving an empty card in the rail. */
-function ScoreImpactBlock({ pillar }: { pillar: string }): JSX.Element | null {
+/** The pillar this action moves, and where it stands today. */
+function PillarScore({ pillar }: { pillar: string }): JSX.Element | null {
   const { slug } = useActiveProject()
   const { data } = usePillars(slug)
   const label = GEO_PILLARS.find(p => String(p.key) === `${pillar}_score`)?.label
   const score = data?.pillars.find(p => p.label === label)?.score
   if (!label || score === undefined) return null
   return (
-    <Block title="Score impact">
+    <div>
       <div className="flex items-baseline justify-between gap-3 text-[13px]">
         <span className="text-[var(--cat-ink-2)]">{label}</span>
         <span className="font-medium text-[var(--cat-ink)] tabular-nums">{score}/100</span>
@@ -92,7 +85,7 @@ function ScoreImpactBlock({ pillar }: { pillar: string }): JSX.Element | null {
       <div className="mt-2">
         <TickBar value={score} ticks={20} showValue={false} />
       </div>
-    </Block>
+    </div>
   )
 }
 
@@ -135,17 +128,15 @@ export function TaskSidebar({ task, fix }: { task: TaskDetail; fix: TaskAutoFix 
   return (
     <aside className="flex flex-col gap-3">
       <Timeline task={task} />
-      {/* Gated here, not just inside the panel: a null panel would still leave
-          the block's empty bordered card in the rail. */}
-      {fix.visible && (
-        <Block title="Auto-fix">
-          <TaskAutoFixPanel fix={fix} />
-        </Block>
-      )}
+      <Block title="Auto-fix">
+        <TaskAutoFixPanel fix={fix} />
+      </Block>
       <Block title="Affected pages">
         <Links task={task} />
       </Block>
-      <ScoreImpactBlock pillar={task.pillar} />
+      <Block title="Score impact">
+        <PillarScore pillar={task.pillar} />
+      </Block>
       {task.verificationMessage && (
         <Block title="Activity" defaultOpen={false}>
           <p className="text-[12.5px] leading-relaxed text-[var(--cat-ink-2)]">

@@ -20,18 +20,6 @@ const SEVERITY: Record<string, string> = {
   low: '#2FBE7E',
 }
 
-/* Where the action stands, as a dot tone: open work is neutral, work in
-   flight is amber, done states are green. Mirrors how an issue tracker
-   colours "New" so the state reads before the word does. */
-const STATUS_DOT: Record<string, string> = {
-  pending: 'var(--cat-ink-3)',
-  open: 'var(--cat-ink-3)',
-  in_progress: '#F6B93B',
-  completed: '#2FBE7E',
-  verified: '#1e8a5c',
-  dismissed: 'var(--cat-ink-3)',
-}
-
 const SECONDARY =
   'inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 text-[12.5px] font-medium text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)] disabled:opacity-60'
 
@@ -107,15 +95,11 @@ function Breadcrumb({ task }: { task: TaskDetail }): JSX.Element {
 }
 
 /** The two numbers you weigh before starting: how urgent, how much work. */
-function HeaderStats({ task }: { task: TaskDetail }): JSX.Element | null {
-  const effort = formatEffort(task.effort)
+function HeaderStats({ task }: { task: TaskDetail }): JSX.Element {
   const stats = [
-    { label: 'Priority', value: capitalize(task.priority) },
-    // formatEffort falls back to a dash placeholder. A dash presented as a
-    // headline number reads as broken data, so an unknown effort is not shown.
-    { label: 'Effort', value: effort === '—' ? '' : capitalize(effort) },
-  ].filter(stat => stat.value)
-  if (stats.length === 0) return null
+    { label: 'Priority', value: capitalize(task.priority) || '—' },
+    { label: 'Effort', value: capitalize(formatEffort(task.effort)) || '—' },
+  ]
   return (
     <div className="flex shrink-0 items-start gap-7">
       {stats.map(stat => (
@@ -187,14 +171,7 @@ function Headline({ task }: { task: TaskDetail }): JSX.Element {
         </p>
       )}
       <p className="mt-1.5 flex flex-wrap items-center gap-2 text-[12.5px] text-[var(--cat-ink-3)]">
-        <span className="flex items-center gap-1.5 font-medium text-[var(--cat-ink-2)]">
-          <span
-            aria-hidden
-            className="h-[7px] w-[7px] rounded-full"
-            style={{ background: STATUS_DOT[task.status] ?? 'var(--cat-ink-3)' }}
-          />
-          {formatStatus(task.status)}
-        </span>
+        <span className="font-medium text-[var(--cat-ink-2)]">{formatStatus(task.status)}</span>
         {page && (
           <>
             <span>|</span>
