@@ -39,7 +39,9 @@ function Block({
         <span className="text-[14px] font-semibold text-[var(--cat-ink)]">{title}</span>
       </button>
       {open && (
-        <div className="mt-2.5 rounded-md border border-[var(--cat-border)] p-3">{children}</div>
+        <div className="cat-card-edge mt-2.5 rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
+          {children}
+        </div>
       )}
     </section>
   )

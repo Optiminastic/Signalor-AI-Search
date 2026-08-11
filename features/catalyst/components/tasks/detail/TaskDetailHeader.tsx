@@ -2,14 +2,16 @@
 
 import { TransitionLink } from '@/components/TransitionLink'
 import { ActionCtaButton } from '@/features/catalyst/components/agent/ActionCtaButton'
+import { SiteFavicon } from '@/features/catalyst/components/SiteFavicon'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
+import { sourceOf } from '@/features/catalyst/task-source'
 import { formatEffort, formatStatus } from '@/features/catalyst/tasks-data'
 import { useAgentMutations } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
 import { useTaskVerify } from '@/hooks/useTaskVerify'
-import { BadgeCheck, Check, Loader2 } from '@/lib/icons'
+import { BadgeCheck, Check, Loader2, Zap } from '@/lib/icons'
 
 const SEVERITY: Record<string, string> = {
   critical: '#E5484D',
@@ -35,6 +37,54 @@ const SECONDARY =
 
 function capitalize(word: string): string {
   return word ? word[0].toUpperCase() + word.slice(1) : word
+}
+
+const CHIP =
+  'inline-flex h-[26px] items-center gap-1.5 rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-2 text-[11.5px] font-medium text-[var(--cat-ink-2)]'
+
+/**
+ * The action's context as icon chips — the issue-page row that carries
+ * IP / browser / OS / environment on Sentry. Same facts as the Highlights
+ * table, but worn on the masthead where they read without scrolling.
+ */
+function TaskChips({ task }: { task: TaskDetail }): JSX.Element | null {
+  const source = sourceOf(task.source, task.findingCode)
+  const chips: JSX.Element[] = []
+
+  if (source) {
+    chips.push(
+      <span key="source" className={CHIP} title={source.detail}>
+        <SiteFavicon domain={source.domain} size={13} />
+        {source.label}
+      </span>,
+    )
+  }
+  if (task.pillar) {
+    chips.push(
+      <span key="pillar" className={CHIP}>
+        {capitalize(task.pillar)}
+      </span>,
+    )
+  }
+  // Backend often mirrors pillar into category; a twin chip says nothing.
+  if (task.category && task.category !== task.pillar) {
+    chips.push(
+      <span key="category" className={CHIP}>
+        {capitalize(task.category)}
+      </span>,
+    )
+  }
+  if (task.canAutoFix) {
+    chips.push(
+      <span key="autofix" className={`${CHIP} text-[#1e8a5c]`}>
+        <Zap size={12} />
+        Auto-fixable
+      </span>,
+    )
+  }
+
+  if (chips.length === 0) return null
+  return <div className="flex flex-wrap items-center gap-1.5">{chips}</div>
 }
 
 /** Breadcrumb: where this sits, and its short id. */
@@ -73,7 +123,7 @@ function HeaderStats({ task }: { task: TaskDetail }): JSX.Element | null {
           <div className="text-[12.5px] text-[var(--cat-ink-2)] underline decoration-[var(--cat-border)] decoration-dotted underline-offset-4">
             {stat.label}
           </div>
-          <div className="mt-1.5 text-[20px] leading-none font-semibold text-[var(--cat-ink)]">
+          <div className="mt-1.5 text-[22px] leading-none font-semibold text-[var(--cat-ink)]">
             {stat.value}
           </div>
         </div>
@@ -177,8 +227,10 @@ export function TaskDetailHeader({ task }: { task: TaskDetail }): JSX.Element {
         <HeaderStats task={task} />
       </div>
 
+      <TaskChips task={task} />
+
       <div className="flex flex-wrap items-center gap-2 pt-0.5">
-        {task.planAction && <ActionCtaButton action={task.planAction} />}
+        {task.planAction && <ActionCtaButton action={task.planAction} primary />}
         <VerifyButton task={task} />
         <CompleteButton task={task} />
         <TaskShareMenu task={task} />

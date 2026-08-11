@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import type { TaskStep } from '@/hooks/useTaskDetail'
 import { Check } from '@/lib/icons'
 
@@ -120,13 +121,20 @@ export function TaskStepsBody({
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-[11.5px] font-medium text-[var(--cat-ink-3)]">
-          {doneCount} of {steps.length} steps done
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <span className="flex items-center gap-2.5">
+          <TickBar
+            value={steps.length ? (doneCount / steps.length) * 100 : 0}
+            ticks={14}
+            showValue={false}
+          />
+          <span className="text-[11.5px] font-medium text-[var(--cat-ink-3)] tabular-nums">
+            {doneCount} of {steps.length} steps done
+          </span>
         </span>
         {doneCount === steps.length && steps.length > 0 && (
           <span className="rounded-full bg-[rgba(47,190,126,0.12)] px-2 py-0.5 text-[10.5px] font-semibold text-[#2FBE7E]">
-            All steps done — mark the task complete
+            All steps done - mark the action complete
           </span>
         )}
       </div>
