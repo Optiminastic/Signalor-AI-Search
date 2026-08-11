@@ -58,33 +58,40 @@ export function TaskHighlights({ task }: { task: TaskDetail }): JSX.Element {
   const source = sourceOf(task.source, task.findingCode)
   const page = task.affectedPages[0]
 
-  const left: Fact[] = [
-    { key: 'finding', value: task.findingCode || '—', mono: true },
-    { key: 'pillar', value: task.pillar || '—' },
-    { key: 'category', value: task.category || '—' },
+  // One flat list, split evenly below. Identity facts first, then provenance —
+  // a fixed left/right assignment left one column a row short whenever a task
+  // had no page, and the empty corner read as a rendering bug.
+  const facts: Fact[] = [
+    { key: 'finding', value: task.findingCode, mono: true },
+    { key: 'pillar', value: task.pillar },
+    { key: 'category', value: task.category },
     { key: 'execution', value: task.canAutoFix ? 'auto-fixable' : 'manual' },
-  ]
-
-  const right: Fact[] = [
-    { key: 'source', value: source?.label ?? '—' },
+    ...(source ? [{ key: 'source', value: source.label }] : []),
     ...(page
       ? [{ key: 'page', value: page.replace(/^https?:\/\//, ''), href: page, mono: true }]
       : []),
     ...evidenceFacts(task),
-  ].slice(0, 4)
+  ].filter(fact => fact.value)
+
+  const mid = Math.ceil(facts.length / 2)
+  const columns = [facts.slice(0, mid), facts.slice(mid)]
 
   return (
-    <div className="grid gap-2.5 lg:grid-cols-2">
-      <div className="overflow-hidden rounded-md border border-[var(--cat-border)]">
-        {left.map(fact => (
-          <FactRow key={fact.key} fact={fact} />
-        ))}
-      </div>
-      <div className="overflow-hidden rounded-md border border-[var(--cat-border)]">
-        {right.map(fact => (
-          <FactRow key={fact.key} fact={fact} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 overflow-hidden rounded-md border border-[var(--cat-border)] lg:grid-cols-2">
+      {columns.map((column, index) => (
+        <div
+          key={index}
+          className={
+            index === 1
+              ? 'border-t border-[var(--cat-border)] lg:border-t-0 lg:border-l'
+              : undefined
+          }
+        >
+          {column.map(fact => (
+            <FactRow key={fact.key} fact={fact} />
+          ))}
+        </div>
+      ))}
     </div>
   )
 }

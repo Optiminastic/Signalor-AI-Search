@@ -1,7 +1,5 @@
 'use client'
 
-import { Card } from '@/features/catalyst/components/Card'
-import { CardHead } from '@/features/catalyst/components/CardHead'
 import type { AutoFixProofState } from '@/hooks/useTaskAutoFix'
 import type { AutoFixResult } from '@/lib/api/autofix'
 import { Loader2 } from '@/lib/icons'
@@ -75,16 +73,14 @@ function Proof({ fix }: { fix: AutoFixProofState }): JSX.Element {
   return <RequestingRow />
 }
 
-/** Integration-aware proof of the auto-fix: the PR it opened or the CMS push. */
+/** Integration-aware proof of the auto-fix: the PR it opened or the CMS push.
+ *  Bare content — the sidebar's Auto-fix block provides the box and title. */
 export function TaskFixResultCard({ fix }: { fix: AutoFixProofState }): JSX.Element | null {
   const hasActivity = fix.phase !== 'idle' || fix.job !== null || fix.result !== null
   if (!hasActivity) return null
   return (
-    <Card>
-      <CardHead title="Auto-fix" />
-      <div className="mt-1 flex flex-col gap-2.5">
-        <Proof fix={fix} />
-      </div>
-    </Card>
+    <div className="flex flex-col gap-2.5">
+      <Proof fix={fix} />
+    </div>
   )
 }

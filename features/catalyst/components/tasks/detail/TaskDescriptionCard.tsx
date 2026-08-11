@@ -1,19 +1,20 @@
 import type { TaskDetail } from '@/hooks/useTaskDetail'
 
-/** "Why this matters" content (rendered inside a TaskSection accordion): the
- *  recommendation's one-line reason as the lead, then the full description. */
+/** Strip a leading repeat of `lead` so the body never opens with the same
+ *  sentence the masthead quote already shows. */
+function withoutLead(description: string, lead: string): string {
+  if (!lead || !description.startsWith(lead)) return description
+  return description.slice(lead.length).replace(/^[\s.:-]+/, '')
+}
+
+/** "Why this matters" content (rendered inside a TaskSection accordion).
+ *  The one-line `why` is NOT repeated here — the masthead already quotes it
+ *  behind the severity bar, and showing it twice made the page read stuttery. */
 export function TaskDescriptionBody({ task }: { task: TaskDetail }): JSX.Element {
-  // Skip the lead when the description already opens with it verbatim —
-  // some findings duplicate `why` into the description's first sentence.
-  const lead = task.why && !task.description.startsWith(task.why) ? task.why : ''
+  const description = withoutLead(task.description, task.why)
   return (
-    <div className="flex flex-col gap-1.5">
-      {lead && (
-        <p className="text-[13px] leading-relaxed font-medium text-[var(--cat-ink)]">{lead}</p>
-      )}
-      <p className="text-[13px] leading-relaxed whitespace-pre-line text-[var(--cat-ink-2)]">
-        {task.description || 'No description was generated for this task.'}
-      </p>
-    </div>
+    <p className="text-[13px] leading-relaxed whitespace-pre-line text-[var(--cat-ink-2)]">
+      {description || task.why || 'No description was generated for this action.'}
+    </p>
   )
 }
