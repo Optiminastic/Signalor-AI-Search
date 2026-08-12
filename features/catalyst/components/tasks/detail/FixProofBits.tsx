@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-
 import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { ExternalLink } from '@/lib/icons'
 
@@ -31,12 +29,11 @@ export function Pill({ tone, children }: { tone: string; children: string }): JS
 
 interface ExternalActionProps {
   href: string
-  /** Leading icon (e.g. the GitHub mark for a PR); defaults to a trailing arrow. */
-  icon?: ReactNode
   children: string
 }
 
-export function ExternalAction({ href, icon, children }: ExternalActionProps): JSX.Element {
+/** A neutral "go look at it" link. PR links use `GithubPrLink` instead. */
+export function ExternalAction({ href, children }: ExternalActionProps): JSX.Element {
   return (
     <a
       href={href}
@@ -44,9 +41,8 @@ export function ExternalAction({ href, icon, children }: ExternalActionProps): J
       rel="noreferrer"
       className="inline-flex items-center gap-1.5 self-start rounded-md border border-[var(--cat-border)] px-3 py-1.5 text-[12px] font-medium text-[var(--cat-ink)] transition-colors hover:bg-[var(--cat-hover)]"
     >
-      {icon}
       {children}
-      {icon ? null : <ExternalLink size={12} />}
+      <ExternalLink size={12} />
     </a>
   )
 }

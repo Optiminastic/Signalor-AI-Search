@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, type ReactNode } from 'react'
 
+import { GithubPrLink } from '@/features/catalyst/components/autofix/GithubPrLink'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { QuickFixesRail } from '@/features/catalyst/components/optimisation/QuickFixesRail'
 import { AlertCircle, ExternalLink, FileText, X } from '@/features/site/components/icons'
@@ -167,14 +168,9 @@ function NoticeBar({ co }: { co: ContentOptimisation }): JSX.Element | null {
       {co.error ? <p className="text-destructive text-[11px]">{co.error}</p> : null}
       {co.notice ? <p className="text-success text-[11px]">{co.notice}</p> : null}
       {co.prUrl ? (
-        <Link
-          href={co.prUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary inline-flex items-center gap-1 text-[11px] font-semibold hover:underline"
-        >
-          View pull request <ExternalLink className="size-3" />
-        </Link>
+        <GithubPrLink href={co.prUrl} size="compact">
+          View pull request
+        </GithubPrLink>
       ) : null}
     </div>
   )

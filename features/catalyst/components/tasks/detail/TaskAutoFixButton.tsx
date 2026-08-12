@@ -1,7 +1,7 @@
 'use client'
 
-import { GithubMark } from '@/components/GithubMark'
 import { TransitionLink } from '@/components/TransitionLink'
+import { GithubPrLink } from '@/features/catalyst/components/autofix/GithubPrLink'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { TaskAutoFix } from '@/hooks/useTaskAutoFix'
