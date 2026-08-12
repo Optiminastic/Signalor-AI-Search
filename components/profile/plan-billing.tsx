@@ -1,3 +1,4 @@
+import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { formatDate, formatMoney } from '@/lib/format'
 import { ArrowUpRight, CreditCard } from '@/lib/icons'
 import type { AccountOverview } from '@/services/account.service'
@@ -5,11 +6,11 @@ import type { AccountOverview } from '@/services/account.service'
 import { SectionCard } from './section-card'
 import { SectionUnavailable } from './section-state'
 
-const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-[#047857]/10 text-[#047857]',
-  trialing: 'bg-primary/10 text-primary',
-  past_due: 'bg-[#b45309]/10 text-[#b45309]',
-  canceled: 'bg-[var(--cat-hover)] text-[var(--cat-ink-2)]',
+const STATUS_CHIP_COLOR: Record<string, ChipColor> = {
+  active: 'lime',
+  trialing: 'blue',
+  past_due: 'yellow',
+  canceled: 'neutral',
 }
 
 /** Current plan, price, status and billing actions. */
@@ -40,11 +41,13 @@ export function PlanBilling({
             <span className="text-xl font-semibold tracking-tight text-[var(--cat-ink)]">
               {plan.label}
             </span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${STATUS_STYLES[plan.status] ?? STATUS_STYLES.canceled}`}
+            <Chip
+              variant="caption"
+              color={STATUS_CHIP_COLOR[plan.status] ?? STATUS_CHIP_COLOR.canceled}
+              className="capitalize"
             >
               {plan.status.replace('_', ' ')}
-            </span>
+            </Chip>
           </div>
           <p className="mt-1 text-[13px] text-[var(--cat-ink-2)]">
             {formatMoney(plan.price, plan.currency)}

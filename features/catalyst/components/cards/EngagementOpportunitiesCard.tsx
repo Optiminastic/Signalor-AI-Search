@@ -1,10 +1,10 @@
 'use client'
 
+import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { Favicon } from '@/components/Favicon'
 import { TransitionLink } from '@/components/TransitionLink'
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
-import { GREEN, YELLOW } from '@/features/catalyst/constants'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import { useOpportunities, type Opportunity } from '@/hooks/useOpportunities'
@@ -21,10 +21,10 @@ function CategoryGlyph({ category }: { category: string }): JSX.Element {
   return <Link2 size={16} strokeWidth={2} />
 }
 
-function impactTone(impact: Opportunity['impact']): { text: string; bg: string } {
-  if (impact === 'High impact') return { text: GREEN, bg: 'rgba(47,190,126,0.12)' }
-  if (impact === 'Med impact') return { text: YELLOW, bg: 'rgba(246,185,59,0.14)' }
-  return { text: 'var(--cat-ink-2)', bg: 'var(--cat-hover)' }
+function impactColor(impact: Opportunity['impact']): ChipColor {
+  if (impact === 'High impact') return 'lime'
+  if (impact === 'Med impact') return 'yellow'
+  return 'neutral'
 }
 
 function EngageButton({
@@ -49,7 +49,6 @@ function EngageButton({
 }
 
 function OpportunityRow({ opp }: { opp: Opportunity }): JSX.Element {
-  const tone = impactTone(opp.impact)
   const backlinksHref = useBrandPath()('backlinks')
   return (
     <div className="bg-background-primary-default hover:bg-background-secondary-default rounded-2xl border border-[var(--cat-border-soft)] p-2.5 transition-colors">
@@ -70,12 +69,9 @@ function OpportunityRow({ opp }: { opp: Opportunity }): JSX.Element {
             </p>
           </div>
         </div>
-        <span
-          className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold"
-          style={{ color: tone.text, background: tone.bg }}
-        >
+        <Chip variant="caption" color={impactColor(opp.impact)} className="shrink-0">
           {opp.impact}
-        </span>
+        </Chip>
       </div>
       <div className="mt-2 flex items-center justify-end">
         <EngageButton opp={opp} backlinksHref={backlinksHref} />

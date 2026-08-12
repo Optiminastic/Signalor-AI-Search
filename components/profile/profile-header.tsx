@@ -1,3 +1,4 @@
+import { Chip } from '@/components/base/badges/chip'
 import type { AccountOverview } from '@/services/account.service'
 
 const AVATAR_BG = 'conic-gradient(from 210deg at 50% 50%, #F2A79E, #e04a3d, #b9382d, #F2A79E)'
@@ -32,12 +33,12 @@ export function ProfileHeader({ user, planLabel }: ProfileHeaderProps): JSX.Elem
           <p className="truncate text-[13px] text-[var(--cat-ink-2)]">{user.email}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5 pb-1">
-          <span className="bg-primary/10 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-semibold">
+          <Chip variant="caption" color="blue">
             {planLabel} plan
-          </span>
-          <span className="rounded-full bg-[var(--cat-hover)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--cat-ink-2)] capitalize">
+          </Chip>
+          <Chip variant="caption" color="neutral" className="capitalize">
             {user.accountType}
-          </span>
+          </Chip>
         </div>
       </div>
     </section>

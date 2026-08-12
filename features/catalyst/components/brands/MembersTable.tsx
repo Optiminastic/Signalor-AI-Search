@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 
-import { ROLES, ROLE_STYLES } from '@/features/catalyst/brands-data'
+import { Chip } from '@/components/base/badges/chip'
+import { ROLES, ROLE_CHIP_COLOR } from '@/features/catalyst/brands-data'
 import { useAgencyMembers } from '@/hooks/useAgencyMembers'
 import { useAgencyRole } from '@/hooks/useAgencyRole'
 import { ApiError } from '@/lib/api/client'
@@ -17,9 +18,9 @@ interface DisplayRow {
 
 function RoleBadge({ roleLabel }: { roleLabel: 'Owner' | 'Member' }): JSX.Element {
   return (
-    <span className={`rounded-md px-2.5 py-1 text-[12px] font-semibold ${ROLE_STYLES[roleLabel]}`}>
+    <Chip variant="subtle" color={ROLE_CHIP_COLOR[roleLabel]}>
       {roleLabel}
-    </span>
+    </Chip>
   )
 }
 
@@ -91,11 +92,9 @@ function RolesLegend(): JSX.Element {
     <div className="grid gap-1.5 rounded-lg border border-[var(--cat-border)] bg-[var(--cat-bg)] p-4 sm:grid-cols-2">
       {ROLES.map(r => (
         <div key={r.role} className="flex items-start gap-2">
-          <span
-            className={`mt-0.5 rounded-md px-2 py-0.5 text-[11px] font-semibold ${ROLE_STYLES[r.role]}`}
-          >
+          <Chip variant="caption" color={ROLE_CHIP_COLOR[r.role]} className="mt-0.5">
             {r.role}
-          </span>
+          </Chip>
           <p className="text-[12px] text-[var(--cat-ink-3)]">{r.desc}</p>
         </div>
       ))}

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 
+import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { ExternalLink } from '@/lib/icons'
 
 /**
@@ -11,22 +12,20 @@ import { ExternalLink } from '@/lib/icons'
  * agent choosing not to invent data is an expected hand-off, not a failure, and
  * must never carry the red `failed` tone.
  */
-export const PILL_TONE: Record<string, string> = {
-  open: 'bg-[rgba(246,185,59,0.15)] text-[#a06f0a]',
-  merged: 'bg-[#E7F7EF] text-[#1e8a5c]',
-  applied: 'bg-[#E7F7EF] text-[#1e8a5c]',
-  manual: 'bg-[rgba(246,185,59,0.15)] text-[#a06f0a]',
-  declined: 'bg-[rgba(246,185,59,0.15)] text-[#a06f0a]',
-  failed: 'bg-[#FDECEC] text-[#E5484D]',
+export const PILL_TONE: Record<string, ChipColor> = {
+  open: 'yellow',
+  merged: 'lime',
+  applied: 'lime',
+  manual: 'yellow',
+  declined: 'yellow',
+  failed: 'rose',
 }
 
 export function Pill({ tone, children }: { tone: string; children: string }): JSX.Element {
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize ${PILL_TONE[tone] ?? 'bg-[var(--cat-hover)] text-[var(--cat-ink-2)]'}`}
-    >
+    <Chip variant="caption" color={PILL_TONE[tone] ?? 'neutral'} className="capitalize">
       {children}
-    </span>
+    </Chip>
   )
 }
 

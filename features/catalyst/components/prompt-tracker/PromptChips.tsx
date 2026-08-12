@@ -1,5 +1,7 @@
 // Small status pills shared by the prompt row and its detail sheet.
 
+import { Chip } from '@/components/base/badges/chip'
+
 /**
  * Colour + meaning per taxonomy value.
  *
@@ -129,14 +131,14 @@ export function MentionIndicator({
 /** Green when the brand's own domain was cited, muted otherwise. */
 export function CitedChip({ cited }: { cited: boolean }): JSX.Element {
   return cited ? (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(47,190,126,0.12)] px-1.5 py-0.5 text-[10px] font-semibold whitespace-nowrap text-[#1e8a5c]">
-      <span className="h-1 w-1 rounded-full bg-[#1e8a5c]" />
+    <Chip variant="caption" color="lime" className="gap-1">
+      <span className="h-1 w-1 rounded-full bg-current" />
       Cited
-    </span>
+    </Chip>
   ) : (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--cat-hover)] px-1.5 py-0.5 text-[10px] font-medium whitespace-nowrap text-[var(--cat-ink-3)]">
-      <span className="h-1 w-1 rounded-full bg-[var(--cat-ink-3)]" />
+    <Chip variant="caption" color="neutral" className="gap-1">
+      <span className="h-1 w-1 rounded-full bg-current" />
       Not cited
-    </span>
+    </Chip>
   )
 }

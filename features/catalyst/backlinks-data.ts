@@ -1,3 +1,4 @@
+import type { ChipColor } from '@/components/base/badges/chip'
 import type { DashStatData } from '@/features/catalyst/components/dash/DashStat'
 import { BLUE, BRAND, GREEN, PURPLE, YELLOW } from '@/features/catalyst/constants'
 import type { AutoBacklink } from '@/lib/api/backlinks'
@@ -84,10 +85,10 @@ export const BACKLINK_STATS: DashStatData[] = [
   { label: 'Submitted', value: '2' },
 ]
 
-export const STATUS_STYLE: Record<LinkStatus, string> = {
-  live: 'bg-[rgba(47,190,126,0.12)] text-[#2FBE7E]',
-  submitted: 'bg-[rgba(59,158,246,0.14)] text-[#3B9EF6]',
-  suggested: 'bg-[var(--cat-hover)] text-[var(--cat-ink-3)]',
+export const STATUS_CHIP_COLOR: Record<LinkStatus, ChipColor> = {
+  live: 'lime',
+  submitted: 'blue',
+  suggested: 'neutral',
 }
 
 /* ============================================================ Auto backlinks ==
@@ -154,20 +155,20 @@ export function siteMeta(value: string): SiteMeta {
 }
 
 /** A published auto-backlink is "live" once it has a public URL. */
-export function autoStatusStyle(row: AutoBacklink): { label: string; className: string } {
+export function autoStatusStyle(row: AutoBacklink): { label: string; color: ChipColor } {
   const status = (row.status || '').toLowerCase()
   if (row.url && (status === 'published' || status === 'live' || status === '')) {
-    return { label: 'Live', className: 'bg-[rgba(47,190,126,0.12)] text-[#2FBE7E]' }
+    return { label: 'Live', color: 'lime' }
   }
   if (status === 'published') {
-    return { label: 'Published', className: 'bg-[rgba(59,158,246,0.14)] text-[#3B9EF6]' }
+    return { label: 'Published', color: 'blue' }
   }
   if (status === 'error' || status === 'failed') {
-    return { label: 'Failed', className: 'bg-[rgba(229,72,77,0.12)] text-[#E5484D]' }
+    return { label: 'Failed', color: 'rose' }
   }
   return {
     label: status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Draft',
-    className: 'bg-[var(--cat-hover)] text-[var(--cat-ink-3)]',
+    color: 'neutral',
   }
 }
 

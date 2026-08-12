@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { Chip } from '@/components/base/badges/chip'
 import { Button } from '@/components/base/buttons/button'
 import { Select, SelectItem } from '@/components/base/select/select'
 import { Switch } from '@/components/base/switch/switch'
@@ -57,9 +58,9 @@ export function SettingsGeneral({ planArtSrc }: { planArtSrc?: string }) {
 
         <div className="relative flex flex-col gap-2.5 py-3 pr-2.5 pl-3">
           <div className="flex flex-col gap-2">
-            <span className="bg-background-tertiary-default text-body-2-medium text-text-secondary inline-flex w-fit items-center rounded-md px-1.5 py-0.5">
+            <Chip variant="bold" color="neutral" className="w-fit">
               Current plan
-            </span>
+            </Chip>
             <div className="flex flex-col gap-0.5">
               <p className="text-headline-medium text-text-primary">Ultra $149/mo</p>
               <p className="text-body-2-regular text-text-secondary">

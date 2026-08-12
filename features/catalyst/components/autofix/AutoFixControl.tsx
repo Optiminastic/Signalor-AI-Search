@@ -1,4 +1,4 @@
-import { GithubMark } from '@/components/GithubMark'
+import { GithubPrLink } from '@/features/catalyst/components/autofix/GithubPrLink'
 import { BRAND_SOFT, BRAND_STRONG } from '@/features/catalyst/constants'
 import type { FixOutcome, FixState } from '@/hooks/useAutoFix'
 import { Check, Loader2, Zap } from '@/lib/icons'
@@ -26,16 +26,9 @@ function PrState({ state }: { state: FixState }): JSX.Element {
     return <span className="text-[12px] font-medium text-[#F6B93B]">PR opening…</span>
   }
   return (
-    <a
-      href={state.prUrl}
-      target="_blank"
-      rel="noreferrer"
-      title={state.message}
-      className={OUTLINE_BTN}
-    >
-      <GithubMark size={13} />
+    <GithubPrLink href={state.prUrl} title={state.message}>
       View PR{state.prNumber ? ` #${state.prNumber}` : ''}
-    </a>
+    </GithubPrLink>
   )
 }
 

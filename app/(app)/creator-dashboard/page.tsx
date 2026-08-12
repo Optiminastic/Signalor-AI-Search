@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
+import { Chip } from '@/components/base/badges/chip'
 import { Check, Copy, ExternalLink, Loader2 } from '@/features/site/components/icons'
 import { Button } from '@/features/site/components/ui/button'
 import type { CommissionRow } from '@/features/site/lib/api/partners-program'
@@ -76,22 +77,22 @@ function StatTile({
 function StatusPill({ row }: { row: CommissionRow }) {
   if (row.bucket === 'paid') {
     return (
-      <span className="bg-success/10 text-success dark:bg-success/40 dark:text-success rounded-full px-2 py-0.5 text-[11px] font-semibold">
+      <Chip variant="caption" color="lime">
         Paid
-      </span>
+      </Chip>
     )
   }
   if (row.bucket === 'locked') {
     return (
-      <span className="bg-info/10 text-info dark:bg-info/40 dark:text-info rounded-full px-2 py-0.5 text-[11px] font-semibold">
+      <Chip variant="caption" color="blue">
         Locked
-      </span>
+      </Chip>
     )
   }
   return (
-    <span className="bg-warning/10 text-warning dark:bg-warning/40 dark:text-warning rounded-full px-2 py-0.5 text-[11px] font-semibold">
+    <Chip variant="caption" color="yellow">
       Pending
-    </span>
+    </Chip>
   )
 }
 

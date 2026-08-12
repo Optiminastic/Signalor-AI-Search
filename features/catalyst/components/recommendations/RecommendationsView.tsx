@@ -1,9 +1,10 @@
 'use client'
 
+import { Chip } from '@/components/base/badges/chip'
 import { AutoFixControl } from '@/features/catalyst/components/autofix/AutoFixControl'
 import { DashHeader, DashStatRow } from '@/features/catalyst/components/dash/DashStat'
 import { DataState } from '@/features/catalyst/components/DataState'
-import { PRIORITY_STYLE, type Recommendation } from '@/features/catalyst/recommendations-data'
+import { PRIORITY_CHIP_COLOR, type Recommendation } from '@/features/catalyst/recommendations-data'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useAutoFix, type FixState } from '@/hooks/useAutoFix'
 import { useRecommendations } from '@/hooks/useRecommendations'
@@ -40,11 +41,9 @@ function RecAction({ item, state, onFix }: RecActionProps): JSX.Element {
 function RecRow({ item, state, onFix }: RecActionProps): JSX.Element {
   return (
     <div className="flex items-center gap-4 px-4 py-3.5">
-      <span
-        className={`w-16 shrink-0 rounded-md px-2 py-0.5 text-center text-[11px] font-semibold ${PRIORITY_STYLE[item.priority]}`}
-      >
+      <Chip variant="caption" color={PRIORITY_CHIP_COLOR[item.priority]} className="w-16 shrink-0">
         {item.priority}
-      </span>
+      </Chip>
       <div className="min-w-0 flex-1">
         <p
           className={`truncate text-[13px] font-medium text-[var(--cat-ink)] ${item.status === 'done' ? 'line-through opacity-60' : ''}`}
