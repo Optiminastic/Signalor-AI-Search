@@ -81,6 +81,9 @@ export const githubJobSchema = z.object({
   // outcome, not a failure, and must never be rendered as an error.
   status: z.enum(['pending', 'running', 'open', 'merged', 'closed', 'declined', 'failed']),
   finding_codes: z.array(z.string()).default([]),
+  /** The one action this PR was raised for. Null on older jobs and on
+   *  class-wide fixes, which is why matching falls back to the finding code. */
+  recommendation_id: z.number().nullable().optional().default(null),
   pr_number: z.number().nullable(),
   pr_url: z.string().optional().default(''),
   files_changed: z.array(z.object({ path: z.string(), summary: z.string() })).default([]),
@@ -132,8 +135,15 @@ export async function getGithubInstallUrl(slug: string): Promise<string> {
 export async function requestGithubFix(
   slug: string,
   findingCodes: string[],
+  /** The action being fixed. Sent so the PR binds to this action alone — many
+   *  actions share a finding code, and without it the server both linked the PR
+   *  to all of them and refused to fix any of the others. */
+  recommendationId?: number,
 ): Promise<GithubFixJobStub[]> {
-  const data = await apiPost<unknown>(`${runBase(slug)}/fix/`, { finding_codes: findingCodes })
+  const data = await apiPost<unknown>(`${runBase(slug)}/fix/`, {
+    finding_codes: findingCodes,
+    recommendation_id: recommendationId ?? null,
+  })
   return z.object({ jobs: z.array(fixJobStubSchema) }).parse(data).jobs
 }
 
@@ -150,13 +160,28 @@ export async function getGithubJobs(slug: string): Promise<GithubJob[]> {
  * way (rather than a session-remembered job id) is what lets the fix state and PR
  * resume after a page refresh.
  */
-export function latestJobForFinding(jobs: GithubJob[], findingCode: string): GithubJob | null {
+export function latestJobForFinding(
+  jobs: GithubJob[],
+  findingCode: string,
+  /** The action asking. When given, a job raised for a DIFFERENT action is
+   *  never returned — that is what put one PR on ten prompt rows at once. */
+  recommendationId?: number,
+): GithubJob | null {
   if (!findingCode) return null
-  let best: GithubJob | null = null
-  for (const job of jobs) {
-    if (job.finding_codes.includes(findingCode) && (!best || job.id > best.id)) best = job
+  const matches = jobs.filter(job => job.finding_codes.includes(findingCode))
+
+  // Prefer a job raised for exactly this action.
+  if (recommendationId !== undefined) {
+    const mine = matches.filter(job => job.recommendation_id === recommendationId)
+    if (mine.length > 0) return mine.reduce((a, b) => (b.id > a.id ? b : a))
+    // Otherwise only untargeted jobs may apply: an older job from before this
+    // field existed, or a deliberate class-wide fix. A job belonging to another
+    // action must not be borrowed.
+    const shared = matches.filter(job => job.recommendation_id === null)
+    return shared.length > 0 ? shared.reduce((a, b) => (b.id > a.id ? b : a)) : null
   }
-  return best
+
+  return matches.length > 0 ? matches.reduce((a, b) => (b.id > a.id ? b : a)) : null
 }
 
 /** True while a job is still being worked (so pollers keep polling). */

@@ -172,7 +172,7 @@ export function useAutoFix({ slug, email, orgId }: UseAutoFixArgs): UseAutoFix {
     // refresh; the local optimistic state only fills the gap before it appears
     // (and carries CMS outcomes, which have no job).
     stateFor: (recId, findingCode) => {
-      const job = latestJobForFinding(jobs, findingCode)
+      const job = latestJobForFinding(jobs, findingCode, recId)
       return job ? jobToState(job) : (states[recId] ?? IDLE)
     },
     runFix,
@@ -220,7 +220,7 @@ async function runGithubFix({ slug, target, setState, refetch }: RunGithubArgs):
   }
   setState(target.id, { outcome: 'running', message: 'Opening PR…' })
   try {
-    await requestGithubFix(slug, [target.findingCode])
+    await requestGithubFix(slug, [target.findingCode], target.id)
     // The job now exists; refetch so the derived (persisted) state takes over and
     // surfaces the PR — no need to hold an optimistic 'pr' with no url.
     refetch()

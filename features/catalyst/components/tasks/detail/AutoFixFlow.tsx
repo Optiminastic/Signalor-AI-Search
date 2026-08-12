@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from 'react'
 
 import { GithubMark } from '@/components/GithubMark'
+import { GithubPrLink } from '@/features/catalyst/components/autofix/GithubPrLink'
 import { Delta } from '@/features/catalyst/components/Delta'
 import { BRAND } from '@/features/catalyst/constants'
 import type { GithubJob } from '@/lib/api/github'
@@ -19,7 +20,7 @@ import {
   Search,
 } from '@/lib/icons'
 
-import { ExternalAction, Pill } from './FixProofBits'
+import { Pill } from './FixProofBits'
 
 /** `declined` is deliberate and expected; only `error` means something broke. */
 type StepState = 'done' | 'active' | 'pending' | 'declined' | 'error'
@@ -209,9 +210,7 @@ function PrDetails({ job }: { job: GithubJob }): JSX.Element {
         <GithubMark size={13} />#{job.pr_number}
         <Pill tone={job.status}>{job.status === 'open' ? 'PR open' : job.status}</Pill>
       </span>
-      <ExternalAction href={job.pr_url} icon={<GithubMark size={12} />}>
-        View pull request
-      </ExternalAction>
+      <GithubPrLink href={job.pr_url}>View pull request</GithubPrLink>
     </div>
   )
 }

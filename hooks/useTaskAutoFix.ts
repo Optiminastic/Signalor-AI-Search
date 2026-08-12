@@ -101,23 +101,35 @@ function announceJob(job: GithubJob, toastId: string): void {
 
 /** Resolve a task's job: the one just started this session (by id), else the
  *  newest job for its finding code — the latter is what makes it resume on refresh. */
-function selectJob(
-  jobs: GithubJob[] | undefined,
-  jobId: number | null,
-  findingCode: string,
-): GithubJob | null {
+interface SelectJobArgs {
+  jobs: GithubJob[] | undefined
+  jobId: number | null
+  findingCode: string
+  /** Scopes the fallback lookup to the action asking, so a PR raised for a
+   *  sibling action sharing this finding code is never adopted. */
+  recommendationId?: number
+}
+
+function selectJob({
+  jobs,
+  jobId,
+  findingCode,
+  recommendationId,
+}: SelectJobArgs): GithubJob | null {
   if (!jobs) return null
   if (jobId !== null) {
     const byId = jobs.find(j => j.id === jobId)
     if (byId) return byId
   }
-  return latestJobForFinding(jobs, findingCode)
+  return latestJobForFinding(jobs, findingCode, recommendationId)
 }
 
 interface UseGithubJobArgs {
   slug: string | undefined
   jobId: number | null
   findingCode: string
+  /** The action asking, so a sibling action's PR is never adopted. */
+  recommendationId?: number
   toastId: string
   /** A fix was just requested this session; poll until its job row appears. */
   requested: boolean
@@ -129,6 +141,7 @@ function useGithubJob({
   slug,
   jobId,
   findingCode,
+  recommendationId,
   toastId,
   requested,
 }: UseGithubJobArgs): GithubJob | null {
@@ -143,7 +156,12 @@ function useGithubJob({
     // than making them reload to see it.
     refetchOnWindowFocus: true,
     refetchInterval: q => {
-      const job = selectJob(q.state.data as GithubJob[] | undefined, jobId, findingCode)
+      const job = selectJob({
+        jobs: q.state.data as GithubJob[] | undefined,
+        jobId,
+        findingCode,
+        recommendationId,
+      })
       if (isJobInFlight(job)) return POLL_MS
       // Just requested a fix but its job row isn't in the cached list yet — keep
       // polling so the result (or failure) shows without a manual refresh.
@@ -155,7 +173,7 @@ function useGithubJob({
       return false
     },
   })
-  const job = selectJob(jobsQuery.data, jobId, findingCode)
+  const job = selectJob({ jobs: jobsQuery.data, jobId, findingCode, recommendationId })
 
   const announcedRef = useRef('')
   useEffect(() => {
@@ -178,6 +196,8 @@ function useGithubJob({
 interface StartGithubArgs {
   slug: string
   findingCode: string
+  /** Binds the new PR to this action alone. */
+  recommendationId?: number
   toastId: string
   setJobId: (id: number) => void
   setRequested: (on: boolean) => void
@@ -186,7 +206,7 @@ interface StartGithubArgs {
 }
 
 async function startGithubFix(args: StartGithubArgs): Promise<void> {
-  const { slug, findingCode, toastId, setJobId, setRequested, refetchJobs } = args
+  const { slug, findingCode, recommendationId, toastId, setJobId, setRequested, refetchJobs } = args
   if (!findingCode) {
     toast.error('This task has no auto-fixable finding code.', { id: toastId })
     return
@@ -194,7 +214,7 @@ async function startGithubFix(args: StartGithubArgs): Promise<void> {
   setRequested(true)
   toast.loading('Opening a fix pull request on your repo…', { id: toastId })
   try {
-    const stubs = await requestGithubFix(slug, [findingCode])
+    const stubs = await requestGithubFix(slug, [findingCode], recommendationId)
     const id = stubs[0]?.job_id
     if (id) {
       setJobId(id)
@@ -256,7 +276,12 @@ async function startCmsFix(args: StartCmsArgs): Promise<void> {
  * progress through sonner toasts, and exposes the integration's proof —
  * the PR number/url and diff, or the CMS apply result. One fix at a time.
  */
-export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
+export function useAutoFixFlow(
+  hydrateFindingCode = '',
+  /** Which action to re-hydrate for. Without it, a refresh could bind this
+   *  action to a sibling's PR that merely shares the finding code. */
+  hydrateRecommendationId?: number,
+): AutoFixFlow {
   const { slug, email, activeOrg } = useActiveProject()
   const { platform, connected } = useAutoFix({ slug, email, orgId: activeOrg?.id })
   const queryClient = useQueryClient()
@@ -271,6 +296,7 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
     slug,
     jobId,
     findingCode: active?.findingCode || hydrateFindingCode,
+    recommendationId: active?.recommendationId ?? hydrateRecommendationId,
     toastId: `autofix-${active?.key ?? 'none'}`,
     requested,
   })
@@ -296,6 +322,7 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
         void startGithubFix({
           slug,
           findingCode: target.findingCode,
+          recommendationId: target.recommendationId ?? undefined,
           toastId,
           setJobId,
           setRequested,
@@ -335,7 +362,7 @@ export function useAutoFixFlow(hydrateFindingCode = ''): AutoFixFlow {
 /** Task-page adapter over the shared flow — one fixed target, the task itself. */
 export function useTaskAutoFix(task: TaskDetail | undefined): TaskAutoFix {
   // Pass the task's finding code so the fix state + PR resume after a refresh.
-  const flow = useAutoFixFlow(task?.findingCode ?? '')
+  const flow = useAutoFixFlow(task?.findingCode ?? '', task?.recommendationId ?? undefined)
   return {
     connected: flow.connected,
     platform: flow.platform,
