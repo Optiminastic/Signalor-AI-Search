@@ -6,7 +6,7 @@ import { SiteFavicon } from '@/features/catalyst/components/SiteFavicon'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { sourceOf } from '@/features/catalyst/task-source'
-import { formatEffort, formatStatus } from '@/features/catalyst/tasks-data'
+import { formatEffort, formatStatus, isTaskDone } from '@/features/catalyst/tasks-data'
 import { useAgentMutations } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
@@ -116,9 +116,13 @@ function HeaderStats({ task }: { task: TaskDetail }): JSX.Element {
   )
 }
 
+/** Deliberately NOT gated on `isTaskDone`: verifying is what you do AFTER
+ *  marking complete — it re-crawls the live site to prove the fix landed. So it
+ *  stays available on `completed` and only disappears once already verified, or
+ *  when the action was dismissed and there is nothing to prove. */
 function VerifyButton({ task }: { task: TaskDetail }): JSX.Element | null {
   const { verify, verifying } = useTaskVerify(task.id)
-  if (task.status === 'verified') return null
+  if (task.status === 'verified' || task.status === 'dismissed') return null
   return (
     <button
       type="button"
@@ -135,7 +139,7 @@ function VerifyButton({ task }: { task: TaskDetail }): JSX.Element | null {
 
 function CompleteButton({ task }: { task: TaskDetail }): JSX.Element | null {
   const { setStatus, busyActionId } = useAgentMutations()
-  if (task.status === 'completed' || task.status === 'verified') return null
+  if (isTaskDone(task.status)) return null
   return (
     <button
       type="button"

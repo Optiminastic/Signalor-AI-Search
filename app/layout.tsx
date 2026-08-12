@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Instrument_Serif, Geist, Inter } from 'next/font/google'
+import { Instrument_Serif, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 import { Suspense } from 'react'
 import type React from 'react'
@@ -33,14 +33,20 @@ import {
 import './globals.css'
 import { cn } from '@/lib/utils'
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
-
 // BoardUI's typeface — Inter (400/500/600/700). Exposed as --font-boardui and
 // applied to the /dashboard (catalyst) surface; the marketing site keeps Mona Sans.
+//
+// `preload: false` on purpose: this is four weight files, and next/font preloads
+// by default for any family whose variable sits on <html> — so every marketing
+// visitor was downloading four Inter files to render a dashboard they may never
+// open, competing with the LCP image for bandwidth. It still loads on demand
+// when CatalystShell asks for var(--font-boardui).
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-boardui',
   weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  preload: false,
 })
 
 // Mona Sans (GitHub) as the global sans font — variable weight 200–900.
@@ -52,12 +58,15 @@ const monaSans = localFont({
   preload: true,
 })
 
+// Kept as the --font-serif design token, but NOT preloaded: nothing currently
+// renders it, so preloading spent a font download on every page for type that
+// never appears. Downloads on demand the moment something uses font-serif.
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   variable: '--font-instrument-serif',
   weight: ['400'],
   display: 'swap',
-  preload: true,
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -87,7 +96,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
         monaSans.variable,
         instrumentSerif.variable,
         'font-sans',
-        geist.variable,
         inter.variable,
       )}
     >

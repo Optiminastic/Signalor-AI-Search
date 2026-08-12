@@ -7,6 +7,7 @@ import { applyAutoFix } from '@/lib/api/autofix'
 import { ApiError } from '@/lib/api/client'
 import {
   getGithubStatus,
+  isJobAwaitingExternalChange,
   isJobInFlight,
   latestJobForFinding,
   requestGithubFix,
@@ -15,6 +16,8 @@ import {
 import { getIntegrationStatus } from '@/lib/api/integrations'
 
 const POLL_MS = 4000
+/** Waiting on a human to merge on GitHub — poll slowly. See useTaskAutoFix. */
+const MERGE_POLL_MS = 30_000
 
 /** Which write path applies for the run's platform. */
 export type FixPlatform = 'nextjs' | 'wordpress' | 'shopify' | 'none'
@@ -80,9 +83,15 @@ function jobToState(job: GithubJob): FixState {
   if (job.status === 'failed') {
     return { outcome: 'failed', message: job.error_message || 'Fix failed' }
   }
+  // `closed` used to fall through to "PR opened" — a PR someone rejected read as
+  // if it were still waiting to be merged.
+  const PR_MESSAGE: Record<string, string> = {
+    merged: 'PR merged',
+    closed: 'PR closed without merging',
+  }
   return {
     outcome: 'pr',
-    message: job.status === 'merged' ? 'PR merged' : 'PR opened',
+    message: PR_MESSAGE[job.status] ?? 'PR opened',
     prUrl: job.pr_url,
     prNumber: job.pr_number,
   }
@@ -101,8 +110,17 @@ export function useAutoFix({ slug, email, orgId }: UseAutoFixArgs): UseAutoFix {
     enabled: Boolean(slug),
     queryFn: () => getGithubStatus(slug as string),
     // Keep the fix jobs fresh while any is still being worked, so the table
-    // updates live and reflects the PR the moment it opens.
-    refetchInterval: q => (q.state.data?.jobs.some(isJobInFlight) ? POLL_MS : false),
+    // updates live and reflects the PR the moment it opens — then keep checking
+    // slowly while any PR is open, because merging happens on GitHub and the
+    // status only changes when we ask. Stopping at "open" is what left merged
+    // PRs reading "PR open" for ever.
+    refetchOnWindowFocus: true,
+    refetchInterval: q => {
+      const jobs = q.state.data?.jobs ?? []
+      if (jobs.some(isJobInFlight)) return POLL_MS
+      if (jobs.some(isJobAwaitingExternalChange)) return MERGE_POLL_MS
+      return false
+    },
   })
   const integrationsQuery = useQuery({
     queryKey: ['integration-status', email, orgId],

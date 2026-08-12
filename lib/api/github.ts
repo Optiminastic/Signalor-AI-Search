@@ -164,6 +164,23 @@ export function isJobInFlight(job: GithubJob | null | undefined): boolean {
   return job?.status === 'pending' || job?.status === 'running'
 }
 
+/**
+ * Can this job's status still change without us doing anything?
+ *
+ * `open` means the PR exists and is waiting for a human to merge it on GitHub —
+ * so it is NOT terminal, even though our side has finished working. Treating it
+ * as terminal is what left a merged PR showing "PR open" for ever: the client
+ * stopped polling the moment the PR opened, so the backend's reconcile (which
+ * asks GitHub for the real state) was never called again.
+ *
+ * `closed` counts too: a closed PR can be reopened on GitHub. Only `merged`,
+ * `failed` and `declined` are genuinely final — a merge cannot be undone, and
+ * the other two never had a PR whose state could move.
+ */
+export function isJobAwaitingExternalChange(job: GithubJob | null | undefined): boolean {
+  return isJobInFlight(job) || job?.status === 'open' || job?.status === 'closed'
+}
+
 // Signals that a fix failed because of the GitHub *connection* (the App was
 // uninstalled, its repo access revoked, or its token can't be minted) rather than
 // the agent's work — so the fix is the ground-truth health check for the install.

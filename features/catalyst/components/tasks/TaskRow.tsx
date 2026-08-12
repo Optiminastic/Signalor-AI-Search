@@ -10,7 +10,7 @@ import { PROMPT_PARAM } from '@/features/catalyst/constants'
 import { sourceOf } from '@/features/catalyst/task-source'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
 import { useBrandPath } from '@/hooks/useBrandPath'
-import { MessageSquare } from '@/lib/icons'
+import { Check, MessageSquare } from '@/lib/icons'
 
 export interface TaskRowProps {
   row: TaskItem
@@ -75,15 +75,34 @@ function TaskNameCell({ row }: Pick<TaskRowProps, 'row'>): JSX.Element {
   )
 }
 
-/** Auto-fix when the agent can do it, otherwise say plainly that it is manual. */
+/**
+ * Auto-fix when the agent can do it, otherwise say plainly that it is manual.
+ *
+ * A finished action offers neither. Availability of auto-fix and whether the
+ * work is still outstanding are two different questions, and this cell used to
+ * ask only the first — so a completed action sat in the Done tab with a live
+ * "Auto fix" button, inviting the user to redo work they had already done.
+ */
 function ActionCell({
   recommendationId,
   findingCode,
+  done,
 }: {
   recommendationId?: number
   findingCode?: string
+  done: boolean
 }): JSX.Element {
+  // Hooks run before any early return — `done` must not change hook order.
   const fix = useTaskFix(recommendationId, findingCode)
+
+  if (done) {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#1e8a5c]">
+        <Check size={13} strokeWidth={2.6} />
+        Done
+      </span>
+    )
+  }
   if (!fix) {
     return (
       <span className="inline-flex items-center rounded-md border border-[var(--cat-border)] px-2 py-1 text-[12px] font-medium text-[var(--cat-ink-2)]">
@@ -133,7 +152,11 @@ export function TaskRow({ row }: TaskRowProps): JSX.Element {
         <PriorityTag priority={row.priority} />
       </td>
       <td className="px-3 py-2.5 whitespace-nowrap" onClick={e => e.stopPropagation()}>
-        <ActionCell recommendationId={row.recommendationId} findingCode={row.findingCode} />
+        <ActionCell
+          recommendationId={row.recommendationId}
+          findingCode={row.findingCode}
+          done={row.progress >= 100}
+        />
       </td>
     </tr>
   )

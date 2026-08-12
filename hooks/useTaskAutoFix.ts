@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
+import { isTaskDone } from '@/features/catalyst/tasks-data'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useAutoFix, type FixPlatform } from '@/hooks/useAutoFix'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
@@ -11,6 +12,7 @@ import { applyAutoFix, type AutoFixResult } from '@/lib/api/autofix'
 import { ApiError } from '@/lib/api/client'
 import {
   getGithubJobs,
+  isJobAwaitingExternalChange,
   isJobInFlight,
   latestJobForFinding,
   requestGithubFix,
@@ -53,6 +55,10 @@ export interface TaskAutoFix extends AutoFixProofState {
 }
 
 const POLL_MS = 4000
+/** Waiting on a human to merge on GitHub, not on our agent — so poll far more
+ *  slowly. Each tick costs the backend a GitHub API call (rate-limited, and
+ *  itself throttled to once per job per minute by pr_sync). */
+const MERGE_POLL_MS = 30_000
 
 function errText(error: unknown): string {
   if (error instanceof ApiError || error instanceof Error) return error.message
@@ -66,6 +72,10 @@ function jobPhase(job: GithubJob | null, requested: boolean): FixPhase {
   // fix that has to be applied by hand.
   if (job.status === 'declined') return 'manual'
   if (job.status === 'failed') return 'failed'
+  // A PR closed without merging means the fix was rejected, so the finding is
+  // still outstanding — reporting it as 'done' hid that the work never landed
+  // and left the user with no way to try again.
+  if (job.status === 'closed') return 'manual'
   return 'done'
 }
 
@@ -128,12 +138,20 @@ function useGithubJob({
     queryKey: ['catalyst', 'github-fix-jobs', slug ?? ''],
     enabled: Boolean(slug),
     queryFn: () => getGithubJobs(slug as string),
+    // A merge happens on GitHub while the user is elsewhere, so the answer is
+    // stale the moment it lands. Refetch when they come back to the tab rather
+    // than making them reload to see it.
+    refetchOnWindowFocus: true,
     refetchInterval: q => {
       const job = selectJob(q.state.data as GithubJob[] | undefined, jobId, findingCode)
       if (isJobInFlight(job)) return POLL_MS
       // Just requested a fix but its job row isn't in the cached list yet — keep
       // polling so the result (or failure) shows without a manual refresh.
       if (requested && !job) return POLL_MS
+      // PR open: our work is done, but a human may merge it at any time. Keep
+      // asking — slowly — so the merge appears on its own. Polling used to stop
+      // here, which is why an already-merged PR read "PR open" indefinitely.
+      if (isJobAwaitingExternalChange(job)) return MERGE_POLL_MS
       return false
     },
   })
@@ -325,7 +343,10 @@ export function useTaskAutoFix(task: TaskDetail | undefined): TaskAutoFix {
     job: flow.job,
     result: flow.result,
     siteUrl: flow.siteUrl,
-    visible: Boolean(task?.canAutoFix),
+    // Capability AND state. `canAutoFix` only says the agent COULD fix this
+    // finding; a completed, verified or dismissed action must not be offered a
+    // fix regardless, or the detail page invites the user to redo finished work.
+    visible: Boolean(task?.canAutoFix) && !isTaskDone(task?.status ?? ''),
     run: () => {
       if (!task) return
       flow.start({

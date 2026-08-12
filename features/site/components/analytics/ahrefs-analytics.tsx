@@ -14,7 +14,7 @@ export function AhrefsAnalytics() {
       <Script
         src="https://analytics.ahrefs.com/analytics.js"
         data-key={AHREFS_DATA_KEY}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <meta
         name="ahrefs-site-verification"
