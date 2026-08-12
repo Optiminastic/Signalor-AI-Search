@@ -161,20 +161,43 @@ function FindingChips({ codes }: { codes: string[] }): JSX.Element {
   )
 }
 
+/** What changed, minus the path the chip beside it already shows.
+ *  Backend summaries commonly read "Update <full path>", so printing both put
+ *  the same 60-character path on screen twice. */
+function changeSummary(path: string, summary: string): string {
+  const rest = (summary || '').replace(path, '').replace(/\s+/g, ' ').trim()
+  return rest.length > 2 ? rest : ''
+}
+
+/**
+ * The files a fix touched.
+ *
+ * Filename only, with the full path on hover: this rail is 300px wide, and a
+ * deep `app/(resources)/guides/.../page.tsx` wrapped across three lines and
+ * pushed everything below it down. The directory is rarely the thing you are
+ * checking — which file, and what happened to it, is.
+ */
 function FilesChanged({ files }: { files: GithubJob['files_changed'] }): JSX.Element {
   return (
     <div className="flex flex-col gap-1.5">
       <span className="text-[var(--cat-ink-3)]">
         {files.length} file{files.length > 1 ? 's' : ''} changed
       </span>
-      {files.map(f => (
-        <p key={f.path}>
-          <span className="mr-2 rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]">
-            {f.path}
-          </span>
-          <span className="text-[var(--cat-ink-3)]">{f.summary}</span>
-        </p>
-      ))}
+      {files.map(f => {
+        const name = f.path.split('/').filter(Boolean).pop() || f.path
+        const summary = changeSummary(f.path, f.summary)
+        return (
+          <p key={f.path} className="flex min-w-0 items-baseline gap-2">
+            <span
+              title={f.path}
+              className="max-w-full shrink-0 truncate rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]"
+            >
+              {name}
+            </span>
+            {summary && <span className="truncate text-[var(--cat-ink-3)]">{summary}</span>}
+          </p>
+        )
+      })}
     </div>
   )
 }

@@ -26,8 +26,8 @@ import { cx, sortCx } from '@/utils/cx'
  *   soft    bg background/secondary/default text text/secondary
  */
 
-type ChipVariant = 'bold' | 'subtle' | 'caption'
-type ChipColor =
+export type ChipVariant = 'bold' | 'subtle' | 'caption'
+export type ChipColor =
   | 'lime'
   | 'rose'
   | 'yellow'

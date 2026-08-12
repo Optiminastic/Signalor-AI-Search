@@ -31,14 +31,17 @@ function WorkingBadge(): JSX.Element {
 
 /** After success: a proof link — the opened PR (GitHub), or the live page for CMS. */
 function DoneLink({ fix }: { fix: TaskAutoFix }): JSX.Element | null {
-  const href = fix.job?.pr_url || fix.siteUrl
+  const prUrl = fix.job?.pr_url
+  const prNumber = fix.job?.pr_number
+  if (prUrl && prNumber) {
+    return <GithubPrLink href={prUrl}>View PR #{prNumber}</GithubPrLink>
+  }
+  const href = prUrl || fix.siteUrl
   if (!href) return null
-  const isPr = Boolean(fix.job?.pr_number)
   return (
     <a href={href} target="_blank" rel="noreferrer" className={OUTLINE}>
-      {isPr ? <GithubMark size={13} /> : null}
-      {isPr ? `View PR #${fix.job?.pr_number}` : 'View change'}
-      {isPr ? null : <ExternalLink size={12} />}
+      View change
+      <ExternalLink size={12} />
     </a>
   )
 }

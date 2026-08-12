@@ -1,3 +1,4 @@
+import { Chip } from '@/components/base/badges/chip'
 import { autoStatusStyle, formatPublished } from '@/features/catalyst/backlinks-data'
 import type { AutoBacklink } from '@/lib/api/backlinks'
 import { ExternalLink, GripVertical, MoreHorizontal } from '@/lib/icons'
@@ -14,9 +15,9 @@ export function AutoBacklinkRow({ row }: AutoBacklinkRowProps): JSX.Element {
     <tr className="border-t border-[var(--cat-border-soft)] transition-colors hover:bg-[var(--cat-hover)]">
       <TitleCell row={row} />
       <td className="px-3 py-2.5">
-        <span className={`rounded-md px-2 py-0.5 text-[11px] font-medium ${status.className}`}>
+        <Chip variant="caption" color={status.color}>
           {status.label}
-        </span>
+        </Chip>
       </td>
       <td className="max-w-[180px] px-3 py-2.5">
         {row.brand_url ? (

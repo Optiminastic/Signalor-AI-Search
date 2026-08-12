@@ -60,10 +60,14 @@ function JumpTo({ targets }: { targets: { id: string; label: string }[] }): JSX.
  */
 function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.Element {
   const hasSteps = task.steps.length > 0 || Boolean(task.actionGuide)
+  // One name per section, used by both the jump link and the heading it lands
+  // on. They had drifted — "How to fix it" in the nav scrolled to a heading
+  // called "Or fix it yourself", so the link appeared to go somewhere else.
+  const fixTitle = task.canAutoFix ? 'Or fix it yourself' : 'How to fix it'
   const targets = [
     { id: 'highlights', label: 'Highlights' },
     { id: 'why', label: 'Why this matters' },
-    ...(hasSteps ? [{ id: 'fix', label: 'How to fix it' }] : []),
+    ...(hasSteps ? [{ id: 'fix', label: fixTitle }] : []),
   ]
 
   return (
@@ -83,7 +87,7 @@ function TaskBody({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.El
             <TaskDescriptionBody task={task} />
           </TaskSection>
           {hasSteps && (
-            <TaskSection id="fix" title={task.canAutoFix ? 'Or fix it yourself' : 'How to fix it'}>
+            <TaskSection id="fix" title={fixTitle}>
               {task.steps.length > 0 ? (
                 <TaskStepsBody taskId={task.id} steps={task.steps} />
               ) : (

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import { useActiveProject } from '@/hooks/useActiveProject'
@@ -67,10 +68,10 @@ function parseDrafts(drafts: Record<EditableKey, string>): {
   return { patch: patch as BrandProfileSections, badKey: null }
 }
 
-function statusStyle(status: string): { label: string; className: string } {
-  if (status === 'approved') return { label: 'Approved', className: 'bg-[#E7F7EF] text-[#1f8f5f]' }
-  if (status === 'rejected') return { label: 'Rejected', className: 'bg-[#FDECEC] text-[#c0392b]' }
-  return { label: 'Pending review', className: 'bg-[#FEF7E6] text-[#a37a12]' }
+function statusStyle(status: string): { label: string; color: ChipColor } {
+  if (status === 'approved') return { label: 'Approved', color: 'lime' }
+  if (status === 'rejected') return { label: 'Rejected', color: 'rose' }
+  return { label: 'Pending review', color: 'yellow' }
 }
 
 export function BrandProfileView(): JSX.Element {
@@ -193,9 +194,9 @@ function StatusMeta({ profile }: { profile: BrandProfile }): JSX.Element {
     : '-'
   return (
     <div className="flex items-center gap-3 text-[13px] text-[var(--cat-ink-2)]">
-      <span className={`rounded-md px-2 py-0.5 text-[12px] font-semibold ${badge.className}`}>
+      <Chip variant="subtle" color={badge.color}>
         {badge.label}
-      </span>
+      </Chip>
       <span>Confidence: {Math.round((profile.confidence ?? 0) * 100)}%</span>
       <span>Last verified: {verified}</span>
     </div>

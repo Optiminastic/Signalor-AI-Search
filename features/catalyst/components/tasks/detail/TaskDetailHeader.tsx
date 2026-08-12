@@ -6,7 +6,12 @@ import { SiteFavicon } from '@/features/catalyst/components/SiteFavicon'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { sourceOf } from '@/features/catalyst/task-source'
-import { formatEffort, formatStatus, isTaskDone } from '@/features/catalyst/tasks-data'
+import {
+  formatEffort,
+  formatStatus,
+  humanizeTerm,
+  isTaskDone,
+} from '@/features/catalyst/tasks-data'
 import { useAgentMutations } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
@@ -18,6 +23,17 @@ const SEVERITY: Record<string, string> = {
   high: '#E5484D',
   medium: '#F6B93B',
   low: '#2FBE7E',
+}
+
+/* Where the action stands, as a dot tone: open work is neutral, work in flight
+   is amber, done states are green. The state reads before the word does. */
+const STATUS_DOT: Record<string, string> = {
+  pending: 'var(--cat-ink-3)',
+  open: 'var(--cat-ink-3)',
+  in_progress: '#F6B93B',
+  completed: '#2FBE7E',
+  verified: '#1e8a5c',
+  dismissed: 'var(--cat-ink-3)',
 }
 
 const SECONDARY =
@@ -50,7 +66,7 @@ function TaskChips({ task }: { task: TaskDetail }): JSX.Element | null {
   if (task.pillar) {
     chips.push(
       <span key="pillar" className={CHIP}>
-        {capitalize(task.pillar)}
+        {humanizeTerm(task.pillar)}
       </span>,
     )
   }
@@ -58,7 +74,7 @@ function TaskChips({ task }: { task: TaskDetail }): JSX.Element | null {
   if (task.category && task.category !== task.pillar) {
     chips.push(
       <span key="category" className={CHIP}>
-        {capitalize(task.category)}
+        {humanizeTerm(task.category)}
       </span>,
     )
   }
@@ -95,11 +111,15 @@ function Breadcrumb({ task }: { task: TaskDetail }): JSX.Element {
 }
 
 /** The two numbers you weigh before starting: how urgent, how much work. */
-function HeaderStats({ task }: { task: TaskDetail }): JSX.Element {
+function HeaderStats({ task }: { task: TaskDetail }): JSX.Element | null {
+  const effort = formatEffort(task.effort)
   const stats = [
-    { label: 'Priority', value: capitalize(task.priority) || '—' },
-    { label: 'Effort', value: capitalize(formatEffort(task.effort)) || '—' },
-  ]
+    { label: 'Priority', value: capitalize(task.priority) },
+    // formatEffort falls back to a dash placeholder. A dash set at 22px reads as
+    // broken data, not as "unknown", so an unmeasured effort is simply not shown.
+    { label: 'Effort', value: effort === '—' ? '' : capitalize(effort) },
+  ].filter(stat => stat.value)
+  if (stats.length === 0) return null
   return (
     <div className="flex shrink-0 items-start gap-7">
       {stats.map(stat => (
@@ -174,11 +194,18 @@ function Headline({ task }: { task: TaskDetail }): JSX.Element {
           {task.why}
         </p>
       )}
-      <p className="mt-1.5 flex flex-wrap items-center gap-2 text-[12.5px] text-[var(--cat-ink-3)]">
-        <span className="font-medium text-[var(--cat-ink-2)]">{formatStatus(task.status)}</span>
+      <p className="mt-2 flex flex-wrap items-center gap-2 text-[12.5px] text-[var(--cat-ink-3)]">
+        <span className="flex items-center gap-1.5 font-medium text-[var(--cat-ink-2)]">
+          <span
+            aria-hidden
+            className="h-[7px] w-[7px] rounded-full"
+            style={{ background: STATUS_DOT[task.status] ?? 'var(--cat-ink-3)' }}
+          />
+          {formatStatus(task.status)}
+        </span>
         {page && (
           <>
-            <span>|</span>
+            <span aria-hidden>·</span>
             <span className="truncate font-mono">{page.replace(/^https?:\/\//, '')}</span>
           </>
         )}

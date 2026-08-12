@@ -11,8 +11,14 @@ import type { TaskAutoFix } from '@/hooks/useTaskAutoFix'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
 import { BadgeCheck, ChevronDown, ExternalLink } from '@/lib/icons'
 
-/** A sidebar block: chevron + label, content below. No card border — the rail
- *  is already a column, and boxing every block flattens the hierarchy. */
+/**
+ * A sidebar block: a floating chevron + label, content in an inset card.
+ *
+ * The heading sits on the canvas and the body is boxed, so the rail reads as a
+ * stack of distinct answers rather than one long ribbon of text. Border-only
+ * insets were tried first and vanished on the dark canvas — the fill is what
+ * makes them hold, and it matches the surface the evidence panel uses.
+ */
 function Block({
   title,
   children,
@@ -24,32 +30,45 @@ function Block({
 }): JSX.Element {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <section className="border-t border-[var(--cat-border)] pt-3">
+    <section>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
-        className="flex w-full items-center gap-1.5 text-left"
+        className="group flex w-full items-center gap-1.5 text-left"
       >
         <ChevronDown
           size={15}
           className={`text-[var(--cat-ink-3)] transition-transform ${open ? '' : '-rotate-90'}`}
         />
-        <span className="text-[14px] font-semibold text-[var(--cat-ink)]">{title}</span>
+        <span className="text-[13.5px] font-semibold text-[var(--cat-ink)] group-hover:text-[var(--cat-ink-2)]">
+          {title}
+        </span>
       </button>
-      {open && <div className="mt-2.5">{children}</div>}
+      {open && (
+        <div className="cat-card-edge mt-2 rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
+          {children}
+        </div>
+      )}
     </section>
   )
 }
 
-/** When it was found and when it was last proven fixed. */
+/**
+ * When it was found, and when it was last proven fixed.
+ *
+ * Boxed like every other block so the rail is one system rather than a loose
+ * pair of lines followed by a stack of cards. It carries no heading because the
+ * two labels already say what they are — a "Timeline" title above "Identified"
+ * and "Verified" would be a word explaining two words.
+ */
 function Timeline({ task }: { task: TaskDetail }): JSX.Element {
   return (
-    <div className="flex flex-col gap-1.5 text-[13px]">
+    <div className="cat-card-edge flex flex-col gap-2 rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3 text-[13px]">
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-[var(--cat-ink-2)]">Identified</span>
         <span className="font-medium text-[var(--cat-ink)]">
-          {task.createdAt ? formatTaskDate(task.createdAt) : '—'}
+          {task.createdAt ? formatTaskDate(task.createdAt) : 'Unknown'}
         </span>
       </div>
       <div className="flex items-baseline justify-between gap-3">
@@ -70,14 +89,16 @@ function Timeline({ task }: { task: TaskDetail }): JSX.Element {
 }
 
 /** The pillar this action moves, and where it stands today. */
-function PillarScore({ pillar }: { pillar: string }): JSX.Element | null {
+/** Renders its own Block so a task with no scored pillar drops the section
+ *  entirely, rather than leaving an empty card sitting in the rail. */
+function ScoreImpactBlock({ pillar }: { pillar: string }): JSX.Element | null {
   const { slug } = useActiveProject()
   const { data } = usePillars(slug)
   const label = GEO_PILLARS.find(p => String(p.key) === `${pillar}_score`)?.label
   const score = data?.pillars.find(p => p.label === label)?.score
   if (!label || score === undefined) return null
   return (
-    <div>
+    <Block title="Score impact">
       <div className="flex items-baseline justify-between gap-3 text-[13px]">
         <span className="text-[var(--cat-ink-2)]">{label}</span>
         <span className="font-medium text-[var(--cat-ink)] tabular-nums">{score}/100</span>
@@ -85,7 +106,7 @@ function PillarScore({ pillar }: { pillar: string }): JSX.Element | null {
       <div className="mt-2">
         <TickBar value={score} ticks={20} showValue={false} />
       </div>
-    </div>
+    </Block>
   )
 }
 
@@ -126,17 +147,19 @@ function Links({ task }: { task: TaskDetail }): JSX.Element {
  */
 export function TaskSidebar({ task, fix }: { task: TaskDetail; fix: TaskAutoFix }): JSX.Element {
   return (
-    <aside className="flex flex-col gap-3">
+    <aside className="flex flex-col gap-4">
       <Timeline task={task} />
-      <Block title="Auto-fix">
-        <TaskAutoFixPanel fix={fix} />
-      </Block>
+      {/* Gated here, not just inside the panel: a null panel would still leave
+          the block's heading and empty card stranded in the rail. */}
+      {fix.visible && (
+        <Block title="Auto-fix">
+          <TaskAutoFixPanel fix={fix} />
+        </Block>
+      )}
       <Block title="Affected pages">
         <Links task={task} />
       </Block>
-      <Block title="Score impact">
-        <PillarScore pillar={task.pillar} />
-      </Block>
+      <ScoreImpactBlock pillar={task.pillar} />
       {task.verificationMessage && (
         <Block title="Activity" defaultOpen={false}>
           <p className="text-[12.5px] leading-relaxed text-[var(--cat-ink-2)]">

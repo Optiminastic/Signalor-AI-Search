@@ -1,3 +1,5 @@
+import type { ChipColor } from '@/components/base/badges/chip'
+
 export type Role = 'Owner' | 'Admin' | 'Member'
 export type BrandStatus = 'active' | 'paused'
 
@@ -13,11 +15,11 @@ export interface Brand {
   members: number
 }
 
-/** Badge classes per role, shared by the members table and its legend. */
-export const ROLE_STYLES: Record<Role, string> = {
-  Owner: 'bg-[rgba(224,74,61,0.12)] text-[#e04a3d]',
-  Admin: 'bg-[rgba(37,99,235,0.12)] text-[#2563EB]',
-  Member: 'bg-[var(--cat-hover)] text-[var(--cat-ink-2)]',
+/** Chip colour per role, shared by the members table and its legend. */
+export const ROLE_CHIP_COLOR: Record<Role, ChipColor> = {
+  Owner: 'rose',
+  Admin: 'blue',
+  Member: 'neutral',
 }
 
 /** What each role can do — the legend under the members table. */

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { GREEN } from '@/features/catalyst/constants'
+import { Chip } from '@/components/base/badges/chip'
 import { ttfbColor, WARN_COLOR } from '@/features/catalyst/sitemap-data'
 import type { AuditRow as Row } from '@/features/catalyst/sitemap-data'
 import { ChevronRight } from '@/lib/icons'
@@ -20,12 +20,9 @@ function Dash(): JSX.Element {
 
 function StatusPill({ status }: { status: number }): JSX.Element {
   return (
-    <span
-      className="inline-flex items-center rounded-full px-2 py-0.5 text-[12px] font-semibold"
-      style={{ color: GREEN, background: 'rgba(47,190,126,.14)' }}
-    >
+    <Chip variant="subtle" color="lime">
       {status}
-    </span>
+    </Chip>
   )
 }
 
@@ -53,12 +50,9 @@ function AiCell({ value }: { value: number }): JSX.Element {
 
 function Warn(): JSX.Element {
   return (
-    <span
-      className="inline-flex items-center rounded px-1.5 py-0.5 text-[11px] font-bold tracking-wide"
-      style={{ color: WARN_COLOR, background: 'rgba(194,112,61,.15)' }}
-    >
+    <Chip variant="caption" color="yellow">
       WARN
-    </span>
+    </Chip>
   )
 }
 

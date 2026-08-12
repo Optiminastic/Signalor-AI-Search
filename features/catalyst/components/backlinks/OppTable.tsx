@@ -1,5 +1,6 @@
+import { Chip } from '@/components/base/badges/chip'
 import { Favicon } from '@/components/Favicon'
-import { STATUS_STYLE, type BacklinkOpp } from '@/features/catalyst/backlinks-data'
+import { STATUS_CHIP_COLOR, type BacklinkOpp } from '@/features/catalyst/backlinks-data'
 import { ExternalLink, Globe } from '@/lib/icons'
 
 const TH =
@@ -66,11 +67,9 @@ function OppRow({ item }: { item: BacklinkOpp }): JSX.Element {
       </td>
       <td className={`${TD} font-semibold text-[var(--cat-ink)] tabular-nums`}>{item.dr}</td>
       <td className={TD}>
-        <span
-          className={`rounded-md px-2 py-0.5 text-[11px] font-medium capitalize ${STATUS_STYLE[item.status]}`}
-        >
+        <Chip variant="caption" color={STATUS_CHIP_COLOR[item.status]} className="capitalize">
           {item.status}
-        </span>
+        </Chip>
       </td>
       <td className={`${TD} text-right`}>
         {item.status === 'live' ? (

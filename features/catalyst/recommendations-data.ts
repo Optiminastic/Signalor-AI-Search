@@ -1,3 +1,5 @@
+import type { ChipColor } from '@/components/base/badges/chip'
+
 export type Priority = 'High' | 'Medium' | 'Low'
 export type RecStatus = 'open' | 'in-progress' | 'done'
 
@@ -14,8 +16,8 @@ export interface Recommendation {
   findingCode: string
 }
 
-export const PRIORITY_STYLE: Record<Priority, string> = {
-  High: 'bg-[rgba(229,72,77,0.12)] text-[#E5484D]',
-  Medium: 'bg-[rgba(246,185,59,0.15)] text-[#F6B93B]',
-  Low: 'bg-[var(--cat-hover)] text-[var(--cat-ink-2)]',
+export const PRIORITY_CHIP_COLOR: Record<Priority, ChipColor> = {
+  High: 'rose',
+  Medium: 'yellow',
+  Low: 'neutral',
 }
