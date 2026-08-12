@@ -116,6 +116,46 @@ export function isTaskDone(status: string): boolean {
   return DONE_STATUSES.has((status || '').trim().toLowerCase())
 }
 
+/* Terms whose casing a generic humaniser gets wrong. "ai_visibility" must read
+   "AI visibility", not "Ai visibility". */
+const ACRONYMS: Record<string, string> = {
+  ai: 'AI',
+  geo: 'GEO',
+  seo: 'SEO',
+  url: 'URL',
+  faq: 'FAQ',
+  ctr: 'CTR',
+  eeat: 'E-E-A-T',
+  llm: 'LLM',
+  llms: 'LLMs',
+  cta: 'CTA',
+  api: 'API',
+}
+
+/**
+ * A backend identifier, as a person would read it.
+ *
+ * `ai_visibility` -> `AI visibility`, `brand_mentions` -> `Brand mentions`.
+ * The action detail page printed these raw, so it named things the way the
+ * database does rather than the way the reader does.
+ *
+ * Sentence case, not Title Case: only the first word and known acronyms are
+ * capitalised, so a label sits quietly beside prose instead of shouting.
+ */
+export function humanizeTerm(value: string): string {
+  const words = (value || '').trim().replace(/[_-]+/g, ' ').split(/\s+/).filter(Boolean)
+  if (words.length === 0) return ''
+
+  return words
+    .map((word, index) => {
+      const known = ACRONYMS[word.toLowerCase()]
+      if (known) return known
+      if (index > 0) return word.toLowerCase()
+      return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
 /** What kind of work a task is — drives its icon and type label. */
 export type TaskType =
   | 'page'

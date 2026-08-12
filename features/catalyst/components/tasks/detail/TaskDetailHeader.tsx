@@ -6,7 +6,12 @@ import { SiteFavicon } from '@/features/catalyst/components/SiteFavicon'
 import { TaskShareMenu } from '@/features/catalyst/components/tasks/detail/TaskShareMenu'
 import { TaskGlyph } from '@/features/catalyst/components/tasks/TaskGlyph'
 import { sourceOf } from '@/features/catalyst/task-source'
-import { formatEffort, formatStatus, isTaskDone } from '@/features/catalyst/tasks-data'
+import {
+  formatEffort,
+  formatStatus,
+  humanizeTerm,
+  isTaskDone,
+} from '@/features/catalyst/tasks-data'
 import { useAgentMutations } from '@/hooks/useAgentPlan'
 import { useBrandPath } from '@/hooks/useBrandPath'
 import type { TaskDetail } from '@/hooks/useTaskDetail'
