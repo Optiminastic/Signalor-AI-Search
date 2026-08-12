@@ -2,26 +2,14 @@ import type { ReactNode } from 'react'
 
 import { GithubMark } from '@/components/GithubMark'
 
-/** `default` is a row/header control; `compact` fits a dense notice strip. */
-type GithubPrLinkSize = 'default' | 'compact'
-
 interface GithubPrLinkProps {
   /** The pull request's URL on GitHub. */
   href: string
   /** Tooltip — usually the fix's status message. */
   title?: string
-  size?: GithubPrLinkSize
+  /** Icon size in px; 13 suits a row control, 12 a body-copy action. */
+  iconSize?: number
   children: ReactNode
-}
-
-const SIZE_STYLES: Record<GithubPrLinkSize, string> = {
-  default: 'h-8 gap-1.5 rounded-md px-3 text-[12px]',
-  compact: 'h-6 gap-1 rounded px-2 text-[11px]',
-}
-
-const ICON_SIZE: Record<GithubPrLinkSize, number> = {
-  default: 13,
-  compact: 11,
 }
 
 /**
@@ -32,13 +20,13 @@ const ICON_SIZE: Record<GithubPrLinkSize, number> = {
  * the next step happens on GitHub, and the button should look like it. The mark
  * inherits `currentColor`, so `text-white` is what inverts it.
  *
- * Shared by the tasks table, the task header, the auto-fix flow and content
- * optimisation so a PR link never drifts between surfaces.
+ * Shared by the tasks table, the task header and the auto-fix flow so a PR
+ * link never drifts between surfaces.
  */
 export function GithubPrLink({
   href,
   title,
-  size = 'default',
+  iconSize = 13,
   children,
 }: GithubPrLinkProps): JSX.Element {
   return (
@@ -47,9 +35,9 @@ export function GithubPrLink({
       target="_blank"
       rel="noreferrer"
       title={title}
-      className={`inline-flex w-fit items-center bg-[#24292f] font-semibold text-white transition-colors hover:bg-[#1f2328] ${SIZE_STYLES[size]}`}
+      className="inline-flex h-8 items-center gap-1.5 rounded-md bg-[#24292f] px-3 text-[12px] font-semibold text-white transition-colors hover:bg-[#1f2328]"
     >
-      <GithubMark size={ICON_SIZE[size]} />
+      <GithubMark size={iconSize} />
       {children}
     </a>
   )
