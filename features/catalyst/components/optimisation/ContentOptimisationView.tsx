@@ -168,7 +168,7 @@ function NoticeBar({ co }: { co: ContentOptimisation }): JSX.Element | null {
       {co.error ? <p className="text-destructive text-[11px]">{co.error}</p> : null}
       {co.notice ? <p className="text-success text-[11px]">{co.notice}</p> : null}
       {co.prUrl ? (
-        <GithubPrLink href={co.prUrl} size="compact">
+        <GithubPrLink href={co.prUrl} iconSize={12}>
           View pull request
         </GithubPrLink>
       ) : null}
