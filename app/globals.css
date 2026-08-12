@@ -70,7 +70,14 @@
      max-width and ran full-bleed. */
   --container-8xl: 90rem; /* 1440px */
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-instrument-serif);
+  /* Mona Sans is the only family (DESIGN.md §0.2: "No serif, no second font",
+     and Part B: "Replaces Inter everywhere"). Google-hosted Inter and Instrument
+     Serif were still being fetched at BUILD time, which broke deploys outright
+     when fonts.gstatic.com returned 404s for Inter's woff2 files. These two
+     tokens are kept and aliased so any existing `font-serif` / `--font-boardui`
+     consumer keeps rendering, now in the family it was supposed to use. */
+  --font-serif: var(--font-inter);
+  --font-boardui: var(--font-inter);
   --font-mono:
     ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
   --color-background: var(--background);
@@ -236,7 +243,8 @@
 }
 
 .font-instrument-serif {
-  font-family: var(--font-instrument-serif);
+  /* Aliased to Mona Sans with the Google font removed; see the token block. */
+  font-family: var(--font-inter);
   font-display: swap;
 }
 
