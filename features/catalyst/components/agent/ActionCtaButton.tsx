@@ -1,5 +1,6 @@
 'use client'
 
+import { formatStatus, isTaskDone } from '@/features/catalyst/tasks-data'
 import { useAgentMutations } from '@/hooks/useAgentPlan'
 import type { AgentAction } from '@/lib/api/agent'
 import { ArrowRight, Check, Loader2, PenLine, Zap } from '@/lib/icons'
@@ -9,6 +10,20 @@ const KIND_CTA: Record<AgentAction['kind'], { label: string; icon: LucideIcon }>
   auto: { label: 'Start', icon: Zap },
   draft: { label: 'Start', icon: PenLine },
   open: { label: 'Review', icon: ArrowRight },
+}
+
+/** A state, not a control — what replaces the CTA once there is nothing to do. */
+function StatusPill({ label, done = false }: { label: string; done?: boolean }): JSX.Element {
+  return (
+    <span
+      className={`inline-flex h-8 items-center gap-1 rounded-md px-2.5 text-[12px] font-medium ${
+        done ? 'text-[#1e8a5c]' : 'text-[#2FBE7E]'
+      }`}
+    >
+      <Check size={14} />
+      {label}
+    </span>
+  )
 }
 
 interface ActionCtaButtonProps {
@@ -37,14 +52,10 @@ export function ActionCtaButton({
   const busy = busyActionId === action.action_id
   const brand = primary || (!quiet && action.kind !== 'open')
 
-  if (inProgress) {
-    return (
-      <span className="inline-flex h-8 items-center gap-1 rounded-md px-2.5 text-[12px] font-medium text-[#2FBE7E]">
-        <Check size={14} />
-        In progress
-      </span>
-    )
-  }
+  // Finished work offers no CTA. This checked only `in_progress`, so a
+  // completed or verified action still rendered a live "Start" button.
+  if (isTaskDone(action.status)) return <StatusPill label={formatStatus(action.status)} done />
+  if (inProgress) return <StatusPill label="In progress" />
 
   return (
     <button

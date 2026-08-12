@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { BLUE, BRAND, GREEN, NEG, YELLOW } from '@/features/catalyst/constants'
-import { formatTaskDate } from '@/features/catalyst/tasks-data'
+import { formatTaskDate, isTaskDone } from '@/features/catalyst/tasks-data'
 import type {
   Priority,
   ProjectRef,
@@ -39,7 +39,7 @@ function priorityOf(action: UserAction): Priority {
 }
 
 function progressOf(status: string): number {
-  if (status === 'completed' || status === 'verified') return 100
+  if (isTaskDone(status)) return 100
   if (status === 'in_progress') return 50
   return 0
 }

@@ -152,8 +152,16 @@ export async function createCheckoutSession(
       response?: { data?: { error?: string; dodo_mode?: string } }
       message?: string
     }
+    // Only a message the SERVER wrote is fit to show. `ax.message` is axios's
+    // own transport string — "Network Error", "timeout of 0ms exceeded" — and
+    // rendering it put a raw developer error in front of a customer at the
+    // moment they were trying to pay. Anything without a server message gets
+    // copy that says what happened and what to do.
     const msg =
-      ax.response?.data?.error || ax.message || 'Failed to start checkout. Please try again.'
+      ax.response?.data?.error ||
+      (ax.response
+        ? 'We could not start checkout. Please try again.'
+        : 'We could not reach our payment service. Check your connection and try again, or email support@signalor.ai.')
     const raw = ax.response?.data?.dodo_mode
     const dodoMode: DodoMode | undefined = raw === 'live' || raw === 'test' ? raw : undefined
     throw new CheckoutSessionError(msg, dodoMode)

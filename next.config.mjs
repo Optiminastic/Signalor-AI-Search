@@ -46,7 +46,17 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    unoptimized: true,
+    // Optimization ON. It was disabled, which meant every next/image served the
+    // original file at full size: /auth-illustration.png alone is 4.6 MB of PNG
+    // on sign-in, sign-up and onboarding, and that is what put LCP at 4.77s.
+    // Vercel now serves AVIF/WebP at the requested width instead.
+    //
+    // Safe to enable: every external image in the app (Google favicons) uses a
+    // plain <img>, not next/image, so nothing needs `remotePatterns`.
+    formats: ['image/avif', 'image/webp'],
+    // A year: these are content-hashed build assets, so a stale cache is not a
+    // risk and it keeps repeat views off the optimizer entirely.
+    minimumCacheTTL: 31536000,
   },
   async headers() {
     return [

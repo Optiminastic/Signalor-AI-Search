@@ -95,6 +95,27 @@ export function formatStatus(status: string): string {
   return STATUS_LABEL[status] ?? status.replace(/_/g, ' ')
 }
 
+/* Statuses that mean the work is over. `dismissed` counts: the user decided not
+   to do it, so offering to do it for them is just as wrong as offering to redo
+   something finished. */
+const DONE_STATUSES = new Set(['completed', 'verified', 'dismissed'])
+
+/**
+ * Is this action finished?
+ *
+ * The single answer to that question. It used to be re-derived at each call
+ * site — `progress >= 100` here, `=== 100` there, two different status lists on
+ * the detail page — so the definitions drifted and any new control could simply
+ * forget to ask. That is exactly how a completed action ended up in the Done
+ * tab still offering an "Auto fix" button.
+ *
+ * Every control that acts ON an action (auto-fix, start, verify, complete) must
+ * gate on this, not on whether the action is *capable* of that operation.
+ */
+export function isTaskDone(status: string): boolean {
+  return DONE_STATUSES.has((status || '').trim().toLowerCase())
+}
+
 /** What kind of work a task is — drives its icon and type label. */
 export type TaskType =
   | 'page'

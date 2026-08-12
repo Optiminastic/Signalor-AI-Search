@@ -375,7 +375,9 @@ function PricingPageInner() {
           setError(e.message)
           setCheckoutDodoMode(e.dodoMode ?? null)
         } else {
-          setError(e instanceof Error ? e.message : 'Failed to start checkout. Please try again.')
+          // Deliberately NOT `e.message`: an unexpected throw here carries a
+          // developer string, and this box is read by someone trying to pay.
+          setError('Something went wrong starting checkout. Please try again.')
           setCheckoutDodoMode(null)
         }
         setLoadingPlan(null)
@@ -419,7 +421,7 @@ function PricingPageInner() {
 
   return (
     <MarketingShell>
-      <PricingHero onboardingBanner={returnTo === routes.onboardingCompanyInfo}>
+      <PricingHero audience={audience} onboardingBanner={returnTo === routes.onboardingCompanyInfo}>
         <div className="flex flex-col items-center gap-4">
           <AudienceSwitch
             audience={audience}
