@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { GREEN } from '@/features/catalyst/constants'
 import { CheckCircle2 } from '@/lib/icons'
 
@@ -10,7 +11,7 @@ export interface IndexedInfo {
 export function IndexedCard({ indexed }: { indexed: IndexedInfo }): JSX.Element {
   const pct = indexed.total ? (indexed.value / indexed.total) * 100 : 0
   return (
-    <div className="cat-card-edge flex flex-col rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card>
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">
           Indexed Pages
@@ -37,6 +38,6 @@ export function IndexedCard({ indexed }: { indexed: IndexedInfo }): JSX.Element 
           Crawl limit: {indexed.crawlLimit}
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

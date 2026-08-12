@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { ThresholdBar } from '@/features/catalyst/components/sitemap/ThresholdBar'
 import type { Vital } from '@/features/catalyst/sitemap-data'
 
@@ -8,7 +9,7 @@ interface WebVitalCardProps {
 export function WebVitalCard({ vital }: WebVitalCardProps): JSX.Element {
   const { icon: Icon, label, value, unit, marker, status, valueColor } = vital
   return (
-    <div className="cat-card-edge flex flex-col rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card>
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">
           {label}
@@ -36,6 +37,6 @@ export function WebVitalCard({ vital }: WebVitalCardProps): JSX.Element {
           {status}
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

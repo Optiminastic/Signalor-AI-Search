@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
 import { BarMeter } from '@/features/catalyst/components/visibility/BarMeter'
 import { MetricDelta } from '@/features/catalyst/components/visibility/MetricDelta'
@@ -41,7 +42,7 @@ function SubStats({ stats }: { stats: SubStat[] }): JSX.Element {
 
 export function PlatformScoreCard({ platform }: { platform: PlatformVis }): JSX.Element {
   return (
-    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card className="gap-3">
       <Head platform={platform} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -54,6 +55,6 @@ export function PlatformScoreCard({ platform }: { platform: PlatformVis }): JSX.
       </div>
       <BarMeter value={platform.score} color={scoreColor(platform.score)} />
       <SubStats stats={platform.substats} />
-    </div>
+    </Card>
   )
 }

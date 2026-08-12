@@ -62,7 +62,10 @@ export function ProjectionPanel(): JSX.Element | null {
   if (noRun || isLoading || !projection) return null
 
   return (
-    <section className="col-span-full rounded-md border border-[rgba(224,74,61,0.16)] bg-[rgba(224,74,61,0.04)] p-3">
+    // rounded-2xl to match the cards below it. At rounded-md this band was the
+    // only 8px corner on a page of 16px ones, so it read as a leftover from the
+    // previous design language rather than part of the same surface family.
+    <section className="col-span-full rounded-2xl border border-[rgba(224,74,61,0.16)] bg-[rgba(224,74,61,0.04)] p-3">
       <ProjectionHeader tasksHref={brandPath('tasks')} />
       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {buildStats(projection).map(stat => (

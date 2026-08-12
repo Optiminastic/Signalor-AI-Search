@@ -1,6 +1,5 @@
 import { TaskRow } from '@/features/catalyst/components/tasks/TaskRow'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
-import { ChevronsUpDown } from '@/lib/icons'
 
 /**
  * Deliberately narrow. Project was the same value on every row (the dashboard is
@@ -14,28 +13,35 @@ import { ChevronsUpDown } from '@/lib/icons'
  * The table is fixed-layout (never scrolls horizontally), so these widths MUST
  * stay in sync with TaskRow's cells, which truncate to fit.
  */
+/* The last column was also called "Action", so the header read
+   "Action | Improves | Priority | Action" — two columns claiming the same name,
+   and (because the key was the label) two <th> sharing a React key. It holds the
+   fix state — Auto fix, Manual, View PR, Done — so "Fix" is what it is. */
 const COLS: { label: string; className: string }[] = [
   { label: 'Action', className: 'px-3' },
   { label: 'Improves', className: 'px-3 w-[150px]' },
   { label: 'Priority', className: 'px-3 w-[128px]' },
+  { label: 'Fix', className: 'px-3 w-[128px]' },
 ]
 
-const ACTION_COL = { label: 'Action', className: 'px-3 w-[128px]' }
-
+/**
+ * Sticky so the columns stay named while you scroll: this list runs to 80+ rows
+ * inside a scrolling panel, and the header left the viewport on the first flick.
+ *
+ * No sort chevrons. Every column used to show a ChevronsUpDown control and none
+ * of them sorted anything — nothing here is wired to sort state. A control that
+ * does nothing is worse than no control, so they are gone until sorting exists.
+ */
 function TaskTableHead(): JSX.Element {
-  const cols = [...COLS, ACTION_COL]
   return (
-    <thead>
+    <thead className="sticky top-0 z-10">
       <tr className="border-b border-[var(--cat-border)] bg-[var(--cat-hover)]">
-        {cols.map(col => (
+        {COLS.map(col => (
           <th
             key={col.label}
             className={`py-2.5 text-left text-[12px] font-medium text-[var(--cat-ink-2)] ${col.className}`}
           >
-            <span className="inline-flex items-center gap-1">
-              {col.label}
-              <ChevronsUpDown size={12} className="text-[var(--cat-ink-3)]" />
-            </span>
+            {col.label}
           </th>
         ))}
       </tr>

@@ -30,8 +30,13 @@ export function DashboardGreeting(): JSX.Element {
     // the later sibling cards paint over them. Stays under the topbar's z-40.
     <div className="cat-rise relative z-30 col-span-full mb-0.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
       <div className="min-w-0">
-        <h1 className="text-[19px] font-semibold tracking-tight text-[var(--cat-ink)]">
-          Welcome back, {name} 👋
+        {/* No emoji: DESIGN.md §0.7 lists it as a never-ship tell, and a waving
+            hand in the page's opening line is the most visible place to have one. */}
+        {/* font-bold matches every other page title in the dashboard (12 of them);
+            this was the only semibold one, so page headers changed weight as you
+            navigated between sections. */}
+        <h1 className="text-[19px] font-bold tracking-tight text-[var(--cat-ink)]">
+          Welcome back, {name}
         </h1>
         <p className="mt-0.5 text-[13px] text-[var(--cat-ink-2)]">
           {activeOrg

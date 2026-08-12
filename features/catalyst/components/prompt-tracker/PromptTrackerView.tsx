@@ -156,7 +156,6 @@ function PromptBody({
         <PromptToolbar shown={prompts.length} total={allCount} />
         <PromptTagFilter value={tags} onChange={onTagsChange} />
       </div>
-      {/* <PromptInsights prompts={prompts} /> */}
       {hasPending && (
         <p className="mb-2 flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-3)]">
           <Loader2 size={12} className="animate-spin" />

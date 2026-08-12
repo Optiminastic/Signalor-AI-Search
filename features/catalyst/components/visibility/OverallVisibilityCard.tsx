@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { BarMeter } from '@/features/catalyst/components/visibility/BarMeter'
 import { MetricDelta } from '@/features/catalyst/components/visibility/MetricDelta'
 import { VisCardHead } from '@/features/catalyst/components/visibility/VisCardHead'
@@ -7,7 +8,7 @@ import { Eye } from '@/lib/icons'
 
 export function OverallVisibilityCard({ data }: { data: OverallVis }): JSX.Element {
   return (
-    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card className="gap-3">
       <VisCardHead icon={Eye} title="Overall Visibility" iconColor={BRAND} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -22,6 +23,6 @@ export function OverallVisibilityCard({ data }: { data: OverallVis }): JSX.Eleme
       <div className="mt-auto text-[12px] text-[var(--cat-ink-3)]">
         {data.detected} of {data.total} platforms detected · SignalorAI
       </div>
-    </div>
+    </Card>
   )
 }

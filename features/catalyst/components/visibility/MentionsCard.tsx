@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { MetricDelta } from '@/features/catalyst/components/visibility/MetricDelta'
 import { Sparkline } from '@/features/catalyst/components/visibility/Sparkline'
 import { VisCardHead } from '@/features/catalyst/components/visibility/VisCardHead'
@@ -7,7 +8,7 @@ import { MessageSquare } from '@/lib/icons'
 
 export function MentionsCard({ data }: { data: MentionsVis }): JSX.Element {
   return (
-    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card className="gap-3">
       <VisCardHead icon={MessageSquare} title="Mentions" iconColor={BRAND} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -22,6 +23,6 @@ export function MentionsCard({ data }: { data: MentionsVis }): JSX.Element {
       <div className="mt-auto text-[12px] text-[var(--cat-ink-3)]">
         Surfaced across {data.platforms} platforms this week
       </div>
-    </div>
+    </Card>
   )
 }

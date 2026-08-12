@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-
 import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { ExternalLink } from '@/lib/icons'
 

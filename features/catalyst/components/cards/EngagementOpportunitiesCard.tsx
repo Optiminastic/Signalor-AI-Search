@@ -51,7 +51,10 @@ function EngageButton({
 function OpportunityRow({ opp }: { opp: Opportunity }): JSX.Element {
   const backlinksHref = useBrandPath()('backlinks')
   return (
-    <div className="bg-background-primary-default hover:bg-background-secondary-default rounded-2xl border border-[var(--cat-border-soft)] p-2.5 transition-colors">
+    // rounded-lg, not rounded-2xl: this row sits INSIDE a rounded-2xl Card, and
+    // an inner corner matching its container's radius makes the two arcs fight.
+    // Nested surfaces always step down.
+    <div className="bg-background-primary-default hover:bg-background-secondary-default rounded-lg border border-[var(--cat-border-soft)] p-2.5 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-start gap-2.5">
           <span className="grid h-5 w-5 shrink-0 place-items-center text-[var(--cat-ink-2)]">

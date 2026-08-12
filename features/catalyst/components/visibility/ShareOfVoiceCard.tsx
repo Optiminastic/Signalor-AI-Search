@@ -1,3 +1,4 @@
+import { Card } from '@/features/catalyst/components/Card'
 import { MetricDelta } from '@/features/catalyst/components/visibility/MetricDelta'
 import { MiniBars } from '@/features/catalyst/components/visibility/MiniBars'
 import { VisCardHead } from '@/features/catalyst/components/visibility/VisCardHead'
@@ -7,7 +8,7 @@ import { TrendingUp } from '@/lib/icons'
 
 export function ShareOfVoiceCard({ sov, meta }: { sov: SovBar[]; meta: SovMeta }): JSX.Element {
   return (
-    <div className="cat-card-edge flex flex-col gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
+    <Card className="gap-3">
       <VisCardHead icon={TrendingUp} title="Share of Voice" iconColor={BRAND} />
       <div className="flex items-end gap-2.5">
         <span className="text-[32px] leading-none font-bold tracking-tight text-[var(--cat-ink)]">
@@ -20,6 +21,6 @@ export function ShareOfVoiceCard({ sov, meta }: { sov: SovBar[]; meta: SovMeta }
       </div>
       <MiniBars bars={sov} color={BRAND} />
       <div className="mt-auto text-[12px] text-[var(--cat-ink-3)]">{meta.prompts} tracked</div>
-    </div>
+    </Card>
   )
 }

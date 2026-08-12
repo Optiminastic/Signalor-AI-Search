@@ -50,7 +50,10 @@ function ScoreReasonInfo({ reason, positive }: { reason: string; positive: boole
       </button>
       <span
         role="tooltip"
-        className="pointer-events-none absolute top-full left-0 z-50 mt-1.5 w-64 rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-2.5 text-[11.5px] leading-relaxed text-[var(--cat-ink-2)] opacity-0 shadow-xl transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100"
+        // shadow-md/5 is the documented ceiling (DESIGN.md §0.3 forbids lg/xl/2xl).
+        // rounded-lg because a tooltip is a small floating surface, not a card —
+        // at rounded-2xl a 64-wide popover reads as a pill.
+        className="pointer-events-none absolute top-full left-0 z-50 mt-1.5 w-64 rounded-lg border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-2.5 text-[11.5px] leading-relaxed text-[var(--cat-ink-2)] opacity-0 shadow-md shadow-black/5 transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100"
       >
         {reason}
       </span>
