@@ -17,8 +17,10 @@ import { useIntegrations } from '@/hooks/useIntegrations'
 import type { GAData, GscData, GscRow } from '@/lib/api/integrations'
 import { BarChart3, Loader2, Search, Settings2 } from '@/lib/icons'
 
-const GA_PROPERTY_HREF = '/settings/integrations/google-analytics/property'
-const GSC_SITE_HREF = '/settings/integrations/google-search-console/property'
+// Property selection lives on Integrations now, opened by this query rather than
+// on its own bare route outside the dashboard shell.
+const GA_PICKER_QUERY = '?picker=google-analytics'
+const GSC_PICKER_QUERY = '?picker=search-console'
 
 function SectionLabel({ children }: { children: string }): JSX.Element {
   return (
@@ -184,7 +186,7 @@ function GaSection({ days }: { days?: number }): JSX.Element {
         icon={<Settings2 size={20} />}
         title="No traffic on this GA4 property"
         body="Connected, but the selected property has no sessions in the last 30 days. Pick a different property."
-        href={GA_PROPERTY_HREF}
+        href={`${brandPath('integrations')}${GA_PICKER_QUERY}`}
         cta="Change property"
       />
     )
@@ -286,7 +288,7 @@ function GscSection({ days }: { days?: number }): JSX.Element {
         icon={<Settings2 size={20} />}
         title="No Search Console data yet"
         body="Connected, but no impressions in the window. Pick a verified property or wait for the first sync."
-        href={GSC_SITE_HREF}
+        href={`${brandPath('integrations')}${GSC_PICKER_QUERY}`}
         cta="Choose property"
       />
     )

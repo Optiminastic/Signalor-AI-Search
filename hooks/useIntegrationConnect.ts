@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import { useActiveProject } from '@/hooks/useActiveProject'
+import { useBrandPath } from '@/hooks/useBrandPath'
 import { ApiError } from '@/lib/api/client'
 import {
   disconnectGA,
@@ -52,6 +53,10 @@ export function useIntegrationConnect(): UseIntegrationConnectResult {
   // first brand — otherwise connecting GA on brand B writes the token to brand A.
   const { activeOrg } = useActiveProject()
   const orgId = activeOrg?.id
+  const brandPath = useBrandPath()
+  // Where the Google OAuth round-trips come back to. Brand-scoped, so the user
+  // returns to the same brand's Integrations page they left from.
+  const integrationsPath = brandPath('integrations')
   const queryClient = useQueryClient()
   const [busySlug, setBusySlug] = useState('')
   const [error, setError] = useState('')
@@ -66,13 +71,11 @@ export function useIntegrationConnect(): UseIntegrationConnectResult {
         // hand-offs run here (their callbacks finish and return to the app).
         if (slug === 'shopify') return
         if (slug === 'search-console') {
-          // GSC's callback is server-side, so send the user straight to the
-          // property picker afterwards (mirrors GA4 selecting on its callback).
-          window.location.href = await getGscAuthUrl(
-            email,
-            '/settings/integrations/google-search-console/property',
-            orgId,
-          )
+          // GSC's callback is server-side, so it needs somewhere to land. Return
+          // to THIS page rather than the old standalone property route: the
+          // backend appends `?gsc=connected`, which opens the picker over the
+          // Integrations grid instead of on a bare page outside the shell.
+          window.location.href = await getGscAuthUrl(email, integrationsPath, orgId)
           return
         }
         window.location.href = await getGAAuthUrl(email, orgId)

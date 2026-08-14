@@ -100,7 +100,9 @@ function Prompt({ href, title, hint, cta }: PromptProps): JSX.Element {
   )
 }
 
-const GA_PROPERTY_HREF = '/settings/integrations/google-analytics/property'
+/** Property selection lives on Integrations now, opened by this query rather
+ *  than on its own bare route outside the dashboard shell. */
+const GA_PICKER_QUERY = '?picker=google-analytics'
 
 function SyncingState(): JSX.Element {
   return (
@@ -124,7 +126,7 @@ function EmptyOrConnect({ isEmpty, syncing }: StateProps): JSX.Element {
   if (syncing) return <SyncingState />
   return isEmpty ? (
     <Prompt
-      href={GA_PROPERTY_HREF}
+      href={`${brandPath('integrations')}${GA_PICKER_QUERY}`}
       title="No location data for this GA4 property"
       hint="Google Analytics is connected, but the selected property has no sessions-by-country to plot. Try a different property."
       cta="Change property"

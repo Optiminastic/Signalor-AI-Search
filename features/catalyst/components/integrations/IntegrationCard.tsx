@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-
 import {
   ConnectButton,
   ConnectedBadge,
@@ -29,8 +27,10 @@ interface IntegrationCardProps {
   /** Omitted for providers with no self-serve flow — no Connect button is shown. */
   onToggle?: (next: boolean) => void
   busy?: boolean
-  /** When connected, where the manage link points (e.g. GA property selection). */
-  manageHref?: string
+  /** Opens this provider's settings (e.g. GA4 property selection) in place.
+   *  Was a `manageHref` that navigated to a bare full-page route outside the
+   *  dashboard shell; the setting now opens over the card it belongs to. */
+  onManage?: () => void
 }
 
 function Action({ item, onToggle, busy }: IntegrationCardProps): JSX.Element | null {
@@ -43,18 +43,19 @@ function Action({ item, onToggle, busy }: IntegrationCardProps): JSX.Element | n
   return <ConnectButton onClick={() => onToggle(true)} style={{ background: item.accent }} />
 }
 
-function Footer({ item, onToggle, busy, manageHref }: IntegrationCardProps): JSX.Element | null {
+function Footer({ item, onToggle, busy, onManage }: IntegrationCardProps): JSX.Element | null {
   if (!item.connected) return null
   return (
     <ConnectorFooterRow>
-      {manageHref ? (
-        <Link
-          href={manageHref}
-          className="inline-flex min-w-0 flex-1 items-center gap-1.5 text-[11.5px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
+      {onManage ? (
+        <button
+          type="button"
+          onClick={onManage}
+          className="inline-flex min-w-0 flex-1 items-center gap-1.5 text-left text-[11.5px] font-medium text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]"
         >
           <Settings2 size={13} strokeWidth={2} />
           Manage
-        </Link>
+        </button>
       ) : (
         <span className="min-w-0 flex-1" />
       )}
