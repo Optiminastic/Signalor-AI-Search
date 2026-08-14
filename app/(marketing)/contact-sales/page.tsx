@@ -351,7 +351,7 @@ export default function ContactSalesPage() {
         headingId="contact-sales-faq-heading"
         heading="Sales FAQs"
         description="The questions teams ask before moving to an enterprise or agency plan."
-        items={[...CONTACT_SALES_FAQ]}
+        items={CONTACT_SALES_FAQ}
       />
     </MarketingShell>
   )

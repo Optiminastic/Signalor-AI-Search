@@ -43,7 +43,12 @@ type LandingFaqProps = {
   headingId?: string
   heading?: string
   description?: string
-  items?: { question: string; answer: string }[]
+  // readonly: every FAQ constant in the site is declared `as const`, so a mutable
+  // array type forced all 13 call sites to pass `items={[...X]}` — a defensive
+  // copy allocated on every render purely to satisfy the type. Forgetting that
+  // spread is a build break, not a runtime bug, which is exactly how it failed.
+  // Nothing here mutates `items`; it is only mapped over.
+  items?: readonly { question: string; answer: string }[]
 }
 
 export function LandingFaq({

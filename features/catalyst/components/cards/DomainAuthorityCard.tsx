@@ -69,6 +69,16 @@ function Empty({ children }: { children: string }): JSX.Element {
   )
 }
 
+/* Why there is no rating, in the user's terms. "unavailable yet" was the only
+   message for every cause, and for the commonest one — no provider key is set on
+   the server — "yet" was simply untrue: nothing about waiting produces a score. */
+const EMPTY_NOTE: Record<string, string> = {
+  not_configured: 'Add an Ahrefs or Open PageRank API key on the server to track domain authority.',
+  invalid_domain:
+    "This brand's website URL isn't a domain we can score. Check it in brand settings.",
+  upstream_error: "The authority provider didn't respond. This retries on its own.",
+}
+
 function AuthorityContent({
   data,
   isLoading,
@@ -77,7 +87,12 @@ function AuthorityContent({
   isLoading: boolean
 }): JSX.Element {
   if (isLoading) return <Empty>Loading…</Empty>
-  if (!data || data.domain_rating === null) return <Empty>Domain authority unavailable yet.</Empty>
+  if (!data || data.domain_rating === null) {
+    const reason = data?.reason ?? ''
+    return (
+      <Empty>{EMPTY_NOTE[reason] ?? 'Domain authority is not available for this brand.'}</Empty>
+    )
+  }
   return <AuthorityBody data={data} />
 }
 

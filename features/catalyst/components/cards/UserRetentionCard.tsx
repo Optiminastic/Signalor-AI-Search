@@ -2,7 +2,7 @@
 
 import { Card } from '@/features/catalyst/components/Card'
 import { CardHead } from '@/features/catalyst/components/CardHead'
-import { Heatmap } from '@/features/catalyst/components/Heatmap'
+import { Heatmap, type HeatmapCell } from '@/features/catalyst/components/Heatmap'
 import { Metric } from '@/features/catalyst/components/Metric'
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { usePrompts } from '@/hooks/usePrompts'
@@ -18,7 +18,11 @@ export function UserRetentionCard(): JSX.Element {
   const avg = prompts.length
     ? Math.round(prompts.reduce((a, p) => a + p.visibility, 0) / prompts.length)
     : 0
-  const intensities = prompts.map(p => p.visibility / 100)
+  // Exactly one cell per tracked prompt, each naming the prompt it stands for.
+  const cells: HeatmapCell[] = prompts.map(p => ({
+    intensity: p.visibility / 100,
+    label: `${p.prompt} — ${p.visibility}% visibility`,
+  }))
 
   return (
     <Card>
@@ -28,15 +32,15 @@ export function UserRetentionCard(): JSX.Element {
         positive
         badge={data ? `${prompts.length} prompts` : '—'}
       />
-      <Heatmap intensities={intensities} />
-      <div className="grid grid-cols-12 gap-1 text-center text-[10px] text-[var(--cat-ink-3)]">
-        {Array.from({ length: 12 }, (_, i) => (
-          <span key={i}>{i + 1}</span>
-        ))}
-      </div>
+      <Heatmap cells={cells} />
+      {/* The 1-12 axis that used to sit here numbered the twelve columns of the
+          old fixed grid. Cells now wrap to the card's width, so column position
+          carries no meaning and a scale under them would invent one. */}
       <div className="mt-3.5 flex items-center gap-2 rounded-md bg-[var(--cat-hover)] px-3 py-2.5 text-xs text-[var(--cat-ink-2)]">
         <Info size={14} className="text-[var(--cat-ink-3)]" />
-        Per-prompt visibility across tracked prompts.
+        {prompts.length > 0
+          ? 'One square per tracked prompt, shaded by how often engines mention you.'
+          : 'Track prompts to see how often engines mention you on each.'}
       </div>
     </Card>
   )

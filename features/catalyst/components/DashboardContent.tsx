@@ -40,35 +40,52 @@ export function DashboardContent(): JSX.Element {
   )
 }
 
-/**
- * The primary card grid.
+/** One masonry item. `break-inside-avoid` keeps a card from splitting across columns. */
+function Tile({ children }: { children: React.ReactNode }): JSX.Element {
+  return <div className="mb-2 break-inside-avoid">{children}</div>
+}
+
+/** The primary card grid as a true CSS masonry — columns auto-balance to equal
+ *  height, so shorter columns don't leave dead space at the bottom.
  *
- * A real CSS grid, NOT the multi-column masonry this used to be. Masonry flows
- * cards down one column before starting the next and auto-balances the column
- * heights, so no two cards ever shared a top or bottom edge — every row read as
- * a different set of gaps even though the gap value was uniform. A grid puts
- * cards on shared rows and stretches each row's cards to a common height, which
- * is what makes the page look deliberate.
- *
- * Ten cards over three columns leaves one alone on the last row, so the final
- * card spans the full width rather than sitting as a lonely third. All ten
- * always render (none return null), so the spans are safe to hard-code.
- */
+ *  This was briefly a real CSS grid with `items-stretch`. That aligned the row
+ *  edges, but it also forced every card in a row up to the tallest card's
+ *  height, which is why a card with nothing to show (Domain Authority with no
+ *  provider key, Prompt Coverage with no prompts) rendered as a large empty
+ *  panel. Masonry lets each card be exactly as tall as its content. */
 function PrimaryCards(): JSX.Element {
   return (
-    <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 xl:grid-cols-3">
-      <GeoScoreCard />
-      <DomainAuthorityCard />
-      <VisibilityTrendCard />
-      <AiCitationCard />
-      <VisitorsChannelsCard />
-      <EngagementOpportunitiesCard />
-      <VisibilityBreakdownCard />
-      <ConversionRateCard />
-      <TopSourcesCard />
-      <div className="sm:col-span-2 xl:col-span-3">
+    <div className="columns-1 gap-2 sm:columns-2 xl:columns-3">
+      <Tile>
+        <GeoScoreCard />
+      </Tile>
+      <Tile>
+        <DomainAuthorityCard />
+      </Tile>
+      <Tile>
+        <VisibilityTrendCard />
+      </Tile>
+      <Tile>
+        <AiCitationCard />
+      </Tile>
+      <Tile>
+        <VisitorsChannelsCard />
+      </Tile>
+      <Tile>
+        <EngagementOpportunitiesCard />
+      </Tile>
+      <Tile>
+        <VisibilityBreakdownCard />
+      </Tile>
+      <Tile>
+        <ConversionRateCard />
+      </Tile>
+      <Tile>
+        <TopSourcesCard />
+      </Tile>
+      <Tile>
         <UserRetentionCard />
-      </div>
+      </Tile>
     </div>
   )
 }

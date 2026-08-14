@@ -3,20 +3,23 @@
 import { useState } from 'react'
 
 import { Chip } from '@/components/base/badges/chip'
-import { ROLES, ROLE_CHIP_COLOR } from '@/features/catalyst/brands-data'
+import { ROLES, ROLE_CHIP_COLOR, type Role } from '@/features/catalyst/brands-data'
 import { useAgencyMembers } from '@/hooks/useAgencyMembers'
 import { useAgencyRole } from '@/hooks/useAgencyRole'
+import type { AgencyMember } from '@/lib/api/agency'
 import { ApiError } from '@/lib/api/client'
 import { Trash2, UserPlus } from '@/lib/icons'
 
 interface DisplayRow {
   id: number | null // null = the owner (no membership row)
   email: string
-  roleLabel: 'Owner' | 'Member'
+  roleLabel: Role
+  /** Invited but not yet active. Such a row grants no access at all yet. */
+  pending: boolean
   locked: boolean
 }
 
-function RoleBadge({ roleLabel }: { roleLabel: 'Owner' | 'Member' }): JSX.Element {
+function RoleBadge({ roleLabel }: { roleLabel: Role }): JSX.Element {
   return (
     <Chip variant="subtle" color={ROLE_CHIP_COLOR[roleLabel]}>
       {roleLabel}
@@ -38,6 +41,12 @@ function MemberRow({
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] font-medium text-[var(--cat-ink)]">{row.email}</p>
+        {/* An invited row reaches nothing until it goes active, and it looked
+            identical to a working one - the roster read as "they have access"
+            when the backend grants none. */}
+        {row.pending && (
+          <p className="text-[11px] text-[var(--cat-ink-3)]">Invited, not active yet</p>
+        )}
       </div>
       <RoleBadge roleLabel={row.roleLabel} />
       <button
@@ -104,16 +113,16 @@ function RolesLegend(): JSX.Element {
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
-function rosterRows(
-  agencyEmail: string,
-  members: { id: number; member_email: string }[],
-): DisplayRow[] {
+function rosterRows(agencyEmail: string, members: AgencyMember[]): DisplayRow[] {
   return [
-    { id: null, email: agencyEmail, roleLabel: 'Owner', locked: true },
+    { id: null, email: agencyEmail, roleLabel: 'Owner', pending: false, locked: true },
+    // The API returns each member's real role, and this hardcoded 'Member',
+    // so an Admin teammate was labelled — and colour-coded — as a plain Member.
     ...members.map(m => ({
       id: m.id,
       email: m.member_email,
-      roleLabel: 'Member' as const,
+      roleLabel: m.role === 'admin' ? ('Admin' as const) : ('Member' as const),
+      pending: m.status === 'invited',
       locked: false,
     })),
   ]

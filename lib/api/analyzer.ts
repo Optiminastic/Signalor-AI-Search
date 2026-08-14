@@ -199,6 +199,9 @@ export const domainAuthoritySchema = z.object({
   /** "ahrefs" | "openpagerank" | null (unavailable). */
   source: z.string().nullable(),
   fetched_at: z.string().nullable(),
+  /** Why the payload is empty: "not_configured" | "invalid_domain" |
+   *  "upstream_error". Absent on a successful read, and on older backends. */
+  reason: z.string().nullish(),
 })
 export type DomainAuthority = z.infer<typeof domainAuthoritySchema>
 

@@ -10,7 +10,9 @@ import { cn } from '@/features/site/lib/utils'
 type FaqItem = { question: string; answer: string }
 
 interface HomeFaqProps {
-  items: FaqItem[]
+  /** readonly so an `as const` FAQ constant passes without a defensive copy.
+   *  See the same note on LandingFaq — only mapped over, never mutated. */
+  items: readonly FaqItem[]
 }
 
 interface FaqRowProps {
