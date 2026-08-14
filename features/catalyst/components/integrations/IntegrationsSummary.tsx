@@ -22,7 +22,10 @@ function Stat({ label, value }: { label: string; value: number }): JSX.Element {
 export function IntegrationsSummary({ connected, total }: IntegrationsSummaryProps): JSX.Element {
   const pct = total > 0 ? Math.round((connected / total) * 100) : 0
   return (
-    <section className="cat-rise mb-4 rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-3.5 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
+    // Border-only, matching every other card: DESIGN.md §B4 keeps elevation on
+    // the two outer panels, so a per-card shadow here made this one panel float
+    // above a grid of flat ones.
+    <section className="cat-card-edge cat-rise mb-4 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">

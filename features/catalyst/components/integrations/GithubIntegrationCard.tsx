@@ -34,13 +34,7 @@ function Action({ gh }: { gh: OrgGithubConnection }): JSX.Element | null {
   if (gh.loading || gh.connecting) return <ConnectorSpinner />
   if (gh.connected) return gh.needsRepoChoice ? null : <ConnectedBadge />
   if (gh.notConfigured) return null
-  return (
-    <ConnectButton
-      onClick={gh.connect}
-      mark={<GithubMark size={13} />}
-      className="bg-[#1f2328] hover:bg-[#32383f]"
-    />
-  )
+  return <ConnectButton onClick={gh.connect} mark={<GithubMark size={13} />} />
 }
 
 /** When the App granted several repos, let the user pick which one fixes target;

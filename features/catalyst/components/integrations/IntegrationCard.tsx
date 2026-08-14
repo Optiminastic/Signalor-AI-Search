@@ -40,7 +40,7 @@ function Action({ item, onToggle, busy }: IntegrationCardProps): JSX.Element | n
   // description already explains the setup, so show no button rather than a dead
   // control — the old inert switch just looked broken.
   if (!onToggle) return null
-  return <ConnectButton onClick={() => onToggle(true)} style={{ background: item.accent }} />
+  return <ConnectButton onClick={() => onToggle(true)} />
 }
 
 function Footer({ item, onToggle, busy, onManage }: IntegrationCardProps): JSX.Element | null {

@@ -14,8 +14,13 @@ import { Check, ChevronDown, Loader2, Unlink2 } from '@/lib/icons'
  * body), which read as two different card designs on one screen.
  */
 
+/* The shared dashboard card recipe (see components/Card.tsx): rounded-2xl,
+   --cat-card-border, p-3, and the cat-card-edge top line in dark mode. This
+   shell used to hand-roll its own — rounded-md, p-3.5, --cat-border — so the
+   integrations grid sat at a visibly different radius and padding from every
+   other card in the product. */
 const CARD_BASE =
-  'group relative flex flex-col rounded-md border p-3.5 transition-all duration-200 hover:-translate-y-px hover:shadow-[0_4px_14px_rgba(16,24,40,.07)]'
+  'cat-card-edge group relative flex h-full flex-col rounded-2xl border bg-[var(--cat-card)] p-3 transition-colors duration-200'
 
 /**
  * `attention` is for connected-but-inert: a workspace with no channel, a GitHub
@@ -23,10 +28,18 @@ const CARD_BASE =
  */
 export type ConnectorTone = 'idle' | 'connected' | 'attention'
 
+/**
+ * Border only, no background wash.
+ *
+ * Connected cards used to carry a green tint AND a green border, which made the
+ * finished integrations the loudest thing on the page while the ones actually
+ * needing a click stayed grey. That is the attention hierarchy backwards: a
+ * connected row is done, and the "Connected" badge already says so.
+ */
 const TONE_BORDER: Record<ConnectorTone, string> = {
-  idle: 'border-[var(--cat-border)] bg-[var(--cat-card)]',
-  connected: 'border-[rgba(47,190,126,0.4)] bg-[rgba(47,190,126,0.035)]',
-  attention: 'border-[rgba(224,74,61,0.4)] bg-[rgba(224,74,61,0.03)]',
+  idle: 'border-[var(--cat-card-border)] hover:border-[var(--cat-ink-3)]',
+  connected: 'border-[rgba(47,190,126,0.35)]',
+  attention: 'border-[rgba(224,74,61,0.45)]',
 }
 
 export interface ConnectorCardProps {
@@ -60,19 +73,31 @@ export function ConnectorCard({
 }: ConnectorCardProps): JSX.Element {
   return (
     <div className={`${CARD_BASE} ${TONE_BORDER[tone]}`}>
-      <div className="flex items-start justify-between gap-2">
+      {/* Name sits beside the logo rather than under it. Stacked, every card
+          spent a whole row on a 36px tile and pushed the footer control below
+          the fold of its neighbours; inline, the identity reads in one line and
+          the card is about 40px shorter. */}
+      <div className="flex items-start gap-2.5">
         <span
           style={markStyle}
           className={`grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-md text-white ${markClassName}`}
         >
           {mark}
         </span>
-        {action}
+        <p className="mt-1.5 min-w-0 flex-1 truncate text-[13.5px] font-semibold text-[var(--cat-ink)]">
+          {name}
+        </p>
+        <span className="mt-0.5 shrink-0">{action}</span>
       </div>
-      <p className="mt-3 text-[13.5px] font-semibold text-[var(--cat-ink)]">{name}</p>
-      <p className="mt-1 text-[12px] leading-snug text-[var(--cat-ink-2)]">{description}</p>
+      {/* Clamped: catalog copy runs to three lines for some providers and one
+          for others, which left a ragged bottom edge across the row. */}
+      <p className="mt-2.5 line-clamp-2 text-[12px] leading-snug text-[var(--cat-ink-2)]">
+        {description}
+      </p>
       {error && <p className="mt-2 text-[11.5px] font-medium text-[#E5484D]">{error}</p>}
-      {footer}
+      {/* mt-auto pins the control to the bottom, so the picker rows line up
+          across a row of cards instead of floating at three different heights. */}
+      {footer && <div className="mt-auto">{footer}</div>}
     </div>
   )
 }
@@ -90,27 +115,30 @@ export function ConnectedBadge(): JSX.Element {
   )
 }
 
+/**
+ * The one filled control on a connector card, always in the brand red.
+ *
+ * It used to take the provider's own accent (`style={{background: item.accent}}`),
+ * so a single screen showed a Shopify-green button beside a WordPress-blue one
+ * beside a Slack-aubergine one. DESIGN.md §B2 reserves hue for the brand in
+ * buttons and active states precisely to stop that: with six vendor colours
+ * competing, none of them reads as "the thing to click". The vendor's colour
+ * still tints its logo tile, which is where a brand mark belongs.
+ */
 export function ConnectButton({
   onClick,
   mark,
-  className = '',
-  style,
   label = 'Connect',
 }: {
   onClick: () => void
   mark?: ReactNode
-  /** Brand background + hover, e.g. `bg-[#4A154B] hover:bg-[#611f69]`. */
-  className?: string
-  /** Brand background when the colour is data rather than a class. */
-  style?: CSSProperties
   label?: string
 }): JSX.Element {
   return (
     <button
       type="button"
       onClick={onClick}
-      style={style}
-      className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white transition-opacity hover:opacity-90 ${className}`}
+      className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-[#e04a3d] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#c53f34]"
     >
       {mark}
       {label}

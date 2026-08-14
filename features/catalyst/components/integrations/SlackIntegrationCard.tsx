@@ -53,13 +53,7 @@ function tone(s: SlackConnection): ConnectorTone {
 function Action({ s }: { s: SlackConnection }): JSX.Element | null {
   if (s.loading || s.connecting) return <ConnectorSpinner />
   if (s.connected) return s.needsChannel ? null : <ConnectedBadge />
-  return (
-    <ConnectButton
-      onClick={s.connect}
-      mark={<SlackMark size={13} />}
-      className="bg-[#4A154B] hover:bg-[#611f69]"
-    />
-  )
+  return <ConnectButton onClick={s.connect} mark={<SlackMark size={13} />} />
 }
 
 function Footer({ s }: { s: SlackConnection }): JSX.Element | null {

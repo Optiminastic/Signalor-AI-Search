@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, type ReactNode } from 'react'
 
 import { GithubIntegrationCard } from '@/features/catalyst/components/integrations/GithubIntegrationCard'
 import { IntegrationCard } from '@/features/catalyst/components/integrations/IntegrationCard'
@@ -28,6 +28,36 @@ function pickerFor(slug: string): PickerProvider | undefined {
   return PICKER_PROVIDERS.has(slug) ? (slug as PickerProvider) : undefined
 }
 
+/**
+ * A labelled band of connector cards.
+ *
+ * The count sits beside the label so a section reads as a set rather than an
+ * arbitrary stopping point, and `items-stretch` makes every card in a row share
+ * the tallest one's height — without it the picker rows sat at three different
+ * heights across a row.
+ */
+function Section({
+  title,
+  count,
+  children,
+}: {
+  title: string
+  count: number
+  children: ReactNode
+}): JSX.Element {
+  return (
+    <section>
+      <h2 className="mb-2.5 flex items-baseline gap-2 text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
+        {title}
+        <span className="text-[10.5px] font-medium tracking-normal text-[var(--cat-ink-3)]/70 normal-case">
+          {count}
+        </span>
+      </h2>
+      <div className="grid items-stretch gap-2.5 sm:grid-cols-2 lg:grid-cols-3">{children}</div>
+    </section>
+  )
+}
+
 interface GroupSectionProps {
   group: IntegrationGroup
   items: IntegrationWithStatus[]
@@ -36,39 +66,37 @@ interface GroupSectionProps {
   onManage: (slug: PickerProvider) => void
 }
 
-function GroupSection({
+function groupCards({
   group,
   items,
   busySlug,
   onToggle,
   onManage,
-}: GroupSectionProps): JSX.Element {
+}: GroupSectionProps): JSX.Element[] {
+  return items
+    .filter(i => i.group === group)
+    .map(item => {
+      const picker = pickerFor(item.slug)
+      return (
+        <IntegrationCard
+          key={item.slug}
+          item={item}
+          onToggle={
+            isConnectable(item.slug) ? (next: boolean) => onToggle(item.slug, next) : undefined
+          }
+          busy={busySlug === item.slug}
+          onManage={picker ? () => onManage(picker) : undefined}
+        />
+      )
+    })
+}
+
+function GroupSection(props: GroupSectionProps): JSX.Element {
+  const cards = groupCards(props)
   return (
-    <section>
-      <h2 className="mb-3 text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
-        {group}
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items
-          .filter(i => i.group === group)
-          .map(item => {
-            const picker = pickerFor(item.slug)
-            return (
-              <IntegrationCard
-                key={item.slug}
-                item={item}
-                onToggle={
-                  isConnectable(item.slug)
-                    ? (next: boolean) => onToggle(item.slug, next)
-                    : undefined
-                }
-                busy={busySlug === item.slug}
-                onManage={picker ? () => onManage(picker) : undefined}
-              />
-            )
-          })}
-      </div>
-    </section>
+    <Section title={props.group} count={cards.length}>
+      {cards}
+    </Section>
   )
 }
 
@@ -94,32 +122,30 @@ function IntegrationsHeader({
   )
 }
 
-/** GitHub is one org-level connection (not a per-framework toggle), so it lives in
- *  its own "Code" section above the catalog-driven groups. */
-function GithubSection({ gh }: { gh: OrgGithubConnection }): JSX.Element {
+/**
+ * GitHub, Slack and the alerting catalog entries, in one band.
+ *
+ * These were three separate sections — "Code" holding only GitHub, "Notifications"
+ * holding only Slack, and the catalog's "Automation & alerts" holding one entry.
+ * Each claimed a full three-column row for a single card, so the page opened with
+ * three bands that were two-thirds empty before any dense content appeared. They
+ * are one job anyway: what happens around a finished run.
+ */
+function WorkflowSection({
+  gh,
+  slack,
+  extras,
+}: {
+  gh: OrgGithubConnection
+  slack: SlackConnection
+  extras: JSX.Element[]
+}): JSX.Element {
   return (
-    <section>
-      <h2 className="mb-3 text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
-        Code
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <GithubIntegrationCard gh={gh} />
-      </div>
-    </section>
-  )
-}
-
-/** Where finished analyses get delivered. Slack today; more channels later. */
-function NotificationsSection({ slack }: { slack: SlackConnection }): JSX.Element {
-  return (
-    <section>
-      <h2 className="mb-3 text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
-        Notifications
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <SlackIntegrationCard s={slack} />
-      </div>
-    </section>
+    <Section title="Code & alerts" count={2 + extras.length}>
+      <GithubIntegrationCard gh={gh} />
+      <SlackIntegrationCard s={slack} />
+      {extras}
+    </Section>
   )
 }
 
@@ -149,28 +175,21 @@ interface ConnectorSectionsProps {
   onManage: (slug: PickerProvider) => void
 }
 
-/** Every section, in order: the first-class connectors, then the catalog. */
-function ConnectorSections({
-  github,
-  slack,
-  items,
-  busySlug,
-  onToggle,
-  onManage,
-}: ConnectorSectionsProps): JSX.Element {
+/** The catalog group folded into the workflow band rather than shown alone. */
+const WORKFLOW_GROUP: IntegrationGroup = 'Automation & alerts'
+
+/** Every section, in order: the workflow band, then the remaining catalog groups. */
+function ConnectorSections(props: ConnectorSectionsProps): JSX.Element {
+  const { github, slack, items } = props
   return (
     <div className="space-y-5">
-      <GithubSection gh={github} />
-      <NotificationsSection slack={slack} />
-      {INTEGRATION_GROUPS.map(group => (
-        <GroupSection
-          key={group}
-          group={group}
-          items={items}
-          busySlug={busySlug}
-          onToggle={onToggle}
-          onManage={onManage}
-        />
+      <WorkflowSection
+        gh={github}
+        slack={slack}
+        extras={groupCards({ ...props, group: WORKFLOW_GROUP })}
+      />
+      {INTEGRATION_GROUPS.filter(group => group !== WORKFLOW_GROUP).map(group => (
+        <GroupSection key={group} {...props} group={group} items={items} />
       ))}
     </div>
   )
