@@ -197,6 +197,27 @@ export default function ContactSalesPage() {
           <ContactIntro />
 
           <div className="border border-black/8 bg-white p-6 shadow-xs sm:p-8">
+            <div className="mb-8 space-y-4">
+              <h2 className="text-foreground text-lg font-semibold">When you need enterprise</h2>
+              <ul className="text-muted-foreground space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <Check className="text-primary mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
+                  You need to track a high volume of prompts per month
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="text-primary mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
+                  You manage multiple client brands or domains
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="text-primary mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
+                  You require dedicated support or API access
+                </li>
+              </ul>
+              <p className="text-muted-foreground text-sm">
+                Enterprise pricing is based on prompt volume and domain count. Fill out the form for
+                a custom quote.
+              </p>
+            </div>
             {done ? (
               <SuccessCard />
             ) : (
@@ -318,10 +339,10 @@ export default function ContactSalesPage() {
                           onClick={() => toggleEngine(eng.value)}
                           aria-pressed={active}
                           className={cn(
-                            'rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors',
+                            'rounded-none border px-3 py-2 text-sm transition-colors',
                             active
                               ? 'border-primary bg-primary/10 text-primary'
-                              : 'border-border text-muted-foreground hover:text-foreground',
+                              : 'border-border text-muted-foreground hover:border-primary/50'
                           )}
                         >
                           {eng.label}
@@ -331,14 +352,10 @@ export default function ContactSalesPage() {
                   </div>
                 </div>
 
-                {error ? (
-                  <p className="border-destructive/25 bg-destructive/5 text-destructive rounded-none border px-4 py-3 text-sm">
-                    {error}
-                  </p>
-                ) : null}
+                {error && <p className="text-destructive text-sm">{error}</p>}
 
-                <Button type="submit" disabled={submitting} className="w-full rounded-none py-6">
-                  {submitting ? <SignalorLoader size="sm" /> : 'Send to sales'}
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting ? <SignalorLoader /> : 'Send'}
                 </Button>
               </form>
             )}
@@ -346,13 +363,7 @@ export default function ContactSalesPage() {
         </div>
       </section>
 
-      <LandingFaq
-        sectionId="contact-sales-faq"
-        headingId="contact-sales-faq-heading"
-        heading="Sales FAQs"
-        description="The questions teams ask before moving to an enterprise or agency plan."
-        items={[...CONTACT_SALES_FAQ]}
-      />
+      <LandingFaq items={CONTACT_SALES_FAQ} />
     </MarketingShell>
   )
 }
