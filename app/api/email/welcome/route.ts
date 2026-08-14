@@ -1,10 +1,9 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+import { sendWelcomeEmail } from '@/lib/email'
 import { logger } from '@/lib/logger'
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY ?? ''
-const FROM_EMAIL = process.env.FROM_EMAIL ?? 'no-reply@signalor.ai'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://signalor.ai'
 
 function buildHtml(firstName: string, dashboardUrl: string): string {
@@ -180,10 +179,6 @@ function buildHtml(firstName: string, dashboardUrl: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  if (!SENDGRID_API_KEY) {
-    return NextResponse.json({ error: 'Email service not configured' }, { status: 503 })
-  }
-
   let email: string, name: string | undefined, dashboardUrl: string
   try {
     ;({ email, name, dashboardUrl } = await req.json())
@@ -196,25 +191,10 @@ export async function POST(req: NextRequest) {
   }
 
   const firstName = name ? name.split(' ')[0] : ''
-  const html = buildHtml(firstName, dashboardUrl)
+  const sent = await sendWelcomeEmail(email, buildHtml(firstName, dashboardUrl))
 
-  const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${SENDGRID_API_KEY}`,
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email }] }],
-      from: { email: FROM_EMAIL, name: 'SignalorAI' },
-      subject: 'Welcome to SignalorAI, your AI visibility report is ready',
-      content: [{ type: 'text/html', value: html }],
-    }),
-  })
-
-  if (!sgRes.ok) {
-    const errText = await sgRes.text()
-    logger.error({ errText }, '[welcome-email] SendGrid error')
+  if (!sent) {
+    logger.error({ email }, '[welcome-email] Resend send failed')
     return NextResponse.json({ error: 'Failed to send email' }, { status: 502 })
   }
 

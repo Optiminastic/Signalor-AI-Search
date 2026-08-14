@@ -10,6 +10,19 @@ import {
 } from '@/lib/api/agency'
 import { useSession } from '@/lib/auth-client'
 
+/** Fire the invite email. Never throws — see the call site for why. */
+async function notifyInvitee(to: string, role: string): Promise<void> {
+  try {
+    await fetch('/api/email/team-invite', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ to, role }),
+    })
+  } catch {
+    // The invite itself succeeded; the roster will show the member either way.
+  }
+}
+
 export interface UseAgencyMembersResult {
   members: AgencyMember[]
   isLoading: boolean
@@ -32,7 +45,16 @@ export function useAgencyMembers(enabled: boolean): UseAgencyMembersResult {
   })
 
   const inviteMutation = useMutation({
-    mutationFn: (memberEmail: string) => inviteAgencyMember(email as string, memberEmail),
+    mutationFn: async (memberEmail: string): Promise<AgencyMember> => {
+      const member = await inviteAgencyMember(email as string, memberEmail)
+      // Announce it. The backend records the membership and sends nothing, so
+      // without this the invitee has access and no way of knowing. Deliberately
+      // after the invite resolves and deliberately swallowed: the membership is
+      // already committed, so a mail fault must not surface as a failed invite
+      // the admin then retries into a 409 "already on your team".
+      await notifyInvitee(memberEmail, member.role)
+      return member
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: key }),
   })
 
