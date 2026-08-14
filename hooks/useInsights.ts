@@ -2,15 +2,33 @@
 
 import { useQuery } from '@tanstack/react-query'
 
-import { BLUE, BRAND, GREEN, YELLOW } from '@/features/catalyst/constants'
+import { BLUE, BRAND, GREEN, PURPLE, YELLOW } from '@/features/catalyst/constants'
 import { engineLabel } from '@/features/catalyst/engine-logos'
 import type { StatCard } from '@/features/catalyst/tasks-data'
 import { getCitations, getTopSources, type Citations, type TopSources } from '@/lib/api/analyzer'
 import { getCitationTrend, type CitationTrendPoint } from '@/lib/api/insights'
 import { Bot, Globe2, Link2, Quote, TrendingUp } from '@/lib/icons'
 
-const SERIES_COLORS = [BRAND, BLUE, '#8B5CF6', YELLOW, GREEN, '#0EA5A4']
-const MAX_SERIES = 5
+/**
+ * One colour per engine the backend can report (PromptResult.Engine has nine).
+ *
+ * This was six colours capped at five series, so a brand measured across seven
+ * engines had two dropped from the plot with no note - directly contradicting
+ * the "Engines Tracked" stat card sitting beside the same chart. Which two
+ * vanished was arbitrary too: the sort is by peak value, so engines tied on 0%
+ * fell back to whatever order the API happened to return.
+ */
+const SERIES_COLORS = [
+  BRAND,
+  BLUE,
+  PURPLE,
+  YELLOW,
+  GREEN,
+  '#0EA5A4',
+  '#EC4899',
+  '#F97316',
+  '#64748B',
+]
 
 export interface TrendSeries {
   key: string
@@ -47,7 +65,11 @@ function buildSeries(points: CitationTrendPoint[]): { weeks: string[]; series: T
     ),
   }))
   series.sort((a, b) => Math.max(0, ...b.points) - Math.max(0, ...a.points))
-  const top = series.slice(0, MAX_SERIES).map((s, i) => ({ ...s, color: SERIES_COLORS[i] }))
+  // Bounded by the palette, not by an arbitrary cap, so every engine the run
+  // actually measured is plotted and keeps a distinct colour.
+  const top = series
+    .slice(0, SERIES_COLORS.length)
+    .map((s, i) => ({ ...s, color: SERIES_COLORS[i] }))
   return { weeks: weeks.map(shortWeek), series: top }
 }
 

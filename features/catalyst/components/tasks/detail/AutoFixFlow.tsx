@@ -147,13 +147,17 @@ function JobScore({ job }: { job: GithubJob }): JSX.Element | null {
   )
 }
 
+/** Finding codes are one unbreakable 60-character token, and this rail is 300px
+ *  wide — without a width cap the chip ran straight off the card edge. Truncated
+ *  with the full code on hover. */
 function FindingChips({ codes }: { codes: string[] }): JSX.Element {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex min-w-0 flex-wrap gap-1.5">
       {codes.map(c => (
         <span
           key={c}
-          className="rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]"
+          title={c}
+          className="max-w-full truncate rounded-sm bg-[var(--cat-hover)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--cat-ink-2)]"
         >
           {c}
         </span>

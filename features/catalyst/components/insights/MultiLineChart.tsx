@@ -57,17 +57,21 @@ function GridLines({ height }: { height: number }): JSX.Element {
   )
 }
 
+/** At most ~6 labels, thinned by a fixed step so the axis never crowds. */
 function XLabels({ labels, height }: { labels: string[]; height: number }): JSX.Element {
-  const shown =
-    labels.length <= 6 ? labels : labels.filter((_, i) => i % Math.ceil(labels.length / 6) === 0)
+  const step = labels.length <= 6 ? 1 : Math.ceil(labels.length / 6)
   return (
     <>
-      {shown.map(label => {
-        if (!label) return null
-        const i = labels.indexOf(label)
+      {/* Positioned from the label's own index. This used to thin the list first
+          and then recover the index with `labels.indexOf(label)`, which returns
+          the FIRST match — so once a label repeated (a year of weeks puts "Aug
+          10" on the axis twice) the later one was drawn on top of the earlier
+          one's tick. */}
+      {labels.map((label, i) => {
+        if (!label || i % step !== 0) return null
         return (
           <text
-            key={`${label}-${i}`}
+            key={i}
             x={xOf(i, labels.length)}
             y={height - 6}
             fontSize={9}

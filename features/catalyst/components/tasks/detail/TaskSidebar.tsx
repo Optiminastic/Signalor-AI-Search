@@ -125,6 +125,7 @@ function Links({ task }: { task: TaskDetail }): JSX.Element {
             href={url}
             target="_blank"
             rel="noreferrer"
+            title={url}
             className="inline-flex max-w-full min-w-0 items-center gap-1.5 text-[12.5px] text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)]"
           >
             <ExternalLink size={12} className="shrink-0 text-[var(--cat-ink-3)]" />

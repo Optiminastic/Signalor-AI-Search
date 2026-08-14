@@ -100,9 +100,16 @@ function Breadcrumb({ task }: { task: TaskDetail }): JSX.Element {
         Actions
       </TransitionLink>
       <span className="text-[var(--cat-ink-3)]">/</span>
-      <span className="flex items-center gap-1.5">
+      {/* Truncated, with the full code on hover. These run to 60+ characters
+          ("site:contact_sales_page_asks_11_questions_before_showing_any_pric"),
+          and a breadcrumb that wraps to two lines of raw snake_case stops being
+          a breadcrumb. The exact code is still in Highlights, selectable. */}
+      <span className="flex min-w-0 items-center gap-1.5">
         <TaskGlyph title={task.title} description={task.description} size={14} />
-        <span className="font-medium text-[var(--cat-ink)]">
+        <span
+          title={task.findingCode || undefined}
+          className="max-w-[28ch] truncate font-medium text-[var(--cat-ink)] sm:max-w-[44ch]"
+        >
           {task.findingCode || `ACTION-${task.id}`}
         </span>
       </span>
@@ -114,17 +121,32 @@ function Breadcrumb({ task }: { task: TaskDetail }): JSX.Element {
 function HeaderStats({ task }: { task: TaskDetail }): JSX.Element | null {
   const effort = formatEffort(task.effort)
   const stats = [
-    { label: 'Priority', value: capitalize(task.priority) },
+    {
+      label: 'Priority',
+      value: capitalize(task.priority),
+      hint: 'How much this finding is holding your AI visibility back',
+    },
     // formatEffort falls back to a dash placeholder. A dash set at 22px reads as
     // broken data, not as "unknown", so an unmeasured effort is simply not shown.
-    { label: 'Effort', value: effort === '—' ? '' : capitalize(effort) },
+    {
+      label: 'Effort',
+      value: effort === '—' ? '' : capitalize(effort),
+      hint: 'Estimated hands-on time to complete it yourself',
+    },
   ].filter(stat => stat.value)
   if (stats.length === 0) return null
   return (
     <div className="flex shrink-0 items-start gap-7">
       {stats.map(stat => (
         <div key={stat.label} className="text-right">
-          <div className="text-[12.5px] text-[var(--cat-ink-2)] underline decoration-[var(--cat-border)] decoration-dotted underline-offset-4">
+          {/* The dotted underline is the universal "there is a definition here"
+              affordance, and there was nothing behind it. Either it explains
+              itself or the underline should go; "15m" in particular says nothing
+              about what it measures. */}
+          <div
+            title={stat.hint}
+            className="cursor-help text-[12.5px] text-[var(--cat-ink-2)] underline decoration-[var(--cat-border)] decoration-dotted underline-offset-4"
+          >
             {stat.label}
           </div>
           <div className="mt-1.5 text-[22px] leading-none font-semibold text-[var(--cat-ink)]">
@@ -173,6 +195,30 @@ function CompleteButton({ task }: { task: TaskDetail }): JSX.Element | null {
   )
 }
 
+/** Where the action stands and which page it points at. */
+function StatusLine({ task, page }: { task: TaskDetail; page?: string }): JSX.Element {
+  return (
+    <p className="mt-2 flex flex-wrap items-center gap-2 text-[12.5px] text-[var(--cat-ink-3)]">
+      <span className="flex items-center gap-1.5 font-medium text-[var(--cat-ink-2)]">
+        <span
+          aria-hidden
+          className="h-[7px] w-[7px] rounded-full"
+          style={{ background: STATUS_DOT[task.status] ?? 'var(--cat-ink-3)' }}
+        />
+        {formatStatus(task.status)}
+      </span>
+      {page && (
+        <>
+          <span aria-hidden>·</span>
+          <span title={page} className="truncate font-mono">
+            {page.replace(/^https?:\/\//, '')}
+          </span>
+        </>
+      )}
+    </p>
+  )
+}
+
 /** Title, the one-line reason behind a severity bar, then status and location. */
 function Headline({ task }: { task: TaskDetail }): JSX.Element {
   const page = task.affectedPages[0]
@@ -194,22 +240,7 @@ function Headline({ task }: { task: TaskDetail }): JSX.Element {
           {task.why}
         </p>
       )}
-      <p className="mt-2 flex flex-wrap items-center gap-2 text-[12.5px] text-[var(--cat-ink-3)]">
-        <span className="flex items-center gap-1.5 font-medium text-[var(--cat-ink-2)]">
-          <span
-            aria-hidden
-            className="h-[7px] w-[7px] rounded-full"
-            style={{ background: STATUS_DOT[task.status] ?? 'var(--cat-ink-3)' }}
-          />
-          {formatStatus(task.status)}
-        </span>
-        {page && (
-          <>
-            <span aria-hidden>·</span>
-            <span className="truncate font-mono">{page.replace(/^https?:\/\//, '')}</span>
-          </>
-        )}
-      </p>
+      <StatusLine task={task} page={page} />
     </div>
   )
 }

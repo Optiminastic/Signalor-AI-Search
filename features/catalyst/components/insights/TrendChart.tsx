@@ -4,7 +4,6 @@ import { EngineLogo } from '@/features/catalyst/components/EngineLogo'
 import { MultiLineChart } from '@/features/catalyst/components/insights/MultiLineChart'
 import {
   latestOf,
-  padForLine,
   TREND_NOTES,
   type TrendState,
 } from '@/features/catalyst/components/insights/trend-series'
@@ -43,6 +42,5 @@ export function TrendChart({ state, series, weeks, height }: TrendChartProps): J
       <p className="py-10 text-center text-[12px] text-[var(--cat-ink-3)]">{TREND_NOTES[state]}</p>
     )
   }
-  const padded = padForLine({ series, weeks })
-  return <MultiLineChart series={padded.series} xLabels={padded.weeks} height={height} />
+  return <MultiLineChart series={series} xLabels={weeks} height={height} />
 }

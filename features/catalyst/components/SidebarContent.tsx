@@ -67,10 +67,15 @@ function SidebarNav({ collapsed }: { collapsed: boolean }): JSX.Element {
   const taskCount = useTaskCount()
   // Real open-task count on the Actions item (hidden when 0), not a hardcoded badge.
   const actionsNav = { ...ACTIONS_NAV, badge: taskCount || undefined }
-  // The whole sidebar scrolls (see Sidebar.tsx), so the nav is a plain column;
-  // px-1 keeps the selected item's ring/rounded corners clear of the scroll clip.
+  // The whole sidebar scrolls (see Sidebar.tsx), so the nav is a plain column.
+  //
+  // Expanded, px-1 keeps the selected row's ring clear of that scroll clip. It
+  // must not survive the collapse: the rail's content box is exactly 36px and a
+  // collapsed row is a fixed w-9, so 4px of left padding pushed every icon 4px
+  // right of the centre line the logo, brand tile and avatar all sit on — the
+  // nav was the one thing in the rail that wasn't centred.
   return (
-    <div className="mt-4 flex flex-col gap-0.5 px-1">
+    <div className={`mt-4 flex flex-col gap-0.5 ${collapsed ? 'items-center' : 'px-1'}`}>
       <NavItem {...MAIN_NAV[0]} collapsed={collapsed} />
       <NavItem {...actionsNav} collapsed={collapsed} />
       <NavItem {...SIGNALS_NAV} collapsed={collapsed} />

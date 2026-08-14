@@ -23,7 +23,13 @@ interface Fact {
 function FactRow({ fact }: { fact: Fact }): JSX.Element {
   const valueClass = `min-w-0 truncate ${fact.mono ? 'font-mono text-[12px]' : 'text-[12.5px]'} font-medium text-[var(--cat-ink)]`
   return (
-    <div className="grid grid-cols-[112px_minmax(0,1fr)] items-baseline gap-3 px-3 py-[7px] odd:bg-[var(--cat-hover)]">
+    // title on the row: every value truncates to hold the column, and a cut-off
+    // quote ("For larger brands and agencies with hig…") is evidence the reader
+    // cannot finish. Hover now reveals it rather than leaving a dead end.
+    <div
+      title={fact.value}
+      className="grid grid-cols-[112px_minmax(0,1fr)] items-baseline gap-3 px-3 py-[7px] odd:bg-[var(--cat-hover)]"
+    >
       <span className="text-[12px] text-[var(--cat-ink-3)]">{fact.key}</span>
       {fact.href ? (
         <a
@@ -41,13 +47,34 @@ function FactRow({ fact }: { fact: Fact }): JSX.Element {
   )
 }
 
-/** Measured values worth quoting verbatim, e.g. GSC impressions or brand mentions. */
-function evidenceFacts(task: TaskDetail): Fact[] {
+/** Same address, ignoring scheme, `www.` and a trailing slash. */
+function sameLink(a: string, b: string): boolean {
+  const strip = (v: string): string =>
+    v
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/+$/, '')
+  return Boolean(a) && strip(a) === strip(b)
+}
+
+/**
+ * Measured values worth quoting verbatim, e.g. GSC impressions or brand mentions.
+ *
+ * `skip` carries values already shown as their own fact. The evidence blob
+ * repeats the affected page under `url`, so the table printed the same address
+ * twice — "Page signalor.ai/contact-sales" directly beside "URL
+ * https://signalor.ai/contact-sales" — spending one of seven rows saying nothing
+ * new.
+ */
+function evidenceFacts(task: TaskDetail, skip: string[]): Fact[] {
   const out: Fact[] = []
   for (const [key, raw] of Object.entries(task.evidence)) {
     if (raw === null || raw === undefined || typeof raw === 'object') continue
     const value = String(raw).trim()
     if (!value) continue
+    if (skip.some(shown => sameLink(value, shown))) continue
     // Keys arrive as backend field names ("brand_mentions"). Numbers keep the
     // monospace face so digits line up; prose does not.
     out.push({ key: humanizeTerm(key), value, mono: typeof raw !== 'string' })
@@ -76,7 +103,7 @@ function factsFor(task: TaskDetail): Fact[] {
     ...(page
       ? [{ key: 'Page', value: page.replace(/^https?:\/\//, ''), href: page, mono: true }]
       : []),
-    ...evidenceFacts(task),
+    ...evidenceFacts(task, page ? [page] : []),
     // Absent facts are dropped rather than rendered as a dash. A column of
     // placeholders reads as broken data, not as "we didn't measure this".
   ].filter(fact => fact.value)
