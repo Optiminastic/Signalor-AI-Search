@@ -55,11 +55,16 @@ const HOMEPAGE_FAQ = [
   },
 ]
 
+const HOMEPAGE_PUBLISHED = '2024-01-15T00:00:00Z'
+const HOMEPAGE_MODIFIED = '2025-01-15T00:00:00Z'
+
 export const metadata: Metadata = {
   ...buildMetadata({
     description:
       'SignalorAI scores, monitors, and improves how ChatGPT, Claude, Gemini, Perplexity, and Google AI cite your brand. Free GEO + AEO audit, paste any URL to start.',
     path: '/',
+    publishedTime: HOMEPAGE_PUBLISHED,
+    modifiedTime: HOMEPAGE_MODIFIED,
   }),
   // Absolute title bypasses the root "%s | SignalorAI" template so the brand
   // leads the SERP (helps the brand-term ranking) without a redundant suffix.
@@ -118,6 +123,13 @@ export default function HomePage(): JSX.Element {
         <HomeCta />
       </main>
       <HomeFooter />
+      <footer className="border-border border-t bg-background py-3">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <p className="text-muted-foreground text-[11px]">
+            Last updated: <time dateTime={HOMEPAGE_MODIFIED}>January 15, 2025</time>
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -113,6 +113,8 @@ type BuildMetadataInput = {
   noindex?: boolean
   ogImage?: string
   ogType?: 'website' | 'article' | 'profile'
+  publishedTime?: string
+  modifiedTime?: string
 }
 
 export function absoluteUrl(path = '/'): string {
@@ -128,10 +130,39 @@ export function buildMetadata({
   noindex = false,
   ogImage,
   ogType = 'website',
+  publishedTime,
+  modifiedTime,
 }: BuildMetadataInput = {}): Metadata {
   const url = absoluteUrl(path)
   const fullTitle = title ? `${title} | ${SITE_BRAND}` : `${SITE_BRAND} | ${SITE_TAGLINE}`
   const image = ogImage || SITE_OG_IMAGE
+
+  const openGraphBase = {
+    type: ogType,
+    title: fullTitle,
+    description,
+    url,
+    siteName: SITE_DISPLAY_NAME,
+    locale: SITE_LOCALE,
+    images: [
+      {
+        url: image,
+        width: 1200,
+        height: 630,
+        alt: fullTitle,
+      },
+    ],
+  }
+
+  // Add article-specific Open Graph tags when dates are provided
+  const openGraph =
+    publishedTime || modifiedTime
+      ? {
+          ...openGraphBase,
+          publishedTime,
+          modifiedTime,
+        }
+      : openGraphBase
 
   return {
     title: title || `${SITE_BRAND} | ${SITE_TAGLINE}`,
@@ -161,22 +192,7 @@ export function buildMetadata({
             'max-snippet': -1,
           },
         },
-    openGraph: {
-      type: ogType,
-      title: fullTitle,
-      description,
-      url,
-      siteName: SITE_DISPLAY_NAME,
-      locale: SITE_LOCALE,
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: fullTitle,
-        },
-      ],
-    },
+    openGraph,
     twitter: {
       card: 'summary_large_image',
       site: SITE_TWITTER,
