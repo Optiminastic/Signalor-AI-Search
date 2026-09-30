@@ -55,8 +55,34 @@ interface BlogPostEntry {
 
 export const revalidate = 3600
 
+/**
+ * Validates and normalizes a date to ensure it's not in the future.
+ * This handles server clock issues or incorrect dates from CMS.
+ * @param date - The date to validate
+ * @param fallback - Fallback date if validation fails
+ * @returns A valid date that is not in the future
+ */
+function getValidLastModified(date: Date, fallback: Date): Date {
+  const now = Date.now()
+  const timestamp = date.getTime()
+  
+  // If date is in the future or invalid, use fallback
+  if (isNaN(timestamp) || timestamp > now) {
+    return fallback
+  }
+  
+  return date
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Use a known valid date as fallback (project launch or a reasonable past date)
+  // This ensures we never show future dates even if server clock is wrong
+  const fallbackDate = new Date('2024-01-01T00:00:00.000Z')
   const now = new Date()
+  
+  // Validate that 'now' is reasonable (not in the far future)
+  // If current year is beyond 2025, cap it to prevent future dates
+  const safeNow = now.getFullYear() > 2025 ? fallbackDate : now
 
   const posts = await client
     .fetch<BlogPostEntry[]>(BLOG_POSTS_FOR_SITEMAP)
@@ -64,17 +90,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries: MetadataRoute.Sitemap = PUBLIC_ROUTES.map(r => ({
     url: `${SITE_URL}${r.path}`,
-    lastModified: now,
+    lastModified: safeNow,
     changeFrequency: r.changeFrequency,
     priority: r.priority,
   }))
 
-  const postEntries: MetadataRoute.Sitemap = posts.map(p => ({
-    url: `${SITE_URL}/blog/${p.slug}`,
-    lastModified: p.lastModified ? new Date(p.lastModified) : now,
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }))
+  const postEntries: MetadataRoute.Sitemap = posts.map(p => {
+    const postDate = p.lastModified ? new Date(p.lastModified) : safeNow
+    return {
+      url: `${SITE_URL}/blog/${p.slug}`,
+      lastModified: getValidLastModified(postDate, fallbackDate),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }
+  })
 
   return [...staticEntries, ...postEntries]
 }
