@@ -23,10 +23,15 @@ export default function ForBrandsPage(): JSX.Element {
       <p className="sr-only">
         SignalorAI for Brands shows marketing and growth teams how AI engines describe, cite, or
         skip their brand. Track mentions, sentiment, and citations across ChatGPT, Claude, Gemini,
-        Perplexity, Copilot, and Google AI Overviews; get one 0-100 GEO score backed by content,
-        schema, E-E-A-T, technical, entity, and AI-visibility checks; and turn every audit into a
-        ranked fix list with connectors that apply many changes for you. Connect analytics to watch
-        AI referral traffic move as visibility improves.
+        Perplexity, Copilot, and Google AI Overviews.
+      </p>
+      <p className="sr-only">
+        Get one 0-100 GEO score backed by content, schema, E-E-A-T, technical, entity, and
+        AI-visibility checks. Turn every audit into a ranked fix list with connectors that apply
+        many changes for you.
+      </p>
+      <p className="sr-only">
+        Connect analytics to watch AI referral traffic move as visibility improves.
       </p>
       <JsonLd
         id="ld-for-brands-breadcrumb"

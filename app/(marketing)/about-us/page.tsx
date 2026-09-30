@@ -9,9 +9,15 @@ export default function AboutPage(): JSX.Element {
       <p className="sr-only">
         SignalorAI is the Generative Engine Optimization platform built by Signalor Ltd. We score
         how ChatGPT, Claude, Gemini, Perplexity, Copilot, and Google AI Overviews describe and cite
-        brands, track the prompts buyers actually ask, and turn every audit into a ranked fix queue
-        with Shopify, WordPress, API, and MCP integrations. Six scoring pillars - content, schema,
-        E-E-A-T, technical, entity, and AI visibility - make AI search visibility measurable.
+        brands.
+      </p>
+      <p className="sr-only">
+        We track the prompts buyers actually ask and turn every audit into a ranked fix queue. Our
+        platform includes Shopify, WordPress, API, and MCP integrations.
+      </p>
+      <p className="sr-only">
+        Six scoring pillars - content, schema, E-E-A-T, technical, entity, and AI visibility - make
+        AI search visibility measurable.
       </p>
       <AboutHero />
       <AboutSections />

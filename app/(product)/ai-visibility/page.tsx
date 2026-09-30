@@ -25,14 +25,21 @@ export default function ContentSignalsPage() {
       <p className="sr-only">
         SignalorAI Visibility scoring audits how ChatGPT, Claude, Gemini, Perplexity, and Google AI
         Overview see and cite your brand. The platform checks schema.org JSON-LD coverage across
-        Organization, Product, Article, FAQ, HowTo, and BreadcrumbList types, detects missing or
-        malformed structured data, and evaluates trust signals including authorship markers,
-        citation authority, and credibility indicators that large language models weigh when
-        deciding what to recommend. Every audit maps findings to a 0-100 GEO score pillar breakdown
-        , Schema, E-E-A-T, Content, and Technical, so SEO teams, content managers, and developers
-        know exactly which fixes deliver the highest citation lift. SignalorAI Visibility is built
-        for brands optimizing for generative engine optimization (GEO) and answer engine
-        optimization (AEO) across the AI search landscape.
+        Organization, Product, Article, FAQ, HowTo, and BreadcrumbList types.
+      </p>
+      <p className="sr-only">
+        It detects missing or malformed structured data and evaluates trust signals including
+        authorship markers, citation authority, and credibility indicators. Large language models
+        weigh these factors when deciding what to recommend.
+      </p>
+      <p className="sr-only">
+        Every audit maps findings to a 0-100 GEO score pillar breakdown: Schema, E-E-A-T, Content,
+        and Technical. SEO teams, content managers, and developers know exactly which fixes deliver
+        the highest citation lift.
+      </p>
+      <p className="sr-only">
+        SignalorAI Visibility is built for brands optimizing for generative engine optimization
+        (GEO) and answer engine optimization (AEO) across the AI search landscape.
       </p>
       <PromptTrackingHero hero={CONTENT_SIGNALS_HERO} cards={CONTENT_SIGNALS_HUB_CARDS} />
       <PromptTrackingFeaturesGrid

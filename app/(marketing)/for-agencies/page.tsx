@@ -72,15 +72,22 @@ export default function ForAgenciesPage(): JSX.Element {
       <p className="sr-only">
         SignalorAI for Agencies lets marketing agencies, SEO consultants, and GEO specialists run AI
         search visibility for an entire client roster from one workspace. Each client is a separate
-        project with its own GEO score, prompt library, competitor set, and run schedule, so account
-        managers report a clean 0-100 number while strategists focus on the schema, structure, and
-        trust-signal work that moves how ChatGPT, Claude, Gemini, Perplexity, Copilot, and Google AI
-        Overviews cite each brand. White-label reporting exports GEO scores and pillar breakdowns
-        for monthly reviews, prioritized fix queues turn every audit into a client-scoped task list
-        ranked by expected score lift, and roster-wide impact planning puts retainer hours where
-        they move scores most. Agency plans scale with your book of business, turning generative
-        engine optimization (GEO) and answer engine optimization (AEO) into repeatable, reportable
-        client delivery.
+        project with its own GEO score, prompt library, competitor set, and run schedule.
+      </p>
+      <p className="sr-only">
+        Account managers report a clean 0-100 number while strategists focus on the schema,
+        structure, and trust-signal work that moves how ChatGPT, Claude, Gemini, Perplexity,
+        Copilot, and Google AI Overviews cite each brand.
+      </p>
+      <p className="sr-only">
+        White-label reporting exports GEO scores and pillar breakdowns for monthly reviews.
+        Prioritized fix queues turn every audit into a client-scoped task list ranked by expected
+        score lift.
+      </p>
+      <p className="sr-only">
+        Roster-wide impact planning puts retainer hours where they move scores most. Agency plans
+        scale with your book of business, turning generative engine optimization (GEO) and answer
+        engine optimization (AEO) into repeatable, reportable client delivery.
       </p>
       <JsonLd
         id="ld-for-agencies-breadcrumb"
