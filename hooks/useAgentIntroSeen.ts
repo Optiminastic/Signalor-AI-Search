@@ -2,7 +2,9 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 
-const STORAGE_KEY = 'signalor.agent-intro-seen'
+/** Bump the version whenever the intro changes, so people who saw the old one see the new one once. */
+const INTRO_VERSION = 2
+const STORAGE_KEY = `signalor.agent-intro-seen.v${INTRO_VERSION}`
 const listeners = new Set<() => void>()
 
 /** 'unknown' on the server and before hydration, so nothing flashes. */
