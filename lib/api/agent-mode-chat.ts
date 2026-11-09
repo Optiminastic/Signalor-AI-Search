@@ -18,6 +18,8 @@ const chatMessageSchema = z
     status: m.status,
     content: m.content,
     changedPlan: m.tool_trace.some(t => t.write),
+    /** Tools the agent used for this reply, in order (for the live activity canvas). */
+    tools: m.tool_trace.map(t => t.tool),
   }))
 
 const chatEnvelope = z.object({ messages: z.array(chatMessageSchema) })

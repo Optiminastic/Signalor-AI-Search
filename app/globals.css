@@ -1334,6 +1334,90 @@
   }
 }
 
+/* Agent mode docked layout: the chat slides from the centre into a left column
+   and the live activity canvas rises in on the right. */
+@keyframes cat-agent-dock {
+  from {
+    opacity: 0.4;
+    transform: translateX(min(30vw, 420px)) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes cat-agent-canvas {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes cat-agent-step {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes cat-agent-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes cat-agent-scan {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes cat-agent-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.cat-agent-dock {
+  animation: cat-agent-dock 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cat-agent-canvas {
+  animation: cat-agent-canvas 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+.cat-agent-step,
+.cat-agent-step-live {
+  animation: cat-agent-step 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cat-agent-pulse {
+  animation: cat-agent-pulse 1.6s ease-in-out infinite;
+}
+.cat-agent-spin {
+  animation: cat-agent-spin 0.9s linear infinite;
+}
+.cat-agent-scan {
+  background: linear-gradient(90deg, transparent, #e04a3d, transparent) 0 0 / 200% 100%;
+  animation: cat-agent-scan 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-agent-dock,
+  .cat-agent-canvas,
+  .cat-agent-step,
+  .cat-agent-step-live,
+  .cat-agent-pulse,
+  .cat-agent-spin,
+  .cat-agent-scan {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cat-rise,
   .cat-stagger > *,
