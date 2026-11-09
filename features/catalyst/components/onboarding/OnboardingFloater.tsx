@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
@@ -212,8 +213,12 @@ function useOnboardingVisibility(): Visibility {
   return { open, dismissed, setOpen, dismiss }
 }
 
+/** Full-page experiences where a floating checklist would sit on top of the content. */
+const FULL_PAGE_SUFFIXES = ['/agent-mode']
+
 export function OnboardingFloater(): JSX.Element | null {
   const mounted = useMounted()
+  const pathname = usePathname()
   const { orgSlug } = useActiveProject()
   const { steps, completed, total, allDone } = useOnboardingSteps()
   const { open, dismissed, setOpen, dismiss } = useOnboardingVisibility()
@@ -223,7 +228,8 @@ export function OnboardingFloater(): JSX.Element | null {
   const { setContainer, style: dragStyle, dragging, startDrag } = useDraggableFloater(POSITION_KEY)
   const drag: DragHandle = { dragging, startDrag }
 
-  if (!mounted || !orgSlug || dismissed) return null
+  const fullPage = FULL_PAGE_SUFFIXES.some(suffix => pathname?.endsWith(suffix))
+  if (!mounted || !orgSlug || dismissed || fullPage) return null
 
   return (
     <div

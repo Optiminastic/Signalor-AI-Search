@@ -66,7 +66,7 @@ export function AgentSidebar(props: AgentSidebarProps): JSX.Element {
         <p className="truncate text-[13px] font-medium text-[var(--cat-ink)]">
           {user.name || user.email}
         </p>
-        <p className="truncate text-[11px] text-[var(--cat-ink-3)]">{user.email}</p>
+        {user.name && <p className="truncate text-[11px] text-[var(--cat-ink-3)]">{user.email}</p>}
         <button
           type="button"
           onClick={onReplayIntro}

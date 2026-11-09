@@ -1,20 +1,17 @@
 /**
- * The Agent intro's soundtrack, synthesized with the Web Audio API (no audio
- * file, no dependency): a warm pad that swells under the logo reveal, then soft
- * chimes timed to the intro's step reveals.
+ * Sound design for the 5s Agent intro, synthesized with the Web Audio API (no
+ * audio file, no dependency): an airy whoosh as the sparkle flies in, a crisp
+ * click when the cursor presses "Run plan", and a warm chord under the lockup.
+ * Cue times match the CSS timeline in app/globals.css (cat-intro-*).
  *
- * Browsers only allow audio after a user gesture. The intro opens from a click on
- * the Agent button, which satisfies that; if the browser still refuses, the
- * intro simply plays silently.
+ * Browsers only allow audio after a user gesture. The intro opens from a click
+ * on the Agent button, which satisfies that; otherwise it plays silently.
  */
 
-const PAD_NOTES_HZ = [220, 277.18, 329.63] // A3, C#4, E4: a calm A-major pad
-const CHIME_NOTES_HZ = [659.25, 739.99, 880, 987.77] // E5, F#5, A5, B5, rising
-const MASTER_VOLUME = 0.18
-const PAD_SECONDS = 8
-const CHIME_SECONDS = 1.6
-/** Seconds from start when each chime sounds; matches the step reveals in AgentIntro. */
-export const CHIME_TIMES_S = [3.4, 4.3, 5.2, 6.1]
+const MASTER_VOLUME = 0.22
+const WHOOSH = { at: 0.02, seconds: 0.85, fromHz: 300, toHz: 2600 }
+const CLICK = { at: 3.06, seconds: 0.06 }
+const SWELL = { at: 3.75, seconds: 1.4, notesHz: [261.63, 329.63, 392, 523.25] } // C major, warm
 
 export interface IntroSound {
   stop: () => void
@@ -29,40 +26,67 @@ function audioContextCtor(): AudioContextCtor | null {
   return window.AudioContext ?? legacy ?? null
 }
 
-function pad(ctx: AudioContext, out: AudioNode): void {
+function noiseBuffer(ctx: AudioContext, seconds: number): AudioBuffer {
+  const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * seconds), ctx.sampleRate)
+  const data = buffer.getChannelData(0)
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1
+  return buffer
+}
+
+function burst(ctx: AudioContext, out: AudioNode, filter: BiquadFilterNode): GainNode {
   const gain = ctx.createGain()
-  gain.gain.setValueAtTime(0, ctx.currentTime)
-  gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 1.6)
-  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + PAD_SECONDS)
+  filter.connect(gain)
   gain.connect(out)
-  for (const hz of PAD_NOTES_HZ) {
+  return gain
+}
+
+function whoosh(ctx: AudioContext, out: AudioNode): void {
+  const start = ctx.currentTime + WHOOSH.at
+  const end = start + WHOOSH.seconds
+  const source = ctx.createBufferSource()
+  source.buffer = noiseBuffer(ctx, WHOOSH.seconds)
+  const band = ctx.createBiquadFilter()
+  band.type = 'bandpass'
+  band.Q.value = 1.4
+  band.frequency.setValueAtTime(WHOOSH.fromHz, start)
+  band.frequency.exponentialRampToValueAtTime(WHOOSH.toHz, end)
+  const gain = burst(ctx, out, band)
+  gain.gain.setValueAtTime(0, start)
+  gain.gain.linearRampToValueAtTime(0.9, start + WHOOSH.seconds * 0.45)
+  gain.gain.linearRampToValueAtTime(0, end)
+  source.connect(band)
+  source.start(start)
+}
+
+function click(ctx: AudioContext, out: AudioNode): void {
+  const start = ctx.currentTime + CLICK.at
+  const source = ctx.createBufferSource()
+  source.buffer = noiseBuffer(ctx, CLICK.seconds)
+  const high = ctx.createBiquadFilter()
+  high.type = 'highpass'
+  high.frequency.value = 2200
+  const gain = burst(ctx, out, high)
+  gain.gain.setValueAtTime(0.8, start)
+  gain.gain.exponentialRampToValueAtTime(0.001, start + CLICK.seconds)
+  source.connect(high)
+  source.start(start)
+}
+
+function swell(ctx: AudioContext, out: AudioNode): void {
+  const start = ctx.currentTime + SWELL.at
+  const gain = ctx.createGain()
+  gain.gain.setValueAtTime(0, start)
+  gain.gain.linearRampToValueAtTime(0.35, start + 0.25)
+  gain.gain.exponentialRampToValueAtTime(0.001, start + SWELL.seconds)
+  gain.connect(out)
+  for (const hz of SWELL.notesHz) {
     const osc = ctx.createOscillator()
     osc.type = 'sine'
     osc.frequency.value = hz
     osc.connect(gain)
-    osc.start()
-    osc.stop(ctx.currentTime + PAD_SECONDS)
+    osc.start(start)
+    osc.stop(start + SWELL.seconds)
   }
-}
-
-interface ChimeOptions {
-  at: number
-  hz: number
-}
-
-function chime(ctx: AudioContext, out: AudioNode, { at, hz }: ChimeOptions): void {
-  const start = ctx.currentTime + at
-  const gain = ctx.createGain()
-  gain.gain.setValueAtTime(0, start)
-  gain.gain.linearRampToValueAtTime(0.6, start + 0.02)
-  gain.gain.exponentialRampToValueAtTime(0.001, start + CHIME_SECONDS)
-  gain.connect(out)
-  const osc = ctx.createOscillator()
-  osc.type = 'triangle'
-  osc.frequency.value = hz
-  osc.connect(gain)
-  osc.start(start)
-  osc.stop(start + CHIME_SECONDS)
 }
 
 /** Starts the soundtrack. Returns null when audio isn't available. */
@@ -74,10 +98,9 @@ export function playIntroSound(): IntroSound | null {
   const master = ctx.createGain()
   master.gain.value = MASTER_VOLUME
   master.connect(ctx.destination)
-  pad(ctx, master)
-  CHIME_TIMES_S.forEach((at, i) =>
-    chime(ctx, master, { at, hz: CHIME_NOTES_HZ[i % CHIME_NOTES_HZ.length] }),
-  )
+  whoosh(ctx, master)
+  click(ctx, master)
+  swell(ctx, master)
   return {
     stop: () => void ctx.close().catch(() => undefined),
     setMuted: muted => {
