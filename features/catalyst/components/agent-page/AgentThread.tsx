@@ -6,9 +6,9 @@ import { AgentRichText } from '@/features/catalyst/components/agent-page/AgentRi
 import type { AgentChatMessage } from '@/lib/api/agent-mode-chat'
 
 const USER_BUBBLE =
-  'max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-sm bg-[var(--cat-ink)] px-3 py-2 text-[13px] text-[var(--cat-content)]'
-const AGENT_BUBBLE =
-  'cat-card-edge max-w-[92%] rounded-2xl rounded-bl-sm border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-3 py-2 text-[13px] leading-relaxed text-[var(--cat-ink-2)]'
+  'max-w-[85%] whitespace-pre-line rounded-2xl rounded-br-md bg-[var(--cat-ink)]/[0.06] px-3.5 py-2 text-[13px] text-[var(--cat-ink)] dark:bg-white/10'
+const AGENT_BUBBLE = 'max-w-[95%] text-[13px] leading-relaxed text-[var(--cat-ink)]'
+const AGENT_META = 'mb-1 text-[11px] text-[var(--cat-ink-3)]'
 
 interface AgentThreadProps {
   messages: AgentChatMessage[]
@@ -18,13 +18,14 @@ interface AgentThreadProps {
 function AgentReply({ message }: { message: AgentChatMessage }): JSX.Element {
   if (message.status === 'pending') {
     return (
-      <p role="status" className={`${AGENT_BUBBLE} text-[var(--cat-ink-3)]`}>
+      <p role="status" className={`${AGENT_META} cat-agent-pulse`}>
         Looking at your data...
       </p>
     )
   }
   return (
     <div className={AGENT_BUBBLE}>
+      {message.tools.length > 0 && <p className={AGENT_META}>Checked your data</p>}
       <AgentRichText text={message.content} />
       {message.changedPlan && (
         <p className="mt-2 text-[11px] font-medium text-[#e04a3d]">Plan updated</p>
@@ -45,7 +46,7 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
 
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4"
+      className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4"
       aria-live="polite"
     >
       {messages.map(message => (

@@ -2,9 +2,8 @@
 
 import { AgentBackdrop } from '@/features/catalyst/components/agent-page/AgentBackdrop'
 import { AgentCanvas } from '@/features/catalyst/components/agent-page/AgentCanvas'
-import { AgentComposer } from '@/features/catalyst/components/agent-page/AgentComposer'
+import { AgentChatPanel } from '@/features/catalyst/components/agent-page/AgentChatPanel'
 import { AgentHome } from '@/features/catalyst/components/agent-page/AgentHome'
-import { AgentThread } from '@/features/catalyst/components/agent-page/AgentThread'
 import { AgentTopBar } from '@/features/catalyst/components/agent-page/AgentTopBar'
 import { useAgentModeChat } from '@/hooks/useAgentModeChat'
 import { useAgentModeProgram } from '@/hooks/useAgentModeProgram'
@@ -49,16 +48,8 @@ function AgentMain({ orgSlug, brandName }: AgentMainProps): JSX.Element {
     return <AgentHome brandName={brandName} onSend={chat.send} busy={chat.thinking} />
   }
   return (
-    <div className="flex min-h-0 flex-1">
-      <section
-        aria-label="Conversation"
-        className="cat-agent-dock flex min-h-0 w-full flex-col lg:w-[440px] lg:shrink-0"
-      >
-        <AgentThread messages={chat.messages} error={chat.error} />
-        <div className="px-4 pb-5">
-          <AgentComposer onSend={chat.send} disabled={chat.thinking} />
-        </div>
-      </section>
+    <div className="flex min-h-0 flex-1 gap-3 px-4 pb-4">
+      <AgentChatPanel brandName={brandName} chat={chat} />
       <AgentCanvas
         program={program.program}
         thinking={chat.thinking}
