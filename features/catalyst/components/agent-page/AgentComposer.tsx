@@ -54,7 +54,7 @@ export function AgentComposer({ onSend, disabled }: AgentComposerProps): JSX.Ele
   return (
     <form
       onSubmit={submit}
-      className="cat-card-edge w-full rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] px-4 pt-3 pb-2.5 shadow-[0_1px_2px_rgba(16,24,40,.05)] focus-within:ring-2 focus-within:ring-[#e04a3d]/40"
+      className="cat-card-edge w-full rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-content)]/85 px-4 pt-3 pb-2.5 shadow-[0_1px_2px_rgba(16,24,40,.05)] backdrop-blur-sm focus-within:ring-2 focus-within:ring-[#e04a3d]/40"
     >
       <textarea
         rows={2}

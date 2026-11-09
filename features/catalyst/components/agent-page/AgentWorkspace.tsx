@@ -1,12 +1,12 @@
 'use client'
 
+import { AgentBackdrop } from '@/features/catalyst/components/agent-page/AgentBackdrop'
 import { AgentComposer } from '@/features/catalyst/components/agent-page/AgentComposer'
 import { AgentHome } from '@/features/catalyst/components/agent-page/AgentHome'
-import { AgentSidebar } from '@/features/catalyst/components/agent-page/AgentSidebar'
 import { AgentThread } from '@/features/catalyst/components/agent-page/AgentThread'
+import { AgentTopBar } from '@/features/catalyst/components/agent-page/AgentTopBar'
 import { useAgentModeChat } from '@/hooks/useAgentModeChat'
 import { useAgentModeProgram } from '@/hooks/useAgentModeProgram'
-import { useSession } from '@/lib/auth-client'
 
 interface AgentWorkspaceProps {
   orgSlug: string
@@ -17,7 +17,6 @@ interface AgentWorkspaceProps {
 interface AgentMainProps {
   orgSlug: string
   brandName: string
-  firstName: string
 }
 
 function ProgramNotice({ message }: { message: string }): JSX.Element {
@@ -32,19 +31,12 @@ function ProgramNotice({ message }: { message: string }): JSX.Element {
 }
 
 /** Greeting home before the first question, then the live conversation. */
-function AgentMain({ orgSlug, brandName, firstName }: AgentMainProps): JSX.Element {
+function AgentMain({ orgSlug, brandName }: AgentMainProps): JSX.Element {
   const program = useAgentModeProgram(orgSlug)
   const chat = useAgentModeChat(orgSlug)
   if (program.error) return <ProgramNotice message={program.error} />
   if (chat.messages.length === 0) {
-    return (
-      <AgentHome
-        firstName={firstName}
-        brandName={brandName}
-        onSend={chat.send}
-        busy={chat.thinking}
-      />
-    )
+    return <AgentHome brandName={brandName} onSend={chat.send} busy={chat.thinking} />
   }
   return (
     <>
@@ -56,36 +48,19 @@ function AgentMain({ orgSlug, brandName, firstName }: AgentMainProps): JSX.Eleme
   )
 }
 
-/** The full-page agent: sidebar (brand, recents, account) + the main chat area. */
+/** The full-page agent: a slim top bar over the chat, no sidebar. */
 export function AgentWorkspace({
   orgSlug,
   brandName,
   onReplayIntro,
 }: AgentWorkspaceProps): JSX.Element {
-  const { data: session } = useSession()
-  const chat = useAgentModeChat(orgSlug)
-  const user = { name: session?.user?.name ?? '', email: session?.user?.email ?? '' }
-  const recentQuestions = chat.messages
-    .filter(m => m.role === 'user')
-    .map(m => m.content)
-    .reverse()
-
   return (
-    <div className="flex h-dvh bg-[var(--cat-canvas)]">
-      <AgentSidebar
-        brandName={brandName}
-        dashboardHref={`/dashboard/${orgSlug}`}
-        recentQuestions={recentQuestions}
-        user={user}
-        onReplayIntro={onReplayIntro}
-      />
-      <main className="flex min-w-0 flex-1 flex-col">
-        <AgentMain
-          orgSlug={orgSlug}
-          brandName={brandName}
-          firstName={user.name.split(' ')[0] ?? ''}
-        />
-      </main>
-    </div>
+    <main className="relative flex h-dvh flex-col bg-[var(--cat-canvas)]">
+      <AgentBackdrop />
+      <AgentTopBar dashboardHref={`/dashboard/${orgSlug}`} onReplayIntro={onReplayIntro} />
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        <AgentMain orgSlug={orgSlug} brandName={brandName} />
+      </div>
+    </main>
   )
 }
