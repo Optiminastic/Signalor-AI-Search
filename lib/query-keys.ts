@@ -34,6 +34,12 @@ export const queryKeys = {
     byOrg: (orgId: number) => ['runs', 'org', orgId] as const,
     byEmail: (email: string) => ['runs', 'email', email] as const,
   },
+  /** Agent mode (ranking-be apps.growth_agent), keyed on the org slug from the URL. */
+  agentMode: {
+    all: (orgSlug: string) => ['agent-mode', orgSlug] as const,
+    program: (orgSlug: string) => ['agent-mode', orgSlug, 'program'] as const,
+    chat: (orgSlug: string) => ['agent-mode', orgSlug, 'chat'] as const,
+  },
   backlinks: {
     auto: (slug: string) => ['backlinks', 'auto', slug] as const,
     schedule: (slug: string) => ['backlinks', 'schedule', slug] as const,
