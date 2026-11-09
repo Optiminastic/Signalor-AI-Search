@@ -214,7 +214,8 @@ function useOnboardingVisibility(): Visibility {
 }
 
 /** Full-page experiences where a floating checklist would sit on top of the content. */
-const FULL_PAGE_SUFFIXES = ['/agent-mode']
+/** Full-page routes (and everything under them) where the floater stays hidden. */
+const FULL_PAGE_SEGMENTS = ['agent-mode']
 
 export function OnboardingFloater(): JSX.Element | null {
   const mounted = useMounted()
@@ -228,7 +229,8 @@ export function OnboardingFloater(): JSX.Element | null {
   const { setContainer, style: dragStyle, dragging, startDrag } = useDraggableFloater(POSITION_KEY)
   const drag: DragHandle = { dragging, startDrag }
 
-  const fullPage = FULL_PAGE_SUFFIXES.some(suffix => pathname?.endsWith(suffix))
+  const segments = pathname?.split('/') ?? []
+  const fullPage = FULL_PAGE_SEGMENTS.some(segment => segments.includes(segment))
   if (!mounted || !orgSlug || dismissed || fullPage) return null
 
   return (

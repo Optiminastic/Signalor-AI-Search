@@ -24,13 +24,51 @@ const chatMessageSchema = z
 
 const chatEnvelope = z.object({ messages: z.array(chatMessageSchema) })
 
-export type AgentChatMessage = z.infer<typeof chatMessageSchema>
+const chatSummarySchema = z
+  .object({ id: z.string(), title: z.string(), updated_at: z.string() })
+  .transform(c => ({ id: c.id, title: c.title || 'Untitled chat', updatedAt: c.updated_at }))
 
-export async function getChat(orgSlug: string): Promise<AgentChatMessage[]> {
-  return (await agentModeRequest(programPath(orgSlug, 'chat'), chatEnvelope)).messages
+const chatListEnvelope = z.object({ conversations: z.array(chatSummarySchema) })
+const startedEnvelope = z.object({
+  conversation: chatSummarySchema,
+  messages: z.array(chatMessageSchema),
+})
+
+export type AgentChatMessage = z.infer<typeof chatMessageSchema>
+export type AgentChatSummary = z.infer<typeof chatSummarySchema>
+
+/** The brand's saved chats, most recent first. */
+export async function listChats(orgSlug: string): Promise<AgentChatSummary[]> {
+  return (await agentModeRequest(programPath(orgSlug, 'chats'), chatListEnvelope)).conversations
 }
 
-export async function sendChat(orgSlug: string, message: string): Promise<AgentChatMessage[]> {
+/** Starts a new chat with its first question; returns the chat and its thread. */
+export async function startChat(
+  orgSlug: string,
+  message: string,
+): Promise<{ chat: AgentChatSummary; messages: AgentChatMessage[] }> {
   const options = { method: 'POST' as const, body: { message } }
-  return (await agentModeRequest(programPath(orgSlug, 'chat'), chatEnvelope, options)).messages
+  const data = await agentModeRequest(programPath(orgSlug, 'chats'), startedEnvelope, options)
+  return { chat: data.conversation, messages: data.messages }
+}
+
+export async function getChat(orgSlug: string, chatId: string): Promise<AgentChatMessage[]> {
+  const path = programPath(orgSlug, 'chats', encodeURIComponent(chatId))
+  return (await agentModeRequest(path, chatEnvelope)).messages
+}
+
+interface SendChatOptions {
+  orgSlug: string
+  chatId: string
+  message: string
+}
+
+export async function sendChat({
+  orgSlug,
+  chatId,
+  message,
+}: SendChatOptions): Promise<AgentChatMessage[]> {
+  const path = programPath(orgSlug, 'chats', encodeURIComponent(chatId))
+  const options = { method: 'POST' as const, body: { message } }
+  return (await agentModeRequest(path, chatEnvelope, options)).messages
 }

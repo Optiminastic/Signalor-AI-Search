@@ -38,7 +38,8 @@ export const queryKeys = {
   agentMode: {
     all: (orgSlug: string) => ['agent-mode', orgSlug] as const,
     program: (orgSlug: string) => ['agent-mode', orgSlug, 'program'] as const,
-    chat: (orgSlug: string) => ['agent-mode', orgSlug, 'chat'] as const,
+    chats: (orgSlug: string) => ['agent-mode', orgSlug, 'chats'] as const,
+    chat: (orgSlug: string, chatId: string) => ['agent-mode', orgSlug, 'chats', chatId] as const,
   },
   backlinks: {
     auto: (slug: string) => ['backlinks', 'auto', slug] as const,
