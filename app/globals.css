@@ -1406,6 +1406,28 @@
   background: linear-gradient(90deg, transparent, #e04a3d, transparent) 0 0 / 200% 100%;
   animation: cat-agent-scan 1.4s linear infinite;
 }
+/* "Thinking…" with a light sweeping across the text. */
+@keyframes cat-agent-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+.cat-agent-shimmer {
+  background: linear-gradient(
+      100deg,
+      var(--cat-ink-3) 30%,
+      var(--cat-ink) 50%,
+      var(--cat-ink-3) 70%
+    )
+    0 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cat-agent-shimmer 1.6s linear infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   .cat-agent-dock,
   .cat-agent-canvas,
@@ -1413,7 +1435,8 @@
   .cat-agent-step-live,
   .cat-agent-pulse,
   .cat-agent-spin,
-  .cat-agent-scan {
+  .cat-agent-scan,
+  .cat-agent-shimmer {
     animation: none;
   }
 }

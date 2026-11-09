@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { AgentRichText } from '@/features/catalyst/components/agent-page/AgentRichText'
+import { useTypewriter } from '@/hooks/useTypewriter'
 import type { AgentChatMessage } from '@/lib/api/agent-mode-chat'
 
 const USER_BUBBLE =
@@ -15,19 +16,40 @@ interface AgentThreadProps {
   error: string | null
 }
 
-function AgentReply({ message }: { message: AgentChatMessage }): JSX.Element {
+const BOLD_MARK = '**'
+
+/** While typing, close a half-typed **bold** so the raw markers never flash on screen. */
+function closeOpenBold(text: string): string {
+  const marks = text.split(BOLD_MARK).length - 1
+  return marks % 2 === 1 ? `${text}${BOLD_MARK}` : text
+}
+
+interface AgentReplyProps {
+  message: AgentChatMessage
+  onGrow: () => void
+}
+
+function AgentReply({ message, onGrow }: AgentReplyProps): JSX.Element {
+  // A reply that mounts while pending is being written during this visit, so it
+  // types out when it lands; replies loaded from history render at once.
+  const [animate] = useState(message.status === 'pending')
+  const { visible, typing } = useTypewriter(message.content, animate)
+  useEffect(() => {
+    if (typing) onGrow()
+  }, [visible, typing, onGrow])
+
   if (message.status === 'pending') {
     return (
-      <p role="status" className={`${AGENT_META} cat-agent-pulse`}>
-        Looking at your data...
+      <p role="status" className="cat-agent-shimmer text-[13px] font-medium">
+        Thinking…
       </p>
     )
   }
   return (
     <div className={AGENT_BUBBLE}>
       {message.tools.length > 0 && <p className={AGENT_META}>Checked your data</p>}
-      <AgentRichText text={message.content} />
-      {message.changedPlan && (
+      <AgentRichText text={typing ? closeOpenBold(visible) : visible} />
+      {!typing && message.changedPlan && (
         <p className="mt-2 text-[11px] font-medium text-[#e04a3d]">Plan updated</p>
       )}
     </div>
@@ -40,9 +62,9 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
   const lastId = messages[messages.length - 1]?.id
   const lastStatus = messages[messages.length - 1]?.status
 
-  useEffect(() => {
-    end.current?.scrollIntoView({ block: 'end' })
-  }, [lastId, lastStatus])
+  const scrollToEnd = useCallback(() => end.current?.scrollIntoView({ block: 'end' }), [])
+
+  useEffect(scrollToEnd, [lastId, lastStatus, scrollToEnd])
 
   return (
     <div
@@ -57,7 +79,7 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
           {message.role === 'user' ? (
             <p className={USER_BUBBLE}>{message.content}</p>
           ) : (
-            <AgentReply message={message} />
+            <AgentReply message={message} onGrow={scrollToEnd} />
           )}
         </div>
       ))}
