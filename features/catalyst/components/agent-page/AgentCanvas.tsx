@@ -1,16 +1,13 @@
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
-import { AgentProgramCard } from '@/features/catalyst/components/agent-page/AgentProgramCard'
-import type { AgentProgram } from '@/lib/api/agent-mode'
 import { Sparkles } from '@/lib/icons'
 
 interface AgentCanvasProps {
-  program: AgentProgram | null
   thinking: boolean
   lastTools: string[]
 }
 
 /** The whiter board beside the chat: a live view of what the agent is doing. */
-export function AgentCanvas({ program, thinking, lastTools }: AgentCanvasProps): JSX.Element {
+export function AgentCanvas({ thinking, lastTools }: AgentCanvasProps): JSX.Element {
   return (
     <section
       aria-label="Agent board"
@@ -28,11 +25,6 @@ export function AgentCanvas({ program, thinking, lastTools }: AgentCanvasProps):
       <div className="mt-4">
         <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
       </div>
-      {program && (
-        <div className="mt-8">
-          <AgentProgramCard program={program} />
-        </div>
-      )}
     </section>
   )
 }

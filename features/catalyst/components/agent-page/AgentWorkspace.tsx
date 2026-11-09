@@ -83,11 +83,7 @@ function AgentMain({ orgSlug, brandName, chatId, agentHref, chats }: AgentMainPr
   return (
     <div className="flex min-h-0 flex-1 gap-3 px-4 pb-4">
       <AgentChatPanel brandName={brandName} chat={chat} />
-      <AgentCanvas
-        program={program.program}
-        thinking={chat.thinking}
-        lastTools={lastReplyTools(chat.messages)}
-      />
+      <AgentCanvas thinking={chat.thinking} lastTools={lastReplyTools(chat.messages)} />
     </div>
   )
 }
