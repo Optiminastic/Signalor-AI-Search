@@ -29,7 +29,7 @@ export function AgentCanvas({ program, thinking, lastTools }: AgentCanvasProps):
         <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
       </div>
       {program && (
-        <div className="mt-8 border-t border-[var(--cat-border)] pt-6">
+        <div className="mt-8">
           <AgentProgramCard program={program} />
         </div>
       )}

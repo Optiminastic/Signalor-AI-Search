@@ -1,5 +1,10 @@
+'use client'
+
+import { useState } from 'react'
+
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import type { AgentProgram } from '@/lib/api/agent-mode'
+import { ChevronDown } from '@/lib/icons'
 
 const STAGES = ['Position', 'Plan', 'Execute', 'Track'] as const
 /** Max uplift goal the meter is scaled against (percentage points). */
@@ -42,20 +47,10 @@ function StagePipeline({ current }: { current: number }): JSX.Element {
   )
 }
 
-/** The brand's program at a glance: stage of the month loop and the uplift goal. */
-export function AgentProgramCard({ program }: { program: AgentProgram }): JSX.Element {
+function ProgramDetails({ program }: { program: AgentProgram }): JSX.Element {
   const goalPercent = Math.round((program.upliftTargetPoints / UPLIFT_SCALE_POINTS) * 100)
   return (
-    <section className="cat-agent-step space-y-4" style={{ animationDelay: '0.15s' }}>
-      <div className="flex items-center justify-between">
-        <p className="text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
-          Program
-        </p>
-        <span className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--cat-ink-2)]">
-          <span className="cat-agent-pulse h-1.5 w-1.5 rounded-full bg-[#e04a3d]" />
-          {STATUS_LABEL[program.status]}
-        </span>
-      </div>
+    <div className="space-y-4 px-4 pt-1 pb-4">
       <StagePipeline current={STAGE_FOR_STATUS[program.status]} />
       <div>
         <p className="mb-1.5 text-[12px] text-[var(--cat-ink-2)]">
@@ -66,6 +61,46 @@ export function AgentProgramCard({ program }: { program: AgentProgram }): JSX.El
           AI visibility
         </p>
         <TickBar value={Math.min(100, goalPercent)} showValue={false} />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Small collapsible card for the brand's program: status and goal at a glance;
+ * the toggle expands it to the month-loop stages and the goal meter.
+ */
+export function AgentProgramCard({ program }: { program: AgentProgram }): JSX.Element {
+  const [open, setOpen] = useState(false)
+  return (
+    <section
+      className="cat-agent-step w-full max-w-md overflow-hidden rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-content)] shadow-[0_1px_3px_rgba(16,24,40,.08)]"
+      style={{ animationDelay: '0.15s' }}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2.5 px-4 py-3 text-left"
+      >
+        <span className="cat-agent-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-[#e04a3d]" />
+        <span className="text-[13px] font-medium text-[var(--cat-ink)]">
+          {STATUS_LABEL[program.status]}
+        </span>
+        <span className="ml-auto text-[12px] text-[var(--cat-ink-3)]">
+          Goal +{program.upliftTargetPoints} pts
+        </span>
+        <ChevronDown
+          size={15}
+          className={`text-[var(--cat-ink-3)] transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+      >
+        <div className="min-h-0">
+          <ProgramDetails program={program} />
+        </div>
       </div>
     </section>
   )
