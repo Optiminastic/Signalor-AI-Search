@@ -62,9 +62,17 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
   const lastId = messages[messages.length - 1]?.id
   const lastStatus = messages[messages.length - 1]?.status
 
-  const scrollToEnd = useCallback(() => end.current?.scrollIntoView({ block: 'end' }), [])
+  // Block bodies on purpose: newer browsers return a Promise from
+  // scrollIntoView, and an effect that returns it makes React call the Promise
+  // as a cleanup function on unmount ("destroy is not a function"), which
+  // crashed the whole page.
+  const scrollToEnd = useCallback((): void => {
+    end.current?.scrollIntoView({ block: 'end' })
+  }, [])
 
-  useEffect(scrollToEnd, [lastId, lastStatus, scrollToEnd])
+  useEffect(() => {
+    scrollToEnd()
+  }, [lastId, lastStatus, scrollToEnd])
 
   return (
     <div
