@@ -40,6 +40,10 @@ export const queryKeys = {
     program: (orgSlug: string) => ['agent-mode', orgSlug, 'program'] as const,
     chats: (orgSlug: string) => ['agent-mode', orgSlug, 'chats'] as const,
     chat: (orgSlug: string, chatId: string) => ['agent-mode', orgSlug, 'chats', chatId] as const,
+    approvals: (orgSlug: string) => ['agent-mode', orgSlug, 'approvals'] as const,
+    planActions: (orgSlug: string) => ['agent-mode', orgSlug, 'plan-actions'] as const,
+    action: (orgSlug: string, actionId: string) =>
+      ['agent-mode', orgSlug, 'actions', actionId] as const,
   },
   backlinks: {
     auto: (slug: string) => ['backlinks', 'auto', slug] as const,

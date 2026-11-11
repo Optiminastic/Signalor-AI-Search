@@ -6,12 +6,14 @@ import { z } from 'zod'
  * `/api/growth/*`. Every response is validated with the caller's Zod schema.
  */
 const AGENT_MODE_BASE = '/api/agent-mode'
-const errorSchema = z.object({ detail: z.string() })
+const errorSchema = z.object({ detail: z.string(), code: z.string().optional() })
 
 export class AgentModeError extends Error {
   constructor(
     message: string,
     readonly status: number,
+    /** The backend's machine-readable reason (e.g. `stale`), when it gives one. */
+    readonly code: string = '',
   ) {
     super(message)
   }
@@ -39,6 +41,7 @@ export async function agentModeRequest<T>(
     throw new AgentModeError(
       parsed.success ? parsed.data.detail : 'Request failed.',
       response.status,
+      parsed.success ? (parsed.data.code ?? '') : '',
     )
   }
   return schema.parse(data)

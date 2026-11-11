@@ -1,0 +1,700 @@
+{
+  "action_not_found": {
+    "body": {
+      "detail": "Action not found."
+    },
+    "status": 404
+  },
+  "approvals_after_approve": {
+    "body": {
+      "actions": [
+        {
+          "connector": "wordpress",
+          "content": {
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-11T05:58:57.006747Z",
+          "id": "herqeivt2nc7",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "approved",
+          "task": {
+            "channel": "owned_content",
+            "id": 1,
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a page"
+          },
+          "updated_at": "2026-11-11T05:58:57.036218Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approvals_empty": {
+    "body": {
+      "actions": []
+    },
+    "status": 200
+  },
+  "approvals_mixed": {
+    "body": {
+      "actions": [
+        {
+          "connector": "wordpress",
+          "content": {
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-11T05:58:57.407854Z",
+          "id": "hbybjx4q65he",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "owned_content",
+            "id": 6,
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a pricing explainer"
+          },
+          "updated_at": "2026-11-11T05:58:57.408596Z",
+          "version": 1
+        },
+        {
+          "connector": "wordpress",
+          "content": {
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-11T05:58:57.388984Z",
+          "id": "tqi5cv5tn48x",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "approved",
+          "task": {
+            "channel": "owned_content",
+            "id": 5,
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a comparison page"
+          },
+          "updated_at": "2026-11-11T05:58:57.398117Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approvals_pending": {
+    "body": {
+      "actions": [
+        {
+          "connector": "gmail",
+          "content": {
+            "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+            "recipient_domain": "roundup.example",
+            "sender": "owner@pro.example",
+            "subject": "A suggestion for your tools roundup"
+          },
+          "created_at": "2026-11-11T05:58:57.137198Z",
+          "id": "5zi3b7fndzk5",
+          "kind": "send_outreach_email",
+          "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "outreach_email",
+            "id": 2,
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "title": "Get listed on roundup.example"
+          },
+          "updated_at": "2026-11-11T05:58:57.137721Z",
+          "version": 1
+        },
+        {
+          "connector": "wordpress",
+          "content": {
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-11T05:58:57.130053Z",
+          "id": "ga59kad24c76",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "owned_content",
+            "id": 1,
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a page"
+          },
+          "updated_at": "2026-11-11T05:58:57.130610Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approve_ok": {
+    "body": {
+      "action": {
+        "connector": "wordpress",
+        "content": {
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-11T05:58:57.006747Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.035675Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "herqeivt2nc7",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "state": "approved",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-11",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "updated_at": "2026-11-11T05:58:57.036218Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "decision_illegal_state": {
+    "body": {
+      "code": "illegal_state",
+      "detail": "This action is rejected and can no longer change."
+    },
+    "status": 409
+  },
+  "decision_missing_fields": {
+    "body": {
+      "code": "validation_error",
+      "detail": "This field is required.",
+      "payload_hash": ["This field is required."],
+      "status_code": 400,
+      "version": ["This field is required."]
+    },
+    "status": 400
+  },
+  "decision_stale": {
+    "body": {
+      "code": "stale",
+      "detail": "The draft changed since you reviewed it. Review it again."
+    },
+    "status": 409
+  },
+  "detail_article_awaiting": {
+    "body": {
+      "action": {
+        "connector": "wordpress",
+        "content": {
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-11T05:58:57.130053Z",
+        "decisions": [],
+        "id": "ga59kad24c76",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-11",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "updated_at": "2026-11-11T05:58:57.130610Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_email_awaiting": {
+    "body": {
+      "action": {
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-11T05:58:57.137198Z",
+        "decisions": [],
+        "id": "5zi3b7fndzk5",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-11",
+          "status": "awaiting_approval",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Get listed on roundup.example"
+        },
+        "updated_at": "2026-11-11T05:58:57.137721Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_failed": {
+    "body": {
+      "action": {
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-11T05:58:57.324488Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.331664Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "fxzcfr2jjmhj",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "state": "failed",
+        "task": {
+          "channel": "outreach_email",
+          "id": 3,
+          "scheduled_for": "2026-11-11",
+          "status": "failed",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Get listed on another roundup"
+        },
+        "updated_at": "2026-11-11T05:58:57.343530Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_outcome_unknown": {
+    "body": {
+      "action": {
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-11T05:58:57.286944Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.299001Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "5dugt9qi39y8",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "state": "needs_reconciliation",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-11",
+          "status": "executing",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Pitch roundup.example for a mention"
+        },
+        "updated_at": "2026-11-11T05:58:57.311801Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_rejected": {
+    "body": {
+      "action": {
+        "connector": "wordpress",
+        "content": {
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-11T05:58:57.171278Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.209659Z",
+            "decision": "rejected",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "vk94jycrsf44",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "state": "rejected",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-11",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "updated_at": "2026-11-11T05:58:57.210103Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_succeeded": {
+    "body": {
+      "action": {
+        "connector": "wordpress",
+        "content": {
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-11T05:58:57.253300Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.262602Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "66rpd3hrnb6t",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "state": "succeeded",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-11",
+          "status": "done",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "updated_at": "2026-11-11T05:58:57.271990Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "plan_mixed": {
+    "body": {
+      "plan": {
+        "baseline_share_of_voice": 0.0,
+        "ends_on": "2026-12-08",
+        "id": 1,
+        "starts_on": "2026-11-11",
+        "status": "active",
+        "target_share_of_voice": 0.0,
+        "tasks": [
+          {
+            "action": {
+              "id": "66rpd3hrnb6t",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "succeeded",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "https://pro.example/blog/x",
+            "id": 1,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "t": 1
+            },
+            "scheduled_for": "2026-11-11",
+            "status": "done",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "5dugt9qi39y8",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "needs_reconciliation",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 2,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "outcome_unknown": "boom"
+            },
+            "scheduled_for": "2026-11-11",
+            "status": "executing",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch roundup.example for a mention",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "fxzcfr2jjmhj",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "failed",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 3,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "error": "Connect Gmail first."
+            },
+            "scheduled_for": "2026-11-11",
+            "status": "failed",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Get listed on another roundup",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "xubhvz2gw5q6",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "rejected",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 4,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "skipped": "Rejected by the brand owner."
+            },
+            "scheduled_for": "2026-11-11",
+            "status": "skipped",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch a third site",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "tqi5cv5tn48x",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "approved",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 5,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a comparison page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "hbybjx4q65he",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "awaiting_approval",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 6,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-11-11",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a pricing explainer",
+            "week": 1
+          },
+          {
+            "action": null,
+            "attempts": 0,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 7,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-12-08",
+            "status": "planned",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Not prepared yet",
+            "week": 1
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "plan_none": {
+    "body": {
+      "plan": null
+    },
+    "status": 200
+  },
+  "program_not_found": {
+    "body": {
+      "detail": "Program not found."
+    },
+    "status": 404
+  },
+  "reject_after_approve_ok": {
+    "body": {
+      "action": {
+        "connector": "wordpress",
+        "content": {
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-11T05:58:57.006747Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.035675Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-11T05:58:57.071434Z",
+            "decision": "rejected",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "Changed my mind about this page.",
+            "version": 1
+          }
+        ],
+        "id": "herqeivt2nc7",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "state": "rejected",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-11",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "updated_at": "2026-11-11T05:58:57.071915Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  }
+}

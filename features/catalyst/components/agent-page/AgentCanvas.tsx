@@ -1,29 +1,74 @@
+'use client'
+
+import { useState } from 'react'
+
+import { awaitingCount, unknownCount } from '@/features/catalyst/agent-approvals'
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
+import { AgentApprovalsPanel } from '@/features/catalyst/components/agent-page/approvals/AgentApprovalsPanel'
+import {
+  BoardTabs,
+  boardPanelId,
+  type BoardTab,
+} from '@/features/catalyst/components/agent-page/BoardTabs'
+import { useAgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
 
 interface AgentCanvasProps {
+  orgSlug: string
   thinking: boolean
   lastTools: string[]
 }
 
-/** The whiter board beside the chat: a live view of what the agent is doing. */
-export function AgentCanvas({ thinking, lastTools }: AgentCanvasProps): JSX.Element {
+function heading(tab: BoardTab, thinking: boolean): string {
+  if (tab === 'approvals') return 'Approvals'
+  return thinking ? 'Working on it' : 'What the agent did'
+}
+
+function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): JSX.Element {
+  return (
+    <div className="mt-4 flex items-center justify-between">
+      <h2 className="text-[17px] font-semibold text-[var(--cat-ink)]">{heading(tab, thinking)}</h2>
+      {thinking && tab === 'activity' && (
+        <span className="cat-agent-scan h-1 w-24 rounded-full" aria-hidden="true" />
+      )}
+    </div>
+  )
+}
+
+/**
+ * The whiter board beside the chat: a live view of what the agent is doing,
+ * and the drafts waiting for the owner's approval.
+ */
+export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
+  const [tab, setTab] = useState<BoardTab>('activity')
+  const approvals = useAgentApprovals(orgSlug)
+  const badges = {
+    awaiting: awaitingCount(approvals.pending),
+    outcomeUnknown: unknownCount(approvals.results) > 0,
+  }
   return (
     <section
       aria-label="Agent board"
       className="cat-agent-canvas hidden min-h-0 flex-1 flex-col overflow-y-auto rounded-[22px] border border-white/80 bg-[var(--cat-content)]/90 px-8 py-6 shadow-[0_10px_40px_rgba(120,60,30,.08)] backdrop-blur-xl lg:flex dark:border-white/10"
     >
-      <p className="flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-3)]">
-        <Sparkles size={12} /> Updated automatically
-      </p>
-      <div className="mt-4 flex items-center justify-between">
-        <h2 className="text-[17px] font-semibold text-[var(--cat-ink)]">
-          {thinking ? 'Working on it' : 'What the agent did'}
-        </h2>
-        {thinking && <span className="cat-agent-scan h-1 w-24 rounded-full" aria-hidden="true" />}
+      <div className="flex items-center justify-between gap-3">
+        <BoardTabs value={tab} onChange={setTab} badges={badges} />
+        <p className="flex items-center gap-1.5 text-[11px] text-[var(--cat-ink-3)]">
+          <Sparkles size={12} /> Updated automatically
+        </p>
       </div>
-      <div className="mt-4">
-        <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
+      <BoardHeading tab={tab} thinking={thinking} />
+      <div
+        className="mt-4"
+        role="tabpanel"
+        id={boardPanelId(tab)}
+        aria-labelledby={`agent-board-tab-${tab}`}
+      >
+        {tab === 'activity' ? (
+          <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
+        ) : (
+          <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
+        )}
       </div>
     </section>
   )
