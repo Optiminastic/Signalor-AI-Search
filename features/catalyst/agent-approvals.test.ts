@@ -13,7 +13,10 @@ import {
   awaitingCount,
   canApprove,
   canReject,
+  canResolve,
+  decisionLabel,
   noticeFor,
+  splitResults,
   stateMeta,
   unknownCount,
 } from './agent-approvals'
@@ -161,5 +164,39 @@ describe('actionResults', () => {
 
   it('counts only drafts awaiting approval as waiting', () => {
     expect(awaitingCount([action(), action({ state: 'approved' })])).toBe(1)
+  })
+})
+
+describe('closing an unknown outcome', () => {
+  it('is possible only for an unknown outcome', () => {
+    const allowed = ACTION_STATES.filter(state => canResolve(action({ state })))
+    expect(allowed).toEqual(['needs_reconciliation'])
+  })
+
+  it('is not possible when the action is not identified', () => {
+    expect(canResolve(action({ state: 'needs_reconciliation', payloadHash: 'short' }))).toBe(false)
+    expect(canResolve(action({ state: 'needs_reconciliation', version: null }))).toBe(false)
+  })
+
+  it('reads a closed action as closed, never as sent or failed', () => {
+    const meta = stateMeta('cancelled', 'send_outreach_email')
+    expect(meta.label).toBe('Closed, outcome unknown')
+    expect(meta.tone).toBe('closed')
+  })
+
+  it('labels the resolutions in the history', () => {
+    expect(decisionLabel('resolved_sent')).toBe('Confirmed sent')
+    expect(decisionLabel('resolved_cancelled')).toBe('Closed with the outcome unknown')
+  })
+
+  it('splits unknown outcomes out as needing attention', () => {
+    const results = actionResults([
+      planTask('needs_reconciliation'),
+      planTask('failed'),
+      planTask('cancelled'),
+    ])
+    const { attention, settled } = splitResults(results)
+    expect(attention.map(r => r.state)).toEqual(['needs_reconciliation'])
+    expect(settled.map(r => r.state)).toEqual(['failed', 'cancelled'])
   })
 })

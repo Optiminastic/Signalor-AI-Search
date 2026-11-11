@@ -30,8 +30,8 @@ function isArticle(kind: string): boolean {
 /** Where a send's result would show, for the outcome-unknown advice. */
 function checkWhere(kind: string): string {
   return isArticle(kind)
-    ? 'Check your site for the post before doing anything else.'
-    : 'Check the Sent folder of the connected mailbox before doing anything else.'
+    ? 'Check your site for the post, then record below what you found.'
+    : 'Check the Sent folder of the connected mailbox, then record below what you found.'
 }
 
 const STATE_META: Record<Exclude<ActionState, 'needs_reconciliation'>, StateMeta> = {
@@ -58,6 +58,11 @@ const STATE_META: Record<Exclude<ActionState, 'needs_reconciliation'>, StateMeta
     summary: 'This failed before anything went out. Nothing was sent.',
   },
   rejected: { label: 'Rejected', tone: 'closed', summary: 'Rejected. It will not be sent.' },
+  cancelled: {
+    label: 'Closed, outcome unknown',
+    tone: 'closed',
+    summary: 'You closed this without confirming whether it went out. It will not be sent again.',
+  },
   unknown: {
     label: 'Unrecognised state',
     tone: 'closed',
@@ -95,6 +100,15 @@ export function isReviewable(action: AgentAction): boolean {
 
 export function canApprove(action: AgentAction): boolean {
   return action.state === 'awaiting_approval' && isReviewable(action)
+}
+
+/** An unknown outcome can be closed by the owner once the action is identified. */
+export function canResolve(action: AgentAction): boolean {
+  return (
+    action.state === 'needs_reconciliation' &&
+    action.version !== null &&
+    action.payloadHash.length === PAYLOAD_HASH_LENGTH
+  )
 }
 
 /** Rejecting also withdraws an approval, as long as sending hasn't started. */
@@ -154,6 +168,7 @@ const RESULT_ORDER: ActionState[] = [
   'dispatching',
   'failed',
   'rejected',
+  'cancelled',
   'succeeded',
 ]
 
@@ -196,8 +211,24 @@ export function formatWhen(iso: string): string {
   return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
 }
 
+const DECISION_LABELS: Record<string, string> = {
+  approved: 'Approved',
+  rejected: 'Rejected',
+  resolved_sent: 'Confirmed sent',
+  resolved_cancelled: 'Closed with the outcome unknown',
+}
+
 export function decisionLabel(decision: string): string {
-  if (decision === 'approved') return 'Approved'
-  if (decision === 'rejected') return 'Rejected'
-  return decision
+  return DECISION_LABELS[decision] ?? decision
+}
+
+/** Results split into what the owner must act on and what is settled. */
+export function splitResults(results: ActionResult[]): {
+  attention: ActionResult[]
+  settled: ActionResult[]
+} {
+  return {
+    attention: results.filter(r => r.state === 'needs_reconciliation'),
+    settled: results.filter(r => r.state !== 'needs_reconciliation'),
+  }
 }

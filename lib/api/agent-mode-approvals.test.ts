@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { decideAction, getAction, listApprovals, listPlanTaskActions } from './agent-mode-approvals'
+import {
+  decideAction,
+  getAction,
+  listApprovals,
+  listPlanTaskActions,
+  resolveAction,
+} from './agent-mode-approvals'
 import fixtures from './agent-mode-approvals.fixtures.json'
 import { AgentModeError } from './agent-mode-request'
 
@@ -234,5 +240,66 @@ describe('decideAction', () => {
       payloadHash,
     })
     await expect(call).rejects.toBeInstanceOf(TypeError)
+  })
+})
+
+describe('resolveAction', () => {
+  it('sends the resolution with the reviewed version and hash, and reads the result', async () => {
+    const fetchMock = serve('resolve_sent_ok')
+    const { id, version, payloadHash } = hashOf('resolve_sent_ok')
+    const result = await resolveAction({
+      orgSlug: SLUG,
+      actionId: id,
+      resolution: 'confirmed_sent',
+      version,
+      payloadHash,
+      reason: 'Found it.',
+    })
+    const { url, init } = sentRequest(fetchMock)
+    expect(url).toBe(`/api/agent-mode/programs/${SLUG}/actions/${id}/resolve`)
+    expect(JSON.parse(init.body as string)).toEqual({
+      resolution: 'confirmed_sent',
+      version,
+      payload_hash: payloadHash,
+      reason: 'Found it.',
+    })
+    expect(result.state).toBe('succeeded')
+    expect(result.decisions.map(d => d.decision)).toEqual(['approved', 'resolved_sent'])
+  })
+
+  it('reads a closed action as cancelled', async () => {
+    serve('resolve_cancel_ok')
+    const { id, version, payloadHash } = hashOf('resolve_cancel_ok')
+    const input = {
+      orgSlug: SLUG,
+      actionId: id,
+      resolution: 'cancel' as const,
+      version,
+      payloadHash,
+    }
+    expect((await resolveAction(input)).state).toBe('cancelled')
+  })
+
+  it('reports a stale action and an action that is already closed', async () => {
+    const { id, version, payloadHash } = hashOf('resolve_sent_ok')
+    const input = {
+      orgSlug: SLUG,
+      actionId: id,
+      resolution: 'cancel' as const,
+      version,
+      payloadHash,
+    }
+    serve('resolve_stale')
+    await expect(resolveAction(input)).rejects.toMatchObject({ status: 409, code: 'stale' })
+    serve('resolve_illegal_state')
+    await expect(resolveAction(input)).rejects.toMatchObject({ status: 409, code: 'illegal_state' })
+  })
+
+  it('refuses locally, without a request, when the action is not identified', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const input = { orgSlug: SLUG, actionId: 'abc', resolution: 'cancel' as const, version: 1 }
+    await expect(resolveAction({ ...input, payloadHash: 'short' })).rejects.toThrow()
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })

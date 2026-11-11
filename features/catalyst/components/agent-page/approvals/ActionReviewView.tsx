@@ -1,6 +1,7 @@
 import {
   canApprove,
   canReject,
+  canResolve,
   formatWhen,
   kindLabel,
   stateMeta,
@@ -12,8 +13,9 @@ import { ActionStateBadge } from '@/features/catalyst/components/agent-page/appr
 import { MUTED_TEXT } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { DecisionBar } from '@/features/catalyst/components/agent-page/approvals/DecisionBar'
 import { DecisionHistory } from '@/features/catalyst/components/agent-page/approvals/DecisionHistory'
+import { ResolveBar } from '@/features/catalyst/components/agent-page/approvals/ResolveBar'
 import { YELLOW } from '@/features/catalyst/constants'
-import type { AgentActionDetail, DecisionVerb } from '@/lib/api/agent-mode-approvals'
+import type { AgentActionDetail, DecisionVerb, Resolution } from '@/lib/api/agent-mode-approvals'
 import { ArrowLeft, Loader2 } from '@/lib/icons'
 
 export interface ActionReviewViewProps {
@@ -27,6 +29,7 @@ export interface ActionReviewViewProps {
   }
   onBack: () => void
   onDecide: (verb: DecisionVerb, reason?: string) => void
+  onResolve: (resolution: Resolution, reason?: string) => void
   onRefresh: () => void
 }
 
@@ -58,10 +61,25 @@ function StateSummary({ action }: { action: AgentActionDetail }): JSX.Element {
   )
 }
 
-function ReviewBody({ props }: { props: ActionReviewViewProps }): JSX.Element {
-  const { review, onDecide, onRefresh } = props
+/** What the owner can do now: decide on a draft, or close an unknown outcome. */
+function Controls({ props }: { props: ActionReviewViewProps }): JSX.Element {
+  const { review, onDecide, onResolve } = props
   const action = review.action as AgentActionDetail
   const blocked = Boolean(review.notice) || review.deciding || review.refreshing
+  if (canResolve(action)) return <ResolveBar disabled={blocked} onResolve={onResolve} />
+  return (
+    <DecisionBar
+      allowed={{ approve: canApprove(action), reject: canReject(action), version: action.version }}
+      disabled={blocked}
+      onDecide={onDecide}
+    />
+  )
+}
+
+function ReviewBody({ props }: { props: ActionReviewViewProps }): JSX.Element {
+  const { review, onRefresh } = props
+  const action = review.action as AgentActionDetail
+  const resolving = canResolve(action)
   return (
     <>
       <header>
@@ -77,16 +95,9 @@ function ReviewBody({ props }: { props: ActionReviewViewProps }): JSX.Element {
       {review.notice && (
         <ActionNotice notice={review.notice} refreshing={review.refreshing} onRefresh={onRefresh} />
       )}
+      {resolving && <Controls props={props} />}
       <ActionContentView content={action.content} />
-      <DecisionBar
-        allowed={{
-          approve: canApprove(action),
-          reject: canReject(action),
-          version: action.version,
-        }}
-        disabled={blocked}
-        onDecide={onDecide}
-      />
+      {!resolving && <Controls props={props} />}
       <DecisionHistory decisions={action.decisions} />
     </>
   )

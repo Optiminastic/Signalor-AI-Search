@@ -19,6 +19,7 @@ export const ACTION_STATES = [
   'succeeded',
   'failed',
   'needs_reconciliation',
+  'cancelled',
 ] as const
 
 /** A state this screen doesn't know yet reads as `unknown` and is never decidable. */
@@ -223,6 +224,16 @@ export async function listPlanTaskActions(orgSlug: string): Promise<PlanTaskActi
 
 export type DecisionVerb = 'approve' | 'reject'
 
+/** Refuses locally, before any request, unless the reviewed draft is fully identified. */
+function assertIdentified(version: number, payloadHash: string): void {
+  if (!Number.isInteger(version) || version < 1) {
+    throw new Error('The reviewed version is missing.')
+  }
+  if (payloadHash.length !== PAYLOAD_HASH_LENGTH) {
+    throw new Error('The reviewed draft is not identified.')
+  }
+}
+
 export interface DecisionInput {
   orgSlug: string
   actionId: string
@@ -233,19 +244,37 @@ export interface DecisionInput {
   reason?: string
 }
 
-/**
- * Records the owner's decision on the exact draft they reviewed. Refuses
- * locally, before any request, if the reviewed draft isn't fully identified.
- */
+/** Records the owner's decision on the exact draft they reviewed. */
 export async function decideAction(input: DecisionInput): Promise<AgentActionDetail> {
-  if (!Number.isInteger(input.version) || input.version < 1) {
-    throw new Error('The reviewed version is missing.')
-  }
-  if (input.payloadHash.length !== PAYLOAD_HASH_LENGTH) {
-    throw new Error('The reviewed draft is not identified.')
-  }
+  assertIdentified(input.version, input.payloadHash)
   const path = programPath(input.orgSlug, 'actions', encodeURIComponent(input.actionId), input.verb)
   const body = {
+    version: input.version,
+    payload_hash: input.payloadHash,
+    ...(input.reason ? { reason: input.reason } : {}),
+  }
+  return (await agentModeRequest(path, detailEnvelope, { method: 'POST', body })).action
+}
+
+/** How the owner closes an action whose send outcome is unknown. There is no "send again". */
+export type Resolution = 'confirmed_sent' | 'cancel'
+
+export interface ResolutionInput {
+  orgSlug: string
+  actionId: string
+  resolution: Resolution
+  /** The version and hash of the action the owner was shown. */
+  version: number
+  payloadHash: string
+  reason?: string
+}
+
+/** Records how the owner closed an outcome-unknown action. Never sends anything. */
+export async function resolveAction(input: ResolutionInput): Promise<AgentActionDetail> {
+  assertIdentified(input.version, input.payloadHash)
+  const path = programPath(input.orgSlug, 'actions', encodeURIComponent(input.actionId), 'resolve')
+  const body = {
+    resolution: input.resolution,
     version: input.version,
     payload_hash: input.payloadHash,
     ...(input.reason ? { reason: input.reason } : {}),

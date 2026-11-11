@@ -11,29 +11,52 @@ import {
 import {
   decideAction,
   getAction,
+  resolveAction,
   type AgentActionDetail,
   type DecisionVerb,
+  type Resolution,
 } from '@/lib/api/agent-mode-approvals'
 import { queryKeys } from '@/lib/query-keys'
+
+/** What the owner asked for: a decision on a draft, or closing an unknown outcome. */
+export type ActionChange =
+  | { type: 'decide'; verb: DecisionVerb }
+  | { type: 'resolve'; resolution: Resolution }
+
+interface ChangeRequest {
+  orgSlug: string
+  actionId: string
+  version: number
+  payloadHash: string
+  change: ActionChange
+  reason?: string
+}
+
+function submitChange(request: ChangeRequest): Promise<AgentActionDetail> {
+  const { change, ...reviewed } = request
+  return change.type === 'decide'
+    ? decideAction({ ...reviewed, verb: change.verb })
+    : resolveAction({ ...reviewed, resolution: change.resolution })
+}
 
 export interface AgentActionReview {
   action: AgentActionDetail | null
   isLoading: boolean
   loadError: string | null
-  /** Set when a decision failed. Decisions stay blocked until `refresh`. */
+  /** Set when a change failed. Everything stays blocked until `refresh`. */
   notice: DecisionNotice | null
   deciding: boolean
-  /** A refresh is loading; decisions wait for it. */
+  /** A refresh is loading; changes wait for it. */
   refreshing: boolean
-  decide: (verb: DecisionVerb, reason?: string) => void
+  submit: (change: ActionChange, reason?: string) => void
   refresh: () => void
 }
 
 /**
- * One action under review. The decision always carries the version and hash
- * of the draft currently on screen. The draft is not refetched in the
- * background (no refetch on focus), so it can only change when the owner
- * presses Refresh, never under them while they read it.
+ * One action under review. Every change carries the version and hash of the
+ * action currently on screen. The action is not refetched in the background
+ * (no refetch on focus), so it only changes when the owner presses Refresh,
+ * never under them while they read it. Nothing is ever retried.
  */
 export function useAgentAction(orgSlug: string, actionId: string): AgentActionReview {
   const queryClient = useQueryClient()
@@ -46,14 +69,12 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
     staleTime: Infinity,
     retry: false,
   })
-
   const refreshLists = useCallback((): void => {
     void queryClient.invalidateQueries({ queryKey: queryKeys.agentMode.approvals(orgSlug) })
     void queryClient.invalidateQueries({ queryKey: queryKeys.agentMode.planActions(orgSlug) })
   }, [queryClient, orgSlug])
-
   const mutation = useMutation({
-    mutationFn: decideAction,
+    mutationFn: submitChange,
     retry: false,
     onSuccess: detail => queryClient.setQueryData(key, detail),
     onError: error => setNotice(noticeFor(error)),
@@ -61,18 +82,12 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
   })
 
   const action = query.data ?? null
-  // Until a refresh lands, the draft on screen may be the outdated one.
+  // Until a refresh lands, the action on screen may be the outdated one.
   const blocked = Boolean(notice) || mutation.isPending || query.isFetching
-  const decide = (verb: DecisionVerb, reason?: string): void => {
+  const submit = (change: ActionChange, reason?: string): void => {
     if (!action || action.version === null || blocked) return
-    mutation.mutate({
-      orgSlug,
-      actionId,
-      verb,
-      version: action.version,
-      payloadHash: action.payloadHash,
-      reason,
-    })
+    const reviewed = { version: action.version, payloadHash: action.payloadHash }
+    mutation.mutate({ orgSlug, actionId, ...reviewed, change, reason })
   }
   const refresh = (): void => {
     setNotice(null)
@@ -86,7 +101,7 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
     notice,
     deciding: mutation.isPending,
     refreshing: query.isFetching && !query.isLoading,
-    decide,
+    submit,
     refresh,
   }
 }

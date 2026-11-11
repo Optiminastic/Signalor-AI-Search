@@ -24,7 +24,8 @@ function ActionReview({ orgSlug, actionId, onBack }: ActionReviewProps): JSX.Ele
     <ActionReviewView
       review={review}
       onBack={onBack}
-      onDecide={review.decide}
+      onDecide={(verb, reason) => review.submit({ type: 'decide', verb }, reason)}
+      onResolve={(resolution, reason) => review.submit({ type: 'resolve', resolution }, reason)}
       onRefresh={review.refresh}
     />
   )

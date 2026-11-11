@@ -58,7 +58,13 @@ function renderReview(
     ...over,
   }
   return renderToStaticMarkup(
-    <ActionReviewView review={review} onBack={noop} onDecide={noop} onRefresh={noop} />,
+    <ActionReviewView
+      review={review}
+      onBack={noop}
+      onDecide={noop}
+      onResolve={noop}
+      onRefresh={noop}
+    />,
   )
 }
 
@@ -66,6 +72,16 @@ function renderReview(
 function buttonTag(html: string, label: string): string | null {
   const match = html.match(new RegExp(`<button[^>]*>(?:(?!</button>).)*${label}`, 's'))
   return match ? match[0].slice(0, match[0].indexOf('>') + 1) : null
+}
+
+/**
+ * Whether a button tag carries the real `disabled` attribute. Matching the word
+ * alone is wrong: Tailwind's `disabled:` classes put it in every class list.
+ * A missing button fails loudly instead of passing as "not disabled".
+ */
+function isDisabled(tag: string | null): boolean {
+  if (tag === null) throw new Error('Button not found')
+  return /\sdisabled=""/.test(tag)
 }
 
 const LIST_BASE = { pending: [], results: [], isLoading: false, error: null, resultsError: null }
@@ -110,7 +126,9 @@ describe('Approvals list', () => {
     expect(html).toContain('Approved, not sent yet')
     const unknownAt = html.indexOf('Outcome unknown')
     expect(unknownAt).toBeGreaterThan(-1)
-    expect(unknownAt).toBeLessThan(html.indexOf('Failed, not sent'))
+    expect(html.indexOf('Needs your attention')).toBeLessThan(html.indexOf('Waiting for you'))
+    expect(unknownAt).toBeLessThan(html.indexOf('Waiting for you'))
+    expect(html.indexOf('Waiting for you')).toBeLessThan(html.indexOf('Failed, not sent'))
     expect(html).toContain('Connect Gmail first.')
     expect(html).not.toMatch(/Retry|Send again|Resend/i)
   })
@@ -131,7 +149,7 @@ describe('Action review', () => {
     expect(html).toContain('A suggestion for your tools roundup')
     expect(html).toContain('A published contact at roundup.example')
     expect(html).toContain('Reply STOP and we will not write again.')
-    expect(buttonTag(html, 'Approve version 1')).not.toContain('disabled')
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(false)
     expect(buttonTag(html, 'Reject')).not.toBeNull()
     expect(html).toContain('No decision has been recorded yet.')
   })
@@ -147,13 +165,13 @@ describe('Action review', () => {
     const html = renderReview(await detail('detail_email_awaiting'), { notice: stale })
     expect(html).toContain('This draft has changed')
     expect(html).toContain('Refresh')
-    expect(buttonTag(html, 'Approve version 1')).toContain('disabled')
-    expect(buttonTag(html, 'Reject<')).toContain('disabled')
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(true)
+    expect(isDisabled(buttonTag(html, 'Reject<'))).toBe(true)
   })
 
   it('blocks decisions while a refresh is loading', async () => {
     const html = renderReview(await detail('detail_email_awaiting'), { refreshing: true })
-    expect(buttonTag(html, 'Approve version 1')).toContain('disabled')
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(true)
   })
 
   it('says an unconfirmed decision may have been saved, and offers only a refresh', async () => {
@@ -161,7 +179,7 @@ describe('Action review', () => {
     const html = renderReview(await detail('detail_email_awaiting'), { notice: unconfirmed })
     expect(html).toContain('Decision not confirmed')
     expect(html).toContain('We could not confirm whether your decision was saved')
-    expect(buttonTag(html, 'Approve version 1')).toContain('disabled')
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(true)
   })
 
   it('shows outcome unknown distinctly, with no decision and no retry', async () => {
@@ -174,6 +192,39 @@ describe('Action review', () => {
     expect(buttonTag(html, 'Reject')).toBeNull()
     expect(html).not.toMatch(/Retry|Try again|Send again|Resend/i)
     expect(html).toContain('Approved')
+  })
+
+  it('offers exactly two ways to close an unknown outcome, and neither sends', async () => {
+    const html = renderReview(await detail('detail_outcome_unknown'))
+    expect(isDisabled(buttonTag(html, 'I found it: it was sent'))).toBe(false)
+    expect(isDisabled(buttonTag(html, 'Close it, outcome unknown'))).toBe(false)
+    expect(html.match(/<button/g)?.length).toBe(3) // back link + the two choices
+    expect(html.indexOf('I found it')).toBeLessThan(html.indexOf('Email body'))
+  })
+
+  it('locks the closing choices while a notice is open', async () => {
+    const stale = noticeFor(new AgentModeError('changed', 409, 'stale'))
+    const html = renderReview(await detail('detail_outcome_unknown'), { notice: stale })
+    expect(isDisabled(buttonTag(html, 'I found it: it was sent'))).toBe(true)
+    expect(isDisabled(buttonTag(html, 'Close it, outcome unknown'))).toBe(true)
+  })
+
+  it('shows an owner-confirmed send as done, with the resolution in the history', async () => {
+    serveFixture('resolve_sent_ok')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('data-state="succeeded"')
+    expect(html).toContain('Confirmed sent')
+    expect(html).toContain('Reason: Found it in the Sent folder.')
+    expect(buttonTag(html, 'I found it')).toBeNull()
+  })
+
+  it('shows a closed unknown outcome as closed, not as sent or failed', async () => {
+    serveFixture('resolve_cancel_ok')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('data-state="cancelled"')
+    expect(html).toContain('Closed with the outcome unknown')
+    expect(html).not.toContain('Failed, not sent')
+    expect(buttonTag(html, 'Close it')).toBeNull()
   })
 
   it('shows a failed send as failed and not sent, with no decision', async () => {

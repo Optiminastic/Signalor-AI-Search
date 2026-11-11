@@ -1,4 +1,4 @@
-import type { ActionResult } from '@/features/catalyst/agent-approvals'
+import { splitResults, type ActionResult } from '@/features/catalyst/agent-approvals'
 import {
   MUTED_TEXT,
   SECONDARY_BUTTON,
@@ -65,15 +65,18 @@ function PendingSection({
   )
 }
 
-function ResultsSection({
-  results,
-  onOpen,
-}: Pick<ApprovalListViewProps['data'], 'results'> & {
+interface ResultsSectionProps {
+  title: string
+  hint?: string
+  results: ActionResult[]
   onOpen: (id: string) => void
-}): JSX.Element {
+}
+
+function ResultsSection({ title, hint, results, onOpen }: ResultsSectionProps): JSX.Element {
   return (
-    <section aria-label="Results">
-      <h3 className={SECTION_TITLE}>Results</h3>
+    <section aria-label={title}>
+      <h3 className={SECTION_TITLE}>{title}</h3>
+      {hint && <p className={`mt-1 ${MUTED_TEXT}`}>{hint}</p>}
       <ul className="-mx-2 mt-1">
         {results.map(result => (
           <ApprovalRow
@@ -105,7 +108,7 @@ function EmptyState(): JSX.Element {
   )
 }
 
-/** The Approvals tab's list: drafts waiting on the owner, then recent results. */
+/** The Approvals tab's list: unknown outcomes first, then drafts waiting on the owner, then results. */
 export function ApprovalListView({ data, onOpen, onReload }: ApprovalListViewProps): JSX.Element {
   if (data.isLoading) {
     return (
@@ -118,10 +121,19 @@ export function ApprovalListView({ data, onOpen, onReload }: ApprovalListViewPro
   if (data.pending.length === 0 && data.results.length === 0 && !data.resultsError) {
     return <EmptyState />
   }
+  const { attention, settled } = splitResults(data.results)
   return (
     <div className="flex flex-col gap-6">
+      {attention.length > 0 && (
+        <ResultsSection
+          title="Needs your attention"
+          hint="We don't know whether these went out. Check, then record what you found."
+          results={attention}
+          onOpen={onOpen}
+        />
+      )}
       <PendingSection pending={data.pending} onOpen={onOpen} />
-      {data.results.length > 0 && <ResultsSection results={data.results} onOpen={onOpen} />}
+      {settled.length > 0 && <ResultsSection title="Results" results={settled} onOpen={onOpen} />}
       {data.resultsError && (
         <p role="alert" className={MUTED_TEXT}>
           Results couldn&apos;t load: {data.resultsError}
