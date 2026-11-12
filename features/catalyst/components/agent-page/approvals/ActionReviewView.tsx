@@ -12,6 +12,7 @@ import { ActionTimeline } from '@/features/catalyst/components/agent-page/approv
 import { MUTED_TEXT } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { DraftControls } from '@/features/catalyst/components/agent-page/approvals/DraftControls'
 import { ResolveBar } from '@/features/catalyst/components/agent-page/approvals/ResolveBar'
+import { ReviewNotes } from '@/features/catalyst/components/agent-page/approvals/ReviewNotes'
 import { SendAttemptsNote } from '@/features/catalyst/components/agent-page/approvals/SendAttemptsNote'
 import { YELLOW } from '@/features/catalyst/constants'
 import type { AgentActionDetail, DecisionVerb, Resolution } from '@/lib/api/agent-mode-approvals'
@@ -106,6 +107,7 @@ function ReviewBody({ props }: { props: ActionReviewViewProps }): JSX.Element {
         <ActionNotice notice={review.notice} refreshing={review.refreshing} onRefresh={onRefresh} />
       )}
       {resolving && <Controls props={props} />}
+      <ReviewNotes notes={action.content?.reviewNotes ?? []} />
       <ActionContentView content={action.content} />
       {!resolving && <Controls props={props} />}
       <ActionTimeline kind={action.kind} timeline={action.timeline} decisions={action.decisions} />

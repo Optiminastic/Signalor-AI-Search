@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { awaitingCount, unknownCount } from '@/features/catalyst/agent-approvals'
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
+import { AgentLog } from '@/features/catalyst/components/agent-page/AgentLog'
 import { AgentApprovalsPanel } from '@/features/catalyst/components/agent-page/approvals/AgentApprovalsPanel'
 import {
   BoardTabs,
@@ -65,7 +66,10 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
         aria-labelledby={`agent-board-tab-${tab}`}
       >
         {tab === 'activity' ? (
-          <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
+          <>
+            <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
+            <AgentLog orgSlug={orgSlug} />
+          </>
         ) : (
           <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
         )}

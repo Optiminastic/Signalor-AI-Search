@@ -1,10 +1,16 @@
-import { splitResults, type ActionResult } from '@/features/catalyst/agent-approvals'
+import {
+  splitResults,
+  type ActionResult,
+  type NeedsContactItem,
+} from '@/features/catalyst/agent-approvals'
 import {
   MUTED_TEXT,
   SECONDARY_BUTTON,
   SECTION_TITLE,
 } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { ApprovalRow } from '@/features/catalyst/components/agent-page/approvals/ApprovalRow'
+import { NeedsContactRow } from '@/features/catalyst/components/agent-page/approvals/NeedsContactRow'
+import type { ContactChoice } from '@/lib/api/agent-mode-activity'
 import type { AgentAction } from '@/lib/api/agent-mode-approvals'
 import { Loader2 } from '@/lib/icons'
 
@@ -15,9 +21,39 @@ interface ApprovalListViewProps {
     isLoading: boolean
     error: string | null
     resultsError: string | null
+    needsContact?: NeedsContactItem[]
   }
   onOpen: (actionId: string) => void
   onReload: () => void
+  /** Answers for tasks waiting on a contact email; omitted where not wired. */
+  contact?: { busyTaskId: number | null; onAnswer: (taskId: number, choice: ContactChoice) => void }
+}
+
+function NeedsInputSection({
+  items,
+  contact,
+}: {
+  items: NeedsContactItem[]
+  contact: NonNullable<ApprovalListViewProps['contact']>
+}): JSX.Element {
+  return (
+    <section aria-label="Needs your input">
+      <h3 className={SECTION_TITLE}>Needs your input</h3>
+      <p className={`mt-1 ${MUTED_TEXT}`}>
+        The agent couldn&apos;t find a public contact for these sites. It won&apos;t guess one.
+      </p>
+      <ul className="mt-2 flex flex-col gap-2">
+        {items.map(item => (
+          <NeedsContactRow
+            key={item.taskId}
+            item={item}
+            busy={contact.busyTaskId === item.taskId}
+            onAnswer={contact.onAnswer}
+          />
+        ))}
+      </ul>
+    </section>
+  )
 }
 
 function pendingNote(action: AgentAction): string {
@@ -108,22 +144,20 @@ function EmptyState(): JSX.Element {
   )
 }
 
-/** The Approvals tab's list: unknown outcomes first, then drafts waiting on the owner, then results. */
-export function ApprovalListView({ data, onOpen, onReload }: ApprovalListViewProps): JSX.Element {
-  if (data.isLoading) {
-    return (
-      <p role="status" className="flex items-center gap-2 text-[13px] text-[var(--cat-ink-3)]">
-        <Loader2 size={14} className="cat-agent-spin" aria-hidden="true" /> Loading approvals…
-      </p>
-    )
-  }
-  if (data.error) return <LoadError message={data.error} onReload={onReload} />
-  if (data.pending.length === 0 && data.results.length === 0 && !data.resultsError) {
-    return <EmptyState />
-  }
+function isEmpty(data: ApprovalListViewProps['data']): boolean {
+  const nothing = data.pending.length === 0 && data.results.length === 0
+  return nothing && (data.needsContact ?? []).length === 0 && !data.resultsError
+}
+
+/** The list's sections, in order: owner input, unknown outcomes, pending drafts, results. */
+function ListSections({ data, onOpen, contact }: ApprovalListViewProps): JSX.Element {
+  const needsContact = data.needsContact ?? []
   const { attention, settled } = splitResults(data.results)
   return (
     <div className="flex flex-col gap-6">
+      {needsContact.length > 0 && contact && (
+        <NeedsInputSection items={needsContact} contact={contact} />
+      )}
       {attention.length > 0 && (
         <ResultsSection
           title="Needs your attention"
@@ -141,4 +175,19 @@ export function ApprovalListView({ data, onOpen, onReload }: ApprovalListViewPro
       )}
     </div>
   )
+}
+
+/** The Approvals tab's list: owner input first, then unknown outcomes, drafts, results. */
+export function ApprovalListView(props: ApprovalListViewProps): JSX.Element {
+  const { data, onReload } = props
+  if (data.isLoading) {
+    return (
+      <p role="status" className="flex items-center gap-2 text-[13px] text-[var(--cat-ink-3)]">
+        <Loader2 size={14} className="cat-agent-spin" aria-hidden="true" /> Loading approvals…
+      </p>
+    )
+  }
+  if (data.error) return <LoadError message={data.error} onReload={onReload} />
+  if (isEmpty(data)) return <EmptyState />
+  return <ListSections {...props} />
 }

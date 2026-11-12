@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { ActionReviewView } from '@/features/catalyst/components/agent-page/approvals/ActionReviewView'
 import { ApprovalListView } from '@/features/catalyst/components/agent-page/approvals/ApprovalListView'
 import { useAgentAction } from '@/hooks/useAgentAction'
+import { useTaskContact } from '@/hooks/useAgentActivity'
 import type { AgentApprovals } from '@/hooks/useAgentApprovals'
 
 interface AgentApprovalsPanelProps {
@@ -35,6 +36,7 @@ function ActionReview({ orgSlug, actionId, onBack }: ActionReviewProps): JSX.Ele
 /** The Approvals tab: the list, or one action opened from it. */
 export function AgentApprovalsPanel({ orgSlug, approvals }: AgentApprovalsPanelProps): JSX.Element {
   const [openId, setOpenId] = useState<string | null>(null)
+  const contact = useTaskContact(orgSlug)
   if (openId) {
     return (
       <ActionReview
@@ -48,5 +50,12 @@ export function AgentApprovalsPanel({ orgSlug, approvals }: AgentApprovalsPanelP
       />
     )
   }
-  return <ApprovalListView data={approvals} onOpen={setOpenId} onReload={approvals.refresh} />
+  return (
+    <ApprovalListView
+      data={approvals}
+      onOpen={setOpenId}
+      onReload={approvals.refresh}
+      contact={{ busyTaskId: contact.pendingTaskId, onAnswer: contact.answer }}
+    />
+  )
 }

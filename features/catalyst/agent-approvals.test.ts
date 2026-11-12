@@ -51,6 +51,7 @@ function action(over: Partial<AgentAction> = {}): AgentAction {
       sender: 'me',
       message: 'b',
       footer: 'footer',
+      reviewNotes: [],
     },
     approvalExpiresAt: null,
     createdAt: '',
@@ -70,6 +71,7 @@ function planTask(
     taskStatus: 'planned',
     action: state ? { id: `id-${title}`, kind: 'send_outreach_email', state, version: 1 } : null,
     failure,
+    needsContact: null,
   }
 }
 

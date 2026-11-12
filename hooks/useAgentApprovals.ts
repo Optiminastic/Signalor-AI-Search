@@ -5,6 +5,8 @@ import { useCallback } from 'react'
 
 import {
   actionResults,
+  needsContactItems,
+  type NeedsContactItem,
   loadErrorMessage,
   type ActionResult,
 } from '@/features/catalyst/agent-approvals'
@@ -23,6 +25,8 @@ export interface AgentApprovals {
   pending: AgentAction[]
   /** Sent, failed, rejected and outcome-unknown actions from the current plan. */
   results: ActionResult[]
+  /** Outreach tasks waiting for the owner to add a contact email or skip. */
+  needsContact: NeedsContactItem[]
   isLoading: boolean
   error: string | null
   resultsError: string | null
@@ -57,6 +61,7 @@ export function useAgentApprovals(orgSlug: string): AgentApprovals {
   return {
     pending: approvals.data ?? [],
     results: actionResults(plan.data ?? []),
+    needsContact: needsContactItems(plan.data ?? []),
     isLoading: approvals.isLoading,
     error: approvals.error ? loadErrorMessage(approvals.error) : null,
     resultsError: plan.error ? loadErrorMessage(plan.error) : null,

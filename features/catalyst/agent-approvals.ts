@@ -238,6 +238,21 @@ export function actionResults(tasks: PlanTaskAction[]): ActionResult[] {
   return results.sort((a, b) => RESULT_ORDER.indexOf(a.state) - RESULT_ORDER.indexOf(b.state))
 }
 
+export interface NeedsContactItem {
+  taskId: number
+  taskTitle: string
+  domain: string
+}
+
+/** Tasks where the agent found no contact email and is waiting for the owner. */
+export function needsContactItems(tasks: PlanTaskAction[]): NeedsContactItem[] {
+  return tasks.flatMap(t =>
+    t.needsContact && t.taskStatus === 'awaiting_approval'
+      ? [{ taskId: t.taskId, taskTitle: t.taskTitle, domain: t.needsContact.domain }]
+      : [],
+  )
+}
+
 export function awaitingCount(actions: AgentAction[]): number {
   return actions.filter(a => a.state === 'awaiting_approval').length
 }

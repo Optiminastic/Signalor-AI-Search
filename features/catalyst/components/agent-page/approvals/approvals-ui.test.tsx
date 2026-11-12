@@ -406,3 +406,40 @@ describe('What happened timeline', () => {
     expect(html).not.toContain('Drafted by the agent')
   })
 })
+
+describe('The owner decides', () => {
+  it('shows fact-check concerns above the draft, with approval still possible', async () => {
+    const action = await detail('detail_email_awaiting')
+    if (action.content?.type !== 'email') throw new Error('expected an email')
+    const flagged = {
+      ...action,
+      content: { ...action.content, reviewNotes: ['Claims 40% growth.'] },
+    }
+    const html = renderReview(flagged)
+    expect(html).toContain('Fact-check concerns, for you to decide')
+    expect(html).toContain('Claims 40% growth.')
+    expect(html.indexOf('Fact-check concerns')).toBeLessThan(html.indexOf('Email body'))
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(false)
+  })
+
+  it('asks the owner for a contact instead of failing the task', () => {
+    const data = {
+      ...LIST_BASE,
+      needsContact: [{ taskId: 7, taskTitle: 'Pitch hubspot.com', domain: 'hubspot.com' }],
+    }
+    const html = renderToStaticMarkup(
+      <ApprovalListView
+        data={data}
+        onOpen={noop}
+        onReload={noop}
+        contact={{ busyTaskId: null, onAnswer: noop }}
+      />,
+    )
+    expect(html).toContain('Needs your input')
+    expect(html).toContain('No public contact email on hubspot.com')
+    expect(html).toContain('placeholder="editor@hubspot.com"')
+    expect(isDisabled(buttonTag(html, 'Draft with this email'))).toBe(true) // until an email is typed
+    expect(isDisabled(buttonTag(html, 'Skip this site'))).toBe(false)
+    expect(html).not.toContain('Nothing to approve yet')
+  })
+})

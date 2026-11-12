@@ -89,6 +89,7 @@ describe('getAction', () => {
       markdown: '**A short answer.**\n',
       platform: 'wordpress',
       answer: 'A short answer.',
+      reviewNotes: [],
     })
     expect(action.decisions).toEqual([])
   })

@@ -45,6 +45,7 @@ const articleSchema = z
     platform: z.string(),
     /** The editable opening answer. Older backends don't send it. */
     answer: z.string().optional(),
+    review_notes: z.array(z.string()).optional(),
   })
   .transform(c => ({
     type: 'article' as const,
@@ -54,6 +55,7 @@ const articleSchema = z
     markdown: c.markdown,
     platform: c.platform,
     answer: c.answer ?? null,
+    reviewNotes: c.review_notes ?? [],
   }))
 
 const emailSchema = z
@@ -65,6 +67,7 @@ const emailSchema = z
     /** The editable message and the fixed footer (sender line, opt-out). */
     message: z.string().optional(),
     footer: z.string().optional(),
+    review_notes: z.array(z.string()).optional(),
   })
   .transform(c => ({
     type: 'email' as const,
@@ -74,6 +77,7 @@ const emailSchema = z
     sender: c.sender,
     message: c.message ?? null,
     footer: c.footer ?? null,
+    reviewNotes: c.review_notes ?? [],
   }))
 
 export type ArticleContent = z.infer<typeof articleSchema>
@@ -247,6 +251,16 @@ const taskActionSchema = z.object({
   version: z.number().nullable(),
 })
 
+const needsContactSchema = z.object({ domain: z.string(), reason: z.string() })
+
+/** Set when the agent found no contact email for the task's site and is waiting for the owner. */
+function needsContactOf(
+  payload: Record<string, unknown> | null,
+): { domain: string; reason: string } | null {
+  const parsed = needsContactSchema.safeParse(payload?.needs_contact)
+  return parsed.success ? parsed.data : null
+}
+
 const planTaskSchema = z
   .object({
     id: z.number(),
@@ -262,6 +276,7 @@ const planTaskSchema = z
     taskStatus: t.status,
     action: t.action,
     failure: typeof t.result_payload?.error === 'string' ? t.result_payload.error : '',
+    needsContact: needsContactOf(t.result_payload),
   }))
 
 export type PlanTaskAction = z.infer<typeof planTaskSchema>

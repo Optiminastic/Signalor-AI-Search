@@ -42,6 +42,7 @@ export const queryKeys = {
     chat: (orgSlug: string, chatId: string) => ['agent-mode', orgSlug, 'chats', chatId] as const,
     approvals: (orgSlug: string) => ['agent-mode', orgSlug, 'approvals'] as const,
     planActions: (orgSlug: string) => ['agent-mode', orgSlug, 'plan-actions'] as const,
+    activity: (orgSlug: string) => ['agent-mode', orgSlug, 'activity'] as const,
     action: (orgSlug: string, actionId: string) =>
       ['agent-mode', orgSlug, 'actions', actionId] as const,
   },
