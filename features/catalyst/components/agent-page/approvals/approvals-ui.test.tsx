@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -428,12 +429,14 @@ describe('The owner decides', () => {
       needsContact: [{ taskId: 7, taskTitle: 'Pitch hubspot.com', domain: 'hubspot.com' }],
     }
     const html = renderToStaticMarkup(
-      <ApprovalListView
-        data={data}
-        onOpen={noop}
-        onReload={noop}
-        contact={{ busyTaskId: null, onAnswer: noop }}
-      />,
+      <QueryClientProvider client={new QueryClient()}>
+        <ApprovalListView
+          data={data}
+          onOpen={noop}
+          onReload={noop}
+          contact={{ orgSlug: 'brand', busyTaskId: null, onAnswer: noop }}
+        />
+      </QueryClientProvider>,
     )
     expect(html).toContain('Needs your input')
     expect(html).toContain('No public contact email on hubspot.com')
@@ -441,5 +444,6 @@ describe('The owner decides', () => {
     expect(isDisabled(buttonTag(html, 'Draft with this email'))).toBe(true) // until an email is typed
     expect(isDisabled(buttonTag(html, 'Skip this site'))).toBe(false)
     expect(html).not.toContain('Nothing to approve yet')
+    expect(html).toContain('Find contacts with Hunter / Apollo')
   })
 })

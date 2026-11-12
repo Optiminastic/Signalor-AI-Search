@@ -4,9 +4,11 @@ import { useId, useState } from 'react'
 
 import type { NeedsContactItem } from '@/features/catalyst/agent-approvals'
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import { ContactCandidates } from '@/features/catalyst/components/agent-page/approvals/ContactCandidates'
 import type { ContactChoice } from '@/lib/api/agent-mode-activity'
 
 interface NeedsContactRowProps {
+  orgSlug: string
   item: NeedsContactItem
   busy: boolean
   onAnswer: (taskId: number, choice: ContactChoice) => void
@@ -46,7 +48,12 @@ function ContactActions({ disabled, onDraft, onSkip }: ContactActionsProps): JSX
  * The agent found no public contact email for this site. Instead of giving
  * up, it asks: give it an email to write to, or skip the site.
  */
-export function NeedsContactRow({ item, busy, onAnswer }: NeedsContactRowProps): JSX.Element {
+export function NeedsContactRow({
+  orgSlug,
+  item,
+  busy,
+  onAnswer,
+}: NeedsContactRowProps): JSX.Element {
   const [email, setEmail] = useState('')
   const fieldId = useId()
   const valid = LOOKS_LIKE_EMAIL.test(email.trim())
@@ -58,8 +65,9 @@ export function NeedsContactRow({ item, busy, onAnswer }: NeedsContactRowProps):
         </p>
         <p className="text-[11.5px] text-[var(--cat-ink-3)]">{item.taskTitle}</p>
       </div>
+      <ContactCandidates orgSlug={orgSlug} taskId={item.taskId} busy={busy} onAnswer={onAnswer} />
       <label htmlFor={fieldId} className="text-[12px] text-[var(--cat-ink-2)]">
-        Know who to write to? The agent will draft the pitch for them.
+        Or type an email you know. The agent will draft the pitch for them.
       </label>
       <div className="flex flex-wrap gap-2">
         <input

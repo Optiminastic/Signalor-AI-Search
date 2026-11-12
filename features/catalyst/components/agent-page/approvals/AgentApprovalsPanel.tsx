@@ -55,7 +55,7 @@ export function AgentApprovalsPanel({ orgSlug, approvals }: AgentApprovalsPanelP
       data={approvals}
       onOpen={setOpenId}
       onReload={approvals.refresh}
-      contact={{ busyTaskId: contact.pendingTaskId, onAnswer: contact.answer }}
+      contact={{ orgSlug, busyTaskId: contact.pendingTaskId, onAnswer: contact.answer }}
     />
   )
 }

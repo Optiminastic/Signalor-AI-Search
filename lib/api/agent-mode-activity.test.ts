@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { answerContact, listActivity } from './agent-mode-activity'
+import { answerContact, findContacts, listActivity } from './agent-mode-activity'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -43,5 +43,38 @@ describe('agent activity API', () => {
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit]
     expect(url).toBe('/api/agent-mode/programs/brand/tasks/7/contact')
     expect(JSON.parse(init.body as string)).toEqual({ email: 'ed@hubspot.com' })
+  })
+})
+
+describe('contact finders', () => {
+  it('reads the people found and sends a picked person back by provider and ref', async () => {
+    serve({
+      candidates: [
+        {
+          provider: 'apollo',
+          ref: 'p1',
+          name: 'Sam Ro***s',
+          title: 'Head of Content',
+          email: '',
+          confidence: '',
+        },
+      ],
+      providers: ['hunter', 'apollo'],
+      errors: ['hunter'],
+    })
+    const found = await findContacts('brand', 7)
+    expect(found.candidates[0]).toMatchObject({ label: 'Apollo', ref: 'p1', email: '' })
+    expect(found.errors).toEqual(['hunter'])
+    const fetchMock = serve({ task: { id: 7, status: 'planned' } }, 202)
+    await answerContact({
+      orgSlug: 'brand',
+      taskId: 7,
+      choice: { candidate: { provider: 'apollo', ref: 'p1' } },
+    })
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(url).toBe('/api/agent-mode/programs/brand/tasks/7/contact')
+    expect(JSON.parse(init.body as string)).toEqual({
+      candidate: { provider: 'apollo', ref: 'p1' },
+    })
   })
 })

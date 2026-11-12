@@ -26,7 +26,11 @@ interface ApprovalListViewProps {
   onOpen: (actionId: string) => void
   onReload: () => void
   /** Answers for tasks waiting on a contact email; omitted where not wired. */
-  contact?: { busyTaskId: number | null; onAnswer: (taskId: number, choice: ContactChoice) => void }
+  contact?: {
+    orgSlug: string
+    busyTaskId: number | null
+    onAnswer: (taskId: number, choice: ContactChoice) => void
+  }
 }
 
 function NeedsInputSection({
@@ -46,6 +50,7 @@ function NeedsInputSection({
         {items.map(item => (
           <NeedsContactRow
             key={item.taskId}
+            orgSlug={contact.orgSlug}
             item={item}
             busy={contact.busyTaskId === item.taskId}
             onAnswer={contact.onAnswer}
