@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { loadErrorMessage } from '@/features/catalyst/agent-approvals'
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import { ConnectToolsPanel } from '@/features/catalyst/components/agent-page/tools/ConnectToolsPanel'
 import {
   findContacts,
   type ContactCandidate,
@@ -49,11 +50,26 @@ function Person({ person, busy, onPick }: PersonProps): JSX.Element {
 
 interface ResultsProps extends ContactCandidatesProps {
   found: FoundContacts
+  onSearchAgain: () => void
 }
 
-function Results({ found, taskId, busy, onAnswer }: ResultsProps): JSX.Element {
+function Results({
+  found,
+  orgSlug,
+  taskId,
+  busy,
+  onAnswer,
+  onSearchAgain,
+}: ResultsProps): JSX.Element {
   if (found.providers.length === 0) {
-    return <p className={NOTE}>Contact finders (Hunter, Apollo) aren&apos;t set up yet.</p>
+    return (
+      <div className="flex flex-col gap-2">
+        <ConnectToolsPanel orgSlug={orgSlug} />
+        <button type="button" onClick={onSearchAgain} className={`${SECONDARY_BUTTON} self-start`}>
+          Search again
+        </button>
+      </div>
+    )
   }
   if (found.candidates.length === 0) {
     return <p className={NOTE}>No suitable people found. Type an email yourself, or skip.</p>
@@ -93,7 +109,9 @@ export function ContactCandidates(props: ContactCandidatesProps): JSX.Element {
         </button>
       )}
       {lookup.error && <p className={NOTE}>{loadErrorMessage(lookup.error)}</p>}
-      {lookup.data && <Results found={lookup.data} {...props} />}
+      {lookup.data && (
+        <Results found={lookup.data} onSearchAgain={() => lookup.mutate()} {...props} />
+      )}
     </div>
   )
 }

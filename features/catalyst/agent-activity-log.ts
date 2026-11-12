@@ -16,6 +16,13 @@ function concerns(entry: ActivityEntry): string {
   return Array.isArray(list) ? list.filter(c => typeof c === 'string').join(' ') : ''
 }
 
+const FINDER_LABELS: Record<string, string> = { hunter: 'Hunter', apollo: 'Apollo' }
+
+function finderLabel(entry: ActivityEntry): string {
+  const provider = text(entry.detail.provider)
+  return FINDER_LABELS[provider] ?? 'a contact finder'
+}
+
 type Describe = (entry: ActivityEntry) => ActivityLine
 
 const LINES: Record<string, Describe> = {
@@ -75,6 +82,21 @@ const LINES: Record<string, Describe> = {
   opt_out_received: e => ({
     title: `They opted out: ${text(e.detail.domain)}`,
     detail: 'Never emailed again.',
+    tone: 'neutral',
+  }),
+  finder_connected: e => ({
+    title: `You connected ${finderLabel(e)}`,
+    detail: `Key ••••${text(e.detail.key_hint)}. The agent will use it to find contacts.`,
+    tone: 'success',
+  }),
+  finder_disconnected: e => ({
+    title: `You disconnected ${finderLabel(e)}`,
+    detail: '',
+    tone: 'neutral',
+  }),
+  contacts_found: e => ({
+    title: `Looked up contacts at ${text(e.detail.domain) || 'a site'}`,
+    detail: `${String(e.detail.found ?? 0)} found.`,
     tone: 'neutral',
   }),
   guardrail: e => ({

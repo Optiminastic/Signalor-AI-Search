@@ -73,6 +73,7 @@ function AgentMain({ orgSlug, brandName, chatId, agentHref, chats }: AgentMainPr
   if (!chatId && !chat.thinking && chat.messages.length === 0) {
     return (
       <AgentHome
+        orgSlug={orgSlug}
         brandName={brandName}
         onSend={chat.send}
         busy={chat.thinking}
@@ -82,7 +83,7 @@ function AgentMain({ orgSlug, brandName, chatId, agentHref, chats }: AgentMainPr
   }
   return (
     <div className="flex min-h-0 flex-1 gap-3 px-4 pb-4">
-      <AgentChatPanel brandName={brandName} chat={chat} />
+      <AgentChatPanel orgSlug={orgSlug} brandName={brandName} chat={chat} />
       <AgentCanvas
         orgSlug={orgSlug}
         thinking={chat.thinking}

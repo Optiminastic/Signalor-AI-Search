@@ -2,9 +2,11 @@
 
 import { useState, type FormEvent, type KeyboardEvent } from 'react'
 
+import { ConnectToolsButton } from '@/features/catalyst/components/agent-page/tools/ConnectToolsButton'
 import { ArrowUp } from '@/lib/icons'
 
 interface AgentComposerProps {
+  orgSlug: string
   onSend: (message: string) => void
   /** True while a reply is being written. */
   disabled: boolean
@@ -14,11 +16,19 @@ const SEND_READY = 'auth-cta-btn grid h-8 w-8 place-items-center rounded-md text
 const SEND_IDLE =
   'grid h-8 w-8 place-items-center rounded-md bg-[var(--cat-track)] text-[var(--cat-ink-3)]'
 
-function SendRow({ canSend }: { canSend: boolean }): JSX.Element {
+interface SendRowProps {
+  orgSlug: string
+  canSend: boolean
+}
+
+function SendRow({ orgSlug, canSend }: SendRowProps): JSX.Element {
   return (
-    <div className="mt-1 flex items-center justify-between">
-      <span className="text-[11px] text-[var(--cat-ink-3)]">
-        Answers come from this brand&apos;s real data.
+    <div className="mt-1 flex items-center justify-between gap-2">
+      <span className="flex min-w-0 items-center gap-2">
+        <ConnectToolsButton orgSlug={orgSlug} />
+        <span className="truncate text-[11px] text-[var(--cat-ink-3)]">
+          Answers come from this brand&apos;s real data.
+        </span>
       </span>
       <button
         type="submit"
@@ -33,7 +43,7 @@ function SendRow({ canSend }: { canSend: boolean }): JSX.Element {
 }
 
 /** The message box. Enter sends, Shift+Enter adds a new line. */
-export function AgentComposer({ onSend, disabled }: AgentComposerProps): JSX.Element {
+export function AgentComposer({ orgSlug, onSend, disabled }: AgentComposerProps): JSX.Element {
   const [value, setValue] = useState('')
   const canSend = value.trim().length > 0 && !disabled
 
@@ -65,7 +75,7 @@ export function AgentComposer({ onSend, disabled }: AgentComposerProps): JSX.Ele
         aria-label="Message the SignalorAI Agent"
         className="max-h-40 w-full resize-none bg-transparent text-[14px] text-[var(--cat-ink)] outline-none placeholder:text-[var(--cat-ink-3)]"
       />
-      <SendRow canSend={canSend} />
+      <SendRow orgSlug={orgSlug} canSend={canSend} />
     </form>
   )
 }

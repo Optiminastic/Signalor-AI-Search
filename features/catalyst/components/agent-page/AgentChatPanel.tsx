@@ -4,6 +4,7 @@ import { AgentThread } from '@/features/catalyst/components/agent-page/AgentThre
 import type { AgentChatMessage } from '@/lib/api/agent-mode-chat'
 
 interface AgentChatPanelProps {
+  orgSlug: string
   brandName: string
   chat: {
     messages: AgentChatMessage[]
@@ -14,7 +15,7 @@ interface AgentChatPanelProps {
 }
 
 /** Translucent glass panel holding the conversation, docked on the left. */
-export function AgentChatPanel({ brandName, chat }: AgentChatPanelProps): JSX.Element {
+export function AgentChatPanel({ orgSlug, brandName, chat }: AgentChatPanelProps): JSX.Element {
   return (
     <section
       aria-label="Conversation"
@@ -31,7 +32,7 @@ export function AgentChatPanel({ brandName, chat }: AgentChatPanelProps): JSX.El
       </header>
       <AgentThread messages={chat.messages} error={chat.error} />
       <div className="px-4 pb-4">
-        <AgentComposer onSend={chat.send} disabled={chat.thinking} />
+        <AgentComposer orgSlug={orgSlug} onSend={chat.send} disabled={chat.thinking} />
       </div>
     </section>
   )
