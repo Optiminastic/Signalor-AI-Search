@@ -68,6 +68,11 @@ const STATE_META: Record<Exclude<ActionState, 'needs_reconciliation'>, StateMeta
     tone: 'closed',
     summary: 'You withdrew your approval before it was sent. It will not be sent.',
   },
+  stopped: {
+    label: 'Stopped, they replied',
+    tone: 'closed',
+    summary: 'The contact replied, so this follow-up was not needed and was not sent.',
+  },
   cancelled: {
     label: 'Closed, outcome unknown',
     tone: 'closed',
@@ -96,6 +101,7 @@ export function stateMeta(state: ActionState, kind: string): StateMeta {
 export function kindLabel(kind: string): string {
   if (isArticle(kind)) return 'Article'
   if (kind === 'send_outreach_email') return 'Outreach email'
+  if (kind === 'send_follow_up') return 'Follow-up email'
   return 'Action'
 }
 
@@ -203,6 +209,7 @@ const RESULT_ORDER: ActionState[] = [
   'rejected',
   'revoked',
   'expired',
+  'stopped',
   'cancelled',
   'succeeded',
 ]
@@ -253,6 +260,7 @@ const DECISION_LABELS: Record<string, string> = {
   resolved_cancelled: 'Closed with the outcome unknown',
   revoked: 'Approval withdrawn',
   expired: 'Approval expired',
+  stopped: 'Stopped, they replied',
 }
 
 export function decisionLabel(decision: string): string {

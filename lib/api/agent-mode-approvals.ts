@@ -22,6 +22,7 @@ export const ACTION_STATES = [
   'cancelled',
   'expired',
   'revoked',
+  'stopped',
 ] as const
 
 /** A state this screen doesn't know yet reads as `unknown` and is never decidable. */
@@ -85,7 +86,7 @@ function parseContent(kind: string, raw: unknown): ActionContent | null {
     const parsed = articleSchema.safeParse(raw)
     return parsed.success ? parsed.data : null
   }
-  if (kind === 'send_outreach_email') {
+  if (kind === 'send_outreach_email' || kind === 'send_follow_up') {
     const parsed = emailSchema.safeParse(raw)
     return parsed.success ? parsed.data : null
   }

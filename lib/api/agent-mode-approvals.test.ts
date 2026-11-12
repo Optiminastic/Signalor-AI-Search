@@ -397,3 +397,29 @@ describe('revoke and expiry', () => {
     ])
   })
 })
+
+describe('follow-ups', () => {
+  it('reads a follow-up as an email with its message and fixed footer', async () => {
+    serve('detail_follow_up_awaiting')
+    const action = await getAction(SLUG, 'abc')
+    expect(action.kind).toBe('send_follow_up')
+    expect(action.content).toMatchObject({
+      type: 'email',
+      subject: 'Re: A suggestion for your tools roundup',
+      recipientDomain: 'roundup.example',
+    })
+    if (action.content?.type !== 'email') throw new Error('expected an email')
+    expect(action.content.message).toMatch(/just bumping this/)
+    expect(action.content.footer).toMatch(/no thanks/)
+  })
+
+  it('reads a stopped follow-up and its system decision', async () => {
+    serve('detail_follow_up_stopped')
+    const action = await getAction(SLUG, 'abc')
+    expect(action.state).toBe('stopped')
+    expect(action.decisions.map(d => [d.decision, d.actorRole])).toEqual([
+      ['approved', 'owner'],
+      ['stopped', 'system'],
+    ])
+  })
+})

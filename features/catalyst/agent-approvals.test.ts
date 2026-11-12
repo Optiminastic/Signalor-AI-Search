@@ -17,6 +17,7 @@ import {
   canResolve,
   canRevoke,
   editErrorFor,
+  kindLabel,
   decisionLabel,
   noticeFor,
   splitResults,
@@ -253,5 +254,15 @@ describe('withdrawing and expired approvals', () => {
   it('labels them in the history', () => {
     expect(decisionLabel('revoked')).toBe('Approval withdrawn')
     expect(decisionLabel('expired')).toBe('Approval expired')
+  })
+})
+
+describe('follow-up emails', () => {
+  it('names a follow-up and reads a stopped one as closed, never sent', () => {
+    expect(kindLabel('send_follow_up')).toBe('Follow-up email')
+    const meta = stateMeta('stopped', 'send_follow_up')
+    expect(meta.tone).toBe('closed')
+    expect(meta.summary).toMatch(/not sent/)
+    expect(decisionLabel('stopped')).toBe('Stopped, they replied')
   })
 })

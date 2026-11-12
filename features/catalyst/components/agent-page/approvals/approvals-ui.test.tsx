@@ -331,3 +331,27 @@ describe('Revoke and expiry', () => {
     expect(buttonTag(html, 'Edit draft')).toBeNull()
   })
 })
+
+describe('Follow-up emails', () => {
+  it('shows a follow-up for approval like any email, editable, with its kind', async () => {
+    const html = renderReview(await detail('detail_follow_up_awaiting'))
+    expect(html).toContain('Follow-up email')
+    expect(html).toContain('Re: A suggestion for your tools roundup')
+    expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(false)
+    expect(isDisabled(buttonTag(html, 'Edit draft'))).toBe(false)
+  })
+
+  it('shows a follow-up approval running out within days', async () => {
+    const html = renderReview(await detail('detail_follow_up_approved'))
+    expect(html).toContain('Approval valid until')
+    expect(isDisabled(buttonTag(html, 'Withdraw approval'))).toBe(false)
+  })
+
+  it('shows a stopped follow-up as closed because they replied, with no controls', async () => {
+    const html = renderReview(await detail('detail_follow_up_stopped'))
+    expect(html).toContain('data-state="stopped"')
+    expect(html).toContain('Stopped, they replied')
+    expect(buttonTag(html, 'Approve')).toBeNull()
+    expect(buttonTag(html, 'Edit draft')).toBeNull()
+  })
+})
