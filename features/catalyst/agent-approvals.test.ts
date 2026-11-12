@@ -13,7 +13,9 @@ import {
   awaitingCount,
   canApprove,
   canReject,
+  canEdit,
   canResolve,
+  editErrorFor,
   decisionLabel,
   noticeFor,
   splitResults,
@@ -39,7 +41,15 @@ function action(over: Partial<AgentAction> = {}): AgentAction {
     },
     version: 1,
     payloadHash: HASH,
-    content: { type: 'email', subject: 's', body: 'b', recipientDomain: 'x.example', sender: 'me' },
+    content: {
+      type: 'email',
+      subject: 's',
+      body: 'b\n\n--\nfooter',
+      recipientDomain: 'x.example',
+      sender: 'me',
+      message: 'b',
+      footer: 'footer',
+    },
     createdAt: '',
     updatedAt: '',
     ...over,
@@ -198,5 +208,27 @@ describe('closing an unknown outcome', () => {
     const { attention, settled } = splitResults(results)
     expect(attention.map(r => r.state)).toEqual(['needs_reconciliation'])
     expect(settled.map(r => r.state)).toEqual(['failed', 'cancelled'])
+  })
+})
+
+describe('editing a draft', () => {
+  it('is possible until sending starts', () => {
+    const allowed = ACTION_STATES.filter(state => canEdit(action({ state })))
+    expect(allowed).toEqual(['awaiting_approval', 'approved', 'rejected'])
+  })
+
+  it('is not possible when the editable parts are missing (older backend)', () => {
+    const email = action().content
+    if (email?.type !== 'email') throw new Error('fixture is an email')
+    expect(canEdit(action({ content: { ...email, message: null } }))).toBe(false)
+    expect(canEdit(action({ content: null }))).toBe(false)
+  })
+
+  it('treats a refused edit as fixable in the form, and nothing else', () => {
+    expect(editErrorFor(new AgentModeError("Subject can't be empty.", 400, 'invalid_edit'))).toBe(
+      "Subject can't be empty.",
+    )
+    expect(editErrorFor(new AgentModeError('changed', 409, 'stale'))).toBeNull()
+    expect(editErrorFor(new TypeError('Failed to fetch'))).toBeNull()
   })
 })

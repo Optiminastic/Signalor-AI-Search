@@ -40,6 +40,8 @@ const articleSchema = z
     slug: z.string(),
     markdown: z.string(),
     platform: z.string(),
+    /** The editable opening answer. Older backends don't send it. */
+    answer: z.string().optional(),
   })
   .transform(c => ({
     type: 'article' as const,
@@ -48,6 +50,7 @@ const articleSchema = z
     slug: c.slug,
     markdown: c.markdown,
     platform: c.platform,
+    answer: c.answer ?? null,
   }))
 
 const emailSchema = z
@@ -56,6 +59,9 @@ const emailSchema = z
     body: z.string(),
     recipient_domain: z.string(),
     sender: z.string(),
+    /** The editable message and the fixed footer (sender line, opt-out). */
+    message: z.string().optional(),
+    footer: z.string().optional(),
   })
   .transform(c => ({
     type: 'email' as const,
@@ -63,6 +69,8 @@ const emailSchema = z
     body: c.body,
     recipientDomain: c.recipient_domain,
     sender: c.sender,
+    message: c.message ?? null,
+    footer: c.footer ?? null,
   }))
 
 export type ArticleContent = z.infer<typeof articleSchema>
@@ -279,5 +287,27 @@ export async function resolveAction(input: ResolutionInput): Promise<AgentAction
     payload_hash: input.payloadHash,
     ...(input.reason ? { reason: input.reason } : {}),
   }
+  return (await agentModeRequest(path, detailEnvelope, { method: 'POST', body })).action
+}
+
+export interface EditInput {
+  orgSlug: string
+  actionId: string
+  /** The version and hash the edit was made on. */
+  version: number
+  payloadHash: string
+  /** Email: subject, message. Article: title, meta_description, slug, answer. */
+  fields: Record<string, string>
+}
+
+/**
+ * Saves an edit as the next version. The action goes back to awaiting approval
+ * and any earlier approval stops counting. Invalid content is a 400
+ * (`invalid_edit`) with the reason.
+ */
+export async function editAction(input: EditInput): Promise<AgentActionDetail> {
+  assertIdentified(input.version, input.payloadHash)
+  const path = programPath(input.orgSlug, 'actions', encodeURIComponent(input.actionId), 'edit')
+  const body = { version: input.version, payload_hash: input.payloadHash, fields: input.fields }
   return (await agentModeRequest(path, detailEnvelope, { method: 'POST', body })).action
 }

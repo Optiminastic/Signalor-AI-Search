@@ -102,6 +102,24 @@ export function canApprove(action: AgentAction): boolean {
   return action.state === 'awaiting_approval' && isReviewable(action)
 }
 
+const EDITABLE: ActionState[] = ['awaiting_approval', 'approved', 'rejected']
+
+/** A draft can be edited until sending starts, if what it says can be shown. */
+export function canEdit(action: AgentAction): boolean {
+  if (!EDITABLE.includes(action.state) || !isReviewable(action)) return false
+  const content = action.content
+  if (content?.type === 'email') return content.message !== null && content.footer !== null
+  return content?.type === 'article' && content.answer !== null
+}
+
+/** A refused edit the owner can fix in the form, as opposed to a notice. */
+export function editErrorFor(error: unknown): string | null {
+  if (error instanceof AgentModeError && error.status === 400 && error.code === 'invalid_edit') {
+    return error.message
+  }
+  return null
+}
+
 /** An unknown outcome can be closed by the owner once the action is identified. */
 export function canResolve(action: AgentAction): boolean {
   return (

@@ -4,12 +4,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 
 import {
+  editErrorFor,
   loadErrorMessage,
   noticeFor,
   type DecisionNotice,
 } from '@/features/catalyst/agent-approvals'
 import {
   decideAction,
+  editAction,
   getAction,
   resolveAction,
   type AgentActionDetail,
@@ -18,9 +20,10 @@ import {
 } from '@/lib/api/agent-mode-approvals'
 import { queryKeys } from '@/lib/query-keys'
 
-/** What the owner asked for: a decision on a draft, or closing an unknown outcome. */
+/** What the owner asked for: a decision, an edit, or closing an unknown outcome. */
 export type ActionChange =
   | { type: 'decide'; verb: DecisionVerb }
+  | { type: 'edit'; fields: Record<string, string> }
   | { type: 'resolve'; resolution: Resolution }
 
 interface ChangeRequest {
@@ -34,9 +37,9 @@ interface ChangeRequest {
 
 function submitChange(request: ChangeRequest): Promise<AgentActionDetail> {
   const { change, ...reviewed } = request
-  return change.type === 'decide'
-    ? decideAction({ ...reviewed, verb: change.verb })
-    : resolveAction({ ...reviewed, resolution: change.resolution })
+  if (change.type === 'decide') return decideAction({ ...reviewed, verb: change.verb })
+  if (change.type === 'edit') return editAction({ ...reviewed, fields: change.fields })
+  return resolveAction({ ...reviewed, resolution: change.resolution })
 }
 
 export interface AgentActionReview {
@@ -45,6 +48,8 @@ export interface AgentActionReview {
   loadError: string | null
   /** Set when a change failed. Everything stays blocked until `refresh`. */
   notice: DecisionNotice | null
+  /** Why the last edit was refused, for the form. Cleared by the next change. */
+  editError: string | null
   deciding: boolean
   /** A refresh is loading; changes wait for it. */
   refreshing: boolean
@@ -62,6 +67,7 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
   const queryClient = useQueryClient()
   const key = queryKeys.agentMode.action(orgSlug, actionId)
   const [notice, setNotice] = useState<DecisionNotice | null>(null)
+  const [editError, setEditError] = useState<string | null>(null)
   const query = useQuery({
     queryKey: key,
     queryFn: () => getAction(orgSlug, actionId),
@@ -76,8 +82,14 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
   const mutation = useMutation({
     mutationFn: submitChange,
     retry: false,
+    onMutate: () => setEditError(null),
     onSuccess: detail => queryClient.setQueryData(key, detail),
-    onError: error => setNotice(noticeFor(error)),
+    onError: error => {
+      // A refused edit is fixable in the form; anything else locks the screen.
+      const fixable = editErrorFor(error)
+      if (fixable) setEditError(fixable)
+      else setNotice(noticeFor(error))
+    },
     onSettled: refreshLists,
   })
 
@@ -99,6 +111,7 @@ export function useAgentAction(orgSlug: string, actionId: string): AgentActionRe
     isLoading: query.isLoading,
     loadError: query.error ? loadErrorMessage(query.error) : null,
     notice,
+    editError,
     deciding: mutation.isPending,
     refreshing: query.isFetching && !query.isLoading,
     submit,

@@ -4,6 +4,7 @@ import {
   decideAction,
   getAction,
   listApprovals,
+  editAction,
   listPlanTaskActions,
   resolveAction,
 } from './agent-mode-approvals'
@@ -87,6 +88,7 @@ describe('getAction', () => {
       slug: 'draft-page',
       markdown: '**A short answer.**\n',
       platform: 'wordpress',
+      answer: 'A short answer.',
     })
     expect(action.decisions).toEqual([])
   })
@@ -301,5 +303,63 @@ describe('resolveAction', () => {
     const input = { orgSlug: SLUG, actionId: 'abc', resolution: 'cancel' as const, version: 1 }
     await expect(resolveAction({ ...input, payloadHash: 'short' })).rejects.toThrow()
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+})
+
+describe('editAction', () => {
+  it('sends the edited fields with the version and hash, and reads the new version', async () => {
+    const fetchMock = serve('edit_email_ok')
+    const fields = { subject: 'A short suggestion', message: 'Hi there' }
+    const result = await editAction({
+      orgSlug: SLUG,
+      actionId: 'abc',
+      version: 1,
+      payloadHash: 'a'.repeat(64),
+      fields,
+    })
+    const { url, init } = sentRequest(fetchMock)
+    expect(url).toBe(`/api/agent-mode/programs/${SLUG}/actions/abc/edit`)
+    expect(JSON.parse(init.body as string)).toEqual({
+      version: 1,
+      payload_hash: 'a'.repeat(64),
+      fields,
+    })
+    expect(result.version).toBe(2)
+    expect(result.state).toBe('awaiting_approval')
+    expect(result.content).toMatchObject({
+      type: 'email',
+      subject: 'A short suggestion',
+      message: 'Hi there,\n\nCould Pro Example join your roundup?',
+    })
+  })
+
+  it('reports invalid content and fields that cannot be edited with the reason', async () => {
+    const input = {
+      orgSlug: SLUG,
+      actionId: 'abc',
+      version: 1,
+      payloadHash: 'a'.repeat(64),
+      fields: {},
+    }
+    serve('edit_invalid')
+    await expect(editAction(input)).rejects.toMatchObject({
+      status: 400,
+      code: 'invalid_edit',
+      message: "Subject can't be empty.",
+    })
+    serve('edit_not_editable')
+    await expect(editAction(input)).rejects.toMatchObject({ status: 400, code: 'invalid_edit' })
+  })
+
+  it('reports an edit made on an outdated version as stale', async () => {
+    serve('edit_stale')
+    const input = {
+      orgSlug: SLUG,
+      actionId: 'abc',
+      version: 1,
+      payloadHash: 'a'.repeat(64),
+      fields: {},
+    }
+    await expect(editAction(input)).rejects.toMatchObject({ status: 409, code: 'stale' })
   })
 })

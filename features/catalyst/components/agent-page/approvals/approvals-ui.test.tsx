@@ -63,6 +63,7 @@ function renderReview(
       onBack={noop}
       onDecide={noop}
       onResolve={noop}
+      onEdit={noop}
       onRefresh={noop}
     />,
   )
@@ -270,5 +271,33 @@ describe('Board tabs', () => {
     expect(html).toMatch(/aria-selected="true"[^>]*>Approvals/)
     expect(html).toContain('2 awaiting approval')
     expect(html).toContain('A send has an unknown outcome')
+  })
+})
+
+describe('Draft editing', () => {
+  it('offers Edit draft for a draft that can still change', async () => {
+    const html = renderReview(await detail('detail_email_awaiting'))
+    expect(isDisabled(buttonTag(html, 'Edit draft'))).toBe(false)
+  })
+
+  it('locks Edit draft while a notice is open', async () => {
+    const stale = noticeFor(new AgentModeError('changed', 409, 'stale'))
+    const html = renderReview(await detail('detail_email_awaiting'), { notice: stale })
+    expect(isDisabled(buttonTag(html, 'Edit draft'))).toBe(true)
+  })
+
+  it('offers no editing once an action is sent, failed or unknown', async () => {
+    for (const name of ['detail_succeeded', 'detail_failed', 'detail_outcome_unknown']) {
+      expect(buttonTag(renderReview(await detail(name)), 'Edit draft')).toBeNull()
+    }
+  })
+
+  it('shows an edited draft as a new version awaiting approval', async () => {
+    serveFixture('edit_email_ok')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('version 2')
+    expect(html).toContain('Awaiting your approval')
+    expect(html).toContain('A short suggestion')
+    expect(isDisabled(buttonTag(html, 'Approve version 2'))).toBe(false)
   })
 })
