@@ -152,7 +152,8 @@ describe('Action review', () => {
     expect(html).toContain('Reply STOP and we will not write again.')
     expect(isDisabled(buttonTag(html, 'Approve version 1'))).toBe(false)
     expect(buttonTag(html, 'Reject')).not.toBeNull()
-    expect(html).toContain('No decision has been recorded yet.')
+    expect(html).toContain('Drafted by the agent')
+    expect(html).not.toContain('Picked up for sending')
   })
 
   it('shows the exact article for an article draft', async () => {
@@ -353,5 +354,55 @@ describe('Follow-up emails', () => {
     expect(html).toContain('Stopped, they replied')
     expect(buttonTag(html, 'Approve')).toBeNull()
     expect(buttonTag(html, 'Edit draft')).toBeNull()
+  })
+})
+
+describe('What happened timeline', () => {
+  it('shows every step of a sent action in order', async () => {
+    const html = renderReview(await detail('detail_succeeded'))
+    const steps = [
+      'Drafted by the agent',
+      'Approved',
+      'Picked up for sending',
+      'Final checks passed',
+      'Published',
+    ]
+    const positions = steps.map(step => html.indexOf(step))
+    expect(positions.every(p => p > -1)).toBe(true)
+    expect([...positions].sort((a, b) => a - b)).toEqual(positions)
+    expect(html).toContain('handed to your site')
+  })
+
+  it('shows an unknown result as unknown, not as sent or failed', async () => {
+    const html = renderReview(await detail('detail_outcome_unknown'))
+    expect(html).toContain('handed to Gmail')
+    expect(html).toContain('Result unknown')
+    expect(html).not.toContain('Failed, nothing was sent')
+  })
+
+  it('says when sending is blocked after repeated failures', async () => {
+    const action = await detail('detail_approved_with_expiry')
+    const blocked = { ...action, sendAttempts: { failures: 10, blocked: true, retryAfter: null } }
+    const html = renderReview(blocked)
+    expect(html).toContain('Sending stopped after 10 failed tries')
+    expect(html).toContain('role="alert"')
+  })
+
+  it('says when a failed send will be tried again', async () => {
+    const action = await detail('detail_approved_with_expiry')
+    const retrying = {
+      ...action,
+      sendAttempts: { failures: 1, blocked: false, retryAfter: '2026-11-12T10:00:00Z' },
+    }
+    const html = renderReview(retrying)
+    expect(html).toContain('The last try to send this failed before anything went out.')
+    expect(html).toContain('It will be tried again after')
+  })
+
+  it('falls back to the decisions when an older backend sends no timeline', async () => {
+    const action = await detail('reject_after_approve_ok')
+    const html = renderReview({ ...action, timeline: [] })
+    expect(html).toContain('Changed my mind about this page.')
+    expect(html).not.toContain('Drafted by the agent')
   })
 })

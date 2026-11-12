@@ -8,10 +8,11 @@ import {
 import { ActionContentView } from '@/features/catalyst/components/agent-page/approvals/ActionContentView'
 import { ActionNotice } from '@/features/catalyst/components/agent-page/approvals/ActionNotice'
 import { ActionStateBadge } from '@/features/catalyst/components/agent-page/approvals/ActionStateBadge'
+import { ActionTimeline } from '@/features/catalyst/components/agent-page/approvals/ActionTimeline'
 import { MUTED_TEXT } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
-import { DecisionHistory } from '@/features/catalyst/components/agent-page/approvals/DecisionHistory'
 import { DraftControls } from '@/features/catalyst/components/agent-page/approvals/DraftControls'
 import { ResolveBar } from '@/features/catalyst/components/agent-page/approvals/ResolveBar'
+import { SendAttemptsNote } from '@/features/catalyst/components/agent-page/approvals/SendAttemptsNote'
 import { YELLOW } from '@/features/catalyst/constants'
 import type { AgentActionDetail, DecisionVerb, Resolution } from '@/lib/api/agent-mode-approvals'
 import { ArrowLeft, Loader2 } from '@/lib/icons'
@@ -58,6 +59,7 @@ function StateSummary({ action }: { action: AgentActionDetail }): JSX.Element {
     >
       <ActionStateBadge state={action.state} kind={action.kind} />
       <p className="text-[12.5px] text-[var(--cat-ink-2)]">{meta.summary}</p>
+      <SendAttemptsNote attempts={action.sendAttempts} />
       {action.approvalExpiresAt && (
         <p className="text-[12px] text-[var(--cat-ink-3)]">
           Approval valid until {formatWhen(action.approvalExpiresAt)}. After that it expires and is
@@ -106,7 +108,7 @@ function ReviewBody({ props }: { props: ActionReviewViewProps }): JSX.Element {
       {resolving && <Controls props={props} />}
       <ActionContentView content={action.content} />
       {!resolving && <Controls props={props} />}
-      <DecisionHistory decisions={action.decisions} />
+      <ActionTimeline kind={action.kind} timeline={action.timeline} decisions={action.decisions} />
     </>
   )
 }

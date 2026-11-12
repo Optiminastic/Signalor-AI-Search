@@ -9,7 +9,7 @@
     "body": {
       "actions": [
         {
-          "approval_expires_at": "2026-11-26T07:08:25.729674Z",
+          "approval_expires_at": "2026-11-26T07:35:47.139448Z",
           "connector": "wordpress",
           "content": {
             "answer": "A short answer.",
@@ -19,8 +19,8 @@
             "slug": "draft-page",
             "title": "Draft page"
           },
-          "created_at": "2026-11-12T07:08:25.722365Z",
-          "id": "fj7pqqy4mgmx",
+          "created_at": "2026-11-12T07:35:47.125349Z",
+          "id": "3h2c2wdqbsbf",
           "kind": "publish_article",
           "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
           "state": "approved",
@@ -33,7 +33,7 @@
             "target": "AI citations",
             "title": "Publish a page"
           },
-          "updated_at": "2026-11-12T07:08:25.729882Z",
+          "updated_at": "2026-11-12T07:35:47.139790Z",
           "version": 1
         }
       ]
@@ -60,8 +60,8 @@
             "slug": "draft-page",
             "title": "Draft page"
           },
-          "created_at": "2026-11-12T07:08:26.252149Z",
-          "id": "kyzru3pdpvyh",
+          "created_at": "2026-11-12T07:35:47.982899Z",
+          "id": "r8b6z58t7jbq",
           "kind": "publish_article",
           "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
           "state": "awaiting_approval",
@@ -74,11 +74,11 @@
             "target": "AI citations",
             "title": "Publish a pricing explainer"
           },
-          "updated_at": "2026-11-12T07:08:26.252912Z",
+          "updated_at": "2026-11-12T07:35:47.983729Z",
           "version": 1
         },
         {
-          "approval_expires_at": "2026-11-26T07:08:26.242554Z",
+          "approval_expires_at": "2026-11-26T07:35:47.956556Z",
           "connector": "wordpress",
           "content": {
             "answer": "A short answer.",
@@ -88,8 +88,8 @@
             "slug": "draft-page",
             "title": "Draft page"
           },
-          "created_at": "2026-11-12T07:08:26.234355Z",
-          "id": "n7uam2mhd93z",
+          "created_at": "2026-11-12T07:35:47.943619Z",
+          "id": "56h624quwesc",
           "kind": "publish_article",
           "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
           "state": "approved",
@@ -102,7 +102,7 @@
             "target": "AI citations",
             "title": "Publish a comparison page"
           },
-          "updated_at": "2026-11-12T07:08:26.242821Z",
+          "updated_at": "2026-11-12T07:35:47.956906Z",
           "version": 1
         }
       ]
@@ -123,8 +123,8 @@
             "sender": "owner@pro.example",
             "subject": "A suggestion for your tools roundup"
           },
-          "created_at": "2026-11-12T07:08:25.813820Z",
-          "id": "adjiu97xaaj9",
+          "created_at": "2026-11-12T07:35:47.251217Z",
+          "id": "sk26mxf4zii4",
           "kind": "send_outreach_email",
           "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
           "state": "awaiting_approval",
@@ -137,7 +137,7 @@
             "target": "roundup.example",
             "title": "Get listed on roundup.example"
           },
-          "updated_at": "2026-11-12T07:08:25.814313Z",
+          "updated_at": "2026-11-12T07:35:47.252190Z",
           "version": 1
         },
         {
@@ -151,8 +151,8 @@
             "slug": "draft-page",
             "title": "Draft page"
           },
-          "created_at": "2026-11-12T07:08:25.807749Z",
-          "id": "nnmcbv6g7p7u",
+          "created_at": "2026-11-12T07:35:47.239699Z",
+          "id": "xfjws8crkqz9",
           "kind": "publish_article",
           "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
           "state": "awaiting_approval",
@@ -165,7 +165,7 @@
             "target": "AI citations",
             "title": "Publish a page"
           },
-          "updated_at": "2026-11-12T07:08:25.808239Z",
+          "updated_at": "2026-11-12T07:35:47.240548Z",
           "version": 1
         }
       ]
@@ -175,7 +175,7 @@
   "approve_ok": {
     "body": {
       "action": {
-        "approval_expires_at": "2026-11-26T07:08:25.729674Z",
+        "approval_expires_at": "2026-11-26T07:35:47.139448Z",
         "connector": "wordpress",
         "content": {
           "answer": "A short answer.",
@@ -185,20 +185,25 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:25.722365Z",
+        "created_at": "2026-11-12T07:35:47.125349Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.729674Z",
+            "created_at": "2026-11-12T07:35:47.139448Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "fj7pqqy4mgmx",
+        "id": "3h2c2wdqbsbf",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "approved",
         "task": {
           "channel": "owned_content",
@@ -209,7 +214,22 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:25.729882Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.125349Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.139790Z",
         "version": 1
       }
     },
@@ -242,7 +262,7 @@
   "detail_approved_with_expiry": {
     "body": {
       "action": {
-        "approval_expires_at": "2026-11-26T07:08:24.447925Z",
+        "approval_expires_at": "2026-11-26T07:35:45.319656Z",
         "connector": "wordpress",
         "content": {
           "answer": "A short answer.",
@@ -252,20 +272,25 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:24.434317Z",
+        "created_at": "2026-11-12T07:35:45.310120Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.447925Z",
+            "created_at": "2026-11-12T07:35:45.319656Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "methicnhzdky",
+        "id": "piyqhd86yed4",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "approved",
         "task": {
           "channel": "owned_content",
@@ -276,7 +301,22 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:24.448147Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.319858Z",
         "version": 1
       }
     },
@@ -295,11 +335,16 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:25.807749Z",
+        "created_at": "2026-11-12T07:35:47.239699Z",
         "decisions": [],
-        "id": "nnmcbv6g7p7u",
+        "id": "xfjws8crkqz9",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "awaiting_approval",
         "task": {
           "channel": "owned_content",
@@ -310,7 +355,14 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:25.808239Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.239699Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.240548Z",
         "version": 1
       }
     },
@@ -329,11 +381,16 @@
           "sender": "owner@pro.example",
           "subject": "A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:25.813820Z",
+        "created_at": "2026-11-12T07:35:47.251217Z",
         "decisions": [],
-        "id": "adjiu97xaaj9",
+        "id": "sk26mxf4zii4",
         "kind": "send_outreach_email",
         "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "awaiting_approval",
         "task": {
           "channel": "outreach_email",
@@ -344,7 +401,14 @@
           "target": "roundup.example",
           "title": "Get listed on roundup.example"
         },
-        "updated_at": "2026-11-12T07:08:25.814313Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.251217Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.252190Z",
         "version": 1
       }
     },
@@ -363,11 +427,11 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:24.487354Z",
+        "created_at": "2026-11-12T07:35:45.502747Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.497850Z",
+            "created_at": "2026-11-12T07:35:45.510328Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
@@ -375,16 +439,21 @@
           },
           {
             "actor_role": "system",
-            "created_at": "2026-11-12T07:08:24.508673Z",
+            "created_at": "2026-11-12T07:35:45.528469Z",
             "decision": "expired",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "b59f7a2bae33",
+        "id": "7jdjs7kv254a",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "expired",
         "task": {
           "channel": "owned_content",
@@ -395,7 +464,30 @@
           "target": "AI citations",
           "title": "Publish a pricing explainer"
         },
-        "updated_at": "2026-11-12T07:08:24.508905Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.502747Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.510328Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "at": "2026-11-12T07:35:45.528469Z",
+            "decision": "expired",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.528728Z",
         "version": 1
       }
     },
@@ -414,20 +506,25 @@
           "sender": "owner@pro.example",
           "subject": "A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:26.159328Z",
+        "created_at": "2026-11-12T07:35:47.829227Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:26.167540Z",
+            "created_at": "2026-11-12T07:35:47.842308Z",
             "decision": "approved",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "tv2drcqdi7w6",
+        "id": "f64ede3r3zkp",
         "kind": "send_outreach_email",
         "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "failed",
         "task": {
           "channel": "outreach_email",
@@ -438,7 +535,46 @@
           "target": "roundup.example",
           "title": "Get listed on another roundup"
         },
-        "updated_at": "2026-11-12T07:08:26.200222Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.829227Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.842308Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.872386Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.882831Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.884315Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "failed",
+            "reason": "Connect Gmail first.",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.885158Z",
         "version": 1
       }
     },
@@ -447,7 +583,7 @@
   "detail_follow_up_approved": {
     "body": {
       "action": {
-        "approval_expires_at": "2026-11-15T07:08:24.918468Z",
+        "approval_expires_at": "2026-11-15T07:35:45.867184Z",
         "connector": "gmail",
         "content": {
           "body": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.\n\n--\nPro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
@@ -457,20 +593,25 @@
           "sender": "owner@pro.example",
           "subject": "Re: A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:24.899481Z",
+        "created_at": "2026-11-12T07:35:45.850228Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.918468Z",
+            "created_at": "2026-11-12T07:35:45.867184Z",
             "decision": "approved",
             "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "gj45xe6bdma8",
+        "id": "2v7av5gz94w2",
         "kind": "send_follow_up",
         "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "approved",
         "task": {
           "channel": "outreach_email",
@@ -481,7 +622,22 @@
           "target": "AI citations",
           "title": "Get listed on roundup.example"
         },
-        "updated_at": "2026-11-12T07:08:24.918686Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.867395Z",
         "version": 1
       }
     },
@@ -500,11 +656,16 @@
           "sender": "owner@pro.example",
           "subject": "Re: A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:24.899481Z",
+        "created_at": "2026-11-12T07:35:45.850228Z",
         "decisions": [],
-        "id": "gj45xe6bdma8",
+        "id": "2v7av5gz94w2",
         "kind": "send_follow_up",
         "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "awaiting_approval",
         "task": {
           "channel": "outreach_email",
@@ -515,7 +676,14 @@
           "target": "AI citations",
           "title": "Get listed on roundup.example"
         },
-        "updated_at": "2026-11-12T07:08:24.900229Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.850783Z",
         "version": 1
       }
     },
@@ -534,11 +702,11 @@
           "sender": "owner@pro.example",
           "subject": "Re: A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:24.899481Z",
+        "created_at": "2026-11-12T07:35:45.850228Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.918468Z",
+            "created_at": "2026-11-12T07:35:45.867184Z",
             "decision": "approved",
             "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
             "reason": "",
@@ -546,16 +714,21 @@
           },
           {
             "actor_role": "system",
-            "created_at": "2026-11-12T07:08:24.931076Z",
+            "created_at": "2026-11-12T07:35:45.888618Z",
             "decision": "stopped",
             "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
             "reason": "The contact replied, so this follow-up isn't needed.",
             "version": 1
           }
         ],
-        "id": "gj45xe6bdma8",
+        "id": "2v7av5gz94w2",
         "kind": "send_follow_up",
         "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "stopped",
         "task": {
           "channel": "outreach_email",
@@ -566,7 +739,30 @@
           "target": "AI citations",
           "title": "Get listed on roundup.example"
         },
-        "updated_at": "2026-11-12T07:08:24.931295Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "at": "2026-11-12T07:35:45.888618Z",
+            "decision": "stopped",
+            "reason": "The contact replied, so this follow-up isn't needed.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.888863Z",
         "version": 1
       }
     },
@@ -585,20 +781,25 @@
           "sender": "owner@pro.example",
           "subject": "A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:26.111879Z",
+        "created_at": "2026-11-12T07:35:47.751801Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:26.120894Z",
+            "created_at": "2026-11-12T07:35:47.763690Z",
             "decision": "approved",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "8z3q34f4mrds",
+        "id": "wg9hfp8qic6w",
         "kind": "send_outreach_email",
         "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "needs_reconciliation",
         "task": {
           "channel": "outreach_email",
@@ -609,7 +810,46 @@
           "target": "roundup.example",
           "title": "Pitch roundup.example for a mention"
         },
-        "updated_at": "2026-11-12T07:08:26.148070Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.751801Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.763690Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.788517Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.799978Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.803941Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.804343Z",
         "version": 1
       }
     },
@@ -628,20 +868,25 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:25.841231Z",
+        "created_at": "2026-11-12T07:35:47.317684Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.864528Z",
+            "created_at": "2026-11-12T07:35:47.350505Z",
             "decision": "rejected",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "mkadah62n2rq",
+        "id": "4dps9jyew32g",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "rejected",
         "task": {
           "channel": "owned_content",
@@ -652,7 +897,22 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:25.864792Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.317684Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.350505Z",
+            "decision": "rejected",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.351048Z",
         "version": 1
       }
     },
@@ -671,20 +931,25 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:26.067705Z",
+        "created_at": "2026-11-12T07:35:47.682460Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:26.076575Z",
+            "created_at": "2026-11-12T07:35:47.697289Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "6498p3e8siq5",
+        "id": "7vrciwsnbhwx",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "succeeded",
         "task": {
           "channel": "owned_content",
@@ -695,7 +960,46 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:26.097500Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.682460Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.697289Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.720487Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.728642Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.729420Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "succeeded",
+            "reason": "",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.729888Z",
         "version": 1
       }
     },
@@ -714,11 +1018,16 @@
           "slug": "a-better-title",
           "title": "A better title"
         },
-        "created_at": "2026-11-12T07:08:23.702030Z",
+        "created_at": "2026-11-12T07:35:44.621889Z",
         "decisions": [],
-        "id": "br4w9688z36z",
+        "id": "7cgs7tnzstjs",
         "kind": "publish_article",
         "payload_hash": "bfab6c63bdcd29d56f6086627ab66a142baa380e31a56868329dd40d483184ac",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "awaiting_approval",
         "task": {
           "channel": "owned_content",
@@ -729,7 +1038,19 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:23.782579Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:44.621889Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:44.677407Z",
+            "type": "edited",
+            "version": 2
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:44.677626Z",
         "version": 2
       }
     },
@@ -748,20 +1069,25 @@
           "sender": "owner@pro.example",
           "subject": "A short suggestion"
         },
-        "created_at": "2026-11-12T07:08:23.709018Z",
+        "created_at": "2026-11-12T07:35:44.627595Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:23.719567Z",
+            "created_at": "2026-11-12T07:35:44.634377Z",
             "decision": "approved",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "",
             "version": 1
           }
         ],
-        "id": "q9bskj3h4y42",
+        "id": "7tn2bzw88urt",
         "kind": "send_outreach_email",
         "payload_hash": "e53f5dddb0120aff175142b4b6b63ded01f90a6bfe4f2796d89dd820f6c108e2",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "awaiting_approval",
         "task": {
           "channel": "outreach_email",
@@ -772,7 +1098,27 @@
           "target": "roundup.example",
           "title": "Get listed on roundup.example"
         },
-        "updated_at": "2026-11-12T07:08:23.731549Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:44.627595Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:44.634377Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:44.645514Z",
+            "type": "edited",
+            "version": 2
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:44.645746Z",
         "version": 2
       }
     },
@@ -811,7 +1157,7 @@
         "tasks": [
           {
             "action": {
-              "id": "methicnhzdky",
+              "id": "piyqhd86yed4",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "revoked",
@@ -837,7 +1183,7 @@
           },
           {
             "action": {
-              "id": "b59f7a2bae33",
+              "id": "7jdjs7kv254a",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "expired",
@@ -878,7 +1224,7 @@
         "tasks": [
           {
             "action": {
-              "id": "6498p3e8siq5",
+              "id": "7vrciwsnbhwx",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "succeeded",
@@ -904,7 +1250,7 @@
           },
           {
             "action": {
-              "id": "8z3q34f4mrds",
+              "id": "wg9hfp8qic6w",
               "kind": "send_outreach_email",
               "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
               "state": "needs_reconciliation",
@@ -930,7 +1276,7 @@
           },
           {
             "action": {
-              "id": "tv2drcqdi7w6",
+              "id": "f64ede3r3zkp",
               "kind": "send_outreach_email",
               "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
               "state": "failed",
@@ -956,7 +1302,7 @@
           },
           {
             "action": {
-              "id": "si9mjdetxnkb",
+              "id": "ryci6imsnyiv",
               "kind": "send_outreach_email",
               "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
               "state": "rejected",
@@ -982,7 +1328,7 @@
           },
           {
             "action": {
-              "id": "n7uam2mhd93z",
+              "id": "56h624quwesc",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "approved",
@@ -1006,7 +1352,7 @@
           },
           {
             "action": {
-              "id": "kyzru3pdpvyh",
+              "id": "r8b6z58t7jbq",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "awaiting_approval",
@@ -1069,7 +1415,7 @@
         "tasks": [
           {
             "action": {
-              "id": "33zj52c97zxx",
+              "id": "r2rd64t2z38e",
               "kind": "publish_article",
               "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
               "state": "awaiting_approval",
@@ -1093,7 +1439,7 @@
           },
           {
             "action": {
-              "id": "wikaa8ync65v",
+              "id": "pru6uuwt5zmn",
               "kind": "send_outreach_email",
               "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
               "state": "succeeded",
@@ -1120,7 +1466,7 @@
           },
           {
             "action": {
-              "id": "p9vwj3in92tz",
+              "id": "4udceisjfrxx",
               "kind": "send_outreach_email",
               "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
               "state": "cancelled",
@@ -1169,11 +1515,11 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:25.722365Z",
+        "created_at": "2026-11-12T07:35:47.125349Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.729674Z",
+            "created_at": "2026-11-12T07:35:47.139448Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
@@ -1181,16 +1527,21 @@
           },
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.742389Z",
+            "created_at": "2026-11-12T07:35:47.165837Z",
             "decision": "rejected",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "Changed my mind about this page.",
             "version": 1
           }
         ],
-        "id": "fj7pqqy4mgmx",
+        "id": "3h2c2wdqbsbf",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "rejected",
         "task": {
           "channel": "owned_content",
@@ -1201,7 +1552,30 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:25.743033Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.125349Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.165837Z",
+            "decision": "rejected",
+            "reason": "Changed my mind about this page.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.166134Z",
         "version": 1
       }
     },
@@ -1220,11 +1594,11 @@
           "sender": "owner@pro.example",
           "subject": "A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:25.974900Z",
+        "created_at": "2026-11-12T07:35:47.514709Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.985955Z",
+            "created_at": "2026-11-12T07:35:47.527719Z",
             "decision": "approved",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "",
@@ -1232,16 +1606,21 @@
           },
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:26.042830Z",
+            "created_at": "2026-11-12T07:35:47.633732Z",
             "decision": "resolved_cancelled",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "Could not check the mailbox.",
             "version": 1
           }
         ],
-        "id": "p9vwj3in92tz",
+        "id": "4udceisjfrxx",
         "kind": "send_outreach_email",
         "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "cancelled",
         "task": {
           "channel": "outreach_email",
@@ -1252,7 +1631,54 @@
           "target": "roundup.example",
           "title": "Pitch roundup.example for a mention"
         },
-        "updated_at": "2026-11-12T07:08:26.043061Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.514709Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.527719Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.576054Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.599995Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.604025Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.633732Z",
+            "decision": "resolved_cancelled",
+            "reason": "Could not check the mailbox.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.634133Z",
         "version": 1
       }
     },
@@ -1287,11 +1713,11 @@
           "sender": "owner@pro.example",
           "subject": "A suggestion for your tools roundup"
         },
-        "created_at": "2026-11-12T07:08:25.914670Z",
+        "created_at": "2026-11-12T07:35:47.422734Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.924228Z",
+            "created_at": "2026-11-12T07:35:47.434601Z",
             "decision": "approved",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "",
@@ -1299,16 +1725,21 @@
           },
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:25.958112Z",
+            "created_at": "2026-11-12T07:35:47.484141Z",
             "decision": "resolved_sent",
             "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
             "reason": "Found it in the Sent folder.",
             "version": 1
           }
         ],
-        "id": "wikaa8ync65v",
+        "id": "pru6uuwt5zmn",
         "kind": "send_outreach_email",
         "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "succeeded",
         "task": {
           "channel": "outreach_email",
@@ -1319,7 +1750,54 @@
           "target": "roundup.example",
           "title": "Pitch roundup.example for a mention"
         },
-        "updated_at": "2026-11-12T07:08:25.958346Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.422734Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.434601Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.457207Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.467501Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.471585Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.484141Z",
+            "decision": "resolved_sent",
+            "reason": "Found it in the Sent folder.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.484509Z",
         "version": 1
       }
     },
@@ -1345,11 +1823,11 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:24.434317Z",
+        "created_at": "2026-11-12T07:35:45.310120Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.447925Z",
+            "created_at": "2026-11-12T07:35:45.319656Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
@@ -1357,16 +1835,21 @@
           },
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.468017Z",
+            "created_at": "2026-11-12T07:35:45.341712Z",
             "decision": "revoked",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "Not this week.",
             "version": 1
           }
         ],
-        "id": "methicnhzdky",
+        "id": "piyqhd86yed4",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "revoked",
         "task": {
           "channel": "owned_content",
@@ -1377,7 +1860,30 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:24.468251Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "reason": "Not this week.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.342050Z",
         "version": 1
       }
     },
@@ -1396,11 +1902,11 @@
           "slug": "draft-page",
           "title": "Draft page"
         },
-        "created_at": "2026-11-12T07:08:24.434317Z",
+        "created_at": "2026-11-12T07:35:45.310120Z",
         "decisions": [
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.447925Z",
+            "created_at": "2026-11-12T07:35:45.319656Z",
             "decision": "approved",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "",
@@ -1408,16 +1914,21 @@
           },
           {
             "actor_role": "owner",
-            "created_at": "2026-11-12T07:08:24.468017Z",
+            "created_at": "2026-11-12T07:35:45.341712Z",
             "decision": "revoked",
             "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
             "reason": "Not this week.",
             "version": 1
           }
         ],
-        "id": "methicnhzdky",
+        "id": "piyqhd86yed4",
         "kind": "publish_article",
         "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
         "state": "revoked",
         "task": {
           "channel": "owned_content",
@@ -1428,7 +1939,30 @@
           "target": "AI citations",
           "title": "Publish a page"
         },
-        "updated_at": "2026-11-12T07:08:24.468251Z",
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "reason": "Not this week.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.342050Z",
         "version": 1
       }
     },

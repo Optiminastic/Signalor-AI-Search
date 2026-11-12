@@ -277,3 +277,35 @@ export function splitResults(results: ActionResult[]): {
     settled: results.filter(r => r.state !== 'needs_reconciliation'),
   }
 }
+
+/** Where an action goes when sent, in words: "Gmail" or "your site". */
+function destinationName(kind: string): string {
+  return isArticle(kind) ? 'your site' : 'Gmail'
+}
+
+function sendResultLabel(outcome: string, kind: string): string {
+  if (outcome === 'succeeded') return isArticle(kind) ? 'Published' : 'Sent'
+  if (outcome === 'failed') return 'Failed, nothing was sent'
+  return 'Result unknown'
+}
+
+/** A send-trail step in words. */
+export function sendStepLabel(event: string, outcome: string, kind: string): string {
+  if (event === 'claimed') return 'Picked up for sending'
+  if (event === 'provider_started') return `Final checks passed, handed to ${destinationName(kind)}`
+  if (event === 'provider_result') return sendResultLabel(outcome, kind)
+  if (event === 'aborted') return 'Stopped before sending'
+  return event
+}
+
+export type TimelineTone = 'neutral' | 'success' | 'danger' | 'unknown' | 'progress'
+
+/** The dot colour for a timeline step. */
+export function timelineTone(event: string, outcome: string): TimelineTone {
+  if (event === 'provider_result') {
+    if (outcome === 'succeeded') return 'success'
+    return outcome === 'failed' ? 'danger' : 'unknown'
+  }
+  if (event === 'aborted') return 'danger'
+  return event ? 'progress' : 'neutral'
+}

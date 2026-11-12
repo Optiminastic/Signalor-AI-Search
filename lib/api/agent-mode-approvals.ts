@@ -178,13 +178,63 @@ const decisionSchema = z
 
 export type ActionDecision = z.infer<typeof decisionSchema>
 
+/** One thing that happened to an action, oldest first. */
+const timelineEntrySchema = z
+  .object({
+    at: z.string(),
+    type: z.string(),
+    version: z.number().optional(),
+    decision: z.string().optional(),
+    actor_role: z.string().optional(),
+    reason: z.string().optional(),
+    event: z.string().optional(),
+    outcome: z.string().optional(),
+    attempt: z.number().optional(),
+  })
+  .transform(e => ({
+    at: e.at,
+    type: e.type,
+    version: e.version ?? null,
+    decision: e.decision ?? '',
+    actorRole: e.actor_role ?? '',
+    reason: e.reason ?? '',
+    event: e.event ?? '',
+    outcome: e.outcome ?? '',
+    attempt: e.attempt ?? null,
+  }))
+
+export type TimelineEntry = z.infer<typeof timelineEntrySchema>
+
+const sendAttemptsSchema = z
+  .object({ failures: z.number(), blocked: z.boolean(), retry_after: z.string().nullable() })
+  .transform(s => ({ failures: s.failures, blocked: s.blocked, retryAfter: s.retry_after }))
+
+export type SendAttempts = z.infer<typeof sendAttemptsSchema>
+
 export interface AgentActionDetail extends AgentAction {
   decisions: ActionDecision[]
+  timeline: TimelineEntry[]
+  sendAttempts: SendAttempts
 }
 
+const NO_ATTEMPTS: SendAttempts = { failures: 0, blocked: false, retryAfter: null }
+
 const detailSchema = z
-  .object({ ...actionFields, decisions: z.array(decisionSchema) })
-  .transform((a): AgentActionDetail => ({ ...toAction(a), decisions: a.decisions }))
+  .object({
+    ...actionFields,
+    decisions: z.array(decisionSchema),
+    // Older backends send neither; the screen then shows decisions only.
+    timeline: z.array(timelineEntrySchema).optional(),
+    send_attempts: sendAttemptsSchema.optional(),
+  })
+  .transform(
+    (a): AgentActionDetail => ({
+      ...toAction(a),
+      decisions: a.decisions,
+      timeline: a.timeline ?? [],
+      sendAttempts: a.send_attempts ?? NO_ATTEMPTS,
+    }),
+  )
 
 const listEnvelope = z.object({ actions: z.array(rawActionSchema.transform(toAction)) })
 const detailEnvelope = z.object({ action: detailSchema })
