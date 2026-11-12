@@ -15,6 +15,7 @@ import {
   canReject,
   canEdit,
   canResolve,
+  canRevoke,
   editErrorFor,
   decisionLabel,
   noticeFor,
@@ -50,6 +51,7 @@ function action(over: Partial<AgentAction> = {}): AgentAction {
       message: 'b',
       footer: 'footer',
     },
+    approvalExpiresAt: null,
     createdAt: '',
     updatedAt: '',
     ...over,
@@ -230,5 +232,26 @@ describe('editing a draft', () => {
     )
     expect(editErrorFor(new AgentModeError('changed', 409, 'stale'))).toBeNull()
     expect(editErrorFor(new TypeError('Failed to fetch'))).toBeNull()
+  })
+})
+
+describe('withdrawing and expired approvals', () => {
+  it('allows withdrawing only an approved action', () => {
+    const allowed = ACTION_STATES.filter(state => canRevoke(action({ state })))
+    expect(allowed).toEqual(['approved'])
+  })
+
+  it('reads expired and withdrawn as closed, never sent', () => {
+    for (const state of ['expired', 'revoked'] as const) {
+      expect(stateMeta(state, 'send_outreach_email').tone).toBe('closed')
+      expect(stateMeta(state, 'send_outreach_email').summary).toMatch(/not (be )?sent/)
+      expect(canApprove(action({ state }))).toBe(false)
+      expect(canEdit(action({ state }))).toBe(false)
+    }
+  })
+
+  it('labels them in the history', () => {
+    expect(decisionLabel('revoked')).toBe('Approval withdrawn')
+    expect(decisionLabel('expired')).toBe('Approval expired')
   })
 })

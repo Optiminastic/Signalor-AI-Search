@@ -301,3 +301,33 @@ describe('Draft editing', () => {
     expect(isDisabled(buttonTag(html, 'Approve version 2'))).toBe(false)
   })
 })
+
+describe('Revoke and expiry', () => {
+  it('shows until when an approval counts, and offers withdrawal, not approval', async () => {
+    serveFixture('detail_approved_with_expiry')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('Approval valid until')
+    expect(isDisabled(buttonTag(html, 'Withdraw approval'))).toBe(false)
+    expect(buttonTag(html, 'Approve version')).toBeNull()
+    expect(buttonTag(html, 'Reject<')).toBeNull()
+  })
+
+  it('shows a withdrawn approval as closed, with no controls', async () => {
+    serveFixture('revoke_ok')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('data-state="revoked"')
+    expect(html).toContain('Reason: Not this week.')
+    expect(html).not.toContain('Approval valid until')
+    expect(buttonTag(html, 'Withdraw approval')).toBeNull()
+    expect(buttonTag(html, 'Edit draft')).toBeNull()
+  })
+
+  it('shows an expired approval as recorded by Signalor, with no controls', async () => {
+    serveFixture('detail_expired')
+    const html = renderReview(await getAction('pro-brand', 'abc'))
+    expect(html).toContain('data-state="expired"')
+    expect(html).toContain('Signalor, automatically')
+    expect(buttonTag(html, 'Approve')).toBeNull()
+    expect(buttonTag(html, 'Edit draft')).toBeNull()
+  })
+})

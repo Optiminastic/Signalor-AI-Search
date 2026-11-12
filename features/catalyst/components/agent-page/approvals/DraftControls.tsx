@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { canApprove, canEdit, canReject } from '@/features/catalyst/agent-approvals'
+import { canApprove, canEdit, canRevoke } from '@/features/catalyst/agent-approvals'
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { ArticleEditForm } from '@/features/catalyst/components/agent-page/approvals/ArticleEditForm'
 import { DecisionBar } from '@/features/catalyst/components/agent-page/approvals/DecisionBar'
@@ -62,6 +62,17 @@ function Editor({ action, disabled, error, onSave, onCancel }: EditorProps): JSX
   )
 }
 
+/** Rejecting judges a draft awaiting review; an approved draft is withdrawn instead. */
+function allowedDecisions(action: AgentActionDetail): {
+  approve: boolean
+  reject: boolean
+  revoke: boolean
+  version: number | null
+} {
+  const awaiting = canApprove(action)
+  return { approve: awaiting, reject: awaiting, revoke: canRevoke(action), version: action.version }
+}
+
 /**
  * Approve, reject or edit the draft on screen. While editing, the decision
  * buttons are hidden, so nothing is approved from a half-edited view. The
@@ -86,14 +97,13 @@ export function DraftControls({
       />
     )
   }
-  const allowed = {
-    approve: canApprove(action),
-    reject: canReject(action),
-    version: action.version,
-  }
   return (
     <div className="flex flex-col gap-2">
-      <DecisionBar allowed={allowed} disabled={disabled} onDecide={handlers.onDecide} />
+      <DecisionBar
+        allowed={allowedDecisions(action)}
+        disabled={disabled}
+        onDecide={handlers.onDecide}
+      />
       {canEdit(action) && (
         <button
           type="button"

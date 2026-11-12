@@ -58,6 +58,16 @@ const STATE_META: Record<Exclude<ActionState, 'needs_reconciliation'>, StateMeta
     summary: 'This failed before anything went out. Nothing was sent.',
   },
   rejected: { label: 'Rejected', tone: 'closed', summary: 'Rejected. It will not be sent.' },
+  expired: {
+    label: 'Approval expired',
+    tone: 'closed',
+    summary: 'The approval ran out before this was sent, so it was not sent and never will be.',
+  },
+  revoked: {
+    label: 'Approval withdrawn',
+    tone: 'closed',
+    summary: 'You withdrew your approval before it was sent. It will not be sent.',
+  },
   cancelled: {
     label: 'Closed, outcome unknown',
     tone: 'closed',
@@ -129,6 +139,11 @@ export function canResolve(action: AgentAction): boolean {
   )
 }
 
+/** Withdrawing an approval is possible until sending starts. */
+export function canRevoke(action: AgentAction): boolean {
+  return action.state === 'approved' && isReviewable(action)
+}
+
 /** Rejecting also withdraws an approval, as long as sending hasn't started. */
 export function canReject(action: AgentAction): boolean {
   return (
@@ -186,6 +201,8 @@ const RESULT_ORDER: ActionState[] = [
   'dispatching',
   'failed',
   'rejected',
+  'revoked',
+  'expired',
   'cancelled',
   'succeeded',
 ]
@@ -234,6 +251,8 @@ const DECISION_LABELS: Record<string, string> = {
   rejected: 'Rejected',
   resolved_sent: 'Confirmed sent',
   resolved_cancelled: 'Closed with the outcome unknown',
+  revoked: 'Approval withdrawn',
+  expired: 'Approval expired',
 }
 
 export function decisionLabel(decision: string): string {

@@ -20,6 +20,8 @@ export const ACTION_STATES = [
   'failed',
   'needs_reconciliation',
   'cancelled',
+  'expired',
+  'revoked',
 ] as const
 
 /** A state this screen doesn't know yet reads as `unknown` and is never decidable. */
@@ -117,6 +119,8 @@ const actionFields = {
   version: z.number().nullable(),
   payload_hash: z.string(),
   content: z.unknown(),
+  /** When the approval in force runs out; null unless approved. */
+  approval_expires_at: z.string().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string(),
 }
@@ -133,6 +137,7 @@ function toAction(a: z.output<typeof rawActionSchema>): AgentAction {
     version: a.version,
     payloadHash: a.payload_hash,
     content: parseContent(a.kind, a.content),
+    approvalExpiresAt: a.approval_expires_at ?? null,
     createdAt: a.created_at,
     updatedAt: a.updated_at,
   }
@@ -147,6 +152,7 @@ export interface AgentAction {
   version: number | null
   payloadHash: string
   content: ActionContent | null
+  approvalExpiresAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -230,7 +236,7 @@ export async function listPlanTaskActions(orgSlug: string): Promise<PlanTaskActi
   return plan?.tasks ?? []
 }
 
-export type DecisionVerb = 'approve' | 'reject'
+export type DecisionVerb = 'approve' | 'reject' | 'revoke'
 
 /** Refuses locally, before any request, unless the reviewed draft is fully identified. */
 function assertIdentified(version: number, payloadHash: string): void {

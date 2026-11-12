@@ -10,7 +10,9 @@ interface DecisionHistoryProps {
 }
 
 function who(role: string): string {
-  return role === 'owner' ? 'the brand owner' : role
+  if (role === 'owner') return 'the brand owner'
+  if (role === 'system') return 'Signalor, automatically'
+  return role
 }
 
 /** Every decision recorded on this action, oldest first, with the version it applied to. */

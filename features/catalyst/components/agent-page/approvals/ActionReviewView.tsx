@@ -58,6 +58,12 @@ function StateSummary({ action }: { action: AgentActionDetail }): JSX.Element {
     >
       <ActionStateBadge state={action.state} kind={action.kind} />
       <p className="text-[12.5px] text-[var(--cat-ink-2)]">{meta.summary}</p>
+      {action.approvalExpiresAt && (
+        <p className="text-[12px] text-[var(--cat-ink-3)]">
+          Approval valid until {formatWhen(action.approvalExpiresAt)}. After that it expires and is
+          not sent.
+        </p>
+      )}
     </div>
   )
 }

@@ -110,7 +110,7 @@ describe('getAction', () => {
 
   it('maps a state it does not know to unknown instead of failing', async () => {
     const { body } = recorded.detail_email_awaiting as { body: { action: object } }
-    const changed = { action: { ...body.action, state: 'expired' } }
+    const changed = { action: { ...body.action, state: 'archived_by_a_newer_backend' } }
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => new Response(JSON.stringify(changed))),
@@ -361,5 +361,39 @@ describe('editAction', () => {
       fields: {},
     }
     await expect(editAction(input)).rejects.toMatchObject({ status: 409, code: 'stale' })
+  })
+})
+
+describe('revoke and expiry', () => {
+  it('reads when an approval runs out', async () => {
+    serve('detail_approved_with_expiry')
+    const action = await getAction(SLUG, 'abc')
+    expect(action.state).toBe('approved')
+    expect(action.approvalExpiresAt).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+  })
+
+  it('sends a revoke to its own endpoint and reads the withdrawn action', async () => {
+    const fetchMock = serve('revoke_ok')
+    const { id, version, payloadHash } = hashOf('revoke_ok')
+    const result = await decideAction({
+      orgSlug: SLUG,
+      actionId: id,
+      verb: 'revoke',
+      version,
+      payloadHash,
+    })
+    expect(sentRequest(fetchMock).url).toBe(`/api/agent-mode/programs/${SLUG}/actions/${id}/revoke`)
+    expect(result.state).toBe('revoked')
+    expect(result.approvalExpiresAt).toBeNull()
+  })
+
+  it('reads an expired action and its system decision', async () => {
+    serve('detail_expired')
+    const action = await getAction(SLUG, 'abc')
+    expect(action.state).toBe('expired')
+    expect(action.decisions.map(d => [d.decision, d.actorRole])).toEqual([
+      ['approved', 'owner'],
+      ['expired', 'system'],
+    ])
   })
 })

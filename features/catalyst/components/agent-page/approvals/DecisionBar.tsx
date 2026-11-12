@@ -8,7 +8,7 @@ import type { DecisionVerb } from '@/lib/api/agent-mode-approvals'
 import { Check, X } from '@/lib/icons'
 
 interface DecisionBarProps {
-  allowed: { approve: boolean; reject: boolean; version: number | null }
+  allowed: { approve: boolean; reject: boolean; revoke: boolean; version: number | null }
   /** True while a decision is saving, a refresh is loading, or a notice is open. */
   disabled: boolean
   onDecide: (verb: DecisionVerb, reason?: string) => void
@@ -21,11 +21,13 @@ const FIELD =
 
 interface RejectFormProps {
   disabled: boolean
+  /** The confirm button's label: rejecting the draft, or withdrawing an approval. */
+  confirmLabel: string
   onCancel: () => void
   onReject: (reason: string) => void
 }
 
-function RejectForm({ disabled, onCancel, onReject }: RejectFormProps): JSX.Element {
+function RejectForm({ disabled, confirmLabel, onCancel, onReject }: RejectFormProps): JSX.Element {
   const [reason, setReason] = useState('')
   const fieldId = useId()
   return (
@@ -48,7 +50,7 @@ function RejectForm({ disabled, onCancel, onReject }: RejectFormProps): JSX.Elem
           onClick={() => onReject(reason.trim())}
           className={SECONDARY_BUTTON}
         >
-          <X size={14} aria-hidden="true" /> Reject this draft
+          <X size={14} aria-hidden="true" /> {confirmLabel}
         </button>
         <button type="button" onClick={onCancel} className={SECONDARY_BUTTON}>
           Cancel
@@ -58,19 +60,35 @@ function RejectForm({ disabled, onCancel, onReject }: RejectFormProps): JSX.Elem
   )
 }
 
+interface SecondaryProps {
+  label: string
+  disabled: boolean
+  onClick: () => void
+}
+
+function SecondaryAction({ label, disabled, onClick }: SecondaryProps): JSX.Element {
+  return (
+    <button type="button" disabled={disabled} onClick={onClick} className={SECONDARY_BUTTON}>
+      <X size={14} aria-hidden="true" /> {label}
+    </button>
+  )
+}
+
 /**
- * Approve or reject the exact version on screen, one action at a time.
+ * Approve, reject or withdraw an approval for the exact version on screen,
+ * one action at a time.
  * There is no bulk control and no resend: neither exists on purpose.
  */
 export function DecisionBar({ allowed, disabled, onDecide }: DecisionBarProps): JSX.Element | null {
-  const [rejecting, setRejecting] = useState(false)
-  if (!allowed.approve && !allowed.reject) return null
-  if (rejecting) {
+  const [pending, setPending] = useState<'reject' | 'revoke' | null>(null)
+  if (!allowed.approve && !allowed.reject && !allowed.revoke) return null
+  if (pending) {
     return (
       <RejectForm
         disabled={disabled}
-        onCancel={() => setRejecting(false)}
-        onReject={reason => onDecide('reject', reason || undefined)}
+        confirmLabel={pending === 'revoke' ? 'Withdraw my approval' : 'Reject this draft'}
+        onCancel={() => setPending(null)}
+        onReject={reason => onDecide(pending, reason || undefined)}
       />
     )
   }
@@ -82,15 +100,14 @@ export function DecisionBar({ allowed, disabled, onDecide }: DecisionBarProps): 
         </PrimaryButton>
       )}
       {allowed.reject && (
-        <button
-          type="button"
+        <SecondaryAction label="Reject" disabled={disabled} onClick={() => setPending('reject')} />
+      )}
+      {allowed.revoke && (
+        <SecondaryAction
+          label="Withdraw approval"
           disabled={disabled}
-          onClick={() => setRejecting(true)}
-          className={SECONDARY_BUTTON}
-        >
-          <X size={14} aria-hidden="true" />
-          {allowed.approve ? 'Reject' : 'Withdraw approval (reject)'}
-        </button>
+          onClick={() => setPending('revoke')}
+        />
       )}
     </div>
   )
