@@ -163,6 +163,16 @@ const LINES: Record<string, Describe> = {
     detail: 'One every 3 days, each mentioning you. See Approvals to skip any topic.',
     tone: 'success',
   }),
+  social_check_started: () => ({
+    title: 'Checking your social presence',
+    detail: 'LinkedIn, X, YouTube, Instagram and Reddit.',
+    tone: 'neutral',
+  }),
+  social_checked: e => ({
+    title: `Social presence score: ${String((e.detail.overall as { score?: number } | undefined)?.score ?? 0)} of 100`,
+    detail: 'See the Social tab for each platform.',
+    tone: 'success',
+  }),
   weekly_summary_posted: () => ({
     title: 'Posted your weekly summary in the chat',
     detail: 'Open it from your recent chats.',

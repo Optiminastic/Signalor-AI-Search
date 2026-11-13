@@ -46,6 +46,7 @@ export const queryKeys = {
     finders: (orgSlug: string) => ['agent-mode', orgSlug, 'finders'] as const,
     indexing: (orgSlug: string) => ['agent-mode', orgSlug, 'indexing'] as const,
     satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
+    social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
     action: (orgSlug: string, actionId: string) =>
       ['agent-mode', orgSlug, 'actions', actionId] as const,
   },

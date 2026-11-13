@@ -13,6 +13,7 @@ import {
   type BoardTab,
 } from '@/features/catalyst/components/agent-page/BoardTabs'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
+import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
@@ -27,6 +28,7 @@ function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'approvals') return 'Approvals'
   if (tab === 'indexing') return 'Indexing on Google'
   if (tab === 'articles') return 'Articles on signalor.ai sites'
+  if (tab === 'social') return 'Social presence'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -78,6 +80,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
           </>
         )}
         {tab === 'articles' && <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />}
+        {tab === 'social' && <SocialPanel orgSlug={orgSlug} />}
         {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}
       </div>

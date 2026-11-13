@@ -1,6 +1,6 @@
 import { YELLOW } from '@/features/catalyst/constants'
 
-export type BoardTab = 'activity' | 'articles' | 'approvals' | 'indexing'
+export type BoardTab = 'activity' | 'articles' | 'social' | 'approvals' | 'indexing'
 
 interface BoardTabsProps {
   value: BoardTab
@@ -12,6 +12,7 @@ interface BoardTabsProps {
 const TABS: { id: BoardTab; label: string }[] = [
   { id: 'activity', label: 'Activity' },
   { id: 'articles', label: 'Articles' },
+  { id: 'social', label: 'Social' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
 ]
