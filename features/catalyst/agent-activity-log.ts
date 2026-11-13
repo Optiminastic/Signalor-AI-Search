@@ -116,6 +116,36 @@ const LINES: Record<string, Describe> = {
     detail: 'Reading every sitemap page in Search Console.',
     tone: 'neutral',
   }),
+  bing_autosubmit_on: () => ({
+    title: 'You turned on weekly sending to Bing',
+    detail: 'The agent sends new and changed pages every week.',
+    tone: 'success',
+  }),
+  bing_autosubmit_off: () => ({
+    title: 'You turned off weekly sending to Bing',
+    detail: '',
+    tone: 'neutral',
+  }),
+  bing_send_started: () => ({
+    title: 'Checking the sitemap for pages to send to Bing',
+    detail: '',
+    tone: 'neutral',
+  }),
+  bing_submitted: e => ({
+    title: `Sent ${String(e.detail.submitted ?? 0)} pages to Bing`,
+    detail: 'Bing decides when to index them.',
+    tone: 'success',
+  }),
+  bing_no_changes: () => ({
+    title: 'No new or changed pages to send to Bing this week',
+    detail: '',
+    tone: 'neutral',
+  }),
+  bing_send_blocked: e => ({
+    title: "Couldn't send pages to Bing",
+    detail: text(e.detail.message),
+    tone: 'danger',
+  }),
   indexing_requested: e => ({
     title: 'You opened a Request indexing link',
     detail: text(e.detail.url),

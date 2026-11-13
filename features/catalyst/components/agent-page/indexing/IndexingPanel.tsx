@@ -1,6 +1,7 @@
 'use client'
 
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import { BingCard } from '@/features/catalyst/components/agent-page/indexing/BingCard'
 import { IndexingSetup } from '@/features/catalyst/components/agent-page/indexing/IndexingSetup'
 import { IndexingSummary } from '@/features/catalyst/components/agent-page/indexing/IndexingSummary'
 import { PageChanges } from '@/features/catalyst/components/agent-page/indexing/PageChanges'
@@ -82,6 +83,7 @@ export function IndexingPanel({ orgSlug }: IndexingPanelProps): JSX.Element {
       {indexing.isLoading && <p className={NOTE}>Loading…</p>}
       {indexing.loadError && <p className={NOTE}>{indexing.loadError}</p>}
       {indexing.report && <Report orgSlug={orgSlug} report={indexing.report} indexing={indexing} />}
+      {indexing.report?.bing && <BingCard orgSlug={orgSlug} bing={indexing.report.bing} />}
       {indexing.checkError && (
         <p role="alert" className="text-[12px] text-[#e04a3d]">
           {indexing.checkError}

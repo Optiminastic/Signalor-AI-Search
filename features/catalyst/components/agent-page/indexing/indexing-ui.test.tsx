@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
+import { BingKeySetup } from '@/features/catalyst/components/agent-page/indexing/BingKeySetup'
 import { IndexingSetup } from '@/features/catalyst/components/agent-page/indexing/IndexingSetup'
 import { IndexingSummary } from '@/features/catalyst/components/agent-page/indexing/IndexingSummary'
 import { ReasonList } from '@/features/catalyst/components/agent-page/indexing/ReasonList'
@@ -10,6 +11,7 @@ import type { IndexingReport } from '@/lib/api/agent-mode-indexing'
 const noop = (): void => {}
 
 const REPORT: IndexingReport = {
+  bing: null,
   status: 'ready',
   property: 'sc-domain:brand.com',
   checkedAt: '2026-11-13T09:00:00Z',
@@ -111,5 +113,28 @@ describe('indexing tab', () => {
     expect(html).toContain('rel="noopener noreferrer"')
     expect(html).toContain('Request indexing')
     expect(html).toContain('https://brand.com/old')
+  })
+
+  it('shows the key file to host and the result of checking it', () => {
+    const bing = {
+      enabled: false,
+      enabledAt: null,
+      site: 'https://brand.com',
+      key: 'abc123',
+      keyFileUrl: 'https://brand.com/abc123.txt',
+      last: null,
+      nextAt: null,
+    }
+    const html = renderToStaticMarkup(
+      <BingKeySetup
+        bing={bing}
+        keyCheck={{ verified: false, message: 'returned HTTP 404' }}
+        verifying={false}
+        onVerify={noop}
+      />,
+    )
+    expect(html).toContain('https://brand.com/abc123.txt')
+    expect(html).toContain('abc123')
+    expect(html).toContain('returned HTTP 404')
   })
 })

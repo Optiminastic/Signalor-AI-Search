@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { checkIndexingNow, getIndexing } from './agent-mode-indexing'
+import { checkIndexingNow, getIndexing, setBingEnabled, verifyBingKey } from './agent-mode-indexing'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -13,6 +13,21 @@ function serve(body: unknown, status = 200): ReturnType<typeof vi.fn> {
 }
 
 const READY = {
+  bing: {
+    enabled: true,
+    enabled_at: '2026-11-13T09:00:00Z',
+    site: 'https://brand.com',
+    key: 'abc123',
+    key_file_url: 'https://brand.com/abc123.txt',
+    last: {
+      kind: 'submitted',
+      at: '2026-11-13T09:05:00Z',
+      submitted: 12,
+      sample: [],
+      message: 'Accepted.',
+    },
+    next_at: '2026-11-20T09:05:00Z',
+  },
   status: 'ready',
   property: 'sc-domain:brand.com',
   checked_at: '2026-11-13T09:00:00Z',
@@ -48,6 +63,8 @@ describe('indexing API', () => {
     const report = await getIndexing('brand')
     expect(report).toMatchObject({ status: 'ready', indexed: 1, notIndexed: 2, indexedChange: 1 })
     expect(report.reasons[0].fixable).toBe(true)
+    expect(report.bing).toMatchObject({ enabled: true, keyFileUrl: 'https://brand.com/abc123.txt' })
+    expect(report.bing?.last?.submitted).toBe(12)
     expect(report.toRequest[0]).toMatchObject({ url: 'https://brand.com/c', requestedAt: null })
     expect((fetchMock.mock.calls[0] as [string])[0]).toBe('/api/agent-mode/programs/brand/indexing')
   })
@@ -60,5 +77,15 @@ describe('indexing API', () => {
     expect(init.method).toBe('POST')
     serve({ detail: 'A check ran recently.', code: 'check_not_started' }, 409)
     await expect(checkIndexingNow('brand')).rejects.toThrow('A check ran recently.')
+  })
+
+  it('turns weekly Bing sending on and checks the key file', async () => {
+    const fetchMock = serve(READY)
+    await setBingEnabled('brand', true)
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(url).toBe('/api/agent-mode/programs/brand/indexing/bing')
+    expect(JSON.parse(init.body as string)).toEqual({ enabled: true })
+    serve({ verified: true, message: 'Key file verified.' })
+    expect(await verifyBingKey('brand')).toEqual({ verified: true, message: 'Key file verified.' })
   })
 })
