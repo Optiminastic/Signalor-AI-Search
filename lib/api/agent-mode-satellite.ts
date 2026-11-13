@@ -36,6 +36,7 @@ const articleSchema = z
     checked_at: z.string().nullable(),
     check: checkSchema.nullable().catch(null),
     flag: z.enum(['needs_links', 'needs_refresh', '']).catch(''),
+    refresh_queued: z.boolean().catch(false),
   })
   .transform(a => ({
     taskId: a.task_id,
@@ -45,6 +46,8 @@ const articleSchema = z
     checkedAt: a.checked_at,
     check: a.check,
     flag: a.flag,
+    /** A refreshed version is drafted and waiting for the owner's approval. */
+    refreshQueued: a.refresh_queued,
   }))
 
 export type SatelliteArticle = z.infer<typeof articleSchema>

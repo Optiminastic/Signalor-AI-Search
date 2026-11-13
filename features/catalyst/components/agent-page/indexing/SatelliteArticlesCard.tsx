@@ -15,6 +15,14 @@ const FLAG_TEXT: Record<Exclude<SatelliteArticle['flag'], ''>, string> = {
   needs_refresh: 'Below page 1 after two weeks. A fuller, refreshed article usually helps.',
 }
 
+const REFRESH_QUEUED = 'Below page 1 after two weeks. A refreshed version is waiting in Approvals.'
+
+function flagText(article: SatelliteArticle): string {
+  if (article.flag === '') return ''
+  if (article.flag === 'needs_refresh' && article.refreshQueued) return REFRESH_QUEUED
+  return FLAG_TEXT[article.flag]
+}
+
 function hostOf(url: string): string {
   try {
     return new URL(url).hostname
@@ -47,9 +55,7 @@ function ArticleRow({ article }: { article: SatelliteArticle }): JSX.Element {
       <span className={MUTED}>
         {hostOf(article.url)} · {googleStatus(article)}
       </span>
-      {article.flag && (
-        <span className="text-[11.5px] text-[#e04a3d]">{FLAG_TEXT[article.flag]}</span>
-      )}
+      {article.flag && <span className="text-[11.5px] text-[#e04a3d]">{flagText(article)}</span>}
     </li>
   )
 }
