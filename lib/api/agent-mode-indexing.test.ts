@@ -32,6 +32,14 @@ const READY = {
   indexed_change: 1,
   newly_indexed: ['https://brand.com/b'],
   dropped: [],
+  to_request: [
+    {
+      url: 'https://brand.com/c',
+      reason: 'Found, not crawled yet',
+      inspect_url: 'https://search.google.com/search-console/inspect?resource_id=x&id=c',
+    },
+  ],
+  requested: [],
 }
 
 describe('indexing API', () => {
@@ -40,6 +48,7 @@ describe('indexing API', () => {
     const report = await getIndexing('brand')
     expect(report).toMatchObject({ status: 'ready', indexed: 1, notIndexed: 2, indexedChange: 1 })
     expect(report.reasons[0].fixable).toBe(true)
+    expect(report.toRequest[0]).toMatchObject({ url: 'https://brand.com/c', requestedAt: null })
     expect((fetchMock.mock.calls[0] as [string])[0]).toBe('/api/agent-mode/programs/brand/indexing')
   })
 

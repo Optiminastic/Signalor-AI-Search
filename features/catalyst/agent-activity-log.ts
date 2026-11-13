@@ -30,7 +30,9 @@ function indexingDetail(entry: ActivityEntry): string {
       ? `${change > 0 ? '+' : ''}${change} since last week. `
       : ''
   const reason = text(entry.detail.top_reason)
-  return `${delta}${reason ? `Most common reason: ${reason}.` : ''}`.trim()
+  const ready = typeof entry.detail.to_request === 'number' ? entry.detail.to_request : 0
+  const requests = ready > 0 ? ` ${ready} pages ready to request in Search Console.` : ''
+  return `${delta}${reason ? `Most common reason: ${reason}.` : ''}${requests}`.trim()
 }
 
 type Describe = (entry: ActivityEntry) => ActivityLine
@@ -112,6 +114,11 @@ const LINES: Record<string, Describe> = {
   indexing_check_started: () => ({
     title: 'Started the weekly indexing check',
     detail: 'Reading every sitemap page in Search Console.',
+    tone: 'neutral',
+  }),
+  indexing_requested: e => ({
+    title: 'You opened a Request indexing link',
+    detail: text(e.detail.url),
     tone: 'neutral',
   }),
   indexing_checked: e => ({

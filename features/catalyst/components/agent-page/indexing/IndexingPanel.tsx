@@ -5,6 +5,7 @@ import { IndexingSetup } from '@/features/catalyst/components/agent-page/indexin
 import { IndexingSummary } from '@/features/catalyst/components/agent-page/indexing/IndexingSummary'
 import { PageChanges } from '@/features/catalyst/components/agent-page/indexing/PageChanges'
 import { ReasonList } from '@/features/catalyst/components/agent-page/indexing/ReasonList'
+import { RequestIndexingList } from '@/features/catalyst/components/agent-page/indexing/RequestIndexingList'
 import { useAgentIndexing, type AgentIndexing } from '@/hooks/useAgentIndexing'
 import type { IndexingReport } from '@/lib/api/agent-mode-indexing'
 
@@ -61,6 +62,11 @@ function Report({ orgSlug, report, indexing }: ReportProps): JSX.Element {
         report={report}
         checking={indexing.checking}
         onCheckNow={indexing.checkNow}
+      />
+      <RequestIndexingList
+        toRequest={report.toRequest}
+        requested={report.requested}
+        onOpened={indexing.markRequested}
       />
       <ReasonList reasons={report.reasons} />
       <PageChanges newlyIndexed={report.newlyIndexed} dropped={report.dropped} />
