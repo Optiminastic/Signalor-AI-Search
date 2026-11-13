@@ -44,6 +44,7 @@ export const queryKeys = {
     planActions: (orgSlug: string) => ['agent-mode', orgSlug, 'plan-actions'] as const,
     activity: (orgSlug: string) => ['agent-mode', orgSlug, 'activity'] as const,
     finders: (orgSlug: string) => ['agent-mode', orgSlug, 'finders'] as const,
+    indexing: (orgSlug: string) => ['agent-mode', orgSlug, 'indexing'] as const,
     action: (orgSlug: string, actionId: string) =>
       ['agent-mode', orgSlug, 'actions', actionId] as const,
   },

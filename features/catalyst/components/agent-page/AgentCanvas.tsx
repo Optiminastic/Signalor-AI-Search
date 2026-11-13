@@ -11,6 +11,7 @@ import {
   boardPanelId,
   type BoardTab,
 } from '@/features/catalyst/components/agent-page/BoardTabs'
+import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { useAgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
 
@@ -22,6 +23,7 @@ interface AgentCanvasProps {
 
 function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'approvals') return 'Approvals'
+  if (tab === 'indexing') return 'Indexing on Google'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -65,14 +67,14 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
         id={boardPanelId(tab)}
         aria-labelledby={`agent-board-tab-${tab}`}
       >
-        {tab === 'activity' ? (
+        {tab === 'activity' && (
           <>
             <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
             <AgentLog orgSlug={orgSlug} />
           </>
-        ) : (
-          <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
         )}
+        {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
+        {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}
       </div>
     </section>
   )

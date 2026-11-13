@@ -23,6 +23,16 @@ function finderLabel(entry: ActivityEntry): string {
   return FINDER_LABELS[provider] ?? 'a contact finder'
 }
 
+function indexingDetail(entry: ActivityEntry): string {
+  const change = entry.detail.indexed_change
+  const delta =
+    typeof change === 'number' && change !== 0
+      ? `${change > 0 ? '+' : ''}${change} since last week. `
+      : ''
+  const reason = text(entry.detail.top_reason)
+  return `${delta}${reason ? `Most common reason: ${reason}.` : ''}`.trim()
+}
+
 type Describe = (entry: ActivityEntry) => ActivityLine
 
 const LINES: Record<string, Describe> = {
@@ -98,6 +108,16 @@ const LINES: Record<string, Describe> = {
     title: `Looked up contacts at ${text(e.detail.domain) || 'a site'}`,
     detail: `${String(e.detail.found ?? 0)} found.`,
     tone: 'neutral',
+  }),
+  indexing_check_started: () => ({
+    title: 'Started the weekly indexing check',
+    detail: 'Reading every sitemap page in Search Console.',
+    tone: 'neutral',
+  }),
+  indexing_checked: e => ({
+    title: `Indexing: ${String(e.detail.indexed ?? 0)} of ${String(e.detail.checked ?? 0)} pages on Google`,
+    detail: indexingDetail(e),
+    tone: 'success',
   }),
   guardrail: e => ({
     title: `Held back: ${e.taskTitle}`,
