@@ -7,6 +7,7 @@ import { IndexingSummary } from '@/features/catalyst/components/agent-page/index
 import { PageChanges } from '@/features/catalyst/components/agent-page/indexing/PageChanges'
 import { ReasonList } from '@/features/catalyst/components/agent-page/indexing/ReasonList'
 import { RequestIndexingList } from '@/features/catalyst/components/agent-page/indexing/RequestIndexingList'
+import { SatelliteArticlesCard } from '@/features/catalyst/components/agent-page/indexing/SatelliteArticlesCard'
 import { useAgentIndexing, type AgentIndexing } from '@/hooks/useAgentIndexing'
 import type { IndexingReport } from '@/lib/api/agent-mode-indexing'
 
@@ -84,6 +85,7 @@ export function IndexingPanel({ orgSlug }: IndexingPanelProps): JSX.Element {
       {indexing.loadError && <p className={NOTE}>{indexing.loadError}</p>}
       {indexing.report && <Report orgSlug={orgSlug} report={indexing.report} indexing={indexing} />}
       {indexing.report?.bing && <BingCard orgSlug={orgSlug} bing={indexing.report.bing} />}
+      <SatelliteArticlesCard orgSlug={orgSlug} />
       {indexing.checkError && (
         <p role="alert" className="text-[12px] text-[#e04a3d]">
           {indexing.checkError}

@@ -146,6 +146,18 @@ const LINES: Record<string, Describe> = {
     detail: text(e.detail.message),
     tone: 'danger',
   }),
+  satellite_rank_started: () => ({
+    title: 'Checking your articles on signalor.ai sites in Google',
+    detail: '',
+    tone: 'neutral',
+  }),
+  satellite_rank_checked: e => ({
+    title: e.detail.indexed
+      ? 'Your satellite article is on Google'
+      : 'Your satellite article is not on Google yet',
+    detail: text(e.detail.url),
+    tone: e.detail.indexed ? 'success' : 'neutral',
+  }),
   indexing_requested: e => ({
     title: 'You opened a Request indexing link',
     detail: text(e.detail.url),
