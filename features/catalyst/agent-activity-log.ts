@@ -158,6 +158,11 @@ const LINES: Record<string, Describe> = {
     detail: text(e.detail.url),
     tone: e.detail.indexed ? 'success' : 'neutral',
   }),
+  satellite_topics_planned: e => ({
+    title: `Planned ${String(e.detail.count ?? 0)} articles on signalor.ai sites`,
+    detail: 'One every 3 days, each mentioning you. See Approvals to skip any topic.',
+    tone: 'success',
+  }),
   weekly_summary_posted: () => ({
     title: 'Posted your weekly summary in the chat',
     detail: 'Open it from your recent chats.',
