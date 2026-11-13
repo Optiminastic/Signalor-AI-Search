@@ -44,3 +44,8 @@ export function satelliteTopics(tasks: PlanTaskAction[]): SatelliteTopic[] {
     })
     .sort((a, b) => a.scheduledFor.localeCompare(b.scheduledFor))
 }
+
+/** A draft for an article on one of signalor.ai's sites (new or a refresh). */
+export function isSatelliteDraft(action: { connector: string }): boolean {
+  return action.connector === 'satellite'
+}

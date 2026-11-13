@@ -6,12 +6,14 @@ import { awaitingCount, unknownCount } from '@/features/catalyst/agent-approvals
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
 import { AgentLog } from '@/features/catalyst/components/agent-page/AgentLog'
 import { AgentApprovalsPanel } from '@/features/catalyst/components/agent-page/approvals/AgentApprovalsPanel'
+import { ArticlesPanel } from '@/features/catalyst/components/agent-page/articles/ArticlesPanel'
 import {
   BoardTabs,
   boardPanelId,
   type BoardTab,
 } from '@/features/catalyst/components/agent-page/BoardTabs'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
+import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
 
@@ -24,6 +26,7 @@ interface AgentCanvasProps {
 function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'approvals') return 'Approvals'
   if (tab === 'indexing') return 'Indexing on Google'
+  if (tab === 'articles') return 'Articles on signalor.ai sites'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -48,6 +51,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
   const badges = {
     awaiting: awaitingCount(approvals.pending),
     outcomeUnknown: unknownCount(approvals.results) > 0,
+    articles: approvals.pending.filter(isSatelliteDraft).length,
   }
   return (
     <section
@@ -73,6 +77,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
             <AgentLog orgSlug={orgSlug} />
           </>
         )}
+        {tab === 'articles' && <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}
       </div>

@@ -1,22 +1,35 @@
 import { YELLOW } from '@/features/catalyst/constants'
 
-export type BoardTab = 'activity' | 'approvals' | 'indexing'
+export type BoardTab = 'activity' | 'articles' | 'approvals' | 'indexing'
 
 interface BoardTabsProps {
   value: BoardTab
   onChange: (tab: BoardTab) => void
-  /** Drafts awaiting the owner, and whether any send has an unknown outcome. */
-  badges: { awaiting: number; outcomeUnknown: boolean }
+  /** Drafts awaiting the owner, whether any send has an unknown outcome, and article drafts waiting. */
+  badges: { awaiting: number; outcomeUnknown: boolean; articles: number }
 }
 
 const TABS: { id: BoardTab; label: string }[] = [
   { id: 'activity', label: 'Activity' },
+  { id: 'articles', label: 'Articles' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
 ]
 
 export function boardPanelId(tab: BoardTab): string {
   return `agent-board-panel-${tab}`
+}
+
+function CountBadge({ count, label }: { count: number; label: string }): JSX.Element | null {
+  if (count <= 0) return null
+  return (
+    <span
+      className="rounded-sm bg-[#e04a3d] px-1.5 text-[10.5px] leading-[16px] font-semibold text-white tabular-nums"
+      aria-label={`${count} ${label}`}
+    >
+      {count}
+    </span>
+  )
 }
 
 function TabBadges({ badges }: Pick<BoardTabsProps, 'badges'>): JSX.Element {
@@ -67,6 +80,9 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
         >
           {tab.label}
           {tab.id === 'approvals' && <TabBadges badges={badges} />}
+          {tab.id === 'articles' && (
+            <CountBadge count={badges.articles} label="article drafts to review" />
+          )}
         </button>
       ))}
     </div>
