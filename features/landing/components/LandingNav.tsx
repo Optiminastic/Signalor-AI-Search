@@ -30,6 +30,12 @@ export function LandingNav(): JSX.Element {
         >
           Sign up
         </Link>
+        <Link
+          href="/contact"
+          className="ml-1 hidden h-9 items-center rounded-md bg-white px-4 text-[14px] font-semibold text-[#171717] shadow-sm ring-1 shadow-black/5 ring-black/10 transition-all hover:bg-[#f4f4f5] motion-safe:hover:-translate-y-px sm:inline-flex"
+        >
+          Talk to us
+        </Link>
       </div>
     </nav>
   )
