@@ -1,10 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import Image from 'next/image'
 
-import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { FinderKeyForm } from '@/features/catalyst/components/agent-page/tools/FinderKeyForm'
-import { PrimaryButton } from '@/features/catalyst/components/PrimaryButton'
 import type { ContactFinder } from '@/lib/api/agent-mode-finders'
 import { Check } from '@/lib/icons'
 
@@ -12,67 +10,94 @@ interface FinderRowProps {
   finder: ContactFinder
   busy: boolean
   error: string | null
+  /** Show the API-key fallback under the row (only when not connected). */
+  showKeyForm: boolean
   onSignIn: () => void
   onConnect: (apiKey: string) => void
   onDisconnect: () => void
 }
 
-const NOTE = 'text-[11.5px] text-[var(--cat-ink-3)]'
-const LINK =
-  'self-start text-[11.5px] text-[var(--cat-ink-3)] underline hover:text-[var(--cat-ink)]'
+const LOGOS: Record<string, string> = { hunter: '/logos/hunter.png', apollo: '/logos/apollo.png' }
+const LOGO_SIZE = 28
+const ROW =
+  'flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[var(--cat-hover)] disabled:cursor-wait'
+const MUTED = 'text-[12px] text-[var(--cat-ink-3)]'
 
-function connectedLabel(finder: ContactFinder): string {
-  return finder.method === 'oauth'
-    ? 'Connected · signed in'
-    : `Connected · key ••••${finder.keyHint}`
+function Logo({ finder }: { finder: ContactFinder }): JSX.Element {
+  const src = LOGOS[finder.provider]
+  if (!src) return <span className="h-7 w-7 rounded-md bg-[var(--cat-hover)]" />
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={LOGO_SIZE}
+      height={LOGO_SIZE}
+      className="h-7 w-7 shrink-0 rounded-md"
+    />
+  )
 }
 
-function Connected({ finder, busy, onDisconnect }: FinderRowProps): JSX.Element {
+function Name({ finder }: { finder: ContactFinder }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-2">
-      <span className="flex items-center gap-1.5 text-[12px] text-[var(--cat-ink-2)]">
-        <Check size={14} strokeWidth={2.4} className="text-emerald-600" />
-        {connectedLabel(finder)}
+    <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-[var(--cat-ink)]">
+      {finder.label}
+    </span>
+  )
+}
+
+function ConnectedRow({ finder, busy, onDisconnect }: FinderRowProps): JSX.Element {
+  return (
+    <div className="flex items-center gap-3 px-2.5 py-2">
+      <Logo finder={finder} />
+      <Name finder={finder} />
+      <span className="flex items-center gap-1 text-[12px] text-emerald-700">
+        <Check size={13} strokeWidth={2.4} />
+        Connected
       </span>
-      <button type="button" disabled={busy} onClick={onDisconnect} className={SECONDARY_BUTTON}>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={onDisconnect}
+        aria-label={`Disconnect ${finder.label}`}
+        className={`${MUTED} underline hover:text-[var(--cat-ink)]`}
+      >
         {busy ? 'Disconnecting…' : 'Disconnect'}
       </button>
     </div>
   )
 }
 
-/** Sign in on the provider's own page first; an API key only if the owner asks for it. */
-function NotConnected(props: FinderRowProps): JSX.Element {
-  const [useKey, setUseKey] = useState(false)
-  const { finder, busy, onSignIn } = props
+/** The whole row signs in: the provider's own login page, like Claude and ChatGPT. */
+function SignInRow({ finder, busy, onSignIn }: FinderRowProps): JSX.Element {
   return (
-    <div className="flex flex-col gap-1.5">
-      {finder.source === 'signalor' && (
-        <p className={NOTE}>Using Signalor&apos;s shared account until you connect yours.</p>
-      )}
-      <PrimaryButton type="button" disabled={busy} onClick={onSignIn} wrapperClassName="self-start">
-        {busy ? 'Opening…' : `Sign in with ${finder.label}`}
-      </PrimaryButton>
-      {useKey ? (
-        <FinderKeyForm finder={finder} busy={busy} onConnect={props.onConnect} />
-      ) : (
-        <button type="button" onClick={() => setUseKey(true)} className={LINK}>
-          Use an API key instead
-        </button>
-      )}
-    </div>
+    <button
+      type="button"
+      disabled={busy}
+      onClick={onSignIn}
+      aria-label={`Sign in with ${finder.label}`}
+      className={ROW}
+    >
+      <Logo finder={finder} />
+      <Name finder={finder} />
+      {busy && <span className={MUTED}>Opening…</span>}
+    </button>
   )
 }
 
-/** One contact finder: sign in (or a key), or "Connected" with how. */
+/** One contact finder: its logo and name. Click to sign in; shows when connected. */
 export function FinderRow(props: FinderRowProps): JSX.Element {
+  const { finder, error } = props
   return (
-    <li className="flex flex-col gap-1.5 rounded-md border border-[var(--cat-border)] px-3 py-2.5">
-      <span className="text-[13px] font-medium text-[var(--cat-ink)]">{props.finder.label}</span>
-      {props.finder.connected ? <Connected {...props} /> : <NotConnected {...props} />}
-      {props.error && (
-        <p role="alert" className="text-[11.5px] text-[#e04a3d]">
-          {props.error}
+    <li className="flex flex-col gap-1">
+      {finder.connected ? <ConnectedRow {...props} /> : <SignInRow {...props} />}
+      {!finder.connected && props.showKeyForm && (
+        <div className="px-2.5 pb-1">
+          <FinderKeyForm finder={finder} busy={props.busy} onConnect={props.onConnect} />
+        </div>
+      )}
+      {error && (
+        <p role="alert" className="px-2.5 text-[11.5px] text-[#e04a3d]">
+          {error}
         </p>
       )}
     </li>
