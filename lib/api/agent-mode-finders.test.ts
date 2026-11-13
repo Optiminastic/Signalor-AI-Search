@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { connectFinder, disconnectFinder, listFinders } from './agent-mode-finders'
+import {
+  connectFinder,
+  disconnectFinder,
+  listFinders,
+  startFinderSignIn,
+} from './agent-mode-finders'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -14,8 +19,22 @@ function serve(body: unknown, status = 200): ReturnType<typeof vi.fn> {
 
 const LISTING = {
   finders: [
-    { provider: 'hunter', label: 'Hunter', connected: true, key_hint: 'abcd', source: 'account' },
-    { provider: 'apollo', label: 'Apollo', connected: false, key_hint: '', source: 'none' },
+    {
+      provider: 'hunter',
+      label: 'Hunter',
+      connected: true,
+      method: 'oauth',
+      key_hint: '',
+      source: 'account',
+    },
+    {
+      provider: 'apollo',
+      label: 'Apollo',
+      connected: false,
+      method: '',
+      key_hint: '',
+      source: 'none',
+    },
   ],
 }
 
@@ -27,7 +46,8 @@ describe('contact finder accounts API', () => {
       provider: 'hunter',
       label: 'Hunter',
       connected: true,
-      keyHint: 'abcd',
+      method: 'oauth',
+      keyHint: '',
       source: 'account',
     })
     expect(finders[1].connected).toBe(false)
@@ -55,5 +75,20 @@ describe('contact finder accounts API', () => {
     await expect(
       connectFinder({ orgSlug: 'brand', provider: 'hunter', apiKey: 'bad' }),
     ).rejects.toThrow("Hunter didn't accept this API key.")
+  })
+
+  it('asks ranking-be for the provider login page, passing where to come back', async () => {
+    const fetchMock = serve({ authorize_url: 'https://hunter.io/oauth/authorize?client_id=c' })
+    const url = await startFinderSignIn({
+      orgSlug: 'brand',
+      provider: 'hunter',
+      returnUrl: 'http://localhost:3002/dashboard/brand/agent-mode',
+    })
+    expect(url).toBe('https://hunter.io/oauth/authorize?client_id=c')
+    const [path, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(path).toBe('/api/agent-mode/programs/brand/finders/hunter/sign-in')
+    expect(JSON.parse(init.body as string)).toEqual({
+      return_url: 'http://localhost:3002/dashboard/brand/agent-mode',
+    })
   })
 })

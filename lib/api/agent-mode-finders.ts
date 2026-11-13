@@ -12,6 +12,7 @@ const finderSchema = z
     provider: z.string(),
     label: z.string(),
     connected: z.boolean(),
+    method: z.enum(['oauth', 'api_key', '']).catch(''),
     key_hint: z.string(),
     source: z.enum(['account', 'signalor', 'none']).catch('none'),
   })
@@ -19,6 +20,7 @@ const finderSchema = z
     provider: f.provider,
     label: f.label,
     connected: f.connected,
+    method: f.method,
     keyHint: f.key_hint,
     source: f.source,
   }))
@@ -53,4 +55,24 @@ export async function disconnectFinder(
 ): Promise<ContactFinder[]> {
   const path = programPath(orgSlug, 'finders', provider, 'disconnect')
   return (await agentModeRequest(path, envelope, { method: 'POST', body: {} })).finders
+}
+
+const signInSchema = z.object({ authorize_url: z.string().url() })
+
+interface SignInInput {
+  orgSlug: string
+  provider: string
+  /** The Agent mode page to come back to after the provider's login. */
+  returnUrl: string
+}
+
+/** The provider's own login page (Hunter or Apollo), to send the browser to. */
+export async function startFinderSignIn({
+  orgSlug,
+  provider,
+  returnUrl,
+}: SignInInput): Promise<string> {
+  const path = programPath(orgSlug, 'finders', provider, 'sign-in')
+  const body = { return_url: returnUrl }
+  return (await agentModeRequest(path, signInSchema, { method: 'POST', body })).authorize_url
 }

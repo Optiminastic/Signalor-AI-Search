@@ -18,8 +18,8 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
   return (
     <div className="flex flex-col gap-2">
       <p className={NOTE}>
-        Connect your Hunter or Apollo account. The agent uses it to find contacts and emails for
-        sites that don&apos;t list one. Your key is stored encrypted and never shown again.
+        Sign in to your Hunter or Apollo account. The agent uses it to find contacts and emails for
+        sites that don&apos;t list one. Signalor never sees your password.
       </p>
       {tools.isLoading && <p className={NOTE}>Loading…</p>}
       {tools.loadError && <p className={NOTE}>{tools.loadError}</p>}
@@ -32,6 +32,7 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
             error={
               tools.actionError?.provider === finder.provider ? tools.actionError.message : null
             }
+            onSignIn={() => tools.signIn(finder.provider)}
             onConnect={apiKey => tools.connect(finder.provider, apiKey)}
             onDisconnect={() => tools.disconnect(finder.provider)}
           />
