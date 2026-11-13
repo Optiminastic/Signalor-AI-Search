@@ -158,6 +158,11 @@ const LINES: Record<string, Describe> = {
     detail: text(e.detail.url),
     tone: e.detail.indexed ? 'success' : 'neutral',
   }),
+  weekly_summary_posted: () => ({
+    title: 'Posted your weekly summary in the chat',
+    detail: 'Open it from your recent chats.',
+    tone: 'neutral',
+  }),
   indexing_requested: e => ({
     title: 'You opened a Request indexing link',
     detail: text(e.detail.url),
