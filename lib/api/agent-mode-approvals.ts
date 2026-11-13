@@ -266,6 +266,10 @@ const planTaskSchema = z
     id: z.number(),
     title: z.string(),
     status: z.string(),
+    tactic: z.string().catch(''),
+    target: z.string().catch(''),
+    target_url: z.string().catch(''),
+    scheduled_for: z.string().catch(''),
     result_payload: z.record(z.unknown()).nullable().catch(null),
     action: taskActionSchema.nullable().catch(null),
   })
@@ -274,6 +278,10 @@ const planTaskSchema = z
     taskTitle: t.title,
     /** The task's own status, passed through unchanged. */
     taskStatus: t.status,
+    tactic: t.tactic,
+    target: t.target,
+    targetUrl: t.target_url,
+    scheduledFor: t.scheduled_for,
     action: t.action,
     failure: typeof t.result_payload?.error === 'string' ? t.result_payload.error : '',
     needsContact: needsContactOf(t.result_payload),
@@ -382,4 +390,18 @@ export async function editAction(input: EditInput): Promise<AgentActionDetail> {
   const path = programPath(input.orgSlug, 'actions', encodeURIComponent(input.actionId), 'edit')
   const body = { version: input.version, payload_hash: input.payloadHash, fields: input.fields }
   return (await agentModeRequest(path, detailEnvelope, { method: 'POST', body })).action
+}
+
+const taskUpdateResult = z.object({ id: z.number() }).passthrough()
+
+export type PlanTaskChoice = 'skipped' | 'planned'
+
+/** Skip a not-yet-started plan task, or restore a skipped one. */
+export async function setPlanTaskStatus(
+  orgSlug: string,
+  taskId: number,
+  status: PlanTaskChoice,
+): Promise<void> {
+  const path = programPath(orgSlug, 'tasks', String(taskId))
+  await agentModeRequest(path, taskUpdateResult, { method: 'PATCH', body: { status } })
 }

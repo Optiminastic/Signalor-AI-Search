@@ -4,9 +4,11 @@ import { useState } from 'react'
 
 import { ActionReviewView } from '@/features/catalyst/components/agent-page/approvals/ActionReviewView'
 import { ApprovalListView } from '@/features/catalyst/components/agent-page/approvals/ApprovalListView'
+import { SatelliteTopicList } from '@/features/catalyst/components/agent-page/approvals/SatelliteTopicList'
 import { useAgentAction } from '@/hooks/useAgentAction'
 import { useTaskContact } from '@/hooks/useAgentActivity'
 import type { AgentApprovals } from '@/hooks/useAgentApprovals'
+import { useSatelliteTopics } from '@/hooks/useSatelliteTopics'
 
 interface AgentApprovalsPanelProps {
   orgSlug: string
@@ -33,6 +35,24 @@ function ActionReview({ orgSlug, actionId, onBack }: ActionReviewProps): JSX.Ele
   )
 }
 
+function SatelliteTopics({ orgSlug }: { orgSlug: string }): JSX.Element {
+  const satellite = useSatelliteTopics(orgSlug)
+  return (
+    <>
+      <SatelliteTopicList
+        topics={satellite.topics}
+        busyTaskId={satellite.busyTaskId}
+        onChange={satellite.setStatus}
+      />
+      {satellite.error && (
+        <p role="alert" className="text-[12px] text-[#e04a3d]">
+          {satellite.error}
+        </p>
+      )}
+    </>
+  )
+}
+
 /** The Approvals tab: the list, or one action opened from it. */
 export function AgentApprovalsPanel({ orgSlug, approvals }: AgentApprovalsPanelProps): JSX.Element {
   const [openId, setOpenId] = useState<string | null>(null)
@@ -51,11 +71,14 @@ export function AgentApprovalsPanel({ orgSlug, approvals }: AgentApprovalsPanelP
     )
   }
   return (
-    <ApprovalListView
-      data={approvals}
-      onOpen={setOpenId}
-      onReload={approvals.refresh}
-      contact={{ orgSlug, busyTaskId: contact.pendingTaskId, onAnswer: contact.answer }}
-    />
+    <div className="flex flex-col gap-6">
+      <ApprovalListView
+        data={approvals}
+        onOpen={setOpenId}
+        onReload={approvals.refresh}
+        contact={{ orgSlug, busyTaskId: contact.pendingTaskId, onAnswer: contact.answer }}
+      />
+      <SatelliteTopics orgSlug={orgSlug} />
+    </div>
   )
 }
