@@ -35,6 +35,8 @@ const backlinkScheduleSchema = z.object({
   next_run_at: z.string().nullish(),
   last_run_at: z.string().nullish(),
   last_batch_count: z.number().default(0),
+  /** The daily batch is switched off: the Agent's satellite articles replace it. */
+  replaced_by_agent: z.boolean().default(false),
 })
 
 export type BacklinkSchedule = z.infer<typeof backlinkScheduleSchema>
