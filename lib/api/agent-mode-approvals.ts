@@ -36,6 +36,14 @@ const stateSchema = z
   .string()
   .transform((s): ActionState => (KNOWN_STATES.includes(s) ? (s as ActionState) : 'unknown'))
 
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
+
 const articleSchema = z
   .object({
     title: z.string(),
@@ -43,6 +51,8 @@ const articleSchema = z
     slug: z.string(),
     markdown: z.string(),
     platform: z.string(),
+    /** Set for articles on a signalor.ai satellite site: that site's address. */
+    site_url: z.string().optional(),
     /** The editable opening answer. Older backends don't send it. */
     answer: z.string().optional(),
     review_notes: z.array(z.string()).optional(),
@@ -54,6 +64,8 @@ const articleSchema = z
     slug: c.slug,
     markdown: c.markdown,
     platform: c.platform,
+    /** Where it will be published, in words: the satellite site, or the brand's own platform. */
+    destination: c.site_url ? `${hostOf(c.site_url)} (a signalor.ai site)` : c.platform,
     answer: c.answer ?? null,
     reviewNotes: c.review_notes ?? [],
   }))

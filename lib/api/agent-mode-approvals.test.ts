@@ -88,10 +88,24 @@ describe('getAction', () => {
       slug: 'draft-page',
       markdown: '**A short answer.**\n',
       platform: 'wordpress',
+      destination: 'wordpress',
       answer: 'A short answer.',
       reviewNotes: [],
     })
     expect(action.decisions).toEqual([])
+  })
+
+  it('names the signalor.ai site a satellite article will be published on', async () => {
+    const { status, body } = recorded.detail_article_awaiting
+    const satellite = structuredClone(body) as { action: { content: Record<string, unknown> } }
+    satellite.action.content.platform = 'satellite'
+    satellite.action.content.site_url = 'https://betterversus.com'
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify(satellite), { status })),
+    )
+    const action = await getAction(SLUG, 'abc')
+    expect(action.content).toMatchObject({ destination: 'betterversus.com (a signalor.ai site)' })
   })
 
   it('keeps the decision history in order', async () => {

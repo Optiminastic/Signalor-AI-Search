@@ -44,7 +44,7 @@ function ArticleDraft({ article }: { article: ArticleContent }): JSX.Element {
   return (
     <>
       <dl className="flex flex-col gap-1.5">
-        <Field label="Publish to" value={article.platform} />
+        <Field label="Publish to" value={article.destination} />
         <Field label="Title" value={article.title} />
         <Field label="URL slug" value={article.slug} />
         <Field label="Description" value={article.metaDescription} />

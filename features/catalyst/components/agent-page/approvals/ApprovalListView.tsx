@@ -64,7 +64,7 @@ function NeedsInputSection({
 function pendingNote(action: AgentAction): string {
   const content = action.content
   if (content?.type === 'email') return `To a contact at ${content.recipientDomain}`
-  if (content?.type === 'article') return content.platform ? `On ${content.platform}` : ''
+  if (content?.type === 'article') return content.destination ? `On ${content.destination}` : ''
   return 'Draft could not be shown'
 }
 
