@@ -8,7 +8,22 @@ import type { BoardTab } from '@/features/catalyst/components/agent-page/BoardTa
 export interface ReplyActions {
   tabs: BoardTab[]
   followUps: string[]
+  /** A tool the reply says to connect (opens the + panel), if any. */
+  connect: ConnectTool | null
 }
+
+export type ConnectTool = 'gmail' | 'hunter' | 'apollo' | 'buffer'
+
+export const CONNECT_LABELS: Record<ConnectTool, string> = {
+  gmail: 'Gmail',
+  hunter: 'Hunter',
+  apollo: 'Apollo',
+  buffer: 'Buffer',
+}
+
+/** Most blocking first: without Gmail nothing approved can be sent. */
+const CONNECT_ORDER: ConnectTool[] = ['gmail', 'hunter', 'apollo', 'buffer']
+const CONNECT_WORDS = /\b(connect|connected|connecting|reconnect|not linked|sign in)\b/i
 
 const MAX_TABS = 2
 const MAX_FOLLOW_UPS = 3
@@ -97,5 +112,15 @@ function followUpsFor(tools: string[], asked: string[]): string[] {
  * @param asked what the owner already asked in this chat (never suggested again)
  */
 export function replyActions(tools: string[], text: string, asked: string[]): ReplyActions {
-  return { tabs: tabsFor(tools, text), followUps: followUpsFor(tools, asked) }
+  return {
+    tabs: tabsFor(tools, text),
+    followUps: followUpsFor(tools, asked),
+    connect: connectFor(text),
+  }
+}
+
+/** The first tool the reply names together with connecting it ("Gmail isn't connected"). */
+function connectFor(text: string): ConnectTool | null {
+  if (!CONNECT_WORDS.test(text)) return null
+  return CONNECT_ORDER.find(tool => new RegExp(`\\b${tool}\\b`, 'i').test(text)) ?? null
 }

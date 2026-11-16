@@ -34,3 +34,15 @@ describe('replyActions', () => {
     expect(actions.followUps).toHaveLength(3)
   })
 })
+
+describe('replyActions connect', () => {
+  it('offers to connect the tool the reply says is missing, Gmail first', () => {
+    const text = 'Gmail is not connected yet, and Hunter would help too. Connect them from the +.'
+    expect(replyActions([], text, []).connect).toBe('gmail')
+  })
+
+  it('offers nothing when no tool needs connecting', () => {
+    expect(replyActions([], 'Your emails went out from Gmail.', []).connect).toBeNull()
+    expect(replyActions([], 'Connect with editors in your niche.', []).connect).toBeNull()
+  })
+})

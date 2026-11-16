@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react'
 
+import { useToolsPanelOpen } from '@/features/catalyst/components/agent-page/AgentUiContext'
 import { useBufferReturn } from '@/features/catalyst/components/agent-page/social/useBufferReturn'
 import { ConnectToolsPanel } from '@/features/catalyst/components/agent-page/tools/ConnectToolsPanel'
 import {
@@ -77,10 +78,10 @@ function useSignInNotice(setOpen: (open: boolean) => void): FinderReturn | null 
 
 /** The "+" next to the message box: connect Gmail, Hunter, Apollo or Buffer for this brand. */
 export function ConnectToolsButton({ orgSlug }: ConnectToolsButtonProps): JSX.Element {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useToolsPanelOpen()
   const wrapper = useRef<HTMLDivElement>(null)
   const panelId = useId()
-  const close = useCallback(() => setOpen(false), [])
+  const close = useCallback(() => setOpen(false), [setOpen])
   const notice = useSignInNotice(setOpen)
   useDismiss(wrapper, open, close)
   return (
@@ -92,7 +93,7 @@ export function ConnectToolsButton({ orgSlug }: ConnectToolsButtonProps): JSX.El
         }
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen(!open)}
         className={TRIGGER}
       >
         {open ? <X size={15} strokeWidth={2.2} /> : <Plus size={16} strokeWidth={2.2} />}
