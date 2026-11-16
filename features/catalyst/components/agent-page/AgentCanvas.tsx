@@ -14,10 +14,12 @@ import {
 } from '@/features/catalyst/components/agent-page/BoardTabs'
 import { GuestPostsPanel } from '@/features/catalyst/components/agent-page/guest-posts/GuestPostsPanel'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
+import { KeywordsPanel } from '@/features/catalyst/components/agent-page/keywords/KeywordsPanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
 import { useGuestPosts } from '@/hooks/useGuestPosts'
+import { useKeywords } from '@/hooks/useKeywords'
 import type { GuestStage } from '@/lib/api/agent-mode-guest-posts'
 import { Sparkles } from '@/lib/icons'
 
@@ -33,6 +35,7 @@ function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'articles') return 'Articles on signalor.ai sites'
   if (tab === 'social') return 'Social presence'
   if (tab === 'guest') return 'Guest posts'
+  if (tab === 'keywords') return 'Keywords on Google'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -50,7 +53,12 @@ function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): 
 /** Guest-post stages where the owner has something to do. */
 const GUEST_NEEDS_YOU = new Set<GuestStage>(['pitch_waiting', 'needs_contact', 'replied'])
 
-function boardBadges(approvals: AgentApprovals, guestNeedsYou: number): BoardBadges {
+interface ExtraBadges {
+  guestNeedsYou: number
+  newKeywordGaps: number
+}
+
+function boardBadges(approvals: AgentApprovals, extra: ExtraBadges): BoardBadges {
   const waitingSocial = approvals.pending.filter(
     a => a.kind === 'publish_social_post' && a.state === 'awaiting_approval',
   )
@@ -59,8 +67,46 @@ function boardBadges(approvals: AgentApprovals, guestNeedsYou: number): BoardBad
     outcomeUnknown: unknownCount(approvals.results) > 0,
     articles: approvals.pending.filter(isSatelliteDraft).length,
     social: waitingSocial.length,
-    guest: guestNeedsYou,
+    guest: extra.guestNeedsYou,
+    keywords: extra.newKeywordGaps,
   }
+}
+
+/** Count badges for every tab, from the data each tab already loads. */
+function useBoardBadges(orgSlug: string, approvals: AgentApprovals): BoardBadges {
+  const guest = useGuestPosts(orgSlug)
+  const keywords = useKeywords(orgSlug)
+  return boardBadges(approvals, {
+    guestNeedsYou: guest.report?.sites.filter(s => GUEST_NEEDS_YOU.has(s.stage)).length ?? 0,
+    newKeywordGaps: keywords.report?.newGaps ?? 0,
+  })
+}
+
+interface BoardPanelProps extends AgentCanvasProps {
+  tab: BoardTab
+  approvals: AgentApprovals
+}
+
+/** The open tab's content. */
+function BoardPanel({
+  tab,
+  orgSlug,
+  approvals,
+  thinking,
+  lastTools,
+}: BoardPanelProps): JSX.Element {
+  if (tab === 'articles') return <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />
+  if (tab === 'guest') return <GuestPostsPanel orgSlug={orgSlug} />
+  if (tab === 'keywords') return <KeywordsPanel orgSlug={orgSlug} />
+  if (tab === 'social') return <SocialPanel orgSlug={orgSlug} approvals={approvals} />
+  if (tab === 'approvals') return <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
+  if (tab === 'indexing') return <IndexingPanel orgSlug={orgSlug} />
+  return (
+    <>
+      <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
+      <AgentLog orgSlug={orgSlug} />
+    </>
+  )
 }
 
 /**
@@ -70,9 +116,7 @@ function boardBadges(approvals: AgentApprovals, guestNeedsYou: number): BoardBad
 export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
   const { tab, setTab } = useAgentUi()
   const approvals = useAgentApprovals(orgSlug)
-  const guest = useGuestPosts(orgSlug)
-  const needYou = guest.report?.sites.filter(s => GUEST_NEEDS_YOU.has(s.stage)).length ?? 0
-  const badges = boardBadges(approvals, needYou)
+  const badges = useBoardBadges(orgSlug, approvals)
   return (
     <section
       aria-label="Agent board"
@@ -91,17 +135,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
         id={boardPanelId(tab)}
         aria-labelledby={`agent-board-tab-${tab}`}
       >
-        {tab === 'activity' && (
-          <>
-            <AgentActivityFeed thinking={thinking} lastTools={lastTools} />
-            <AgentLog orgSlug={orgSlug} />
-          </>
-        )}
-        {tab === 'articles' && <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />}
-        {tab === 'guest' && <GuestPostsPanel orgSlug={orgSlug} />}
-        {tab === 'social' && <SocialPanel orgSlug={orgSlug} approvals={approvals} />}
-        {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
-        {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}
+        <BoardPanel {...{ tab, orgSlug, approvals, thinking, lastTools }} />
       </div>
     </section>
   )

@@ -47,6 +47,7 @@ export const queryKeys = {
     gmail: (orgSlug: string) => ['agent-mode', orgSlug, 'gmail'] as const,
     indexing: (orgSlug: string) => ['agent-mode', orgSlug, 'indexing'] as const,
     guestPosts: (orgSlug: string) => ['agent-mode', orgSlug, 'guest-posts'] as const,
+    keywords: (orgSlug: string) => ['agent-mode', orgSlug, 'keywords'] as const,
     satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
     social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
     action: (orgSlug: string, actionId: string) =>

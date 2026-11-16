@@ -20,7 +20,14 @@ describe('Articles tab', () => {
   })
 
   it('has its own tab, with a count while article drafts wait for review', () => {
-    const badges = { awaiting: 3, outcomeUnknown: false, articles: 1, social: 0, guest: 2 }
+    const badges = {
+      awaiting: 3,
+      outcomeUnknown: false,
+      articles: 1,
+      social: 0,
+      guest: 2,
+      keywords: 0,
+    }
     const html = renderToStaticMarkup(
       <BoardTabs value="articles" onChange={noop} badges={badges} />,
     )
@@ -33,7 +40,14 @@ describe('Articles tab', () => {
   })
 
   it('shows a Guest posts tab with how many guest posts wait for the owner', () => {
-    const badges = { awaiting: 0, outcomeUnknown: false, articles: 0, social: 0, guest: 2 }
+    const badges = {
+      awaiting: 0,
+      outcomeUnknown: false,
+      articles: 0,
+      social: 0,
+      guest: 2,
+      keywords: 0,
+    }
     const html = renderToStaticMarkup(<BoardTabs value="guest" onChange={noop} badges={badges} />)
     expect(html).toMatch(/aria-selected="true"[^>]*>Guest posts/)
     expect(html).toContain('2 guest posts waiting for you')

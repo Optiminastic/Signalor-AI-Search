@@ -168,6 +168,23 @@ const LINES: Record<string, Describe> = {
     detail: 'Added to this month’s plan. See the Guest posts tab to skip any.',
     tone: 'success',
   }),
+  keywords_refresh_started: () => ({
+    title: 'Reading your keywords',
+    detail: 'What you rank for on Google, and what your top competitors win.',
+    tone: 'neutral',
+  }),
+  keywords_refreshed: e =>
+    e.detail.reason
+      ? {
+          title: 'Couldn’t read your keywords',
+          detail: 'See the Keywords tab for why.',
+          tone: 'neutral',
+        }
+      : {
+          title: `Found ${String(e.detail.gaps ?? 0)} keywords your competitors win`,
+          detail: 'See the Keywords tab.',
+          tone: 'success',
+        },
   satellite_topics_planned: e => ({
     title: `Planned ${String(e.detail.count ?? 0)} articles on signalor.ai sites`,
     detail: 'One every 3 days, each mentioning you. See Approvals to skip any topic.',

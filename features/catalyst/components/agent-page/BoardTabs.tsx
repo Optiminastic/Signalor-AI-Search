@@ -1,6 +1,13 @@
 import { YELLOW } from '@/features/catalyst/constants'
 
-export type BoardTab = 'activity' | 'articles' | 'guest' | 'social' | 'approvals' | 'indexing'
+export type BoardTab =
+  | 'activity'
+  | 'articles'
+  | 'guest'
+  | 'keywords'
+  | 'social'
+  | 'approvals'
+  | 'indexing'
 
 export interface BoardBadges {
   awaiting: number
@@ -9,6 +16,8 @@ export interface BoardBadges {
   social: number
   /** Guest posts waiting for the owner: a pitch to review, a contact to add, or a reply. */
   guest: number
+  /** New keywords competitors win since last week. */
+  keywords: number
 }
 
 interface BoardTabsProps {
@@ -22,6 +31,7 @@ const TABS: { id: BoardTab; label: string }[] = [
   { id: 'activity', label: 'Activity' },
   { id: 'articles', label: 'Articles' },
   { id: 'guest', label: 'Guest posts' },
+  { id: 'keywords', label: 'Keywords' },
   { id: 'social', label: 'Social' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
@@ -97,6 +107,7 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
           {tab.id === 'guest' && (
             <CountBadge count={badges.guest} label="guest posts waiting for you" />
           )}
+          {tab.id === 'keywords' && <CountBadge count={badges.keywords} label="new keyword gaps" />}
           {tab.id === 'social' && (
             <CountBadge count={badges.social} label="post drafts to review" />
           )}

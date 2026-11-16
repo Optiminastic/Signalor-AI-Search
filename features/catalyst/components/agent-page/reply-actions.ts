@@ -32,6 +32,7 @@ export const TAB_LABELS: Record<BoardTab, string> = {
   activity: 'Activity',
   articles: 'Articles',
   guest: 'Guest posts',
+  keywords: 'Keywords',
   social: 'Social',
   approvals: 'Approvals',
   indexing: 'Indexing',
@@ -56,6 +57,7 @@ const TAB_MENTIONS: [BoardTab, RegExp][] = [
   ['social', /\bsocial\b/i],
   ['indexing', /\bindex(ing|ed)?\b/i],
   ['articles', /\barticles?\b/i],
+  ['keywords', /\bkeywords?\b/i],
 ]
 
 const FOLLOW_UPS: Record<string, string[]> = {
