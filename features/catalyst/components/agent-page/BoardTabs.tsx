@@ -2,11 +2,18 @@ import { YELLOW } from '@/features/catalyst/constants'
 
 export type BoardTab = 'activity' | 'articles' | 'social' | 'approvals' | 'indexing'
 
+export interface BoardBadges {
+  awaiting: number
+  outcomeUnknown: boolean
+  articles: number
+  social: number
+}
+
 interface BoardTabsProps {
   value: BoardTab
   onChange: (tab: BoardTab) => void
   /** Drafts awaiting the owner, whether any send has an unknown outcome, and article drafts waiting. */
-  badges: { awaiting: number; outcomeUnknown: boolean; articles: number }
+  badges: BoardBadges
 }
 
 const TABS: { id: BoardTab; label: string }[] = [
@@ -83,6 +90,9 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
           {tab.id === 'approvals' && <TabBadges badges={badges} />}
           {tab.id === 'articles' && (
             <CountBadge count={badges.articles} label="article drafts to review" />
+          )}
+          {tab.id === 'social' && (
+            <CountBadge count={badges.social} label="post drafts to review" />
           )}
         </button>
       ))}

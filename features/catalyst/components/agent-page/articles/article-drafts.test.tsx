@@ -20,14 +20,14 @@ describe('Articles tab', () => {
   })
 
   it('has its own tab, with a count while article drafts wait for review', () => {
-    const badges = { awaiting: 3, outcomeUnknown: false, articles: 1 }
+    const badges = { awaiting: 3, outcomeUnknown: false, articles: 1, social: 0 }
     const html = renderToStaticMarkup(
       <BoardTabs value="articles" onChange={noop} badges={badges} />,
     )
     expect(html).toMatch(/aria-selected="true"[^>]*>Articles/)
     expect(html).toContain('1 article drafts to review')
     const none = renderToStaticMarkup(
-      <BoardTabs value="activity" onChange={noop} badges={{ ...badges, articles: 0 }} />,
+      <BoardTabs value="activity" onChange={noop} badges={{ ...badges, articles: 0, social: 0 }} />,
     )
     expect(none).not.toContain('article drafts to review')
   })

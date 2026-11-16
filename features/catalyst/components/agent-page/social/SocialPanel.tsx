@@ -1,16 +1,22 @@
 'use client'
 
+import { useState } from 'react'
+
+import { ActionReview } from '@/features/catalyst/components/agent-page/approvals/ActionReview'
 import {
   SECONDARY_BUTTON,
   SECTION_TITLE,
 } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { PlatformRow } from '@/features/catalyst/components/agent-page/social/PlatformRow'
+import { SocialPosts } from '@/features/catalyst/components/agent-page/social/SocialPosts'
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
+import type { AgentApprovals } from '@/hooks/useAgentApprovals'
 import { useAgentSocial, type AgentSocial } from '@/hooks/useAgentSocial'
 import type { SocialReport } from '@/lib/api/agent-mode-social'
 
 interface SocialPanelProps {
   orgSlug: string
+  approvals: AgentApprovals
 }
 
 const ORDER = ['linkedin', 'x', 'youtube', 'instagram', 'reddit']
@@ -124,8 +130,7 @@ function FirstCheck({
   )
 }
 
-/** The Social tab: how strong the brand's marketing is, per platform and overall. */
-export function SocialPanel({ orgSlug }: SocialPanelProps): JSX.Element {
+function Score({ orgSlug }: { orgSlug: string }): JSX.Element {
   const social = useAgentSocial(orgSlug)
   const report = social.report
   return (
@@ -138,6 +143,27 @@ export function SocialPanel({ orgSlug }: SocialPanelProps): JSX.Element {
           {social.checkError}
         </p>
       )}
+    </div>
+  )
+}
+
+/**
+ * The Social tab: post drafts to review and approved posts ready to publish,
+ * then how strong the brand's marketing is, per platform and overall.
+ */
+export function SocialPanel({ orgSlug, approvals }: SocialPanelProps): JSX.Element {
+  const [openId, setOpenId] = useState<string | null>(null)
+  if (openId) {
+    const back = (): void => {
+      setOpenId(null)
+      approvals.refresh()
+    }
+    return <ActionReview key={openId} orgSlug={orgSlug} actionId={openId} onBack={back} />
+  }
+  return (
+    <div className="flex flex-col gap-6">
+      <SocialPosts orgSlug={orgSlug} approvals={approvals} onOpen={setOpenId} />
+      <Score orgSlug={orgSlug} />
     </div>
   )
 }

@@ -65,6 +65,7 @@ function pendingNote(action: AgentAction): string {
   const content = action.content
   if (content?.type === 'email') return `To a contact at ${content.recipientDomain}`
   if (content?.type === 'article') return content.destination ? `On ${content.destination}` : ''
+  if (content?.type === 'social') return `Post on ${content.platformLabel}`
   return 'Draft could not be shown'
 }
 

@@ -10,12 +10,13 @@ import { ArticlesPanel } from '@/features/catalyst/components/agent-page/article
 import {
   BoardTabs,
   boardPanelId,
+  type BoardBadges,
   type BoardTab,
 } from '@/features/catalyst/components/agent-page/BoardTabs'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
-import { useAgentApprovals } from '@/hooks/useAgentApprovals'
+import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
 
 interface AgentCanvasProps {
@@ -43,6 +44,18 @@ function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): 
   )
 }
 
+function boardBadges(approvals: AgentApprovals): BoardBadges {
+  const waitingSocial = approvals.pending.filter(
+    a => a.kind === 'publish_social_post' && a.state === 'awaiting_approval',
+  )
+  return {
+    awaiting: awaitingCount(approvals.pending),
+    outcomeUnknown: unknownCount(approvals.results) > 0,
+    articles: approvals.pending.filter(isSatelliteDraft).length,
+    social: waitingSocial.length,
+  }
+}
+
 /**
  * The whiter board beside the chat: a live view of what the agent is doing,
  * and the drafts waiting for the owner's approval.
@@ -50,11 +63,7 @@ function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): 
 export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
   const [tab, setTab] = useState<BoardTab>('activity')
   const approvals = useAgentApprovals(orgSlug)
-  const badges = {
-    awaiting: awaitingCount(approvals.pending),
-    outcomeUnknown: unknownCount(approvals.results) > 0,
-    articles: approvals.pending.filter(isSatelliteDraft).length,
-  }
+  const badges = boardBadges(approvals)
   return (
     <section
       aria-label="Agent board"
@@ -80,7 +89,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
           </>
         )}
         {tab === 'articles' && <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />}
-        {tab === 'social' && <SocialPanel orgSlug={orgSlug} />}
+        {tab === 'social' && <SocialPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}
       </div>

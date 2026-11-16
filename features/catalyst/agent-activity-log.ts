@@ -173,6 +173,11 @@ const LINES: Record<string, Describe> = {
     detail: 'See the Social tab for each platform.',
     tone: 'success',
   }),
+  posted_by_owner: e => ({
+    title: `You posted it yourself: ${e.taskTitle}`,
+    detail: 'Closed, so it is never sent again.',
+    tone: 'success',
+  }),
   weekly_summary_posted: () => ({
     title: 'Posted your weekly summary in the chat',
     detail: 'Open it from your recent chats.',

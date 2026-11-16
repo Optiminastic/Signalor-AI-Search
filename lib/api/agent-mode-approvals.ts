@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { agentModeRequest, programPath } from '@/lib/api/agent-mode-request'
+import { socialSchema, type SocialContent } from '@/lib/api/agent-mode-social-posts'
 
 /**
  * Agent mode approvals: drafts the agent prepared, waiting on the brand owner.
@@ -94,12 +95,17 @@ const emailSchema = z
 
 export type ArticleContent = z.infer<typeof articleSchema>
 export type EmailContent = z.infer<typeof emailSchema>
-export type ActionContent = ArticleContent | EmailContent
+export type { SocialContent }
+export type ActionContent = ArticleContent | EmailContent | SocialContent
 
 /** The draft as the owner sees it, or null when it can't be shown (then it can't be approved). */
 function parseContent(kind: string, raw: unknown): ActionContent | null {
   if (kind === 'publish_article') {
     const parsed = articleSchema.safeParse(raw)
+    return parsed.success ? parsed.data : null
+  }
+  if (kind === 'publish_social_post') {
+    const parsed = socialSchema.safeParse(raw)
     return parsed.success ? parsed.data : null
   }
   if (kind === 'send_outreach_email' || kind === 'send_follow_up') {

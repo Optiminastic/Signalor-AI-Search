@@ -125,6 +125,7 @@ export function canEdit(action: AgentAction): boolean {
   if (!EDITABLE.includes(action.state) || !isReviewable(action)) return false
   const content = action.content
   if (content?.type === 'email') return content.message !== null && content.footer !== null
+  if (content?.type === 'social') return true
   return content?.type === 'article' && content.answer !== null
 }
 

@@ -7,6 +7,7 @@ import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/appr
 import { ArticleEditForm } from '@/features/catalyst/components/agent-page/approvals/ArticleEditForm'
 import { DecisionBar } from '@/features/catalyst/components/agent-page/approvals/DecisionBar'
 import { EmailEditForm } from '@/features/catalyst/components/agent-page/approvals/EmailEditForm'
+import { SocialEditForm } from '@/features/catalyst/components/agent-page/approvals/SocialEditForm'
 import type { AgentActionDetail, DecisionVerb } from '@/lib/api/agent-mode-approvals'
 import { FileText } from '@/lib/icons'
 
@@ -29,17 +30,28 @@ interface EditorProps {
   onCancel: () => void
 }
 
+function EditFormFor({
+  content,
+  onFields,
+}: {
+  content: AgentActionDetail['content']
+  onFields: (fields: Record<string, string>) => void
+}): JSX.Element | null {
+  if (content?.type === 'email') return <EmailEditForm email={content} onFields={onFields} />
+  if (content?.type === 'article') return <ArticleEditForm article={content} onFields={onFields} />
+  if (content?.type === 'social') return <SocialEditForm post={content} onFields={onFields} />
+  return null
+}
+
 function Editor({ action, disabled, error, onSave, onCancel }: EditorProps): JSX.Element {
   const [fields, setFields] = useState<Record<string, string> | null>(null)
-  const content = action.content
   return (
     <section aria-label="Edit draft" className="flex flex-col gap-3">
       <p className="text-[12.5px] text-[var(--cat-ink-2)]">
         Saving creates version {(action.version ?? 0) + 1}. It goes back to awaiting your approval,
         and any approval of this version stops counting.
       </p>
-      {content?.type === 'email' && <EmailEditForm email={content} onFields={setFields} />}
-      {content?.type === 'article' && <ArticleEditForm article={content} onFields={setFields} />}
+      <EditFormFor content={action.content} onFields={setFields} />
       {error && (
         <p role="alert" className="text-[12.5px] font-medium text-[var(--cat-ink)]">
           Not saved: {error}

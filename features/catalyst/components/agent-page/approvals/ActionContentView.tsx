@@ -3,7 +3,12 @@ import {
   PANEL,
   SECTION_TITLE,
 } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
-import type { ActionContent, ArticleContent, EmailContent } from '@/lib/api/agent-mode-approvals'
+import type {
+  ActionContent,
+  ArticleContent,
+  EmailContent,
+  SocialContent,
+} from '@/lib/api/agent-mode-approvals'
 
 interface ActionContentViewProps {
   content: ActionContent | null
@@ -23,6 +28,20 @@ function Field({ label, value }: FieldProps): JSX.Element {
       <dt className="text-[var(--cat-ink-3)]">{label}</dt>
       <dd className="min-w-0 break-words text-[var(--cat-ink)]">{value || '(empty)'}</dd>
     </div>
+  )
+}
+
+function SocialDraft({ post }: { post: SocialContent }): JSX.Element {
+  return (
+    <>
+      <dl className="flex flex-col gap-1.5">
+        <Field label="Post on" value={post.platformLabel} />
+        <Field label="Profile" value={post.profileUrl} />
+        <Field label="Length" value={`${post.text.length} characters`} />
+      </dl>
+      <p className={`mt-3 ${SECTION_TITLE}`}>Post, exactly as it will be published</p>
+      <pre className={BODY}>{post.text}</pre>
+    </>
   )
 }
 
@@ -70,6 +89,7 @@ export function ActionContentView({ content }: ActionContentViewProps): JSX.Elem
       )}
       {content?.type === 'email' && <EmailDraft email={content} />}
       {content?.type === 'article' && <ArticleDraft article={content} />}
+      {content?.type === 'social' && <SocialDraft post={content} />}
     </section>
   )
 }
