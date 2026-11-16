@@ -11,6 +11,20 @@ describe('stepsForTools', () => {
     ])
   })
 
+  it('labels every chat tool the backend offers', () => {
+    const tools = [
+      'get_overview',
+      'get_approvals',
+      'get_outreach',
+      'get_guest_posts',
+      'get_connections',
+      'find_guest_sites',
+      'check_social_now',
+      'check_indexing_now',
+    ]
+    for (const step of stepsForTools(tools)) expect(step.label).not.toBe('Used a tool')
+  })
+
   it('never returns two steps with the same label (they are list keys)', () => {
     const steps = stepsForTools(['get_plan', 'unknown_a', 'get_plan', 'unknown_b'])
     expect(steps.map(s => s.label)).toEqual(['Read this month’s plan', 'Used a tool'])

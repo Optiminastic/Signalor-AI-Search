@@ -19,6 +19,14 @@ export interface ActivityStep {
 
 /** Human labels for the backend chat tools (apps/growth_agent/services/chat/tools.py). */
 const TOOL_STEPS: Record<string, ActivityStep> = {
+  get_overview: { label: 'Checked everything the agent is running', icon: Activity },
+  get_approvals: { label: 'Looked at drafts waiting for you', icon: Check },
+  get_outreach: { label: 'Checked replies to outreach emails', icon: Activity },
+  get_guest_posts: { label: 'Checked guest-post sites', icon: Compass },
+  get_connections: { label: 'Checked your connected tools', icon: Zap },
+  find_guest_sites: { label: 'Started a search for guest-post sites', icon: Search },
+  check_social_now: { label: 'Started a social presence check', icon: TrendingUp },
+  check_indexing_now: { label: 'Started a Google indexing check', icon: Search },
   get_positioning: { label: 'Checked where you stand in AI answers', icon: Compass },
   get_plan: { label: 'Read this month’s plan', icon: CalendarDays },
   get_progress: { label: 'Compared visibility with your baseline', icon: TrendingUp },
