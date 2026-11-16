@@ -18,6 +18,7 @@ import { SocialPanel } from '@/features/catalyst/components/agent-page/social/So
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
 import { useGuestPosts } from '@/hooks/useGuestPosts'
+import type { GuestStage } from '@/lib/api/agent-mode-guest-posts'
 import { Sparkles } from '@/lib/icons'
 
 interface AgentCanvasProps {
@@ -46,7 +47,10 @@ function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): 
   )
 }
 
-function boardBadges(approvals: AgentApprovals, guestToPitch: number): BoardBadges {
+/** Guest-post stages where the owner has something to do. */
+const GUEST_NEEDS_YOU = new Set<GuestStage>(['pitch_waiting', 'needs_contact', 'replied'])
+
+function boardBadges(approvals: AgentApprovals, guestNeedsYou: number): BoardBadges {
   const waitingSocial = approvals.pending.filter(
     a => a.kind === 'publish_social_post' && a.state === 'awaiting_approval',
   )
@@ -55,7 +59,7 @@ function boardBadges(approvals: AgentApprovals, guestToPitch: number): BoardBadg
     outcomeUnknown: unknownCount(approvals.results) > 0,
     articles: approvals.pending.filter(isSatelliteDraft).length,
     social: waitingSocial.length,
-    guest: guestToPitch,
+    guest: guestNeedsYou,
   }
 }
 
@@ -67,8 +71,8 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
   const { tab, setTab } = useAgentUi()
   const approvals = useAgentApprovals(orgSlug)
   const guest = useGuestPosts(orgSlug)
-  const toPitch = guest.report?.sites.filter(s => s.stage === 'to_pitch').length ?? 0
-  const badges = boardBadges(approvals, toPitch)
+  const needYou = guest.report?.sites.filter(s => GUEST_NEEDS_YOU.has(s.stage)).length ?? 0
+  const badges = boardBadges(approvals, needYou)
   return (
     <section
       aria-label="Agent board"

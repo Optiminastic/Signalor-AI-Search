@@ -1,3 +1,4 @@
+import { useAgentUi } from '@/features/catalyst/components/agent-page/AgentUiContext'
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
 import { SiteFavicon } from '@/features/catalyst/components/agent-page/guest-posts/SiteFavicon'
 import type { PlanTaskChoice } from '@/lib/api/agent-mode-approvals'
@@ -10,24 +11,57 @@ interface GuestSiteRowProps {
 
 const STAGE_LABELS: Record<GuestStage, string> = {
   to_pitch: 'To pitch',
-  pitch_waiting: 'Pitch waiting for you',
-  pitching: 'Sending pitch',
+  needs_contact: 'No editor email found',
+  pitch_waiting: 'Pitch ready for your review',
+  pitching: 'Working on the pitch',
   pitched: 'Pitched',
+  replied: 'Editor replied',
+  declined: 'Editor declined',
+  no_reply: 'No reply',
   failed: 'Couldn’t pitch',
   skipped: 'Skipped',
+}
+/** Stages where the owner has something to do in Approvals, and the button that takes them there. */
+const REVIEW_LABELS: Partial<Record<GuestStage, string>> = {
+  pitch_waiting: 'Review pitch',
+  needs_contact: 'Add a contact',
 }
 const MUTED = 'text-[11.5px] text-[var(--cat-ink-3)]'
 const CITED_CHIP =
   'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-[#e04a3d]'
+const REVIEW_BUTTON =
+  'shrink-0 rounded-md bg-[#e04a3d] px-2.5 py-1 text-[12px] font-semibold text-white hover:opacity-90'
 
-function pitchDate(iso: string): string {
-  return new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, {
-    day: 'numeric',
-    month: 'short',
-  })
+function shortDate(iso: string): string {
+  const date = iso.length === 10 ? new Date(`${iso}T00:00:00`) : new Date(iso)
+  return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
+}
+
+/** Where the site stands, in a few words: when it's pitched, follow-ups, a reply. */
+function stageDetail(site: GuestSite): string {
+  const { pitch } = site
+  if (site.stage === 'to_pitch') return ` · pitch from ${shortDate(site.scheduledFor)}`
+  if (site.stage === 'replied') return ' · read the reply in your Gmail'
+  if (!pitch) return ''
+  const sent = ` ${shortDate(pitch.sentOn)}`
+  const followUps = pitch.followupsSent ? ` · ${pitch.followupsSent} follow-up(s) sent` : ''
+  const next =
+    site.stage === 'pitched' && pitch.nextFollowUpOn
+      ? ` · next follow-up ${shortDate(pitch.nextFollowUpOn)}`
+      : ''
+  return `${sent}${followUps}${next}`
 }
 
 function StatusAction({ site, onStatus }: GuestSiteRowProps): JSX.Element | null {
+  const { setTab } = useAgentUi()
+  const review = REVIEW_LABELS[site.stage]
+  if (review) {
+    return (
+      <button type="button" className={REVIEW_BUTTON} onClick={() => setTab('approvals')}>
+        {review}
+      </button>
+    )
+  }
   if (site.stage !== 'to_pitch' && site.stage !== 'skipped') return null
   const skip = site.stage === 'to_pitch'
   return (
@@ -42,11 +76,10 @@ function StatusAction({ site, onStatus }: GuestSiteRowProps): JSX.Element | null
 }
 
 function StageLine({ site }: { site: GuestSite }): JSX.Element {
-  const when = site.stage === 'to_pitch' ? ` · pitch from ${pitchDate(site.scheduledFor)}` : ''
   return (
     <p className={MUTED}>
       {STAGE_LABELS[site.stage]}
-      {when} ·{' '}
+      {stageDetail(site)} ·{' '}
       <a
         href={site.guidelinesUrl}
         target="_blank"

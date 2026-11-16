@@ -6,7 +6,33 @@ import { agentModeRequest, programPath } from '@/lib/api/agent-mode-request'
  * Sites that accept guest articles on the brand's topic, found by the agent and
  * added to this month's plan (ranking-be `services/guest_posts`).
  */
-const STAGES = ['to_pitch', 'pitch_waiting', 'pitching', 'pitched', 'failed', 'skipped'] as const
+const STAGES = [
+  'to_pitch',
+  'needs_contact',
+  'pitch_waiting',
+  'pitching',
+  'pitched',
+  'replied',
+  'declined',
+  'no_reply',
+  'failed',
+  'skipped',
+] as const
+
+/** The sent pitch's email thread, once there is one. */
+const pitchSchema = z
+  .object({
+    sent_on: z.string(),
+    followups_sent: z.number().catch(0),
+    next_follow_up_on: z.string().nullable().catch(null),
+    replied_at: z.string().nullable().catch(null),
+  })
+  .transform(p => ({
+    sentOn: p.sent_on,
+    followupsSent: p.followups_sent,
+    nextFollowUpOn: p.next_follow_up_on,
+    repliedAt: p.replied_at,
+  }))
 
 const siteSchema = z
   .object({
@@ -18,6 +44,7 @@ const siteSchema = z
     reason: z.string().catch(''),
     scheduled_for: z.string(),
     stage: z.enum(STAGES).catch('to_pitch'),
+    pitch: pitchSchema.nullable().catch(null),
   })
   .transform(s => ({
     taskId: s.task_id,
@@ -28,6 +55,7 @@ const siteSchema = z
     reason: s.reason,
     scheduledFor: s.scheduled_for,
     stage: s.stage,
+    pitch: s.pitch,
   }))
 
 export type GuestSite = z.infer<typeof siteSchema>

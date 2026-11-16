@@ -47,6 +47,24 @@ describe('guest posts API', () => {
     expect((await getGuestPosts('brand')).sites[0].stage).toBe('to_pitch')
   })
 
+  it('reads a sent pitch and its follow-ups', async () => {
+    const pitch = {
+      sent_on: '2026-11-16',
+      followups_sent: 1,
+      next_follow_up_on: '2026-11-25',
+      replied_at: null,
+    }
+    reply({ sites: [{ ...SITE, stage: 'pitched', pitch }] })
+    const site = (await getGuestPosts('brand')).sites[0]
+    expect(site.stage).toBe('pitched')
+    expect(site.pitch).toEqual({
+      sentOn: '2026-11-16',
+      followupsSent: 1,
+      nextFollowUpOn: '2026-11-25',
+      repliedAt: null,
+    })
+  })
+
   it('posts to the find endpoint', async () => {
     reply({ sites: [], searching: true })
     expect((await findGuestSitesNow('brand')).searching).toBe(true)

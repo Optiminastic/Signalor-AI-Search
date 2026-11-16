@@ -7,7 +7,7 @@ export interface BoardBadges {
   outcomeUnknown: boolean
   articles: number
   social: number
-  /** Guest-post sites found and waiting to be pitched. */
+  /** Guest posts waiting for the owner: a pitch to review, a contact to add, or a reply. */
   guest: number
 }
 
@@ -95,7 +95,7 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
             <CountBadge count={badges.articles} label="article drafts to review" />
           )}
           {tab.id === 'guest' && (
-            <CountBadge count={badges.guest} label="guest-post sites to pitch" />
+            <CountBadge count={badges.guest} label="guest posts waiting for you" />
           )}
           {tab.id === 'social' && (
             <CountBadge count={badges.social} label="post drafts to review" />
