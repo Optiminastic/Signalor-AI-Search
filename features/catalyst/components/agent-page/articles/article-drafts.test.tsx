@@ -20,7 +20,7 @@ describe('Articles tab', () => {
   })
 
   it('has its own tab, with a count while article drafts wait for review', () => {
-    const badges = { awaiting: 3, outcomeUnknown: false, articles: 1, social: 0 }
+    const badges = { awaiting: 3, outcomeUnknown: false, articles: 1, social: 0, guest: 2 }
     const html = renderToStaticMarkup(
       <BoardTabs value="articles" onChange={noop} badges={badges} />,
     )
@@ -30,5 +30,12 @@ describe('Articles tab', () => {
       <BoardTabs value="activity" onChange={noop} badges={{ ...badges, articles: 0, social: 0 }} />,
     )
     expect(none).not.toContain('article drafts to review')
+  })
+
+  it('shows a Guest posts tab with how many sites wait to be pitched', () => {
+    const badges = { awaiting: 0, outcomeUnknown: false, articles: 0, social: 0, guest: 2 }
+    const html = renderToStaticMarkup(<BoardTabs value="guest" onChange={noop} badges={badges} />)
+    expect(html).toMatch(/aria-selected="true"[^>]*>Guest posts/)
+    expect(html).toContain('2 guest-post sites to pitch')
   })
 })

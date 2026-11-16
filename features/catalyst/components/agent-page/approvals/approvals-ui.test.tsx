@@ -266,7 +266,7 @@ describe('Board tabs', () => {
       <BoardTabs
         value="approvals"
         onChange={noop}
-        badges={{ awaiting: 2, outcomeUnknown: true, articles: 0, social: 0 }}
+        badges={{ awaiting: 2, outcomeUnknown: true, articles: 0, social: 0, guest: 0 }}
       />,
     )
     expect(html).toContain('role="tablist"')

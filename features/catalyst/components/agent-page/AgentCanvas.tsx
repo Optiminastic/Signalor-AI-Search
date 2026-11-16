@@ -13,10 +13,12 @@ import {
   type BoardBadges,
   type BoardTab,
 } from '@/features/catalyst/components/agent-page/BoardTabs'
+import { GuestPostsPanel } from '@/features/catalyst/components/agent-page/guest-posts/GuestPostsPanel'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
+import { useGuestPosts } from '@/hooks/useGuestPosts'
 import { Sparkles } from '@/lib/icons'
 
 interface AgentCanvasProps {
@@ -30,6 +32,7 @@ function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'indexing') return 'Indexing on Google'
   if (tab === 'articles') return 'Articles on signalor.ai sites'
   if (tab === 'social') return 'Social presence'
+  if (tab === 'guest') return 'Guest posts'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -44,7 +47,7 @@ function BoardHeading({ tab, thinking }: { tab: BoardTab; thinking: boolean }): 
   )
 }
 
-function boardBadges(approvals: AgentApprovals): BoardBadges {
+function boardBadges(approvals: AgentApprovals, guestToPitch: number): BoardBadges {
   const waitingSocial = approvals.pending.filter(
     a => a.kind === 'publish_social_post' && a.state === 'awaiting_approval',
   )
@@ -53,6 +56,7 @@ function boardBadges(approvals: AgentApprovals): BoardBadges {
     outcomeUnknown: unknownCount(approvals.results) > 0,
     articles: approvals.pending.filter(isSatelliteDraft).length,
     social: waitingSocial.length,
+    guest: guestToPitch,
   }
 }
 
@@ -63,7 +67,9 @@ function boardBadges(approvals: AgentApprovals): BoardBadges {
 export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
   const [tab, setTab] = useState<BoardTab>('activity')
   const approvals = useAgentApprovals(orgSlug)
-  const badges = boardBadges(approvals)
+  const guest = useGuestPosts(orgSlug)
+  const toPitch = guest.report?.sites.filter(s => s.stage === 'to_pitch').length ?? 0
+  const badges = boardBadges(approvals, toPitch)
   return (
     <section
       aria-label="Agent board"
@@ -89,6 +95,7 @@ export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps):
           </>
         )}
         {tab === 'articles' && <ArticlesPanel orgSlug={orgSlug} approvals={approvals} />}
+        {tab === 'guest' && <GuestPostsPanel orgSlug={orgSlug} />}
         {tab === 'social' && <SocialPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'approvals' && <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />}
         {tab === 'indexing' && <IndexingPanel orgSlug={orgSlug} />}

@@ -158,6 +158,16 @@ const LINES: Record<string, Describe> = {
     detail: text(e.detail.url),
     tone: e.detail.indexed ? 'success' : 'neutral',
   }),
+  guest_find_started: () => ({
+    title: 'Looking for guest-post sites',
+    detail: 'Searching your niche for sites that invite guest articles.',
+    tone: 'neutral',
+  }),
+  guest_sites_found: e => ({
+    title: `Found ${String(e.detail.count ?? 0)} guest-post sites`,
+    detail: 'Added to this month’s plan. See the Guest posts tab to skip any.',
+    tone: 'success',
+  }),
   satellite_topics_planned: e => ({
     title: `Planned ${String(e.detail.count ?? 0)} articles on signalor.ai sites`,
     detail: 'One every 3 days, each mentioning you. See Approvals to skip any topic.',
