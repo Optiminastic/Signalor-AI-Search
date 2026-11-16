@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react'
 
+import { useBufferReturn } from '@/features/catalyst/components/agent-page/social/useBufferReturn'
 import { ConnectToolsPanel } from '@/features/catalyst/components/agent-page/tools/ConnectToolsPanel'
 import {
   readFinderReturn,
@@ -69,11 +70,13 @@ export function ConnectToolsButton({ orgSlug }: ConnectToolsButtonProps): JSX.El
   }, [])
   useDismiss(wrapper, open, close)
   useFinderReturn(showReturn)
+  // Back from Buffer's sign-in page: open this panel and say how it went.
+  useBufferReturn(showReturn, true)
   return (
     <div ref={wrapper} className="relative">
       <button
         type="button"
-        aria-label={open ? 'Close connected tools' : 'Connect tools (Hunter, Apollo)'}
+        aria-label={open ? 'Close connected tools' : 'Connect tools (Hunter, Apollo, Buffer)'}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen(o => !o)}

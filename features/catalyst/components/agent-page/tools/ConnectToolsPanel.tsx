@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { BufferRow } from '@/features/catalyst/components/agent-page/tools/BufferRow'
 import { FinderRow } from '@/features/catalyst/components/agent-page/tools/FinderRow'
 import { useContactFinders, type ContactFinders } from '@/hooks/useContactFinders'
 
@@ -15,6 +16,7 @@ interface FinderListProps {
 }
 
 const NOTE = 'text-[12px] text-[var(--cat-ink-2)]'
+const GROUP = 'text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase'
 const LINK =
   'self-start text-[11.5px] text-[var(--cat-ink-3)] underline hover:text-[var(--cat-ink)]'
 
@@ -38,8 +40,8 @@ function FinderList({ tools, showKeyForms }: FinderListProps): JSX.Element {
 }
 
 /**
- * Connect the brand's own Hunter or Apollo account, so the agent can find the
- * right person (and their email) at sites that publish no contact address.
+ * Every tool the agent can use on the brand's behalf, in one place: contact
+ * finders (Hunter, Apollo) for outreach, and Buffer for social posts.
  */
 export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Element {
   const tools = useContactFinders(orgSlug)
@@ -47,6 +49,7 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
   const anyDisconnected = tools.finders.some(f => !f.connected)
   return (
     <div className="flex flex-col gap-2">
+      <p className={GROUP}>Find contacts</p>
       <p className={NOTE}>
         Sign in so the agent can find contacts and emails for sites that don&apos;t list one.
       </p>
@@ -58,6 +61,11 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
           Use an API key instead
         </button>
       )}
+      <p className={`mt-2 ${GROUP}`}>Social posting</p>
+      <p className={NOTE}>Approved social posts go to your Buffer queue.</p>
+      <ul className="-mx-2.5 flex flex-col gap-0.5">
+        <BufferRow orgSlug={orgSlug} />
+      </ul>
     </div>
   )
 }

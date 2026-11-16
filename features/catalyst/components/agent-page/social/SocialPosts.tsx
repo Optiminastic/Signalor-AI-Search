@@ -65,7 +65,8 @@ function ReadySection({ ready, busyId, onPosted }: ReadySectionProps): JSX.Eleme
       <h3 className={SECTION_TITLE}>Approved, ready to post</h3>
       <p className={MUTED_TEXT}>
         Without Buffer, copy each post, publish it yourself, then mark it posted. With Buffer
-        connected, approved posts are added to your Buffer queue automatically.
+        connected (the + next to the chat box), approved posts go to your Buffer queue
+        automatically.
       </p>
       <ul className="flex flex-col gap-2">
         {ready.map(action =>
