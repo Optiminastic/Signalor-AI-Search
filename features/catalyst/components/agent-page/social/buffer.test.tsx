@@ -24,5 +24,10 @@ describe('Connect Buffer', () => {
     })
     expect(readBufferReturn('?buffer_error=denied')?.ok).toBe(false)
     expect(readBufferReturn('?finder_connected=hunter')).toBeNull()
+    expect(readBufferReturn('?gmail_connected=gmail')).toEqual({
+      ok: true,
+      message: 'Gmail is connected.',
+    })
+    expect(readBufferReturn('?gmail_error=not_owner')?.message).toContain('owner can connect Gmail')
   })
 })

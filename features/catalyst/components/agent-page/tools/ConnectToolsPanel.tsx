@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { BufferRow } from '@/features/catalyst/components/agent-page/tools/BufferRow'
 import { FinderRow } from '@/features/catalyst/components/agent-page/tools/FinderRow'
+import { GmailRow } from '@/features/catalyst/components/agent-page/tools/GmailRow'
 import { useContactFinders, type ContactFinders } from '@/hooks/useContactFinders'
 
 interface ConnectToolsPanelProps {
@@ -40,8 +41,8 @@ function FinderList({ tools, showKeyForms }: FinderListProps): JSX.Element {
 }
 
 /**
- * Every tool the agent can use on the brand's behalf, in one place: contact
- * finders (Hunter, Apollo) for outreach, and Buffer for social posts.
+ * Every tool the agent can use on the brand's behalf, in one place: Gmail for
+ * sending, contact finders (Hunter, Apollo) for outreach, and Buffer for social posts.
  */
 export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Element {
   const tools = useContactFinders(orgSlug)
@@ -49,7 +50,14 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
   const anyDisconnected = tools.finders.some(f => !f.connected)
   return (
     <div className="flex flex-col gap-2">
-      <p className={GROUP}>Find contacts</p>
+      <p className={GROUP}>Sending</p>
+      <p className={NOTE}>
+        Outreach emails and pitches go out from your own Gmail, after you approve each.
+      </p>
+      <ul className="-mx-2.5 flex flex-col gap-0.5">
+        <GmailRow orgSlug={orgSlug} />
+      </ul>
+      <p className={`mt-2 ${GROUP}`}>Find contacts</p>
       <p className={NOTE}>
         Sign in so the agent can find contacts and emails for sites that don&apos;t list one.
       </p>

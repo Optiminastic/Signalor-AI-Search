@@ -57,26 +57,39 @@ function useFinderReturn(onReturn: (outcome: FinderReturn) => void): void {
   }, [onReturn])
 }
 
-/** The "+" next to the message box: connect Hunter or Apollo for this brand. */
+/**
+ * Back from a tool's own sign-in page (Hunter, Apollo, Buffer or Google): open the
+ * panel and say how it went.
+ */
+function useSignInNotice(setOpen: (open: boolean) => void): FinderReturn | null {
+  const [notice, setNotice] = useState<FinderReturn | null>(null)
+  const showReturn = useCallback(
+    (outcome: FinderReturn) => {
+      setNotice(outcome)
+      setOpen(true)
+    },
+    [setOpen],
+  )
+  useFinderReturn(showReturn)
+  useBufferReturn(showReturn, true)
+  return notice
+}
+
+/** The "+" next to the message box: connect Gmail, Hunter, Apollo or Buffer for this brand. */
 export function ConnectToolsButton({ orgSlug }: ConnectToolsButtonProps): JSX.Element {
   const [open, setOpen] = useState(false)
   const wrapper = useRef<HTMLDivElement>(null)
   const panelId = useId()
-  const [notice, setNotice] = useState<FinderReturn | null>(null)
   const close = useCallback(() => setOpen(false), [])
-  const showReturn = useCallback((outcome: FinderReturn) => {
-    setNotice(outcome)
-    setOpen(true)
-  }, [])
+  const notice = useSignInNotice(setOpen)
   useDismiss(wrapper, open, close)
-  useFinderReturn(showReturn)
-  // Back from Buffer's sign-in page: open this panel and say how it went.
-  useBufferReturn(showReturn, true)
   return (
     <div ref={wrapper} className="relative">
       <button
         type="button"
-        aria-label={open ? 'Close connected tools' : 'Connect tools (Hunter, Apollo, Buffer)'}
+        aria-label={
+          open ? 'Close connected tools' : 'Connect tools (Gmail, Hunter, Apollo, Buffer)'
+        }
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen(o => !o)}
