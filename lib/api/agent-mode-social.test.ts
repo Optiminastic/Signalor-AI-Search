@@ -34,6 +34,7 @@ describe('social API', () => {
     expect(report.overall).toEqual({ score: 18.4, partial: true })
     expect(report.platforms.youtube).toMatchObject({ score: 62, notMeasured: ['engagement'] })
     expect(report.notes).toHaveLength(1)
+    expect(report.buffer).toEqual({ connected: false, channels: [] })
   })
 
   it('reads a brand that was never checked', async () => {

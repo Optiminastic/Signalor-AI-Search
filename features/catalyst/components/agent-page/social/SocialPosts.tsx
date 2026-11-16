@@ -64,8 +64,8 @@ function ReadySection({ ready, busyId, onPosted }: ReadySectionProps): JSX.Eleme
     <section aria-label="Approved, ready to post" className="flex flex-col gap-2">
       <h3 className={SECTION_TITLE}>Approved, ready to post</h3>
       <p className={MUTED_TEXT}>
-        Copy each post and publish it yourself, then mark it posted. Once Buffer is connected,
-        approved posts are scheduled for you.
+        Without Buffer, copy each post, publish it yourself, then mark it posted. With Buffer
+        connected, approved posts are added to your Buffer queue automatically.
       </p>
       <ul className="flex flex-col gap-2">
         {ready.map(action =>

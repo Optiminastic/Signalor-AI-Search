@@ -42,8 +42,18 @@ const redditSchema = z
     communities: r.communities,
   }))
 
+const bufferSchema = z
+  .object({
+    connected: z.boolean(),
+    channels: z.array(z.object({ service: z.string(), name: z.string() })).catch([]),
+  })
+  .catch({ connected: false, channels: [] })
+
+export type BufferStatus = z.infer<typeof bufferSchema>
+
 const reportSchema = z
   .object({
+    buffer: bufferSchema.optional(),
     status: z.enum(['never_checked', 'checking', 'ready']).catch('never_checked'),
     checked_at: z.string().nullable(),
     change: z.number().nullable().optional(),
@@ -54,6 +64,7 @@ const reportSchema = z
     notes: z.array(z.string()).optional(),
   })
   .transform(r => ({
+    buffer: r.buffer ?? { connected: false, channels: [] },
     status: r.status,
     checkedAt: r.checked_at,
     change: r.change ?? null,
@@ -76,4 +87,18 @@ export async function checkSocialNow(orgSlug: string): Promise<SocialReport> {
     method: 'POST',
     body: {},
   })
+}
+
+const signInSchema = z.object({ authorize_url: z.string().url() })
+
+/** Buffer's own login page, to connect the brand's Buffer account. */
+export async function startBufferSignIn(orgSlug: string, returnUrl: string): Promise<string> {
+  const path = programPath(orgSlug, 'social', 'buffer', 'sign-in')
+  const body = { return_url: returnUrl }
+  return (await agentModeRequest(path, signInSchema, { method: 'POST', body })).authorize_url
+}
+
+export async function disconnectBuffer(orgSlug: string): Promise<SocialReport> {
+  const path = programPath(orgSlug, 'social', 'buffer', 'disconnect')
+  return agentModeRequest(path, reportSchema, { method: 'POST', body: {} })
 }

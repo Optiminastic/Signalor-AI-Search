@@ -1,14 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { ActionReview } from '@/features/catalyst/components/agent-page/approvals/ActionReview'
 import {
   SECONDARY_BUTTON,
   SECTION_TITLE,
 } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import type { BufferReturn } from '@/features/catalyst/components/agent-page/social/buffer-return'
+import { BufferCard } from '@/features/catalyst/components/agent-page/social/BufferCard'
 import { PlatformRow } from '@/features/catalyst/components/agent-page/social/PlatformRow'
 import { SocialPosts } from '@/features/catalyst/components/agent-page/social/SocialPosts'
+import { useBufferReturn } from '@/features/catalyst/components/agent-page/social/useBufferReturn'
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
 import type { AgentApprovals } from '@/hooks/useAgentApprovals'
 import { useAgentSocial, type AgentSocial } from '@/hooks/useAgentSocial'
@@ -53,7 +56,7 @@ function Overall({ report, social }: { report: SocialReport; social: AgentSocial
       <p className={MUTED}>
         {changeText(report.change)}
         {report.overall?.partial
-          ? ' · Partial: some numbers aren’t measured yet. Connecting Buffer (next step) adds exact LinkedIn, X and Instagram numbers.'
+          ? ' · Partial: some numbers aren’t measured yet. Connect Buffer above for exact LinkedIn, X and Instagram numbers.'
           : ''}
       </p>
     </div>
@@ -162,8 +165,31 @@ export function SocialPanel({ orgSlug, approvals }: SocialPanelProps): JSX.Eleme
   }
   return (
     <div className="flex flex-col gap-6">
+      <BufferArea orgSlug={orgSlug} />
       <SocialPosts orgSlug={orgSlug} approvals={approvals} onOpen={setOpenId} />
       <Score orgSlug={orgSlug} />
+    </div>
+  )
+}
+
+/** Connect Buffer, and say how the sign-in went when Buffer sends the browser back. */
+function BufferArea({ orgSlug }: { orgSlug: string }): JSX.Element {
+  const social = useAgentSocial(orgSlug)
+  const [notice, setNotice] = useState<BufferReturn | null>(null)
+  const showNotice = useCallback((outcome: BufferReturn) => setNotice(outcome), [])
+  useBufferReturn(showNotice, true)
+  const buffer = social.report?.buffer ?? { connected: false, channels: [] }
+  return (
+    <div className="flex flex-col gap-2">
+      {notice && (
+        <p
+          role="status"
+          className={`rounded-md px-2.5 py-1.5 text-[12px] ${notice.ok ? 'bg-emerald-600/10 text-emerald-700' : 'bg-[#e04a3d]/10 text-[#e04a3d]'}`}
+        >
+          {notice.message}
+        </p>
+      )}
+      <BufferCard orgSlug={orgSlug} buffer={buffer} />
     </div>
   )
 }

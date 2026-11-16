@@ -178,6 +178,12 @@ const LINES: Record<string, Describe> = {
     detail: 'Closed, so it is never sent again.',
     tone: 'success',
   }),
+  buffer_connected: () => ({
+    title: 'You connected Buffer',
+    detail: 'Approved posts now go to your Buffer queue.',
+    tone: 'success',
+  }),
+  buffer_disconnected: () => ({ title: 'You disconnected Buffer', detail: '', tone: 'neutral' }),
   weekly_summary_posted: () => ({
     title: 'Posted your weekly summary in the chat',
     detail: 'Open it from your recent chats.',

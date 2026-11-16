@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { awaitingCount, unknownCount } from '@/features/catalyst/agent-approvals'
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
@@ -15,6 +15,7 @@ import {
 } from '@/features/catalyst/components/agent-page/BoardTabs'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
+import { useBufferReturn } from '@/features/catalyst/components/agent-page/social/useBufferReturn'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
 import { Sparkles } from '@/lib/icons'
@@ -62,6 +63,9 @@ function boardBadges(approvals: AgentApprovals): BoardBadges {
  */
 export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
   const [tab, setTab] = useState<BoardTab>('activity')
+  // Back from Buffer's sign-in page: show the Social tab, where the result is.
+  const openSocial = useCallback(() => setTab('social'), [])
+  useBufferReturn(openSocial)
   const approvals = useAgentApprovals(orgSlug)
   const badges = boardBadges(approvals)
   return (
