@@ -17,6 +17,7 @@ import { HomeFeatures } from '@/features/site/components/landing/home-features'
 import { HomeHero } from '@/features/site/components/landing/home-hero'
 import { HomeHowItWorks } from '@/features/site/components/landing/home-how-it-works'
 import { HomeIntegrations } from '@/features/site/components/landing/home-integrations'
+import { HomeLetsTalk } from '@/features/site/components/landing/home-lets-talk'
 import { HomeLogoCloud } from '@/features/site/components/landing/home-logo-cloud'
 import { HomeSpotlights } from '@/features/site/components/landing/home-spotlights'
 import { HomeVsClaude } from '@/features/site/components/landing/home-vs-claude'
@@ -114,6 +115,7 @@ export default function HomePage(): JSX.Element {
           <HomeHowItWorks />
           <HomeIntegrations />
           <HomeFaq items={HOMEPAGE_FAQ} />
+          <HomeLetsTalk />
         </div>
         <HomeCta />
       </main>
