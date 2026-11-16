@@ -23,6 +23,8 @@ const TOOL_STEPS: Record<string, ActivityStep> = {
   get_plan: { label: 'Read this month’s plan', icon: CalendarDays },
   get_progress: { label: 'Compared visibility with your baseline', icon: TrendingUp },
   get_activity: { label: 'Reviewed recent agent work', icon: Activity },
+  get_indexing: { label: 'Checked which pages Google and Bing have indexed', icon: Search },
+  get_social: { label: 'Checked your social presence score', icon: TrendingUp },
   search_brand_knowledge: { label: 'Searched your site content', icon: Search },
   skip_tasks: { label: 'Skipped tasks in the plan', icon: Zap },
   restore_tasks: { label: 'Restored tasks in the plan', icon: Zap },
@@ -43,7 +45,12 @@ export const THINKING_STEPS: ActivityStep[] = [
   { label: 'Writing the answer', icon: Sparkles },
 ]
 
-/** Maps a reply's tool trace to display steps, dropping repeats of the same tool. */
+/**
+ * Maps a reply's tool trace to display steps, dropping repeats. Repeats are
+ * dropped by label, so several tools without a label yet show one fallback
+ * step (labels are also the list keys in the activity feed).
+ */
 export function stepsForTools(tools: string[]): ActivityStep[] {
-  return [...new Set(tools)].map(tool => TOOL_STEPS[tool] ?? FALLBACK_STEP)
+  const steps = tools.map(tool => TOOL_STEPS[tool] ?? FALLBACK_STEP)
+  return steps.filter((step, i) => steps.findIndex(s => s.label === step.label) === i)
 }
