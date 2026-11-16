@@ -30,7 +30,12 @@ export function AgentChatPanel({ orgSlug, brandName, chat }: AgentChatPanelProps
           <p className="truncate text-[11px] text-[var(--cat-ink-3)]">Growing {brandName}</p>
         </div>
       </header>
-      <AgentThread messages={chat.messages} error={chat.error} />
+      <AgentThread
+        messages={chat.messages}
+        error={chat.error}
+        onAsk={chat.send}
+        busy={chat.thinking}
+      />
       <div className="px-4 pb-4">
         <AgentComposer orgSlug={orgSlug} onSend={chat.send} disabled={chat.thinking} />
       </div>

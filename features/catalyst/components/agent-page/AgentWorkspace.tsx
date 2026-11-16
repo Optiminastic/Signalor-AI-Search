@@ -7,6 +7,7 @@ import { AgentCanvas } from '@/features/catalyst/components/agent-page/AgentCanv
 import { AgentChatPanel } from '@/features/catalyst/components/agent-page/AgentChatPanel'
 import { AgentHome } from '@/features/catalyst/components/agent-page/AgentHome'
 import { AgentTopBar } from '@/features/catalyst/components/agent-page/AgentTopBar'
+import { BoardTabProvider } from '@/features/catalyst/components/agent-page/BoardTabContext'
 import { useAgentChats } from '@/hooks/useAgentChats'
 import { useAgentModeChat } from '@/hooks/useAgentModeChat'
 import { useAgentModeProgram } from '@/hooks/useAgentModeProgram'
@@ -82,14 +83,16 @@ function AgentMain({ orgSlug, brandName, chatId, agentHref, chats }: AgentMainPr
     )
   }
   return (
-    <div className="flex min-h-0 flex-1 gap-3 px-4 pb-4">
-      <AgentChatPanel orgSlug={orgSlug} brandName={brandName} chat={chat} />
-      <AgentCanvas
-        orgSlug={orgSlug}
-        thinking={chat.thinking}
-        lastTools={lastReplyTools(chat.messages)}
-      />
-    </div>
+    <BoardTabProvider>
+      <div className="flex min-h-0 flex-1 gap-3 px-4 pb-4">
+        <AgentChatPanel orgSlug={orgSlug} brandName={brandName} chat={chat} />
+        <AgentCanvas
+          orgSlug={orgSlug}
+          thinking={chat.thinking}
+          lastTools={lastReplyTools(chat.messages)}
+        />
+      </div>
+    </BoardTabProvider>
   )
 }
 

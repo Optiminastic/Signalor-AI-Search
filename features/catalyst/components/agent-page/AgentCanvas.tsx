@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-
 import { awaitingCount, unknownCount } from '@/features/catalyst/agent-approvals'
 import { AgentActivityFeed } from '@/features/catalyst/components/agent-page/AgentActivityFeed'
 import { AgentLog } from '@/features/catalyst/components/agent-page/AgentLog'
 import { AgentApprovalsPanel } from '@/features/catalyst/components/agent-page/approvals/AgentApprovalsPanel'
 import { ArticlesPanel } from '@/features/catalyst/components/agent-page/articles/ArticlesPanel'
+import { useBoardTab } from '@/features/catalyst/components/agent-page/BoardTabContext'
 import {
   BoardTabs,
   boardPanelId,
@@ -65,7 +64,7 @@ function boardBadges(approvals: AgentApprovals, guestToPitch: number): BoardBadg
  * and the drafts waiting for the owner's approval.
  */
 export function AgentCanvas({ orgSlug, thinking, lastTools }: AgentCanvasProps): JSX.Element {
-  const [tab, setTab] = useState<BoardTab>('activity')
+  const { tab, setTab } = useBoardTab()
   const approvals = useAgentApprovals(orgSlug)
   const guest = useGuestPosts(orgSlug)
   const toPitch = guest.report?.sites.filter(s => s.stage === 'to_pitch').length ?? 0

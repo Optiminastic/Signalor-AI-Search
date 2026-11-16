@@ -1,8 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 
 import { AgentRichText } from '@/features/catalyst/components/agent-page/AgentRichText'
+import { replyActions } from '@/features/catalyst/components/agent-page/reply-actions'
+import { ReplyActionChips } from '@/features/catalyst/components/agent-page/ReplyActionChips'
 import { useTypewriter } from '@/hooks/useTypewriter'
 import type { AgentChatMessage } from '@/lib/api/agent-mode-chat'
 
@@ -14,6 +16,9 @@ const AGENT_META = 'mb-1 text-[11px] text-[var(--cat-ink-3)]'
 interface AgentThreadProps {
   messages: AgentChatMessage[]
   error: string | null
+  /** Sends a suggested follow-up; suggestions are hidden while a reply is being written. */
+  onAsk: (question: string) => void
+  busy: boolean
 }
 
 const BOLD_MARK = '**'
@@ -27,9 +32,11 @@ function closeOpenBold(text: string): string {
 interface AgentReplyProps {
   message: AgentChatMessage
   onGrow: () => void
+  /** Only the latest reply offers next steps. */
+  actions: { asked: string[]; onAsk: (question: string) => void } | null
 }
 
-function AgentReply({ message, onGrow }: AgentReplyProps): JSX.Element {
+function AgentReply({ message, onGrow, actions }: AgentReplyProps): JSX.Element {
   // A reply that mounts while pending is being written during this visit, so it
   // types out when it lands; replies loaded from history render at once.
   const [animate] = useState(message.status === 'pending')
@@ -52,16 +59,26 @@ function AgentReply({ message, onGrow }: AgentReplyProps): JSX.Element {
       {!typing && message.changedPlan && (
         <p className="mt-2 text-[11px] font-medium text-[#e04a3d]">Plan updated</p>
       )}
+      {!typing && actions && message.status === 'complete' && (
+        <ReplyActionChips
+          actions={replyActions(message.tools, message.content, actions.asked)}
+          onAsk={actions.onAsk}
+        />
+      )}
     </div>
   )
 }
 
-/** The live conversation with the agent, newest at the bottom (auto-scrolls). */
-export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element {
+interface ScrollToEnd {
+  end: RefObject<HTMLDivElement | null>
+  scrollToEnd: () => void
+}
+
+/** Keeps the newest message in view as messages arrive or finish. */
+function useScrollToEnd(messages: AgentChatMessage[]): ScrollToEnd {
   const end = useRef<HTMLDivElement>(null)
   const lastId = messages[messages.length - 1]?.id
   const lastStatus = messages[messages.length - 1]?.status
-
   // Block bodies on purpose: newer browsers return a Promise from
   // scrollIntoView, and an effect that returns it makes React call the Promise
   // as a cleanup function on unmount ("destroy is not a function"), which
@@ -69,10 +86,18 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
   const scrollToEnd = useCallback((): void => {
     end.current?.scrollIntoView({ block: 'end' })
   }, [])
-
   useEffect(() => {
     scrollToEnd()
   }, [lastId, lastStatus, scrollToEnd])
+  return { end, scrollToEnd }
+}
+
+/** The live conversation with the agent, newest at the bottom (auto-scrolls). */
+export function AgentThread({ messages, error, onAsk, busy }: AgentThreadProps): JSX.Element {
+  const lastId = messages[messages.length - 1]?.id
+  const asked = messages.filter(m => m.role === 'user').map(m => m.content)
+  const nextSteps = busy ? null : { asked, onAsk }
+  const { end, scrollToEnd } = useScrollToEnd(messages)
 
   return (
     <div
@@ -87,7 +112,11 @@ export function AgentThread({ messages, error }: AgentThreadProps): JSX.Element 
           {message.role === 'user' ? (
             <p className={USER_BUBBLE}>{message.content}</p>
           ) : (
-            <AgentReply message={message} onGrow={scrollToEnd} />
+            <AgentReply
+              message={message}
+              onGrow={scrollToEnd}
+              actions={message.id === lastId ? nextSteps : null}
+            />
           )}
         </div>
       ))}
