@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { BrandMentions } from '@/features/catalyst/components/agent-page/tracking/BrandMentions'
 import { TrackedKeywords } from '@/features/catalyst/components/agent-page/tracking/TrackedKeywords'
 import {
   colorOf,
@@ -10,10 +11,7 @@ import {
   weeksFor,
   type TrackingTab,
 } from '@/features/catalyst/components/agent-page/tracking/tracking-data'
-import {
-  AioTable,
-  SeoTable,
-} from '@/features/catalyst/components/agent-page/tracking/TrackingTables'
+import { SeoTable } from '@/features/catalyst/components/agent-page/tracking/TrackingTables'
 import { MultiLineChart } from '@/features/catalyst/components/insights/MultiLineChart'
 import { POS, NEG } from '@/features/catalyst/constants'
 import { useRankTracking, type RankTrackingState } from '@/hooks/useRankTracking'
@@ -41,10 +39,12 @@ const TABS: { id: TrackingTab; label: string; explain: string; empty: string }[]
       'AI answers are measured every week; the first week appears after the first measurement.',
   },
   {
-    id: 'aio',
-    label: 'AIO',
-    explain: 'Share of tracked keywords where Google’s AI Overview cites each brand.',
-    empty: 'The first AI Overview check runs this week.',
+    id: 'brand',
+    label: 'Brand',
+    explain:
+      'Share of everything the internet said this week (news, blogs, Reddit) that was about each brand.',
+    empty:
+      'The first look at what the internet says about you and your competitors runs this week.',
   },
 ]
 const CHART_WIDTH = 360
@@ -130,7 +130,6 @@ function TabBody({
   return (
     <div className="flex flex-col gap-3">
       <p className={MUTED}>{meta.explain}</p>
-      {tab === 'aio' && report.aioNote && <p className={NOTE}>{report.aioNote}</p>}
       {weeks.length ? (
         <>
           <MultiLineChart
@@ -145,8 +144,8 @@ function TabBody({
         <p className={NOTE}>{meta.empty}</p>
       )}
       {tab === 'seo' && report.seo.latest.length > 0 && <SeoTable report={report} />}
-      {tab === 'aio' && report.aio.latest.length > 0 && <AioTable report={report} />}
-      {tab !== 'geo' && (
+      {tab === 'brand' && <BrandMentions report={report} />}
+      {tab === 'seo' && (
         <TrackedKeywords
           keywords={report.keywords}
           busy={tracking.busy}
@@ -203,7 +202,7 @@ function Header({ tracking, onClose }: HeaderProps): JSX.Element {
 
 /**
  * Weekly tracking of the brand against its top competitors: Google positions
- * (SEO), mentions in AI answers (GEO) and Google AI Overview citations (AIO).
+ * (SEO), mentions in AI answers (GEO) and what the internet says about each (Brand).
  */
 export function RankTrackingPanel({ orgSlug, onClose }: RankTrackingPanelProps): JSX.Element {
   const [tab, setTab] = useState<TrackingTab>('seo')

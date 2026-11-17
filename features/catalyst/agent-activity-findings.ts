@@ -231,14 +231,13 @@ export const FINDING_LINES: Record<string, Describe> = {
   preview: e => ({ title: `Previewed: ${e.taskTitle}`, detail: '', tone: 'neutral' }),
   rank_check_started: () => ({
     title: 'Checking your positions against competitors',
-    detail: 'Google positions and AI Overview citations for your tracked keywords.',
+    detail:
+      'Google positions for your tracked keywords, and what the internet says about each brand.',
     tone: 'neutral',
   }),
   rank_check_done: e => ({
     title: `Checked positions for ${num(e.detail.keywords)} keywords`,
-    detail: e.detail.aio_problem
-      ? 'Google positions updated. AI Overview data is waiting (see the AIO tab).'
-      : 'See You vs competitors.',
+    detail: `${num(e.detail.mentions)} new mentions found. See You vs competitors.`,
     tone: 'success',
   }),
 }

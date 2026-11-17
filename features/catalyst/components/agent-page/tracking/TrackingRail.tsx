@@ -32,7 +32,7 @@ function ClosedStrip({ onOpen }: { onOpen: () => void }): JSX.Element {
 
 /**
  * Third column, right of the board, on wide screens (1440px+): the weekly
- * SEO / GEO / AIO tracking. It folds to a thin strip and remembers that per
+ * SEO / GEO / Brand tracking. It folds to a thin strip and remembers that per
  * browser. Below 1440px the board shows it as a tab instead.
  */
 export function TrackingRail({ orgSlug }: TrackingRailProps): JSX.Element {

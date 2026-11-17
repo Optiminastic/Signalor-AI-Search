@@ -3,7 +3,7 @@ import type { TrendSeries } from '@/hooks/useInsights'
 import type { RankTracking, TrackingPlayer } from '@/lib/api/agent-mode-rank-tracking'
 
 /** The three views in the tracking panel. */
-export type TrackingTab = 'seo' | 'geo' | 'aio'
+export type TrackingTab = 'seo' | 'geo' | 'brand'
 
 /** Brand in brand red; competitors in the dashboard's other series colours. */
 const RIVAL_COLORS = [BLUE, YELLOW, PURPLE]
@@ -24,7 +24,7 @@ function percent(part: number, whole: number): number {
   return whole > 0 ? Math.round((part / whole) * 100) : 0
 }
 
-/** One line per player, 0-100: share of AI answers (GEO), share of keywords in Google's top 10 (SEO), share of AI Overviews citing them (AIO). */
+/** One line per player, 0-100: share of keywords in Google's top 10 (SEO), share of AI answers (GEO), share of all mentions on the internet (Brand). */
 export function seriesFor(tab: TrackingTab, report: RankTracking): TrendSeries[] {
   return report.players.map((player, index) => ({
     key: player.domain,
@@ -45,7 +45,9 @@ function pointsFor(tab: TrackingTab, report: RankTracking, player: TrackingPlaye
       percent(week.domains[player.domain]?.top10 ?? 0, week.keywords),
     )
   }
-  return report.aio.weeks.map(week => percent(week.domains[player.domain] ?? 0, week.keywords))
+  return report.brand.weeks.map(week =>
+    percent(week.domains[player.domain]?.mentions ?? 0, week.total),
+  )
 }
 
 export function weeksFor(tab: TrackingTab, report: RankTracking): string[] {

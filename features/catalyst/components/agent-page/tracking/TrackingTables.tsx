@@ -84,37 +84,3 @@ export function SeoTable({ report }: { report: RankTracking }): JSX.Element {
     </table>
   )
 }
-
-/** Whether Google's AI Overview cited each player for each tracked keyword, this week. */
-export function AioTable({ report }: { report: RankTracking }): JSX.Element {
-  return (
-    <table className="w-full border-collapse">
-      <Head players={report.players} />
-      <tbody>
-        {report.aio.latest.map(row => (
-          <tr key={row.keyword} className="border-b border-[var(--cat-border)] last:border-0">
-            <td className={KEYWORD} title={row.keyword}>
-              {row.keyword}
-            </td>
-            {report.players.map(player => {
-              const isCited = row.domains[player.domain]?.now === true
-              return (
-                <td key={player.domain} className={CELL}>
-                  {isCited ? (
-                    <span style={{ color: POS }} aria-label="cited">
-                      ✓
-                    </span>
-                  ) : (
-                    <span className="text-[var(--cat-ink-3)]" aria-label="not cited">
-                      –
-                    </span>
-                  )}
-                </td>
-              )
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-}

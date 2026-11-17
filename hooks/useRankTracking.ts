@@ -27,7 +27,7 @@ export interface RankTrackingState {
   actionError: string | null
 }
 
-/** Weekly SEO / GEO / AIO tracking for the brand and its competitors. */
+/** Weekly SEO / GEO / Brand tracking for the brand and its competitors. */
 export function useRankTracking(orgSlug: string): RankTrackingState {
   const queryClient = useQueryClient()
   const key = queryKeys.agentMode.rankTracking(orgSlug)

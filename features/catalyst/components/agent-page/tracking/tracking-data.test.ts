@@ -39,13 +39,21 @@ const REPORT: RankTracking = {
     ],
     latest: [],
   },
-  aio: {
-    weeks: [{ week: '2026-11-09', keywords: 4, domains: { 'pro.example': 1, 'acme.io': 3 } }],
-    latest: [],
+  brand: {
+    weeks: [
+      {
+        week: '2026-11-09',
+        total: 20,
+        domains: {
+          'pro.example': { mentions: 5, positive: 2, negative: 1 },
+          'acme.io': { mentions: 15, positive: 4, negative: 3 },
+        },
+      },
+    ],
+    latest: {},
   },
   checking: false,
   lastCheckAt: null,
-  aioNote: '',
 }
 
 describe('tracking data', () => {
@@ -56,16 +64,16 @@ describe('tracking data', () => {
     ])
   })
 
-  it('SEO and AIO lines are a share of tracked keywords', () => {
+  it('SEO is a share of tracked keywords, Brand a share of all mentions', () => {
     expect(seriesFor('seo', REPORT)[0].points).toEqual([20, 30])
-    expect(seriesFor('aio', REPORT).map(s => s.points)).toEqual([[25], [75]])
+    expect(seriesFor('brand', REPORT).map(s => s.points)).toEqual([[25], [75]])
   })
 
   it('latest values come with the change since last week', () => {
     const [brand, rival] = latestFor('seo', REPORT)
     expect(brand).toMatchObject({ now: 30, change: 10 })
     expect(rival.change).toBe(0)
-    expect(latestFor('aio', REPORT)[0].change).toBeNull()
+    expect(latestFor('brand', REPORT)[0].change).toBeNull()
   })
 
   it('positions read as #n or 100+, and a smaller number is a move up', () => {

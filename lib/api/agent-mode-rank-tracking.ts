@@ -3,9 +3,9 @@ import { z } from 'zod'
 import { agentModeRequest, programPath } from '@/lib/api/agent-mode-request'
 
 /**
- * Weekly SEO / GEO / AIO tracking for the brand and its top competitors
+ * Weekly SEO / GEO / Brand tracking for the brand and its top competitors
  * (ranking-be `services/rank_tracking`): Google positions, share of AI answers,
- * and Google AI Overview citations, for the last 8 weeks.
+ * and what the internet says about each (news, blogs, Reddit), for the last 8 weeks.
  */
 const playerSchema = z
   .object({ name: z.string().catch(''), domain: z.string(), is_brand: z.boolean().catch(false) })
@@ -34,10 +34,6 @@ const positionCell = z.object({
   now: z.number().nullable().catch(null),
   before: z.number().nullable().catch(null),
 })
-const citedCell = z.object({
-  now: z.boolean().nullable().catch(null),
-  before: z.boolean().nullable().catch(null),
-})
 
 const seoSchema = z.object({
   weeks: z
@@ -54,19 +50,34 @@ const seoSchema = z.object({
     .catch([]),
 })
 
-const aioSchema = z.object({
+/** One page elsewhere on the internet about a player. */
+const mentionSchema = z.object({
+  title: z.string().catch(''),
+  url: z.string(),
+  source: z.string().catch(''),
+  channel: z.enum(['web', 'news', 'reddit']).catch('web'),
+  published: z.string().catch(''),
+  sentiment: z.enum(['positive', 'neutral', 'negative']).catch('neutral'),
+  snippet: z.string().catch(''),
+})
+
+const mentionCountSchema = z.object({
+  mentions: z.number().catch(0),
+  positive: z.number().catch(0),
+  negative: z.number().catch(0),
+})
+
+const brandSchema = z.object({
   weeks: z
     .array(
       z.object({
         week: z.string(),
-        keywords: z.number().catch(0),
-        domains: z.record(z.number()).catch({}),
+        total: z.number().catch(0),
+        domains: z.record(mentionCountSchema).catch({}),
       }),
     )
     .catch([]),
-  latest: z
-    .array(z.object({ keyword: z.string(), domains: z.record(citedCell).catch({}) }))
-    .catch([]),
+  latest: z.record(z.array(mentionSchema)).catch({}),
 })
 
 const reportSchema = z
@@ -75,24 +86,23 @@ const reportSchema = z
     keywords: z.array(keywordSchema).catch([]),
     geo: z.array(geoWeekSchema).catch([]),
     seo: seoSchema.catch({ weeks: [], latest: [] }),
-    aio: aioSchema.catch({ weeks: [], latest: [] }),
+    brand: brandSchema.catch({ weeks: [], latest: {} }),
     checking: z.boolean().catch(false),
     last_check_at: z.string().nullable().catch(null),
-    aio_note: z.string().catch(''),
   })
   .transform(r => ({
     players: r.players,
     keywords: r.keywords,
     geo: r.geo,
     seo: r.seo,
-    aio: r.aio,
+    brand: r.brand,
     checking: r.checking,
     lastCheckAt: r.last_check_at,
-    aioNote: r.aio_note,
   }))
 
 export type TrackingPlayer = z.infer<typeof playerSchema>
 export type TrackedKeyword = z.infer<typeof keywordSchema>
+export type BrandMention = z.infer<typeof mentionSchema>
 export type RankTracking = z.infer<typeof reportSchema>
 
 export async function getRankTracking(orgSlug: string): Promise<RankTracking> {
