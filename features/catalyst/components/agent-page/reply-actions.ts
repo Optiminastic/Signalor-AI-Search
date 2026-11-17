@@ -49,6 +49,10 @@ const TOOL_TABS: Record<string, BoardTab> = {
   check_social_now: 'social',
   get_indexing: 'indexing',
   check_indexing_now: 'indexing',
+  get_keywords: 'keywords',
+  refresh_keywords_now: 'keywords',
+  get_competitor_tracking: 'tracking',
+  check_ranks_now: 'tracking',
 }
 
 /** Tabs the reply names in plain words ("open Approvals", "the Guest posts tab"). */
@@ -72,6 +76,15 @@ const FOLLOW_UPS: Record<string, string[]> = {
   get_indexing: ['Which pages are not indexed yet?', 'Check indexing now'],
   check_indexing_now: ['Show my indexing status'],
   get_connections: ['Which tools should I connect first?'],
+  get_competitor_tracking: [
+    'Which keywords are competitors beating us on?',
+    'What should we do to catch up?',
+  ],
+  get_keywords: [
+    'Which golden keywords should we target first?',
+    'Which keyword gaps have the most searches?',
+  ],
+  get_site_health: ['Is anything wrong with my site?'],
   get_positioning: [
     'Which competitors do AI answers recommend instead?',
     'Which sites should we get mentioned on?',
@@ -82,6 +95,7 @@ const FOLLOW_UPS: Record<string, string[]> = {
 }
 
 const DEFAULT_FOLLOW_UPS = [
+  'How are we doing against competitors?',
   'What is the agent running right now?',
   'What should I do next?',
   'What is waiting for my approval?',
