@@ -16,6 +16,7 @@ import { GuestPostsPanel } from '@/features/catalyst/components/agent-page/guest
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { KeywordsPanel } from '@/features/catalyst/components/agent-page/keywords/KeywordsPanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
+import { RankTrackingPanel } from '@/features/catalyst/components/agent-page/tracking/RankTrackingPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
 import { useAgentApprovals, type AgentApprovals } from '@/hooks/useAgentApprovals'
 import { useGuestPosts } from '@/hooks/useGuestPosts'
@@ -36,6 +37,7 @@ function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'social') return 'Social presence'
   if (tab === 'guest') return 'Guest posts'
   if (tab === 'keywords') return 'Keywords on Google'
+  if (tab === 'tracking') return 'Tracking'
   return thinking ? 'Working on it' : 'What the agent did'
 }
 
@@ -101,6 +103,7 @@ function BoardPanel({
   if (tab === 'social') return <SocialPanel orgSlug={orgSlug} approvals={approvals} />
   if (tab === 'approvals') return <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
   if (tab === 'indexing') return <IndexingPanel orgSlug={orgSlug} />
+  if (tab === 'tracking') return <RankTrackingPanel orgSlug={orgSlug} />
   return (
     <>
       <AgentActivityFeed thinking={thinking} lastTools={lastTools} />

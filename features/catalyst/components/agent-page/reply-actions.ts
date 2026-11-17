@@ -33,6 +33,7 @@ export const TAB_LABELS: Record<BoardTab, string> = {
   articles: 'Articles',
   guest: 'Guest posts',
   keywords: 'Keywords',
+  tracking: 'Tracking',
   social: 'Social',
   approvals: 'Approvals',
   indexing: 'Indexing',

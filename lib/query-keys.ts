@@ -49,6 +49,7 @@ export const queryKeys = {
     guestPosts: (orgSlug: string) => ['agent-mode', orgSlug, 'guest-posts'] as const,
     keywords: (orgSlug: string) => ['agent-mode', orgSlug, 'keywords'] as const,
     keywordTools: (orgSlug: string) => ['agent-mode', orgSlug, 'keyword-tools'] as const,
+    rankTracking: (orgSlug: string) => ['agent-mode', orgSlug, 'rank-tracking'] as const,
     satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
     social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
     action: (orgSlug: string, actionId: string) =>

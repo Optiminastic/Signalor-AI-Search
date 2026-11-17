@@ -8,6 +8,7 @@ export type BoardTab =
   | 'social'
   | 'approvals'
   | 'indexing'
+  | 'tracking'
 
 export interface BoardBadges {
   awaiting: number
@@ -27,7 +28,7 @@ interface BoardTabsProps {
   badges: BoardBadges
 }
 
-const TABS: { id: BoardTab; label: string }[] = [
+const TABS: { id: BoardTab; label: string; className?: string }[] = [
   { id: 'activity', label: 'Activity' },
   { id: 'articles', label: 'Articles' },
   { id: 'guest', label: 'Guest posts' },
@@ -35,6 +36,8 @@ const TABS: { id: BoardTab; label: string }[] = [
   { id: 'social', label: 'Social' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
+  // Wide screens show tracking in its own column on the right instead.
+  { id: 'tracking', label: 'Tracking', className: 'min-[1440px]:hidden' },
 ]
 
 export function boardPanelId(tab: BoardTab): string {
@@ -93,7 +96,7 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
           aria-selected={tab.id === value}
           aria-controls={boardPanelId(tab.id)}
           onClick={() => onChange(tab.id)}
-          className={`inline-flex items-center gap-1.5 rounded-sm px-3 py-[5px] text-xs font-medium transition-colors ${
+          className={`inline-flex items-center gap-1.5 rounded-sm px-3 py-[5px] text-xs font-medium transition-colors ${tab.className ?? ''} ${
             tab.id === value
               ? 'bg-[var(--cat-card)] font-semibold text-[var(--cat-ink)] shadow-sm'
               : 'text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)]'

@@ -8,6 +8,7 @@ import { AgentChatPanel } from '@/features/catalyst/components/agent-page/AgentC
 import { AgentHome } from '@/features/catalyst/components/agent-page/AgentHome'
 import { AgentTopBar } from '@/features/catalyst/components/agent-page/AgentTopBar'
 import { AgentUiProvider } from '@/features/catalyst/components/agent-page/AgentUiContext'
+import { TrackingRail } from '@/features/catalyst/components/agent-page/tracking/TrackingRail'
 import { useAgentChats } from '@/hooks/useAgentChats'
 import { useAgentModeChat } from '@/hooks/useAgentModeChat'
 import { useAgentModeProgram } from '@/hooks/useAgentModeProgram'
@@ -91,6 +92,7 @@ function AgentMain({ orgSlug, brandName, chatId, agentHref, chats }: AgentMainPr
           thinking={chat.thinking}
           lastTools={lastReplyTools(chat.messages)}
         />
+        <TrackingRail orgSlug={orgSlug} />
       </div>
     </AgentUiProvider>
   )

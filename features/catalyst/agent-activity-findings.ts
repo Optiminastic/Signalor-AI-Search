@@ -229,6 +229,18 @@ export const FINDING_LINES: Record<string, Describe> = {
     tone: 'neutral',
   }),
   preview: e => ({ title: `Previewed: ${e.taskTitle}`, detail: '', tone: 'neutral' }),
+  rank_check_started: () => ({
+    title: 'Checking your positions against competitors',
+    detail: 'Google positions and AI Overview citations for your tracked keywords.',
+    tone: 'neutral',
+  }),
+  rank_check_done: e => ({
+    title: `Checked positions for ${num(e.detail.keywords)} keywords`,
+    detail: e.detail.aio_problem
+      ? 'Google positions updated. AI Overview data is waiting (see the AIO tab).'
+      : 'See You vs competitors.',
+    tone: 'success',
+  }),
 }
 
 /** Bookkeeping rows that would only repeat another line (the daily check has its own line). */
