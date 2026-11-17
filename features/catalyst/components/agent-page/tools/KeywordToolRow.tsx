@@ -19,10 +19,14 @@ interface KeywordToolRowProps {
 }
 
 const LOGO_SIZE = 28
-/** Letter tiles for tools without a logo file, in each brand's own colour. */
-const TILES: Record<string, { letter: string; color: string }> = {
-  semrush: { letter: 'S', color: '#ff642d' },
-  ahrefs: { letter: 'a', color: '#054ada' },
+/** Logo files in /public/logos. Semrush is drawn on a white tile so its orange mark shows in dark mode. */
+const LOGOS: Record<string, { src: string; className: string }> = {
+  search_console: { src: '/logos/search-console.svg', className: 'h-7 w-7 shrink-0' },
+  semrush: {
+    src: '/logos/semrush.svg',
+    className: 'h-7 w-7 shrink-0 rounded-md border border-[var(--cat-border)] bg-white p-1',
+  },
+  ahrefs: { src: '/logos/ahrefs.png', className: 'h-7 w-7 shrink-0 rounded-md' },
 }
 const ROW = 'flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left'
 const MUTED = 'text-[12px] text-[var(--cat-ink-3)]'
@@ -37,24 +41,21 @@ function Logo({ tool }: { tool: KeywordTool }): JSX.Element {
       </span>
     )
   }
-  if (tool.provider === 'search_console') {
+  const logo = LOGOS[tool.provider]
+  if (logo) {
     return (
       <Image
-        src="/logos/search-console.svg"
+        src={logo.src}
         alt=""
         width={LOGO_SIZE}
         height={LOGO_SIZE}
-        className="h-7 w-7 shrink-0"
+        className={logo.className}
       />
     )
   }
-  const tile = TILES[tool.provider] ?? { letter: tool.label.charAt(0), color: '#667085' }
   return (
-    <span
-      className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-[14px] font-bold text-white"
-      style={{ background: tile.color }}
-    >
-      {tile.letter}
+    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[var(--cat-hover)] text-[13px] font-semibold text-[var(--cat-ink-2)]">
+      {tool.label.charAt(0)}
     </span>
   )
 }
