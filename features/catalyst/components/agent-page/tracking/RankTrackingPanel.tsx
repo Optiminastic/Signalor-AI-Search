@@ -18,9 +18,12 @@ import { MultiLineChart } from '@/features/catalyst/components/insights/MultiLin
 import { POS, NEG } from '@/features/catalyst/constants'
 import { useRankTracking, type RankTrackingState } from '@/hooks/useRankTracking'
 import type { RankTracking } from '@/lib/api/agent-mode-rank-tracking'
+import { ChevronRight } from '@/lib/icons'
 
 interface RankTrackingPanelProps {
   orgSlug: string
+  /** Shown as a close button when the panel sits in the folding right column. */
+  onClose?: () => void
 }
 
 const TABS: { id: TrackingTab; label: string; explain: string; empty: string }[] = [
@@ -161,21 +164,39 @@ function checkedText(tracking: RankTrackingState): string {
   return at ? `Checked ${new Date(at).toLocaleDateString()}` : 'Checked every week'
 }
 
-function Header({ tracking }: { tracking: RankTrackingState }): JSX.Element {
+interface HeaderProps {
+  tracking: RankTrackingState
+  onClose?: () => void
+}
+
+function Header({ tracking, onClose }: HeaderProps): JSX.Element {
   return (
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0">
         <h2 className="text-[15px] font-semibold text-[var(--cat-ink)]">You vs competitors</h2>
         <p className={MUTED}>{checkedText(tracking)}</p>
       </div>
-      <button
-        type="button"
-        disabled={tracking.checking}
-        onClick={tracking.checkNow}
-        className="shrink-0 rounded-md border border-[var(--cat-border)] px-2.5 py-1 text-[12px] text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)] disabled:opacity-50"
-      >
-        Check now
-      </button>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <button
+          type="button"
+          disabled={tracking.checking}
+          onClick={tracking.checkNow}
+          className="rounded-md border border-[var(--cat-border)] px-2.5 py-1 text-[12px] text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)] disabled:opacity-50"
+        >
+          Check now
+        </button>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close You vs competitors"
+            aria-expanded={true}
+            className="grid h-7 w-7 place-items-center rounded-md text-[var(--cat-ink-2)] hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]"
+          >
+            <ChevronRight size={16} strokeWidth={2.2} />
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -184,12 +205,12 @@ function Header({ tracking }: { tracking: RankTrackingState }): JSX.Element {
  * Weekly tracking of the brand against its top competitors: Google positions
  * (SEO), mentions in AI answers (GEO) and Google AI Overview citations (AIO).
  */
-export function RankTrackingPanel({ orgSlug }: RankTrackingPanelProps): JSX.Element {
+export function RankTrackingPanel({ orgSlug, onClose }: RankTrackingPanelProps): JSX.Element {
   const [tab, setTab] = useState<TrackingTab>('seo')
   const tracking = useRankTracking(orgSlug)
   return (
     <div className="flex flex-col gap-4">
-      <Header tracking={tracking} />
+      <Header tracking={tracking} onClose={onClose} />
       <TabSwitch value={tab} onChange={setTab} />
       {tracking.actionError && (
         <p role="alert" className="text-[12px] text-[#e04a3d]">
