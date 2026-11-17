@@ -7,6 +7,7 @@ import {
 import {
   BrandList,
   GapList,
+  QueryList,
 } from '@/features/catalyst/components/agent-page/keywords/KeywordTables'
 import { useKeywords, type Keywords } from '@/hooks/useKeywords'
 
@@ -21,10 +22,28 @@ interface PartProps {
 const NOTE = 'text-[12.5px] text-[var(--cat-ink-2)]'
 const MUTED = 'text-[11.5px] text-[var(--cat-ink-3)]'
 
+const SOURCES: Record<string, string> = {
+  semrush: 'your Semrush account',
+  ahrefs: 'your Ahrefs account',
+}
+
 function lastReadText(keywords: Keywords): string {
   const at = keywords.report?.fetchedAt
   if (!at) return 'The agent reads keywords every week.'
-  return `Last read ${new Date(at).toLocaleDateString()}. Refreshed every week.`
+  const from = SOURCES[keywords.report?.source ?? '']
+  const via = from ? ` from ${from}` : ''
+  return `Last read ${new Date(at).toLocaleDateString()}${via}. Refreshed every week.`
+}
+
+function SearchConsole({ keywords }: PartProps): JSX.Element | null {
+  const queries = keywords.report?.searchConsole ?? []
+  if (!queries.length) return null
+  return (
+    <section className="flex flex-col gap-2">
+      <h3 className={SECTION_TITLE}>Your top Google searches (Search Console)</h3>
+      <QueryList queries={queries} />
+    </section>
+  )
 }
 
 function RefreshBar({ keywords }: PartProps): JSX.Element {
@@ -102,6 +121,7 @@ export function KeywordsPanel({ orgSlug }: KeywordsPanelProps): JSX.Element {
       ))}
       <Gaps keywords={keywords} />
       <Ranking keywords={keywords} />
+      <SearchConsole keywords={keywords} />
     </div>
   )
 }

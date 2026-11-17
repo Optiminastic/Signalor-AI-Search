@@ -3,10 +3,10 @@
 import { useId, useState, type KeyboardEvent } from 'react'
 
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
-import type { ContactFinder } from '@/lib/api/agent-mode-finders'
 
 interface FinderKeyFormProps {
-  finder: ContactFinder
+  /** Any tool connected by API key (contact finders, keyword tools). */
+  finder: { provider: string; label: string }
   busy: boolean
   onConnect: (apiKey: string) => void
 }
@@ -14,6 +14,8 @@ interface FinderKeyFormProps {
 const WHERE_TO_FIND: Record<string, string> = {
   hunter: 'hunter.io → API',
   apollo: 'Apollo → Settings → API keys',
+  semrush: 'Semrush → Subscription info → API units',
+  ahrefs: 'Ahrefs → Account settings → API keys',
 }
 const NOTE = 'text-[11.5px] text-[var(--cat-ink-3)]'
 const INPUT =

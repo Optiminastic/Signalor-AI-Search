@@ -1,4 +1,4 @@
-import type { BrandKeyword, KeywordGap } from '@/lib/api/agent-mode-keywords'
+import type { BrandKeyword, KeywordGap, SearchQuery } from '@/lib/api/agent-mode-keywords'
 
 const ROW =
   'flex items-center gap-3 border-b border-[var(--cat-border)] py-2 text-[12.5px] last:border-0'
@@ -65,6 +65,34 @@ export function BrandList({ keywords }: BrandListProps): JSX.Element {
             </span>
             <span className={NUMBER}>#{row.position}</span>
             <span className={NUMBER}>{searches(row.searchVolume)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+interface QueryListProps {
+  queries: SearchQuery[]
+}
+
+/** Real Google queries from the brand's Search Console: clicks, impressions, average position. */
+export function QueryList({ queries }: QueryListProps): JSX.Element {
+  return (
+    <div>
+      <p className={HEAD}>
+        <span className="flex-1">Query</span>
+        <span className="w-16 text-right">Clicks</span>
+        <span className="w-16 text-right">Shown</span>
+        <span className="w-16 text-right">Position</span>
+      </p>
+      <ul>
+        {queries.map(row => (
+          <li key={row.query} className={ROW}>
+            <span className="min-w-0 flex-1 truncate text-[var(--cat-ink)]">{row.query}</span>
+            <span className={NUMBER}>{volume.format(row.clicks)}</span>
+            <span className={NUMBER}>{volume.format(row.impressions)}</span>
+            <span className={NUMBER}>{row.position.toFixed(1)}</span>
           </li>
         ))}
       </ul>

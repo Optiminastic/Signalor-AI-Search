@@ -41,9 +41,19 @@ const gapSchema = z
     isNew: g.new,
   }))
 
+/** A real Google query from the brand's Search Console (clicks and impressions, last 30 days). */
+const queryRowSchema = z.object({
+  query: z.string(),
+  clicks: z.number().catch(0),
+  impressions: z.number().catch(0),
+  position: z.number().catch(0),
+})
+
 const reportSchema = z
   .object({
     keywords: z.array(keywordSchema).catch([]),
+    source: z.string().catch(''),
+    search_console: z.array(queryRowSchema).catch([]),
     gaps: z.array(gapSchema).catch([]),
     new_gaps: z.number().catch(0),
     competitors: z.array(z.object({ name: z.string().catch(''), domain: z.string() })).catch([]),
@@ -53,6 +63,8 @@ const reportSchema = z
   })
   .transform(r => ({
     keywords: r.keywords,
+    source: r.source,
+    searchConsole: r.search_console,
     gaps: r.gaps,
     newGaps: r.new_gaps,
     competitors: r.competitors,
@@ -63,6 +75,7 @@ const reportSchema = z
 
 export type BrandKeyword = z.infer<typeof keywordSchema>
 export type KeywordGap = z.infer<typeof gapSchema>
+export type SearchQuery = z.infer<typeof queryRowSchema>
 export type KeywordsReport = z.infer<typeof reportSchema>
 
 export async function getKeywords(orgSlug: string): Promise<KeywordsReport> {

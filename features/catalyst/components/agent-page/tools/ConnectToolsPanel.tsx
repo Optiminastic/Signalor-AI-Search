@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { BufferRow } from '@/features/catalyst/components/agent-page/tools/BufferRow'
 import { FinderRow } from '@/features/catalyst/components/agent-page/tools/FinderRow'
 import { GmailRow } from '@/features/catalyst/components/agent-page/tools/GmailRow'
+import { KeywordToolsGroup } from '@/features/catalyst/components/agent-page/tools/KeywordToolsGroup'
 import { useContactFinders, type ContactFinders } from '@/hooks/useContactFinders'
 
 interface ConnectToolsPanelProps {
@@ -42,7 +43,8 @@ function FinderList({ tools, showKeyForms }: FinderListProps): JSX.Element {
 
 /**
  * Every tool the agent can use on the brand's behalf, in one place: Gmail for
- * sending, contact finders (Hunter, Apollo) for outreach, and Buffer for social posts.
+ * sending, contact finders (Hunter, Apollo) for outreach, keyword data (built in,
+ * Search Console, Semrush, Ahrefs), and Buffer for social posts.
  */
 export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Element {
   const tools = useContactFinders(orgSlug)
@@ -69,6 +71,7 @@ export function ConnectToolsPanel({ orgSlug }: ConnectToolsPanelProps): JSX.Elem
           Use an API key instead
         </button>
       )}
+      <KeywordToolsGroup orgSlug={orgSlug} />
       <p className={`mt-2 ${GROUP}`}>Social posting</p>
       <p className={NOTE}>Approved social posts go to your Buffer queue.</p>
       <ul className="-mx-2.5 flex flex-col gap-0.5">
