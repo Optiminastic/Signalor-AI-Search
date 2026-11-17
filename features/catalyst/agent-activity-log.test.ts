@@ -12,6 +12,7 @@ function entry(over: Partial<ActivityEntry>): ActivityEntry {
     outcome: 'succeeded',
     taskTitle: 'Pitch ahrefs.com for a mention',
     detail: {},
+    category: 'outreach',
     createdAt: '2026-11-12T10:00:00Z',
     ...over,
   }

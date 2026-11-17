@@ -1,11 +1,12 @@
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { loadErrorMessage } from '@/features/catalyst/agent-approvals'
 import {
   answerContact,
   listActivity,
+  type ActivityCategory,
   type ActivityEntry,
   type ContactChoice,
 } from '@/lib/api/agent-mode-activity'
@@ -18,19 +19,31 @@ interface AgentActivityLog {
   entries: ActivityEntry[]
   isLoading: boolean
   error: string | null
+  hasMore: boolean
+  loadingMore: boolean
+  loadMore: () => void
 }
 
-export function useAgentActivity(orgSlug: string): AgentActivityLog {
-  const query = useQuery({
-    queryKey: queryKeys.agentMode.activity(orgSlug),
-    queryFn: () => listActivity(orgSlug),
+/** The agent's log, one category at a time, newest first; older pages load on demand. */
+export function useAgentActivity(
+  orgSlug: string,
+  category: ActivityCategory = 'all',
+): AgentActivityLog {
+  const query = useInfiniteQuery({
+    queryKey: [...queryKeys.agentMode.activity(orgSlug), category],
+    queryFn: ({ pageParam }) => listActivity(orgSlug, category, pageParam),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: page => page.nextBefore ?? undefined,
     enabled: Boolean(orgSlug),
     refetchInterval: ACTIVITY_REFRESH_MS,
   })
   return {
-    entries: query.data ?? [],
+    entries: query.data?.pages.flatMap(page => page.entries) ?? [],
     isLoading: query.isLoading,
     error: query.error ? loadErrorMessage(query.error) : null,
+    hasMore: query.hasNextPage,
+    loadingMore: query.isFetchingNextPage,
+    loadMore: () => void query.fetchNextPage(),
   }
 }
 

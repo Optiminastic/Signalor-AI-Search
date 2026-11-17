@@ -30,9 +30,25 @@ describe('agent activity API', () => {
         },
       ],
     })
-    const [entry] = await listActivity('brand')
-    expect(entry).toMatchObject({ action: 'contact_not_found', taskTitle: 'Pitch hubspot.com' })
-    expect(entry.detail.domain).toBe('hubspot.com')
+    const { entries, nextBefore } = await listActivity('brand')
+    expect(entries[0]).toMatchObject({
+      action: 'contact_not_found',
+      taskTitle: 'Pitch hubspot.com',
+      category: 'other',
+    })
+    expect(entries[0].detail.domain).toBe('hubspot.com')
+    expect(nextBefore).toBeNull()
+  })
+
+  it('puts the category and the next page in the path', async () => {
+    const fetchMock = serve({ activity: [], next_before: null })
+    await listActivity('brand', 'site')
+    await listActivity('brand', 'all', 120)
+    const urls = fetchMock.mock.calls.map(call => String((call as unknown[])[0]))
+    expect(urls).toEqual([
+      '/api/agent-mode/programs/brand/activity/site',
+      '/api/agent-mode/programs/brand/activity/all/120',
+    ])
   })
 
   it('sends the owner email, or a skip, to the task contact endpoint', async () => {

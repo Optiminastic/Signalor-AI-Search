@@ -15,6 +15,7 @@ const entrySchema = z
     outcome: z.string(),
     task_title: z.string().nullable().catch(''),
     detail: z.record(z.unknown()).nullable().catch(null),
+    category: z.string().catch('other'),
     created_at: z.string(),
   })
   .transform(e => ({
@@ -24,15 +25,48 @@ const entrySchema = z
     outcome: e.outcome,
     taskTitle: e.task_title ?? '',
     detail: e.detail ?? {},
+    category: e.category,
     createdAt: e.created_at,
   }))
 
 export type ActivityEntry = z.infer<typeof entrySchema>
 
-const envelope = z.object({ activity: z.array(entrySchema) })
+/** Log categories, matching ranking-be `services/activity.py`. */
+export const ACTIVITY_CATEGORIES = [
+  'all',
+  'articles',
+  'guest',
+  'keywords',
+  'social',
+  'site',
+  'outreach',
+] as const
 
-export async function listActivity(orgSlug: string): Promise<ActivityEntry[]> {
-  return (await agentModeRequest(programPath(orgSlug, 'activity'), envelope)).activity
+export type ActivityCategory = (typeof ACTIVITY_CATEGORIES)[number]
+
+const envelope = z
+  .object({
+    activity: z.array(entrySchema),
+    next_before: z.number().nullable().catch(null),
+  })
+  .transform(r => ({ entries: r.activity, nextBefore: r.next_before }))
+
+export type ActivityPage = z.infer<typeof envelope>
+
+/**
+ * One page of the log, newest first, optionally one category. ``before`` is the
+ * previous page's ``nextBefore``. Filters are path segments: the app's signed
+ * proxy forwards paths, not query strings.
+ */
+export async function listActivity(
+  orgSlug: string,
+  category: ActivityCategory = 'all',
+  before?: number,
+): Promise<ActivityPage> {
+  const rest = category === 'all' ? [] : [category]
+  if (before)
+    return agentModeRequest(programPath(orgSlug, 'activity', category, String(before)), envelope)
+  return agentModeRequest(programPath(orgSlug, 'activity', ...rest), envelope)
 }
 
 const contactResult = z.object({ task: z.object({ id: z.number(), status: z.string() }) })

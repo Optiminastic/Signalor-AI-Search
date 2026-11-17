@@ -1,3 +1,4 @@
+import { FINDING_LINES } from '@/features/catalyst/agent-activity-findings'
 import type { ActivityEntry } from '@/lib/api/agent-mode-activity'
 
 /** How one line of the agent's log reads, and its colour. */
@@ -72,10 +73,6 @@ const LINES: Record<string, Describe> = {
     detail: `Now version ${text(String(e.detail.version ?? ''))}`,
     tone: 'neutral',
   }),
-  publish: e =>
-    e.outcome === 'succeeded'
-      ? { title: `Sent: ${e.taskTitle}`, detail: '', tone: 'success' }
-      : { title: `Couldn't send: ${e.taskTitle}`, detail: text(e.detail.error), tone: 'danger' },
   outcome_unknown: e => ({
     title: `Send result unknown: ${e.taskTitle}`,
     detail: 'It may or may not have gone out. It will not be sent again automatically.',
@@ -240,7 +237,7 @@ function humanize(action: string): string {
 
 /** One log entry in plain words. Unknown actions still read sensibly. */
 export function describeActivity(entry: ActivityEntry): ActivityLine {
-  const describe = LINES[entry.action]
+  const describe = LINES[entry.action] ?? FINDING_LINES[entry.action]
   if (describe) return describe(entry)
   return {
     title: `${humanize(entry.action)}${entry.taskTitle ? `: ${entry.taskTitle}` : ''}`,
