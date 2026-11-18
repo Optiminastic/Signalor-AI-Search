@@ -10,6 +10,9 @@ export const env = createEnv({
     // Optional — Google OAuth is enabled only when both are present.
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
+    // Agent mode: HMAC secret shared with ranking-be (GROWTH_AGENT_SIGNING_SECRET there).
+    // Optional so the app still boots without it; the agent-mode proxy returns 503.
+    GROWTH_AGENT_SIGNING_SECRET: z.string().min(32).optional(),
     // Optional — OTP email delivery via Resend (falls back to dev log when unset).
     // Must match the key read in lib/email.ts and mapped in runtimeEnv below;
     // a mismatch here silently disables sending, since t3-env only exposes keys
@@ -43,6 +46,7 @@ export const env = createEnv({
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GROWTH_AGENT_SIGNING_SECRET: process.env.GROWTH_AGENT_SIGNING_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,
     SIGNALOR_CRAWLER_INGEST_TOKEN: process.env.SIGNALOR_CRAWLER_INGEST_TOKEN,

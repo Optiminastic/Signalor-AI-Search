@@ -1,0 +1,1971 @@
+{
+  "action_not_found": {
+    "body": {
+      "detail": "Action not found."
+    },
+    "status": 404
+  },
+  "approvals_after_approve": {
+    "body": {
+      "actions": [
+        {
+          "approval_expires_at": "2026-11-26T07:35:47.139448Z",
+          "connector": "wordpress",
+          "content": {
+            "answer": "A short answer.",
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-12T07:35:47.125349Z",
+          "id": "3h2c2wdqbsbf",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "approved",
+          "task": {
+            "channel": "owned_content",
+            "id": 1,
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a page"
+          },
+          "updated_at": "2026-11-12T07:35:47.139790Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approvals_empty": {
+    "body": {
+      "actions": []
+    },
+    "status": 200
+  },
+  "approvals_mixed": {
+    "body": {
+      "actions": [
+        {
+          "approval_expires_at": null,
+          "connector": "wordpress",
+          "content": {
+            "answer": "A short answer.",
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-12T07:35:47.982899Z",
+          "id": "r8b6z58t7jbq",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "owned_content",
+            "id": 6,
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a pricing explainer"
+          },
+          "updated_at": "2026-11-12T07:35:47.983729Z",
+          "version": 1
+        },
+        {
+          "approval_expires_at": "2026-11-26T07:35:47.956556Z",
+          "connector": "wordpress",
+          "content": {
+            "answer": "A short answer.",
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-12T07:35:47.943619Z",
+          "id": "56h624quwesc",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "approved",
+          "task": {
+            "channel": "owned_content",
+            "id": 5,
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a comparison page"
+          },
+          "updated_at": "2026-11-12T07:35:47.956906Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approvals_pending": {
+    "body": {
+      "actions": [
+        {
+          "approval_expires_at": null,
+          "connector": "gmail",
+          "content": {
+            "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+            "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+            "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+            "recipient_domain": "roundup.example",
+            "sender": "owner@pro.example",
+            "subject": "A suggestion for your tools roundup"
+          },
+          "created_at": "2026-11-12T07:35:47.251217Z",
+          "id": "sk26mxf4zii4",
+          "kind": "send_outreach_email",
+          "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "outreach_email",
+            "id": 2,
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "title": "Get listed on roundup.example"
+          },
+          "updated_at": "2026-11-12T07:35:47.252190Z",
+          "version": 1
+        },
+        {
+          "approval_expires_at": null,
+          "connector": "wordpress",
+          "content": {
+            "answer": "A short answer.",
+            "markdown": "**A short answer.**\n",
+            "meta_description": "About the draft.",
+            "platform": "wordpress",
+            "slug": "draft-page",
+            "title": "Draft page"
+          },
+          "created_at": "2026-11-12T07:35:47.239699Z",
+          "id": "xfjws8crkqz9",
+          "kind": "publish_article",
+          "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+          "state": "awaiting_approval",
+          "task": {
+            "channel": "owned_content",
+            "id": 1,
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "title": "Publish a page"
+          },
+          "updated_at": "2026-11-12T07:35:47.240548Z",
+          "version": 1
+        }
+      ]
+    },
+    "status": 200
+  },
+  "approve_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": "2026-11-26T07:35:47.139448Z",
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:47.125349Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "3h2c2wdqbsbf",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "approved",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.125349Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.139790Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "decision_illegal_state": {
+    "body": {
+      "code": "illegal_state",
+      "detail": "This action is rejected and can no longer change."
+    },
+    "status": 409
+  },
+  "decision_missing_fields": {
+    "body": {
+      "code": "validation_error",
+      "detail": "This field is required.",
+      "payload_hash": ["This field is required."],
+      "status_code": 400,
+      "version": ["This field is required."]
+    },
+    "status": 400
+  },
+  "decision_stale": {
+    "body": {
+      "code": "stale",
+      "detail": "The draft changed since you reviewed it. Review it again."
+    },
+    "status": 409
+  },
+  "detail_approved_with_expiry": {
+    "body": {
+      "action": {
+        "approval_expires_at": "2026-11-26T07:35:45.319656Z",
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:45.310120Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "piyqhd86yed4",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "approved",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.319858Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_article_awaiting": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:47.239699Z",
+        "decisions": [],
+        "id": "xfjws8crkqz9",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.239699Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.240548Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_email_awaiting": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:47.251217Z",
+        "decisions": [],
+        "id": "sk26mxf4zii4",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Get listed on roundup.example"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.251217Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.252190Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_expired": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:45.502747Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.510328Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "created_at": "2026-11-12T07:35:45.528469Z",
+            "decision": "expired",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "7jdjs7kv254a",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "expired",
+        "task": {
+          "channel": "owned_content",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a pricing explainer"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.502747Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.510328Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "at": "2026-11-12T07:35:45.528469Z",
+            "decision": "expired",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.528728Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_failed": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:47.829227Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.842308Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "f64ede3r3zkp",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "failed",
+        "task": {
+          "channel": "outreach_email",
+          "id": 3,
+          "scheduled_for": "2026-11-12",
+          "status": "failed",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Get listed on another roundup"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.829227Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.842308Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.872386Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.882831Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.884315Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "failed",
+            "reason": "Connect Gmail first.",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.885158Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_follow_up_approved": {
+    "body": {
+      "action": {
+        "approval_expires_at": "2026-11-15T07:35:45.867184Z",
+        "connector": "gmail",
+        "content": {
+          "body": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.\n\n--\nPro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "footer": "Pro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "message": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "Re: A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:45.850228Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "2v7av5gz94w2",
+        "kind": "send_follow_up",
+        "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "approved",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "planned",
+          "tactic": "listicle_inclusion",
+          "target": "AI citations",
+          "title": "Get listed on roundup.example"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.867395Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_follow_up_awaiting": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.\n\n--\nPro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "footer": "Pro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "message": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "Re: A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:45.850228Z",
+        "decisions": [],
+        "id": "2v7av5gz94w2",
+        "kind": "send_follow_up",
+        "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "planned",
+          "tactic": "listicle_inclusion",
+          "target": "AI citations",
+          "title": "Get listed on roundup.example"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.850783Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_follow_up_stopped": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.\n\n--\nPro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "footer": "Pro Brand (https://pro.example), sent by owner@pro.example\nNot relevant? Reply \"no thanks\" and I won't email again.",
+          "message": "Hi again, just bumping this in case it got buried. Happy to send anything that makes it easier to review Pro Brand for your piece.",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "Re: A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:45.850228Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "created_at": "2026-11-12T07:35:45.888618Z",
+            "decision": "stopped",
+            "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+            "reason": "The contact replied, so this follow-up isn't needed.",
+            "version": 1
+          }
+        ],
+        "id": "2v7av5gz94w2",
+        "kind": "send_follow_up",
+        "payload_hash": "2b0ae367dce04f76849426e7a102a587a1e7a38a615642b90d693baa8c14392c",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "stopped",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "planned",
+          "tactic": "listicle_inclusion",
+          "target": "AI citations",
+          "title": "Get listed on roundup.example"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.850228Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.867184Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "system",
+            "at": "2026-11-12T07:35:45.888618Z",
+            "decision": "stopped",
+            "reason": "The contact replied, so this follow-up isn't needed.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.888863Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_outcome_unknown": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:47.751801Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.763690Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "wg9hfp8qic6w",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "needs_reconciliation",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "executing",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Pitch roundup.example for a mention"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.751801Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.763690Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.788517Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.799978Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.803941Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.804343Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_rejected": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:47.317684Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.350505Z",
+            "decision": "rejected",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "4dps9jyew32g",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "rejected",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.317684Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.350505Z",
+            "decision": "rejected",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.351048Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "detail_succeeded": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:47.682460Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.697289Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "7vrciwsnbhwx",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "succeeded",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "done",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.682460Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.697289Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.720487Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.728642Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.729420Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "succeeded",
+            "reason": "",
+            "type": "send"
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.729888Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "edit_article_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "The direct answer, rewritten.",
+          "markdown": "**The direct answer, rewritten.**\n",
+          "meta_description": "A sharper description.",
+          "platform": "wordpress",
+          "slug": "a-better-title",
+          "title": "A better title"
+        },
+        "created_at": "2026-11-12T07:35:44.621889Z",
+        "decisions": [],
+        "id": "7cgs7tnzstjs",
+        "kind": "publish_article",
+        "payload_hash": "bfab6c63bdcd29d56f6086627ab66a142baa380e31a56868329dd40d483184ac",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:44.621889Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:44.677407Z",
+            "type": "edited",
+            "version": 2
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:44.677626Z",
+        "version": 2
+      }
+    },
+    "status": 200
+  },
+  "edit_email_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nCould Pro Example join your roundup?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nCould Pro Example join your roundup?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A short suggestion"
+        },
+        "created_at": "2026-11-12T07:35:44.627595Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:44.634377Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          }
+        ],
+        "id": "7tn2bzw88urt",
+        "kind": "send_outreach_email",
+        "payload_hash": "e53f5dddb0120aff175142b4b6b63ded01f90a6bfe4f2796d89dd820f6c108e2",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "awaiting_approval",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "awaiting_approval",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Get listed on roundup.example"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:44.627595Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:44.634377Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:44.645514Z",
+            "type": "edited",
+            "version": 2
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:44.645746Z",
+        "version": 2
+      }
+    },
+    "status": 200
+  },
+  "edit_invalid": {
+    "body": {
+      "code": "invalid_edit",
+      "detail": "Subject can't be empty."
+    },
+    "status": 400
+  },
+  "edit_not_editable": {
+    "body": {
+      "code": "invalid_edit",
+      "detail": "These fields can't be edited: domain."
+    },
+    "status": 400
+  },
+  "edit_stale": {
+    "body": {
+      "code": "stale",
+      "detail": "The draft changed since you opened it. Review it again."
+    },
+    "status": 409
+  },
+  "plan_expired_revoked": {
+    "body": {
+      "plan": {
+        "baseline_share_of_voice": 0.0,
+        "ends_on": "2026-12-09",
+        "id": 1,
+        "starts_on": "2026-11-12",
+        "status": "active",
+        "target_share_of_voice": 0.0,
+        "tasks": [
+          {
+            "action": {
+              "id": "piyqhd86yed4",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "revoked",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 1,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "skipped": "Approval withdrawn by the brand owner."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "skipped",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "7jdjs7kv254a",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "expired",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 2,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "skipped": "The approval expired before it was sent."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "skipped",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a pricing explainer",
+            "week": 1
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "plan_mixed": {
+    "body": {
+      "plan": {
+        "baseline_share_of_voice": 0.0,
+        "ends_on": "2026-12-09",
+        "id": 1,
+        "starts_on": "2026-11-12",
+        "status": "active",
+        "target_share_of_voice": 0.0,
+        "tasks": [
+          {
+            "action": {
+              "id": "7vrciwsnbhwx",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "succeeded",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "https://pro.example/blog/x",
+            "id": 1,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "t": 1
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "done",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "wg9hfp8qic6w",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "needs_reconciliation",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 2,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "outcome_unknown": "boom"
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "executing",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch roundup.example for a mention",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "f64ede3r3zkp",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "failed",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 3,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "error": "Connect Gmail first."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "failed",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Get listed on another roundup",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "ryci6imsnyiv",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "rejected",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 4,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "skipped": "Rejected by the brand owner."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "skipped",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch a third site",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "56h624quwesc",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "approved",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 5,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a comparison page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "r8b6z58t7jbq",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "awaiting_approval",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 6,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a pricing explainer",
+            "week": 1
+          },
+          {
+            "action": null,
+            "attempts": 0,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 7,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-12-09",
+            "status": "planned",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Not prepared yet",
+            "week": 1
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "plan_none": {
+    "body": {
+      "plan": null
+    },
+    "status": 200
+  },
+  "plan_resolved": {
+    "body": {
+      "plan": {
+        "baseline_share_of_voice": 0.0,
+        "ends_on": "2026-12-09",
+        "id": 1,
+        "starts_on": "2026-11-12",
+        "status": "active",
+        "target_share_of_voice": 0.0,
+        "tasks": [
+          {
+            "action": {
+              "id": "r2rd64t2z38e",
+              "kind": "publish_article",
+              "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+              "state": "awaiting_approval",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "owned_content",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 1,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {},
+            "scheduled_for": "2026-11-12",
+            "status": "awaiting_approval",
+            "tactic": "answer_content",
+            "target": "AI citations",
+            "target_url": "",
+            "title": "Publish a page",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "pru6uuwt5zmn",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "succeeded",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 2,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "outcome_unknown": "boom",
+              "resolved": "Confirmed sent by the brand owner."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "done",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch roundup.example for a mention",
+            "week": 1
+          },
+          {
+            "action": {
+              "id": "4udceisjfrxx",
+              "kind": "send_outreach_email",
+              "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+              "state": "cancelled",
+              "version": 1
+            },
+            "attempts": 1,
+            "channel": "outreach_email",
+            "effort": 1,
+            "evidence_url": "",
+            "id": 3,
+            "impact_score": 0.0,
+            "rationale": "",
+            "result_payload": {
+              "outcome_unknown": "boom",
+              "skipped": "Closed by the brand owner with the outcome unknown."
+            },
+            "scheduled_for": "2026-11-12",
+            "status": "skipped",
+            "tactic": "listicle_inclusion",
+            "target": "roundup.example",
+            "target_url": "",
+            "title": "Pitch roundup.example for a mention",
+            "week": 1
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "program_not_found": {
+    "body": {
+      "detail": "Program not found."
+    },
+    "status": 404
+  },
+  "reject_after_approve_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:47.125349Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.165837Z",
+            "decision": "rejected",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "Changed my mind about this page.",
+            "version": 1
+          }
+        ],
+        "id": "3h2c2wdqbsbf",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "rejected",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.125349Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.139448Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.165837Z",
+            "decision": "rejected",
+            "reason": "Changed my mind about this page.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.166134Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "resolve_cancel_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:47.514709Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.527719Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.633732Z",
+            "decision": "resolved_cancelled",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "Could not check the mailbox.",
+            "version": 1
+          }
+        ],
+        "id": "4udceisjfrxx",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "cancelled",
+        "task": {
+          "channel": "outreach_email",
+          "id": 3,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Pitch roundup.example for a mention"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.514709Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.527719Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.576054Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.599995Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.604025Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.633732Z",
+            "decision": "resolved_cancelled",
+            "reason": "Could not check the mailbox.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.634133Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "resolve_illegal_state": {
+    "body": {
+      "code": "illegal_state",
+      "detail": "This action is succeeded and can no longer change."
+    },
+    "status": 409
+  },
+  "resolve_resend_refused": {
+    "body": {
+      "code": "validation_error",
+      "detail": "\"authorize_resend\" is not a valid choice.",
+      "resolution": ["\"authorize_resend\" is not a valid choice."],
+      "status_code": 400
+    },
+    "status": 400
+  },
+  "resolve_sent_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "gmail",
+        "content": {
+          "body": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?\n\n--\nSent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "footer": "Sent by Pro Example (https://pro.example)\nReply STOP and we will not write again.",
+          "message": "Hi there,\n\nI read your roundup of visibility tools and noticed Pro Example is not in it.\nWould you consider adding it?",
+          "recipient_domain": "roundup.example",
+          "sender": "owner@pro.example",
+          "subject": "A suggestion for your tools roundup"
+        },
+        "created_at": "2026-11-12T07:35:47.422734Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.434601Z",
+            "decision": "approved",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:47.484141Z",
+            "decision": "resolved_sent",
+            "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+            "reason": "Found it in the Sent folder.",
+            "version": 1
+          }
+        ],
+        "id": "pru6uuwt5zmn",
+        "kind": "send_outreach_email",
+        "payload_hash": "50d29fa84939e5e70a9f7eaaec19e1e15e0d2a358696cb54c95285ce3a5bbf88",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "succeeded",
+        "task": {
+          "channel": "outreach_email",
+          "id": 2,
+          "scheduled_for": "2026-11-12",
+          "status": "done",
+          "tactic": "listicle_inclusion",
+          "target": "roundup.example",
+          "title": "Pitch roundup.example for a mention"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:47.422734Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.434601Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "at": "2026-11-12T07:35:47.457207Z",
+            "attempt": 1,
+            "event": "claimed",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.467501Z",
+            "attempt": 1,
+            "event": "provider_started",
+            "outcome": "",
+            "reason": "",
+            "type": "send"
+          },
+          {
+            "at": "2026-11-12T07:35:47.471585Z",
+            "attempt": 1,
+            "event": "provider_result",
+            "outcome": "unknown",
+            "reason": "boom",
+            "type": "send"
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:47.484141Z",
+            "decision": "resolved_sent",
+            "reason": "Found it in the Sent folder.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:47.484509Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "resolve_stale": {
+    "body": {
+      "code": "stale",
+      "detail": "This action changed since you reviewed it. Review it again."
+    },
+    "status": 409
+  },
+  "revoke_illegal_state": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:45.310120Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "Not this week.",
+            "version": 1
+          }
+        ],
+        "id": "piyqhd86yed4",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "revoked",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "reason": "Not this week.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.342050Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  },
+  "revoke_ok": {
+    "body": {
+      "action": {
+        "approval_expires_at": null,
+        "connector": "wordpress",
+        "content": {
+          "answer": "A short answer.",
+          "markdown": "**A short answer.**\n",
+          "meta_description": "About the draft.",
+          "platform": "wordpress",
+          "slug": "draft-page",
+          "title": "Draft page"
+        },
+        "created_at": "2026-11-12T07:35:45.310120Z",
+        "decisions": [
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "created_at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+            "reason": "Not this week.",
+            "version": 1
+          }
+        ],
+        "id": "piyqhd86yed4",
+        "kind": "publish_article",
+        "payload_hash": "baa62e0ee39f92cfdf2e15ede19515f2ccd7d0fc41062b91fccf59f52d1026d1",
+        "send_attempts": {
+          "blocked": false,
+          "failures": 0,
+          "retry_after": null
+        },
+        "state": "revoked",
+        "task": {
+          "channel": "owned_content",
+          "id": 1,
+          "scheduled_for": "2026-11-12",
+          "status": "skipped",
+          "tactic": "answer_content",
+          "target": "AI citations",
+          "title": "Publish a page"
+        },
+        "timeline": [
+          {
+            "at": "2026-11-12T07:35:45.310120Z",
+            "type": "drafted",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.319656Z",
+            "decision": "approved",
+            "reason": "",
+            "type": "decision",
+            "version": 1
+          },
+          {
+            "actor_role": "owner",
+            "at": "2026-11-12T07:35:45.341712Z",
+            "decision": "revoked",
+            "reason": "Not this week.",
+            "type": "decision",
+            "version": 1
+          }
+        ],
+        "updated_at": "2026-11-12T07:35:45.342050Z",
+        "version": 1
+      }
+    },
+    "status": 200
+  }
+}

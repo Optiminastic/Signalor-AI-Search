@@ -149,6 +149,7 @@ export {
   ChevronsUpDown,
   Code2,
   Copy,
+  CornerDownRight,
   Crosshair,
   Download,
   ExternalLink,

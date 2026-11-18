@@ -34,6 +34,27 @@ export const queryKeys = {
     byOrg: (orgId: number) => ['runs', 'org', orgId] as const,
     byEmail: (email: string) => ['runs', 'email', email] as const,
   },
+  /** Agent mode (ranking-be apps.growth_agent), keyed on the org slug from the URL. */
+  agentMode: {
+    all: (orgSlug: string) => ['agent-mode', orgSlug] as const,
+    program: (orgSlug: string) => ['agent-mode', orgSlug, 'program'] as const,
+    chats: (orgSlug: string) => ['agent-mode', orgSlug, 'chats'] as const,
+    chat: (orgSlug: string, chatId: string) => ['agent-mode', orgSlug, 'chats', chatId] as const,
+    approvals: (orgSlug: string) => ['agent-mode', orgSlug, 'approvals'] as const,
+    planActions: (orgSlug: string) => ['agent-mode', orgSlug, 'plan-actions'] as const,
+    activity: (orgSlug: string) => ['agent-mode', orgSlug, 'activity'] as const,
+    finders: (orgSlug: string) => ['agent-mode', orgSlug, 'finders'] as const,
+    gmail: (orgSlug: string) => ['agent-mode', orgSlug, 'gmail'] as const,
+    indexing: (orgSlug: string) => ['agent-mode', orgSlug, 'indexing'] as const,
+    guestPosts: (orgSlug: string) => ['agent-mode', orgSlug, 'guest-posts'] as const,
+    keywords: (orgSlug: string) => ['agent-mode', orgSlug, 'keywords'] as const,
+    keywordTools: (orgSlug: string) => ['agent-mode', orgSlug, 'keyword-tools'] as const,
+    rankTracking: (orgSlug: string) => ['agent-mode', orgSlug, 'rank-tracking'] as const,
+    satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
+    social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
+    action: (orgSlug: string, actionId: string) =>
+      ['agent-mode', orgSlug, 'actions', actionId] as const,
+  },
   backlinks: {
     auto: (slug: string) => ['backlinks', 'auto', slug] as const,
     schedule: (slug: string) => ['backlinks', 'schedule', slug] as const,

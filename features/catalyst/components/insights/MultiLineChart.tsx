@@ -7,7 +7,6 @@ const PAD_L = 30
 const PAD_R = 8
 const PAD_T = 8
 const PAD_B = 20
-const PLOT_W = W - PAD_L - PAD_R
 const TICKS = [0, 25, 50, 75, 100]
 
 function plotH(height: number): number {
@@ -19,25 +18,32 @@ function yOf(value: number, height: number): number {
   return PAD_T + (1 - Math.max(0, Math.min(100, value)) / 100) * plotH(height)
 }
 
-function xOf(index: number, count: number): number {
-  if (count <= 1) return PAD_L + PLOT_W / 2
-  return PAD_L + (index / (count - 1)) * PLOT_W
+/** Chart size in viewBox units. A narrower width keeps labels readable in small columns. */
+interface Size {
+  width: number
+  height: number
 }
 
-function linePoints(points: number[], height: number): string {
+function xOf(index: number, count: number, width: number): number {
+  const plotW = width - PAD_L - PAD_R
+  if (count <= 1) return PAD_L + plotW / 2
+  return PAD_L + (index / (count - 1)) * plotW
+}
+
+function linePoints(points: number[], { width, height }: Size): string {
   return points
-    .map((v, i) => `${xOf(i, points.length).toFixed(1)},${yOf(v, height).toFixed(1)}`)
+    .map((v, i) => `${xOf(i, points.length, width).toFixed(1)},${yOf(v, height).toFixed(1)}`)
     .join(' ')
 }
 
-function GridLines({ height }: { height: number }): JSX.Element {
+function GridLines({ width, height }: Size): JSX.Element {
   return (
     <>
       {TICKS.map(tick => (
         <g key={tick}>
           <line
             x1={PAD_L}
-            x2={W - PAD_R}
+            x2={width - PAD_R}
             y1={yOf(tick, height)}
             y2={yOf(tick, height)}
             stroke="var(--cat-grid)"
@@ -58,7 +64,7 @@ function GridLines({ height }: { height: number }): JSX.Element {
 }
 
 /** At most ~6 labels, thinned by a fixed step so the axis never crowds. */
-function XLabels({ labels, height }: { labels: string[]; height: number }): JSX.Element {
+function XLabels({ labels, width, height }: Size & { labels: string[] }): JSX.Element {
   const step = labels.length <= 6 ? 1 : Math.ceil(labels.length / 6)
   return (
     <>
@@ -72,7 +78,7 @@ function XLabels({ labels, height }: { labels: string[]; height: number }): JSX.
         return (
           <text
             key={i}
-            x={xOf(i, labels.length)}
+            x={xOf(i, labels.length, width)}
             y={height - 6}
             fontSize={9}
             textAnchor="middle"
@@ -86,11 +92,11 @@ function XLabels({ labels, height }: { labels: string[]; height: number }): JSX.
   )
 }
 
-function SeriesLine({ s, height }: { s: TrendSeries; height: number }): JSX.Element {
+function SeriesLine({ s, size }: { s: TrendSeries; size: Size }): JSX.Element {
   return (
     <g>
       <polyline
-        points={linePoints(s.points, height)}
+        points={linePoints(s.points, size)}
         fill="none"
         stroke={s.color}
         strokeWidth={2}
@@ -101,8 +107,8 @@ function SeriesLine({ s, height }: { s: TrendSeries; height: number }): JSX.Elem
       {s.points.map((v, i) => (
         <circle
           key={i}
-          cx={xOf(i, s.points.length)}
-          cy={yOf(v, height)}
+          cx={xOf(i, s.points.length, size.width)}
+          cy={yOf(v, size.height)}
           r={2.5}
           fill="var(--color-background-primary-default)"
           stroke={s.color}
@@ -118,6 +124,8 @@ interface MultiLineChartProps {
   xLabels: string[]
   /** viewBox height; the SVG scales to its container width at this aspect ratio. */
   height?: number
+  /** viewBox width (default 680). Use a smaller one in narrow columns so labels stay legible. */
+  width?: number
 }
 
 /** Multi-series 0-100% line chart (inline SVG, no chart lib). */
@@ -125,14 +133,16 @@ export function MultiLineChart({
   series,
   xLabels,
   height = DEFAULT_H,
+  width = W,
 }: MultiLineChartProps): JSX.Element {
+  const size = { width, height }
   return (
     <ChartFrame>
-      <svg viewBox={`0 0 ${W} ${height}`} className="w-full">
-        <GridLines height={height} />
-        <XLabels labels={xLabels} height={height} />
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
+        <GridLines {...size} />
+        <XLabels labels={xLabels} {...size} />
         {series.map(s => (
-          <SeriesLine key={s.key} s={s} height={height} />
+          <SeriesLine key={s.key} s={s} size={size} />
         ))}
       </svg>
     </ChartFrame>

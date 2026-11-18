@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { getAuthToken } from '@/lib/auth-token'
+
 import { apiDelete, apiGet, apiPost } from './client'
 
 const organizationSchema = z.object({
@@ -42,9 +44,16 @@ export async function getOrganizations(email: string): Promise<Organization[]> {
   return z.array(organizationSchema).parse(data)
 }
 
-/** DELETE /api/organizations/<id>/ → permanently delete a brand/project + its runs. */
+/**
+ * DELETE /api/organizations/<id>/ → permanently delete a brand/project + its runs.
+ *
+ * Sends the caller's bearer token: the backend only deletes a brand for its
+ * verified owner, so a request without one is refused.
+ */
 export async function deleteOrganization(id: number): Promise<void> {
-  await apiDelete<unknown>(`/api/organizations/${id}/`)
+  const token = await getAuthToken()
+  const headers = token ? { Authorization: `Bearer ${token}` } : undefined
+  await apiDelete<unknown>(`/api/organizations/${id}/`, undefined, { headers })
 }
 
 /** POST /api/organizations/onboard/ → create the org (single-use onboarding token). */
