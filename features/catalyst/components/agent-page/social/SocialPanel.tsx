@@ -7,6 +7,7 @@ import {
   SECONDARY_BUTTON,
   SECTION_TITLE,
 } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import { CompetitorSocial } from '@/features/catalyst/components/agent-page/social/CompetitorSocial'
 import { PlatformRow } from '@/features/catalyst/components/agent-page/social/PlatformRow'
 import { SocialPosts } from '@/features/catalyst/components/agent-page/social/SocialPosts'
 import { TickBar } from '@/features/catalyst/components/brands/BrandBits'
@@ -90,6 +91,11 @@ function Ready({ report, social }: { report: SocialReport; social: AgentSocial }
           />
         ))}
       </ul>
+      <CompetitorSocial
+        labels={report.labels}
+        platforms={report.platforms}
+        competitors={report.competitors}
+      />
       <RedditCommunities report={report} />
       {report.notes.length > 0 && (
         <ul className={`flex flex-col gap-0.5 ${MUTED}`}>

@@ -39,7 +39,7 @@ const siteSchema = z
     task_id: z.number(),
     domain: z.string(),
     guidelines_url: z.string(),
-    source: z.enum(['cited', 'search']).catch('search'),
+    source: z.enum(['cited', 'search', 'competitor']).catch('search'),
     topic: z.string().catch(''),
     reason: z.string().catch(''),
     scheduled_for: z.string(),
