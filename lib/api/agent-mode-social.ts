@@ -30,6 +30,15 @@ const platformSchema = z
 
 export type SocialPlatform = z.infer<typeof platformSchema>
 
+/** A top competitor's social profiles (found by Google search), platform -> address. */
+const competitorSchema = z.object({
+  name: z.string().catch(''),
+  domain: z.string(),
+  profiles: z.record(z.string()).catch({}),
+})
+
+export type SocialCompetitor = z.infer<typeof competitorSchema>
+
 const redditSchema = z
   .object({
     mentions_90d: z.number(),
@@ -62,6 +71,7 @@ const reportSchema = z
     platforms: z.record(platformSchema).optional(),
     reddit: redditSchema.nullable().optional(),
     notes: z.array(z.string()).optional(),
+    competitors: z.array(competitorSchema).catch([]).optional(),
   })
   .transform(r => ({
     buffer: r.buffer ?? { connected: false, channels: [] },
@@ -73,6 +83,7 @@ const reportSchema = z
     platforms: r.platforms ?? {},
     reddit: r.reddit ?? null,
     notes: r.notes ?? [],
+    competitors: r.competitors ?? [],
   }))
 
 export type SocialReport = z.infer<typeof reportSchema>

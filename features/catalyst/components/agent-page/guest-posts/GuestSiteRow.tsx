@@ -104,6 +104,9 @@ export function GuestSiteRow({ site, onStatus }: GuestSiteRowProps): JSX.Element
         <p className="flex flex-wrap items-center gap-x-2 text-[13.5px] font-medium text-[var(--cat-ink)]">
           {site.domain}
           {site.source === 'cited' && <span className={CITED_CHIP}>Cited by AI</span>}
+          {site.source === 'competitor' && (
+            <span className={CITED_CHIP}>Covers your competitors</span>
+          )}
         </p>
         <p className="text-[12.5px] text-[var(--cat-ink-2)]">{site.reason}</p>
         <StageLine site={site} />
