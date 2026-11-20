@@ -111,6 +111,7 @@ export function AgentWorkspace({
     <main className="relative flex h-dvh flex-col bg-[var(--cat-canvas)]">
       <AgentBackdrop />
       <AgentTopBar
+        orgSlug={orgSlug}
         dashboardHref={`/dashboard/${orgSlug}`}
         agentHref={agentHref}
         chats={chats}

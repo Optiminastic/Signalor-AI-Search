@@ -50,6 +50,7 @@ export const queryKeys = {
     keywords: (orgSlug: string) => ['agent-mode', orgSlug, 'keywords'] as const,
     keywordTools: (orgSlug: string) => ['agent-mode', orgSlug, 'keyword-tools'] as const,
     rankTracking: (orgSlug: string) => ['agent-mode', orgSlug, 'rank-tracking'] as const,
+    weeklyReports: (orgSlug: string) => ['agent-mode', orgSlug, 'weekly-reports'] as const,
     satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
     social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
     action: (orgSlug: string, actionId: string) =>
