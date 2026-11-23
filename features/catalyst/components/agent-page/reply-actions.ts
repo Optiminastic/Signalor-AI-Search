@@ -35,6 +35,7 @@ export const TAB_LABELS: Record<BoardTab, string> = {
   keywords: 'Keywords',
   tracking: 'Tracking',
   social: 'Social',
+  business: 'Google Business',
   approvals: 'Approvals',
   indexing: 'Indexing',
 }

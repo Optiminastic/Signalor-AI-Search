@@ -273,6 +273,7 @@ describe('Board tabs', () => {
           social: 0,
           guest: 0,
           keywords: 0,
+          business: 0,
         }}
       />,
     )

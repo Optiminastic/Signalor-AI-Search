@@ -6,6 +6,7 @@ export type BoardTab =
   | 'guest'
   | 'keywords'
   | 'social'
+  | 'business'
   | 'approvals'
   | 'indexing'
   | 'tracking'
@@ -19,6 +20,8 @@ export interface BoardBadges {
   guest: number
   /** New keywords competitors win since last week. */
   keywords: number
+  /** 1 while the brand has no Google Business Profile, so the owner sees there's one to create. */
+  business: number
 }
 
 interface BoardTabsProps {
@@ -34,6 +37,7 @@ const TABS: { id: BoardTab; label: string; className?: string }[] = [
   { id: 'guest', label: 'Guest posts' },
   { id: 'keywords', label: 'Keywords' },
   { id: 'social', label: 'Social' },
+  { id: 'business', label: 'Google Business' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
   // Wide screens show tracking in its own column on the right instead.
@@ -79,6 +83,23 @@ function TabBadges({ badges }: Pick<BoardTabsProps, 'badges'>): JSX.Element {
   )
 }
 
+const COUNT_LABELS: Partial<Record<BoardTab, string>> = {
+  articles: 'article drafts to review',
+  guest: 'guest posts waiting for you',
+  keywords: 'new keyword gaps',
+  social: 'post drafts to review',
+  business: 'business listing to create',
+}
+
+/** The badge one tab carries, if any. */
+function TabBadge({ tab, badges }: { tab: BoardTab; badges: BoardBadges }): JSX.Element | null {
+  if (tab === 'approvals') return <TabBadges badges={badges} />
+  const label = COUNT_LABELS[tab]
+  if (!label) return null
+  const count = badges[tab as keyof BoardBadges]
+  return typeof count === 'number' ? <CountBadge count={count} label={label} /> : null
+}
+
 /** Segmented tabs over the board, in the dashboard's RangeTabs style. */
 export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Element {
   return (
@@ -103,17 +124,7 @@ export function BoardTabs({ value, onChange, badges }: BoardTabsProps): JSX.Elem
           }`}
         >
           {tab.label}
-          {tab.id === 'approvals' && <TabBadges badges={badges} />}
-          {tab.id === 'articles' && (
-            <CountBadge count={badges.articles} label="article drafts to review" />
-          )}
-          {tab.id === 'guest' && (
-            <CountBadge count={badges.guest} label="guest posts waiting for you" />
-          )}
-          {tab.id === 'keywords' && <CountBadge count={badges.keywords} label="new keyword gaps" />}
-          {tab.id === 'social' && (
-            <CountBadge count={badges.social} label="post drafts to review" />
-          )}
+          <TabBadge tab={tab.id} badges={badges} />
         </button>
       ))}
     </div>
