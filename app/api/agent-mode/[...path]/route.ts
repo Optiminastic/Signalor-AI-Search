@@ -27,6 +27,18 @@ function upstreamPath(segments: string[]): string | null {
   return `/api/growth/${segments.join('/')}/`
 }
 
+/** JSON by default; a photo upload (multipart) is passed through byte for byte. */
+function upstreamContentType(request: NextRequest): string {
+  const type = request.headers.get('Content-Type') ?? ''
+  return type.startsWith('multipart/form-data') ? type : 'application/json'
+}
+
+async function upstreamBody(request: NextRequest): Promise<BodyInit | undefined> {
+  if (request.method === 'GET') return undefined
+  if (upstreamContentType(request).startsWith('multipart/')) return request.arrayBuffer()
+  return request.text()
+}
+
 async function callUpstream(
   request: NextRequest,
   path: string,
@@ -36,9 +48,9 @@ async function callUpstream(
   const method = request.method
   return fetch(`${env.NEXT_PUBLIC_API_URL}${path}`, {
     method,
-    body: method === 'GET' ? undefined : await request.text(),
+    body: await upstreamBody(request),
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': upstreamContentType(request),
       ...signAgentModeRequest(secret, email, { method, path }),
     },
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
@@ -70,3 +82,4 @@ async function forward(request: NextRequest, context: RouteContext): Promise<Nex
 export const GET = forward
 export const POST = forward
 export const PATCH = forward
+export const DELETE = forward

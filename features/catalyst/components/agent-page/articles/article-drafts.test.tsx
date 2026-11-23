@@ -27,6 +27,7 @@ describe('Articles tab', () => {
       social: 0,
       guest: 2,
       keywords: 0,
+      business: 0,
     }
     const html = renderToStaticMarkup(
       <BoardTabs value="articles" onChange={noop} badges={badges} />,
@@ -47,6 +48,7 @@ describe('Articles tab', () => {
       social: 0,
       guest: 2,
       keywords: 0,
+      business: 0,
     }
     const html = renderToStaticMarkup(<BoardTabs value="guest" onChange={noop} badges={badges} />)
     expect(html).toMatch(/aria-selected="true"[^>]*>Guest posts/)

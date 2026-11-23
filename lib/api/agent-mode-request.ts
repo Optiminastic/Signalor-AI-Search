@@ -20,8 +20,19 @@ export class AgentModeError extends Error {
 }
 
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH'
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
+  /** JSON body, or a FormData for a file upload (the browser sets its own Content-Type). */
   body?: unknown
+}
+
+function requestInit(method: string, body: unknown): RequestInit {
+  if (method === 'GET') return { method }
+  if (body instanceof FormData) return { method, body }
+  return {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body ?? {}),
+  }
 }
 
 export async function agentModeRequest<T>(
@@ -30,11 +41,7 @@ export async function agentModeRequest<T>(
   options: RequestOptions = {},
 ): Promise<T> {
   const method = options.method ?? 'GET'
-  const response = await fetch(`${AGENT_MODE_BASE}/${path}`, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: method === 'GET' ? undefined : JSON.stringify(options.body ?? {}),
-  })
+  const response = await fetch(`${AGENT_MODE_BASE}/${path}`, requestInit(method, options.body))
   const data: unknown = await response.json().catch(() => ({}))
   if (!response.ok) {
     const parsed = errorSchema.safeParse(data)
