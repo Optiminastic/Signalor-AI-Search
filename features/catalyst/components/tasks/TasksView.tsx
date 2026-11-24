@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { AutoFixProvider } from '@/features/catalyst/components/autofix/AutoFixContext'
 import { DataState } from '@/features/catalyst/components/DataState'
 import { TaskCards } from '@/features/catalyst/components/tasks/TaskCards'
+import { TaskDetailModal } from '@/features/catalyst/components/tasks/TaskDetailModal'
 import { TaskStatCards } from '@/features/catalyst/components/tasks/TaskStatCards'
 import { TasksToolbar } from '@/features/catalyst/components/tasks/TasksToolbar'
 import { TaskTable } from '@/features/catalyst/components/tasks/TaskTable'
@@ -125,6 +126,7 @@ export function TasksView(): JSX.Element {
     <AutoFixProvider>
       <TasksToolbar tabs={data?.tabs ?? EMPTY_TABS} assignableEmails={assignableEmails} />
       <TaskBoard data={data} shared={shared} isLoading={isLoading} isError={isError} />
+      <TaskDetailModal />
     </AutoFixProvider>
   )
 }

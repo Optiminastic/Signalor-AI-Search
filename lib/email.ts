@@ -37,6 +37,13 @@ export async function sendOtpEmail(to: string, otp: string): Promise<void> {
   if (!res.ok) {
     const body = await res.text().catch(() => '')
     log.error({ status: res.status, body }, 'SendGrid send failed')
+    // In development, don't block sign-in when the provider is down or out of
+    // credits — log the code so the flow stays testable locally. Production
+    // still throws so a failed verification email is never silently swallowed.
+    if (env.NODE_ENV !== 'production') {
+      log.warn({ to, otp }, 'Email OTP (SendGrid failed — dev fallback log)')
+      return
+    }
     throw new Error('Failed to send verification email.')
   }
 }

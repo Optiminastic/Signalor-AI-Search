@@ -1,4 +1,4 @@
-import { Check, GripVertical } from 'lucide-react'
+import { Check, GripVertical, Wrench } from 'lucide-react'
 
 import { useTaskFix } from '@/features/catalyst/components/autofix/AutoFixContext'
 import { AutoFixControl } from '@/features/catalyst/components/autofix/AutoFixControl'
@@ -7,6 +7,7 @@ import { PriorityTag } from '@/features/catalyst/components/tasks/PriorityTag'
 import { ProgressCell } from '@/features/catalyst/components/tasks/ProgressCell'
 import { ProjectTag } from '@/features/catalyst/components/tasks/ProjectTag'
 import type { TaskItem } from '@/features/catalyst/tasks-data'
+import { useTaskDetailStore } from '@/stores/useTaskDetailStore'
 
 export interface TaskRowProps {
   row: TaskItem
@@ -29,6 +30,7 @@ function AssignControl({
     <select
       value={row.assigneeEmail}
       disabled={busy}
+      onClick={e => e.stopPropagation()}
       onChange={e => onAssign(row.taskId, e.target.value)}
       className="h-8 max-w-[170px] rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-2 text-[12px] font-medium text-[var(--cat-ink-2)] outline-none disabled:opacity-60"
     >
@@ -54,7 +56,10 @@ function TaskNameCell({
       <button
         type="button"
         disabled={busy}
-        onClick={() => onToggleDone(row.taskId, !done)}
+        onClick={e => {
+          e.stopPropagation()
+          onToggleDone(row.taskId, !done)
+        }}
         aria-label={done ? 'Mark task not done' : 'Mark task done'}
         className={`grid h-[15px] w-[15px] shrink-0 place-items-center rounded-sm border disabled:opacity-50 ${
           done
@@ -89,17 +94,41 @@ function AssigneeCell({
   )
 }
 
-function AutoFixCell({ recommendationId }: { recommendationId?: number }): JSX.Element {
-  const fix = useTaskFix(recommendationId)
+function ManualFixButton({ onOpen }: { onOpen: () => void }): JSX.Element {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--cat-border)] px-3 text-[12px] font-medium text-[var(--cat-ink-2)] transition-colors hover:bg-[var(--cat-hover)]"
+    >
+      <Wrench size={13} />
+      Manual fix
+    </button>
+  )
+}
+
+function AutoFixCell({ row }: { row: TaskItem }): JSX.Element {
+  const fix = useTaskFix(row.recommendationId)
+  const open = useTaskDetailStore(s => s.open)
+  const openModal = (): void =>
+    open({ recommendationId: row.recommendationId, name: row.name, description: row.description })
+
   if (!fix) return <span className="text-[var(--cat-ink-3)]">—</span>
-  return <AutoFixControl state={fix.state} onFix={fix.onFix} />
+  if (fix.auto) return <AutoFixControl state={fix.state} onFix={fix.onFix} />
+  return <ManualFixButton onOpen={openModal} />
 }
 
 export function TaskRow(props: TaskRowProps): JSX.Element {
   const { row } = props
   const done = row.progress === 100
+  const open = useTaskDetailStore(s => s.open)
+  const openDetail = (): void =>
+    open({ recommendationId: row.recommendationId, name: row.name, description: row.description })
   return (
-    <tr className="border-t border-[var(--cat-border-soft)] transition-colors hover:bg-[var(--cat-hover)]">
+    <tr
+      onClick={openDetail}
+      className="cursor-pointer border-t border-[var(--cat-border-soft)] transition-colors hover:bg-[var(--cat-hover)]"
+    >
       <td className="py-2.5 pr-3 pl-1">
         <TaskNameCell row={row} done={done} busy={props.busy} onToggleDone={props.onToggleDone} />
       </td>
@@ -119,8 +148,8 @@ export function TaskRow(props: TaskRowProps): JSX.Element {
       <td className="px-3 py-2.5">
         <ProgressCell value={row.progress} />
       </td>
-      <td className="px-3 py-2.5">
-        <AutoFixCell recommendationId={row.recommendationId} />
+      <td className="px-3 py-2.5" onClick={e => e.stopPropagation()}>
+        <AutoFixCell row={row} />
       </td>
     </tr>
   )

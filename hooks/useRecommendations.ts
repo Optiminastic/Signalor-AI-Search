@@ -45,6 +45,18 @@ function effortOf(rec: ApiRecommendation): string {
   return rec.difficulty ? rec.difficulty.charAt(0).toUpperCase() + rec.difficulty.slice(1) : '—'
 }
 
+/** Pull the "+30%" / "-10%" out of a title like "… (Research: +30% Visibility)". */
+function boostPercentOf(title: string): number | null {
+  const match = title.match(/([+-]?\d+)\s*%/)
+  return match ? Number(match[1]) : null
+}
+
+function impactEstimateOf(estimate: number | string | null | undefined): string {
+  if (typeof estimate === 'string') return estimate
+  if (typeof estimate === 'number') return `~${Math.round(estimate)} points`
+  return ''
+}
+
 function toRec(rec: ApiRecommendation): Recommendation {
   return {
     id: rec.id,
@@ -56,7 +68,15 @@ function toRec(rec: ApiRecommendation): Recommendation {
     // Per-run completion tracking isn't modelled yet — everything starts open.
     status: 'open',
     auto: rec.can_auto_fix || rec.code_fixable,
+    canAutoFix: rec.can_auto_fix,
+    codeFixable: rec.code_fixable,
     findingCode: rec.finding_code,
+    description: rec.description ?? '',
+    action: rec.action ?? '',
+    why: rec.why ?? '',
+    steps: rec.steps ?? [],
+    impactEstimate: impactEstimateOf(rec.impact_estimate),
+    boostPercent: boostPercentOf(rec.title),
   }
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 
 import { applyAutoFix } from '@/lib/api/autofix'
@@ -9,7 +9,10 @@ import { getGithubStatus, requestGithubFix } from '@/lib/api/github'
 import { getIntegrationStatus } from '@/lib/api/integrations'
 
 /** Which write path applies for the run's platform. */
-export type FixPlatform = 'nextjs' | 'wordpress' | 'shopify' | 'none'
+export type FixPlatform = 'nextjs' | 'wordpress' | 'shopify' | 'webflow' | 'none'
+
+/** Store providers the backend auto-fix endpoint can write back to. */
+const WRITABLE_STORE_PROVIDERS = ['wordpress', 'shopify', 'webflow'] as const
 
 /** Per-recommendation fix outcome shown inline on the button. */
 export type FixOutcome =
@@ -54,13 +57,16 @@ function errMessage(error: unknown): string {
 }
 
 /**
- * Resolves the active run's fix platform (WordPress/Shopify store, or Next.js via
- * GitHub) and exposes a per-recommendation `runFix` that routes to the correct
- * connector: CMS push (applyAutoFix) or a GitHub PR (requestGithubFix). When the
- * platform isn't connected — or has no write path (Webflow/Framer) — it surfaces
- * a `connect`/`manual` state instead of applying.
+ * Resolves the active run's fix platform (a connected store — Webflow, WordPress,
+ * or Shopify — or Next.js via GitHub) and exposes a per-recommendation `runFix`
+ * that routes to the correct connector: a store push (applyAutoFix, which the
+ * backend writes to the live site via the provider's API) or a GitHub PR
+ * (requestGithubFix). When nothing is connected it surfaces a `connect` state.
+ * A successful store push flips the linked task to Done, so the Tasks board is
+ * refreshed to show the new "Done" tag.
  */
 export function useAutoFix({ slug, email, orgId }: UseAutoFixArgs): UseAutoFix {
+  const queryClient = useQueryClient()
   const githubQuery = useQuery({
     queryKey: ['github-run-status', slug],
     enabled: Boolean(slug),
@@ -73,26 +79,34 @@ export function useAutoFix({ slug, email, orgId }: UseAutoFixArgs): UseAutoFix {
   })
   const [states, setStates] = useState<Record<number, FixState>>({})
 
-  const cms = (integrationsQuery.data ?? []).find(
-    i => i.is_active && (i.provider === 'wordpress' || i.provider === 'shopify'),
+  const store = (integrationsQuery.data ?? []).find(
+    i => i.is_active && (WRITABLE_STORE_PROVIDERS as readonly string[]).includes(i.provider),
   )
   const githubConnected = githubQuery.data?.connected ?? false
-  const platform: FixPlatform = cms
-    ? (cms.provider as 'wordpress' | 'shopify')
+  const platform: FixPlatform = store
+    ? (store.provider as 'wordpress' | 'shopify' | 'webflow')
     : githubConnected
       ? 'nextjs'
       : 'none'
-  const connected = Boolean(cms) || githubConnected
+  const connected = Boolean(store) || githubConnected
 
   const setState = useCallback((recId: number, state: FixState): void => {
     setStates(prev => ({ ...prev, [recId]: state }))
   }, [])
 
+  // The backend marks the linked UserAction completed on a successful write;
+  // refetch the board so the row shows its "Done" tag.
+  const onApplied = useCallback((): void => {
+    void queryClient.invalidateQueries({ queryKey: ['catalyst', 'tasks'] })
+  }, [queryClient])
+
+  const isStore = platform === 'webflow' || platform === 'wordpress' || platform === 'shopify'
+
   const runFix = useCallback(
     async (target: FixTarget): Promise<void> => {
       if (!slug || !email) return
-      if (platform === 'wordpress' || platform === 'shopify') {
-        await runCmsFix({ slug, email, orgId, target, setState })
+      if (isStore) {
+        await runCmsFix({ slug, email, orgId, target, setState, onApplied })
         return
       }
       if (githubConnected) {
@@ -101,10 +115,10 @@ export function useAutoFix({ slug, email, orgId }: UseAutoFixArgs): UseAutoFix {
       }
       setState(target.id, {
         outcome: 'connect',
-        message: 'Connect your site (WordPress, Shopify, or GitHub) to auto-fix.',
+        message: 'Connect your site (Webflow, WordPress, Shopify, or GitHub) to auto-fix.',
       })
     },
-    [slug, email, orgId, platform, githubConnected, githubQuery.refetch, setState],
+    [slug, email, orgId, isStore, githubConnected, githubQuery.refetch, setState, onApplied],
   )
 
   return {
@@ -122,14 +136,23 @@ interface RunCmsArgs {
   orgId: number | undefined
   target: FixTarget
   setState: (recId: number, state: FixState) => void
+  onApplied: () => void
 }
 
-async function runCmsFix({ slug, email, orgId, target, setState }: RunCmsArgs): Promise<void> {
+async function runCmsFix({
+  slug,
+  email,
+  orgId,
+  target,
+  setState,
+  onApplied,
+}: RunCmsArgs): Promise<void> {
   setState(target.id, { outcome: 'running', message: 'Applying fix…' })
   try {
     const [result] = await applyAutoFix({ slug, recommendationIds: [target.id], email, orgId })
     if (result?.status === 'success' || result?.status === 'verified') {
       setState(target.id, { outcome: 'applied', message: result.message || 'Fix applied' })
+      onApplied()
     } else if (result?.status === 'manual') {
       setState(target.id, {
         outcome: 'manual',

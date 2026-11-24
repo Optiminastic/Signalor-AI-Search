@@ -45,9 +45,9 @@ export function AutoFixControl({ state, onFix }: AutoFixControlProps): JSX.Eleme
   }
   if (outcome === 'applied') {
     return (
-      <span className="inline-flex items-center gap-1 text-[12px] font-medium text-[#2FBE7E]">
-        <Check size={14} />
-        Applied
+      <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#2FBE7E]">
+        <Check size={14} strokeWidth={2.5} />
+        Done
       </span>
     )
   }

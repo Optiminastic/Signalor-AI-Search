@@ -267,6 +267,16 @@ export async function getPrompts(slug: string): Promise<PromptTrack[]> {
 
 /* ─────────────────────────────────────────────────────────── recommendations */
 
+/** One structured how-to step (with optional platform-specific detail). */
+const recStepSchema = z
+  .object({
+    n: z.number().optional(),
+    title: z.string().optional().default(''),
+    detail: z.string().optional().default(''),
+  })
+  .passthrough()
+export type RecStep = z.infer<typeof recStepSchema>
+
 export const recommendationSchema = z.object({
   id: z.number(),
   pillar: z.string().optional().default(''),
@@ -274,6 +284,8 @@ export const recommendationSchema = z.object({
   title: z.string(),
   description: z.string().optional().default(''),
   action: z.string().optional().default(''),
+  why: z.string().optional().default(''),
+  steps: z.array(recStepSchema).optional().default([]),
   // Backend sends this as free text ("Could improve your score by ~10 points"),
   // but older runs may store a bare number — accept either.
   impact_estimate: z.union([z.number(), z.string()]).nullable().optional(),

@@ -101,6 +101,8 @@ export interface SiteMeta {
   color: string
   initial: string
   domain: string
+  /** Public path to the site's real logo (falls back to the letter badge). */
+  logo: string
 }
 
 export const AUTO_SITES: SiteMeta[] = [
@@ -110,6 +112,7 @@ export const AUTO_SITES: SiteMeta[] = [
     color: BLUE,
     initial: 'R',
     domain: 'brightsfindings.com',
+    logo: '/backlink-logos/research.svg',
   },
   {
     value: 'listicals',
@@ -117,6 +120,7 @@ export const AUTO_SITES: SiteMeta[] = [
     color: PURPLE,
     initial: 'L',
     domain: 'thepickpost.com',
+    logo: '/backlink-logos/listicals.svg',
   },
   {
     value: 'market_trends',
@@ -124,6 +128,7 @@ export const AUTO_SITES: SiteMeta[] = [
     color: BRAND,
     initial: 'M',
     domain: 'trendledgers.com',
+    logo: '/backlink-logos/market_trends.svg',
   },
   {
     value: 'comparison',
@@ -131,6 +136,7 @@ export const AUTO_SITES: SiteMeta[] = [
     color: GREEN,
     initial: 'C',
     domain: 'betterversus.com',
+    logo: '/backlink-logos/comparison.svg',
   },
   {
     value: 'step_guide',
@@ -138,6 +144,7 @@ export const AUTO_SITES: SiteMeta[] = [
     color: YELLOW,
     initial: 'S',
     domain: 'guidefactories.com',
+    logo: '/backlink-logos/step_guide.svg',
   },
 ]
 
@@ -149,6 +156,7 @@ export function siteMeta(value: string): SiteMeta {
       color: 'var(--cat-ink-3)',
       initial: value.charAt(0).toUpperCase() || '?',
       domain: '',
+      logo: '',
     }
   )
 }

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 export type WizardStep =
   | 'company'
@@ -56,15 +57,36 @@ const initialState: WizardState = {
   analyticsConnected: false,
 }
 
-export const useOnboardingWizardStore = create<WizardState & WizardActions>(set => ({
-  ...initialState,
-  setStep: step => set({ step }),
-  setCompanyName: companyName => set({ companyName }),
-  setPlatform: platform => set({ platform }),
-  setSiteUrl: siteUrl => set({ siteUrl }),
-  setOrgId: orgId => set({ orgId }),
-  setPrompts: prompts => set({ prompts }),
-  setAppInstalled: appInstalled => set({ appInstalled }),
-  setAnalyticsConnected: analyticsConnected => set({ analyticsConnected }),
-  reset: () => set(initialState),
-}))
+// Persisted to sessionStorage so the wizard survives a full-page OAuth
+// round-trip (e.g. the Webflow connect redirect) in the same tab. A normal
+// refresh still resets via OnboardingWizard's mount effect.
+export const useOnboardingWizardStore = create<WizardState & WizardActions>()(
+  persist(
+    set => ({
+      ...initialState,
+      setStep: step => set({ step }),
+      setCompanyName: companyName => set({ companyName }),
+      setPlatform: platform => set({ platform }),
+      setSiteUrl: siteUrl => set({ siteUrl }),
+      setOrgId: orgId => set({ orgId }),
+      setPrompts: prompts => set({ prompts }),
+      setAppInstalled: appInstalled => set({ appInstalled }),
+      setAnalyticsConnected: analyticsConnected => set({ analyticsConnected }),
+      reset: () => set(initialState),
+    }),
+    {
+      name: 'signalor-onboarding-wizard',
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (s): WizardState => ({
+        step: s.step,
+        companyName: s.companyName,
+        platform: s.platform,
+        siteUrl: s.siteUrl,
+        orgId: s.orgId,
+        prompts: s.prompts,
+        appInstalled: s.appInstalled,
+        analyticsConnected: s.analyticsConnected,
+      }),
+    },
+  ),
+)

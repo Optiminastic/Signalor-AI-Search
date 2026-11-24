@@ -43,11 +43,26 @@ const STEP_COMPONENTS: Record<WizardStep, () => JSX.Element> = {
 export function OnboardingWizard(): JSX.Element {
   const step = useOnboardingWizardStore(s => s.step)
   const reset = useOnboardingWizardStore(s => s.reset)
+  const setAppInstalled = useOnboardingWizardStore(s => s.setAppInstalled)
+  const setStep = useOnboardingWizardStore(s => s.setStep)
 
-  // Start clean on mount so a refresh doesn't strand the user mid-flow.
+  // On mount: a Webflow/WordPress OAuth redirect returns here as
+  // ?webflow=connected|error. Because the store is persisted to sessionStorage,
+  // the wizard state survives that same-tab round-trip — so DON'T reset; just
+  // advance past the connect step. Any other mount is a fresh start → reset.
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const result = params.get('webflow') ?? params.get('wordpress')
+    if (result) {
+      if (result === 'connected') {
+        setAppInstalled(true)
+        setStep('prompts')
+      }
+      window.history.replaceState(null, '', window.location.pathname)
+      return
+    }
     reset()
-  }, [reset])
+  }, [reset, setAppInstalled, setStep])
 
   const stepIndex = Math.max(0, WIZARD_STEP_ORDER.indexOf(step))
   const { title, description } = STEP_HEADER[step]
