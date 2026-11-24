@@ -3,13 +3,10 @@
 import type { LucideIcon } from 'lucide-react'
 
 import type { ActivityLine } from '@/features/catalyst/agent-activity-log'
-import {
-  TARGET_LABELS,
-  timeLabel,
-  type TimelineRow,
-} from '@/features/catalyst/agent-activity-timeline'
+import { timeLabel, type TimelineRow } from '@/features/catalyst/agent-activity-timeline'
 import { formatWhen } from '@/features/catalyst/agent-approvals'
 import { useAgentUi } from '@/features/catalyst/components/agent-page/AgentUiContext'
+import { TAB_LABELS } from '@/features/catalyst/components/agent-page/reply-actions'
 import { NEG, YELLOW } from '@/features/catalyst/constants'
 import {
   Bot,
@@ -86,7 +83,7 @@ function OpenTab({ row }: ActivityRowProps): JSX.Element | null {
       onClick={() => setTab(target)}
       className="text-primary-ink mt-1 inline-flex items-center gap-0.5 rounded-sm text-[12px] font-medium hover:underline focus-visible:ring-2 focus-visible:ring-[#e04a3d] focus-visible:outline-none"
     >
-      Open {TARGET_LABELS[target]}
+      Open {TAB_LABELS[target]}
       <ChevronRight size={13} strokeWidth={2.2} aria-hidden="true" />
     </button>
   )

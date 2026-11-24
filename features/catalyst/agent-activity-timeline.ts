@@ -43,17 +43,6 @@ const TARGETS: Record<string, BoardTab> = {
   rank_check_done: 'tracking',
 }
 
-export const TARGET_LABELS: Record<BoardTab, string> = {
-  activity: 'Activity',
-  articles: 'Articles',
-  guest: 'Guest posts',
-  keywords: 'Keywords',
-  social: 'Social',
-  approvals: 'Approvals',
-  indexing: 'Indexing',
-  tracking: 'Tracking',
-}
-
 /** The tab to open for a line, or null when there's none or it's off the board (HIDDEN_TABS). */
 export function targetFor(action: string): BoardTab | null {
   const target = TARGETS[action]
