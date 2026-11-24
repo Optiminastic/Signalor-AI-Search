@@ -114,7 +114,7 @@ export function ToolsHeroFloaters(): React.ReactElement {
       <FloatCard left="78%" top="60%" delay="1.6s" duration="6s" className="w-40">
         <div className="flex items-center gap-2.5">
           <IconTile>
-            <Radar className="text-primary h-4 w-4" />
+            <Radar className="text-primary-ink h-4 w-4" />
           </IconTile>
           <span className="text-muted-foreground text-[10px] leading-tight font-semibold tracking-widest uppercase">
             Domain rating

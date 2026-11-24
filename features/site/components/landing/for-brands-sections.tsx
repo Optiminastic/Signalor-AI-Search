@@ -10,17 +10,17 @@ import { cn } from '@/features/site/lib/utils'
 function AnswerSpotlightIllo(): JSX.Element {
   return (
     <div className="w-full max-w-sm space-y-3 text-[13px] leading-snug">
-      <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-card px-3.5 py-2.5 text-foreground shadow-sm shadow-black/5 ring-1 ring-border">
+      <div className="bg-card text-foreground ring-border max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2.5 shadow-sm ring-1 shadow-black/5">
         What are the best DTC sneaker brands?
       </div>
-      <div className="ml-auto max-w-[92%] rounded-2xl rounded-br-md bg-foreground px-3.5 py-2.5 text-xs font-medium text-background/80 shadow-md shadow-black/10">
-        For quality and fit, <span className="font-semibold text-orange-300">Vault Apparel</span>{' '}
-        is a frequent pick - reviewers cite its sizing guide and repair program.
+      <div className="bg-foreground text-background/80 ml-auto max-w-[92%] rounded-2xl rounded-br-md px-3.5 py-2.5 text-xs font-medium shadow-md shadow-black/10">
+        For quality and fit, <span className="font-semibold text-orange-300">Vault Apparel</span> is
+        a frequent pick - reviewers cite its sizing guide and repair program.
       </div>
-      <div className="ml-auto flex w-fit items-center gap-2 rounded-full bg-card px-3 py-1 shadow-sm shadow-black/5 ring-1 ring-border">
-        <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden />
-        <span className="text-[11px] font-semibold text-foreground">Positive · Cited</span>
-        <span className="text-[10px] tabular-nums text-muted-foreground">2 sources</span>
+      <div className="bg-card ring-border ml-auto flex w-fit items-center gap-2 rounded-full px-3 py-1 shadow-sm ring-1 shadow-black/5">
+        <span className="bg-success h-1.5 w-1.5 rounded-full" aria-hidden />
+        <span className="text-foreground text-[11px] font-semibold">Positive · Cited</span>
+        <span className="text-muted-foreground text-[10px] tabular-nums">2 sources</span>
       </div>
     </div>
   )
@@ -31,14 +31,25 @@ function PromptCoverageIllo(): JSX.Element {
   const rows = [
     { prompt: 'best crm for startups', engine: 'ChatGPT', logo: '/logos/chatgpt.svg', cited: true },
     { prompt: 'crm with a free tier', engine: 'Gemini', logo: '/logos/gemini.svg', cited: false },
-    { prompt: 'top crm tools 2026', engine: 'Perplexity', logo: '/logos/perplexity.svg', cited: true },
+    {
+      prompt: 'top crm tools 2026',
+      engine: 'Perplexity',
+      logo: '/logos/perplexity.svg',
+      cited: true,
+    },
   ]
   return (
-    <ul className="w-full max-w-sm divide-y divide-border/70 rounded-xl bg-card px-3 py-1 shadow-sm shadow-black/5 ring-1 ring-border">
-      {rows.map((row) => (
+    <ul className="divide-border/70 bg-card ring-border w-full max-w-sm divide-y rounded-xl px-3 py-1 shadow-sm ring-1 shadow-black/5">
+      {rows.map(row => (
         <li key={row.prompt} className="flex items-center gap-2.5 py-2.5">
-          <Image src={row.logo} alt={row.engine} width={16} height={16} className="h-4 w-4 shrink-0" />
-          <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-foreground">
+          <Image
+            src={row.logo}
+            alt={row.engine}
+            width={16}
+            height={16}
+            className="h-4 w-4 shrink-0"
+          />
+          <span className="text-foreground min-w-0 flex-1 truncate font-mono text-[11px]">
             &ldquo;{row.prompt}&rdquo;
           </span>
           <span
@@ -46,7 +57,7 @@ function PromptCoverageIllo(): JSX.Element {
               'shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase',
               row.cited
                 ? 'bg-success/10 text-success'
-                : 'bg-muted text-muted-foreground ring-1 ring-border',
+                : 'bg-muted text-muted-foreground ring-border ring-1',
             )}
           >
             {row.cited ? 'Cited' : 'Missing'}
@@ -65,18 +76,18 @@ function ReferralTrafficIllo(): JSX.Element {
     { source: 'gemini.google.com', share: 23, delta: '+9%' },
   ]
   return (
-    <div className="w-full max-w-sm rounded-xl bg-card p-4 shadow-sm shadow-black/5 ring-1 ring-border">
-      <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+    <div className="bg-card ring-border w-full max-w-sm rounded-xl p-4 shadow-sm ring-1 shadow-black/5">
+      <div className="text-muted-foreground flex items-center justify-between text-[10px] font-semibold tracking-[0.14em] uppercase">
         <span>AI referral traffic</span>
-        <span className="tabular-nums normal-case tracking-normal">30d</span>
+        <span className="tracking-normal normal-case tabular-nums">30d</span>
       </div>
       <ul className="mt-3 space-y-2.5">
-        {rows.map((row) => {
+        {rows.map(row => {
           const ticks = 14
           const filled = Math.round((row.share / 100) * ticks)
           return (
             <li key={row.source} className="flex items-center gap-3">
-              <span className="w-28 shrink-0 truncate font-mono text-[11px] text-foreground">
+              <span className="text-foreground w-28 shrink-0 truncate font-mono text-[11px]">
                 {row.source}
               </span>
               <span className="flex flex-1 items-center gap-[2px]" role="presentation">
@@ -90,7 +101,7 @@ function ReferralTrafficIllo(): JSX.Element {
                   />
                 ))}
               </span>
-              <span className="shrink-0 rounded-full bg-success/10 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-success">
+              <span className="bg-success/10 text-success shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
                 {row.delta}
               </span>
             </li>
@@ -125,7 +136,7 @@ const REPUTATION_CELLS = [
 function ReputationGrid(): JSX.Element {
   return (
     <section aria-labelledby="for-brands-reputation-heading">
-      <div className="relative border-b border-border px-6 py-14 sm:py-16">
+      <div className="border-border relative border-b px-6 py-14 sm:py-16">
         <HomeSectionHeader
           eyebrow="Your AI reputation"
           headingId="for-brands-reputation-heading"
@@ -136,16 +147,16 @@ function ReputationGrid(): JSX.Element {
       <div className="relative">
         <GridHandle className="-top-[3.5px] left-1/3 -ml-[3.5px] hidden lg:block" />
         <GridHandle className="-top-[3.5px] left-2/3 -ml-[3.5px] hidden lg:block" />
-        <div className="grid grid-cols-1 divide-border max-lg:divide-y lg:grid-cols-3 lg:divide-x">
-          {REPUTATION_CELLS.map((cell) => (
-            <div key={cell.title} className="group flex flex-col bg-card px-6 py-10 sm:px-8">
+        <div className="divide-border grid grid-cols-1 max-lg:divide-y lg:grid-cols-3 lg:divide-x">
+          {REPUTATION_CELLS.map(cell => (
+            <div key={cell.title} className="group bg-card flex flex-col px-6 py-10 sm:px-8">
               <div className={cn(HOME_WELL, 'flex min-h-44 flex-1 items-center justify-center')}>
                 {cell.illo}
               </div>
-              <h3 className="mt-7 text-center text-base font-semibold tracking-tight text-foreground">
+              <h3 className="text-foreground mt-7 text-center text-base font-semibold tracking-tight">
                 {cell.title}
               </h3>
-              <p className="mx-auto mt-2 max-w-xs text-center text-sm leading-relaxed text-muted-foreground">
+              <p className="text-muted-foreground mx-auto mt-2 max-w-xs text-center text-sm leading-relaxed">
                 {cell.description}
               </p>
             </div>
@@ -159,38 +170,38 @@ function ReputationGrid(): JSX.Element {
 function BrandStats(): JSX.Element {
   return (
     <section aria-labelledby="for-brands-stats-heading">
-      <div className="relative border-t border-border">
+      <div className="border-border relative border-t">
         <GridCornerHandles top />
         <GridHandle className="-top-[3.5px] left-1/2 -ml-[3.5px] hidden lg:block" />
-        <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-border">
-          <div className="flex flex-col justify-center px-6 py-14 max-lg:border-b max-lg:border-border sm:px-10 lg:py-20">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-primary">
+        <div className="lg:divide-border grid lg:grid-cols-2 lg:divide-x">
+          <div className="max-lg:border-border flex flex-col justify-center px-6 py-14 max-lg:border-b sm:px-10 lg:py-20">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Proof
             </p>
             <h2
               id="for-brands-stats-heading"
-              className="mt-3 max-w-md text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+              className="text-foreground mt-3 max-w-md text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
             >
               Brands measure the shift, not the vibes
             </h2>
-            <p className="mt-4 max-w-sm text-pretty text-base leading-relaxed text-muted-foreground">
+            <p className="text-muted-foreground mt-4 max-w-sm text-base leading-relaxed text-pretty">
               AI-referred visitors arrive with the answer already read - what changes is{' '}
-              <strong className="font-semibold text-foreground">
+              <strong className="text-foreground font-semibold">
                 whether that answer cites you
               </strong>
               .
             </p>
           </div>
           <dl className="grid gap-x-10 gap-y-10 px-6 py-14 sm:grid-cols-2 sm:px-10 lg:py-20">
-            {FOR_BRANDS_PROOF_METRICS.map((stat) => (
+            {FOR_BRANDS_PROOF_METRICS.map(stat => (
               <div
                 key={stat.label}
-                className="border-l-2 border-foreground/15 pl-4 transition-colors duration-200 hover:border-primary"
+                className="border-foreground/15 hover:border-primary border-l-2 pl-4 transition-colors duration-200"
               >
-                <dd className="text-3xl font-semibold tabular-nums tracking-tight text-foreground sm:text-4xl">
+                <dd className="text-foreground text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl">
                   {stat.value}
                 </dd>
-                <dt className="mt-2 max-w-[15rem] text-pretty text-sm leading-relaxed text-muted-foreground">
+                <dt className="text-muted-foreground mt-2 max-w-[15rem] text-sm leading-relaxed text-pretty">
                   {stat.label}
                 </dt>
               </div>

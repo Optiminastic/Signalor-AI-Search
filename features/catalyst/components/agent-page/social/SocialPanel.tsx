@@ -145,7 +145,7 @@ function Score({ orgSlug }: { orgSlug: string }): JSX.Element {
       {report && !report.checkedAt && <FirstCheck report={report} social={social} />}
       {report?.checkedAt && <Ready report={report} social={social} />}
       {social.checkError && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {social.checkError}
         </p>
       )}

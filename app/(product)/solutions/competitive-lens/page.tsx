@@ -421,7 +421,7 @@ function LensOverviewPreview() {
     <div className="overflow-hidden rounded-none border border-black/8 bg-white shadow-lg">
       <div className="bg-muted flex items-center justify-between border-b border-black/6 px-5 py-3">
         <div className="text-foreground flex items-center gap-2 text-xs font-semibold">
-          <Users className="text-primary h-4 w-4" aria-hidden />
+          <Users className="text-primary-ink h-4 w-4" aria-hidden />
           Competitive benchmark
         </div>
         <div className="text-muted-foreground hidden items-center gap-3 text-[11px] sm:flex">
@@ -455,7 +455,7 @@ function LensOverviewPreview() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold ${
-                          r.you ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                          r.you ? 'bg-primary-strong text-white' : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         {r.name
@@ -494,7 +494,7 @@ function LensOverviewPreview() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     {delta === null ? (
-                      <span className="text-primary text-[11px] font-semibold tracking-wide uppercase">
+                      <span className="text-primary-ink text-[11px] font-semibold tracking-wide uppercase">
                         You
                       </span>
                     ) : delta > 0 ? (
@@ -516,7 +516,7 @@ function LensOverviewPreview() {
       </div>
       <div className="bg-muted border-t border-black/6 px-5 py-3">
         <p className="text-muted-foreground text-[11px] leading-relaxed font-medium">
-          <Sparkles className="text-primary mr-1 inline-block h-3 w-3" aria-hidden />
+          <Sparkles className="text-primary-ink mr-1 inline-block h-3 w-3" aria-hidden />
           Illustrative benchmark, your real Lens compares citation share, mentions, and
           recommendations across every competitor and engine you track.
         </p>
@@ -582,7 +582,7 @@ function GapDetectionPreview() {
             </p>
             <Link
               href="/sign-up"
-              className="text-primary mt-4 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+              className="text-primary-ink mt-4 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
             >
               See the fix path <ArrowRight className="h-3 w-3" />
             </Link>
@@ -621,7 +621,7 @@ function RecommendationsPreview() {
     <div className="overflow-hidden rounded-none border border-black/8 bg-white">
       <div className="bg-muted flex items-center justify-between border-b border-black/6 px-5 py-3">
         <div className="text-foreground flex items-center gap-2 text-xs font-semibold">
-          <LineChart className="text-primary h-4 w-4" aria-hidden />
+          <LineChart className="text-primary-ink h-4 w-4" aria-hidden />
           Ranked strategic moves
         </div>
         <span className="text-muted-foreground hidden text-[11px] sm:inline">
@@ -646,7 +646,7 @@ function RecommendationsPreview() {
             <div className="flex items-center justify-end">
               <Link
                 href="/sign-up"
-                className="bg-primary hover:bg-primary/90 inline-flex h-8 items-center gap-1 rounded-md px-3 text-[11px] font-semibold text-white transition"
+                className="bg-primary-strong hover:bg-primary-strong/90 inline-flex h-8 items-center gap-1 rounded-md px-3 text-[11px] font-semibold text-white transition"
               >
                 Plan this move <ArrowRight className="h-3 w-3" />
               </Link>
@@ -688,7 +688,7 @@ function GrowthOpportunitiesPreview() {
             key={w.title}
             className="rounded-none border border-black/8 bg-white p-6 shadow-lg"
           >
-            <div className="bg-primary/10 text-primary inline-flex h-9 w-9 items-center justify-center rounded-md">
+            <div className="bg-primary/10 text-primary-ink inline-flex h-9 w-9 items-center justify-center rounded-md">
               <I className="h-4 w-4" aria-hidden />
             </div>
             <h3 className="text-foreground mt-5 text-base font-semibold tracking-tight">

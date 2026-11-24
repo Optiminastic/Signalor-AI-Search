@@ -84,7 +84,7 @@ function CreatorSidebarNav() {
               className={cn(
                 'flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 active
-                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  ? 'bg-primary-strong text-primary-foreground shadow-sm'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground',
               )}
             >

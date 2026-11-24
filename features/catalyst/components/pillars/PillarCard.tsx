@@ -25,7 +25,7 @@ function RecList({ pillar }: { pillar: PillarDetailItem }): JSX.Element {
     <div className="flex flex-col gap-1">
       {pillar.topRecs.map(rec => (
         <p key={rec.id} className="truncate text-[11px] text-[var(--cat-ink-3)]">
-          <span className="mr-1.5 text-[#e04a3d]">•</span>
+          <span className="text-primary-ink mr-1.5">•</span>
           {rec.title}
         </p>
       ))}

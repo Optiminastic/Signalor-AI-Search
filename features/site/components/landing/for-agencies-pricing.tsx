@@ -148,7 +148,11 @@ function PlanCell({ plan }: { plan: AgencyPlan }): JSX.Element {
             key={feature}
             className="text-foreground/90 first:text-foreground flex items-center gap-2 first:font-medium"
           >
-            <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
+            <Check
+              className="text-primary-ink h-3.5 w-3.5 shrink-0"
+              strokeWidth={2.5}
+              aria-hidden
+            />
             <span>{feature}</span>
           </li>
         ))}
@@ -179,7 +183,11 @@ function AgencyEnterpriseRow(): JSX.Element {
         <ul className="grid content-center gap-x-10 gap-y-3 p-8 text-sm sm:grid-cols-2">
           {AGENCY_ENTERPRISE_FEATURES.map(feature => (
             <li key={feature} className="text-foreground/90 flex items-center gap-2">
-              <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
+              <Check
+                className="text-primary-ink h-3.5 w-3.5 shrink-0"
+                strokeWidth={2.5}
+                aria-hidden
+              />
               <span>{feature}</span>
             </li>
           ))}
@@ -200,7 +208,7 @@ export function ForAgenciesPricing(): JSX.Element {
         <div className="border-border relative border-t px-6 py-14 sm:py-16">
           <GridCornerHandles top />
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Agency pricing
             </p>
             <h2
@@ -213,11 +221,11 @@ export function ForAgenciesPricing(): JSX.Element {
               All agency plans start with a conversation - no public checkout, no surprises.
             </p>
             <p className="text-muted-foreground mt-6 text-[13px] font-medium">
-              <span className="text-primary font-semibold">Save 15%</span> on every brand you
+              <span className="text-primary-ink font-semibold">Save 15%</span> on every brand you
               onboard · Prices in GBP ·{' '}
               <Link
                 href="/pricing"
-                className="text-primary hover:text-primary/80 font-semibold transition-colors"
+                className="text-primary-ink hover:text-primary-ink/80 font-semibold transition-colors"
               >
                 Full plan comparison →
               </Link>

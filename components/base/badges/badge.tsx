@@ -22,7 +22,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 const styles = sortCx({
   base: 'inline-flex items-center justify-center rounded-sm px-1 py-px text-caption-1-semibold tracking-normal whitespace-nowrap',
   color: {
-    primary: 'bg-[#e04a3d] text-white', // Signalor red, was bg-blue-400
+    primary: 'bg-primary-strong text-white', // Signalor red, was bg-blue-400
     neutral: 'bg-badge-neutral-background text-text-secondary',
   },
 })

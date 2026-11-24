@@ -9,7 +9,7 @@ type Domain = Citations['domains'][number]
 function DomainTag({ domain }: { domain: Domain }): JSX.Element | null {
   if (domain.is_brand) {
     return (
-      <span className="rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 py-0.5 text-[10px] font-semibold text-[#e04a3d]">
+      <span className="text-primary-ink rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 py-0.5 text-[10px] font-semibold">
         You
       </span>
     )

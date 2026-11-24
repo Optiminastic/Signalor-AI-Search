@@ -72,7 +72,7 @@ export function CompetitorsInline() {
         <Button
           type="submit"
           disabled={!url.trim() || state.kind === 'running'}
-          className="bg-primary shrink-0 rounded-md px-4 text-xs font-semibold text-white hover:brightness-110"
+          className="bg-primary-strong shrink-0 rounded-md px-4 text-xs font-semibold text-white hover:brightness-110"
         >
           {state.kind === 'running' ? (
             <>
@@ -91,7 +91,7 @@ export function CompetitorsInline() {
       {state.kind === 'running' && (
         <div className="bg-card ring-border mt-5 rounded-xl border border-transparent p-5 shadow-sm ring-1 shadow-black/6.5">
           <div className="text-foreground flex items-center gap-2 text-sm">
-            <Loader2 className="text-primary h-4 w-4 animate-spin" />
+            <Loader2 className="text-primary-ink h-4 w-4 animate-spin" />
             Pulling competitive comparison queries from real search autocomplete…
           </div>
         </div>

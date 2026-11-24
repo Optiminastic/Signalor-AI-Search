@@ -57,7 +57,7 @@ function AgentReply({ message, onGrow, actions }: AgentReplyProps): JSX.Element 
       {message.tools.length > 0 && <p className={AGENT_META}>Checked your data</p>}
       <AgentRichText text={typing ? closeOpenBold(visible) : visible} />
       {!typing && message.changedPlan && (
-        <p className="mt-2 text-[11px] font-medium text-[#e04a3d]">Plan updated</p>
+        <p className="text-primary-ink mt-2 text-[11px] font-medium">Plan updated</p>
       )}
       {!typing && actions && message.status === 'complete' && (
         <ReplyActionChips
@@ -121,7 +121,7 @@ export function AgentThread({ messages, error, onAsk, busy }: AgentThreadProps):
         </div>
       ))}
       {error && (
-        <p role="alert" className={`${AGENT_BUBBLE} text-[#e04a3d]`}>
+        <p role="alert" className={`${AGENT_BUBBLE} text-primary-ink`}>
           {error}
         </p>
       )}

@@ -91,7 +91,8 @@ All controls are **34px tall** so toolbars line up.
 
 - **Surface tokens** (light+dark aware CSS vars, in `app/globals.css`): `--cat-canvas`,
   `--cat-content`, `--cat-card`, `--cat-track`, `--cat-hover`, `--cat-border`,
-  `--cat-grid`, `--cat-ink` / `--cat-ink-2` / `--cat-ink-3`. Use `bg-[var(--cat-card)]`,
+  `--cat-grid`, `--cat-ink` / `--cat-ink-2` / `--cat-ink-3` (all three pass WCAG AA 4.5:1 on every
+  surface in both themes; don't lighten text with opacity, e.g. `/60`, it breaks that). Use `bg-[var(--cat-card)]`,
   `text-[var(--cat-ink-2)]`, etc. — **never** raw `bg-white` / `text-gray-500`.
 - **Brand palette constants** (`features/catalyst/constants.ts`): `BRAND` (#e04a3d),
   `BRAND_STRONG`, `BRAND_SOFT`, `GREEN`, `YELLOW`, `BLUE`, `PURPLE`, `POS`/`POS_BG`,

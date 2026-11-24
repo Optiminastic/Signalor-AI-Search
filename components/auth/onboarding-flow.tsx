@@ -115,7 +115,7 @@ export function OnboardingFlow({ mode }: OnboardingFlowProps): JSX.Element {
             Already have an account?{' '}
             <Link
               href={routes.signIn}
-              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+              className="text-primary-ink hover:text-primary-ink/80 font-semibold transition-colors"
             >
               Sign in
             </Link>
@@ -125,7 +125,7 @@ export function OnboardingFlow({ mode }: OnboardingFlowProps): JSX.Element {
             Don&apos;t have an account?{' '}
             <Link
               href={routes.signUp}
-              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+              className="text-primary-ink hover:text-primary-ink/80 font-semibold transition-colors"
             >
               Sign up
             </Link>

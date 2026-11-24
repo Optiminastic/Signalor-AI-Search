@@ -194,7 +194,7 @@ function RankRow({ item }: { item: Rank }): JSX.Element {
         <span className="text-foreground block truncate text-[12.5px] font-semibold">
           {item.name}
           {item.isBrand && (
-            <span className="bg-primary/10 text-primary ml-1.5 rounded px-1 py-px text-[9px] font-bold tracking-wide uppercase">
+            <span className="bg-primary/10 text-primary-ink ml-1.5 rounded px-1 py-px text-[9px] font-bold tracking-wide uppercase">
               You
             </span>
           )}
@@ -210,7 +210,7 @@ function RankRow({ item }: { item: Rank }): JSX.Element {
         <span
           className={cn(
             'block text-[11.5px] font-semibold tabular-nums',
-            item.positiveTrend ? 'text-success' : 'text-primary',
+            item.positiveTrend ? 'text-success' : 'text-primary-ink',
           )}
         >
           {item.position}
@@ -238,7 +238,7 @@ function CardHead(): JSX.Element {
         </p>
       </div>
       <div className="bg-muted flex shrink-0 items-center gap-0.5 rounded-sm p-0.5">
-        <span className="bg-card ring-border text-primary grid h-6 w-6 place-items-center rounded-[3px] ring-1">
+        <span className="bg-card ring-border text-primary-ink grid h-6 w-6 place-items-center rounded-[3px] ring-1">
           <LineChart className="h-3.5 w-3.5" aria-hidden />
         </span>
         <span className="text-muted-foreground grid h-6 w-6 place-items-center">

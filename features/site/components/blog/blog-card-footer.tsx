@@ -28,7 +28,7 @@ export function BlogCardFooter({ authors }: BlogCardFooterProps): React.ReactEle
                   className="size-full object-cover"
                 />
               ) : (
-                <span className="text-primary text-[11px] leading-none font-bold">
+                <span className="text-primary-ink text-[11px] leading-none font-bold">
                   {author.name.charAt(0)}
                 </span>
               )}
@@ -39,7 +39,7 @@ export function BlogCardFooter({ authors }: BlogCardFooterProps): React.ReactEle
       </div>
 
       <div className="flex h-6 items-center">
-        <span className="text-primary group-hover:text-foreground flex items-center gap-1 text-sm font-medium transition-colors duration-200">
+        <span className="text-primary-ink group-hover:text-foreground flex items-center gap-1 text-sm font-medium transition-colors duration-200">
           Read
           <ChevronRight className="size-3.5 translate-y-px duration-200 group-hover:translate-x-0.5" />
         </span>

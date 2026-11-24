@@ -81,7 +81,7 @@ export function HomeFaq({ items }: HomeFaqProps): JSX.Element {
         <div className="lg:divide-border grid lg:grid-cols-[2fr_3fr] lg:divide-x">
           <div className="max-lg:border-border relative max-lg:border-b">
             <div className="px-6 py-14 sm:px-10 lg:sticky lg:top-24 lg:py-20">
-              <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+              <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
                 FAQ
               </p>
               <h2
@@ -95,7 +95,7 @@ export function HomeFaq({ items }: HomeFaqProps): JSX.Element {
                 <MailLink
                   user="hello"
                   subject="Question about SignalorAI"
-                  className="text-primary hover:text-primary/80 font-semibold transition-colors"
+                  className="text-primary-ink hover:text-primary-ink/80 font-semibold transition-colors"
                 >
                   Contact our support team
                 </MailLink>

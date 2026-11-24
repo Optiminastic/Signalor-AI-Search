@@ -184,7 +184,7 @@ export default function PaymentSuccessPage() {
   if (isPending) {
     return (
       <div className="bg-background flex min-h-screen flex-col items-center justify-center px-4 text-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        <Loader2 className="text-primary-ink h-8 w-8 animate-spin" />
         <p className="text-muted-foreground mt-4 text-sm">Loading your session…</p>
       </div>
     )
@@ -199,7 +199,7 @@ export default function PaymentSuccessPage() {
         </p>
         <Link
           href={routes.signIn}
-          className="bg-primary text-primary-foreground mt-6 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="bg-primary-strong text-primary-foreground mt-6 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90"
         >
           Sign in
         </Link>
@@ -210,7 +210,7 @@ export default function PaymentSuccessPage() {
   if (slow) {
     return (
       <div className="bg-background mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 text-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        <Loader2 className="text-primary-ink h-8 w-8 animate-spin" />
         <h1 className="text-foreground mt-4 text-lg font-bold">
           Confirming your payment is taking longer than usual
         </h1>
@@ -221,7 +221,7 @@ export default function PaymentSuccessPage() {
         </p>
         <Link
           href={slowNext}
-          className="bg-primary text-primary-foreground mt-6 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="bg-primary-strong text-primary-foreground mt-6 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90"
         >
           Continue setup
         </Link>
@@ -236,12 +236,12 @@ export default function PaymentSuccessPage() {
     <div className="bg-background flex min-h-screen flex-col items-center justify-center px-4 text-center">
       {!showSuccessIcon ? (
         <>
-          <Loader2 className="text-primary h-8 w-8 animate-spin" />
+          <Loader2 className="text-primary-ink h-8 w-8 animate-spin" />
           <p className="text-muted-foreground mt-4 text-sm">{message}</p>
         </>
       ) : (
         <>
-          <CheckCircle2 className="text-primary h-12 w-12" />
+          <CheckCircle2 className="text-primary-ink h-12 w-12" />
           <h1 className="mt-4 text-xl font-bold text-white md:text-2xl">Payment Successful!</h1>
           <p className="text-muted-foreground mt-2 text-sm">{message}</p>
         </>

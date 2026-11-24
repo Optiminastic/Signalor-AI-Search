@@ -21,10 +21,16 @@
   /* Signalor brand — warm red accent (matches signalor.ai) */
   --primary: #e04a3d;
   --primary-foreground: #ffffff;
+  /* Accessible brand red (WCAG AA 4.5:1). #e04a3d stays the brand colour for fills,
+     icons, charts and large shapes, but measures 4.0:1 as small text on white or
+     behind small white text. Use text-primary-ink for red text and
+     bg-primary-strong behind white text. */
+  --primary-ink: #c13b2f; /* 5.3:1 on white, 4.7:1 on the pink tint */
+  --primary-strong: #c13b2f; /* white text on it: 5.3:1 */
   --secondary: #f0f0f0;
   --secondary-foreground: #171717;
   --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted-foreground: #666666; /* was #737373: 4.3:1 on muted fills, now 5.2:1 */
   --accent: #f5f5f5;
   --accent-foreground: #171717;
   --destructive: #d80027;
@@ -88,6 +94,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-strong: var(--primary-strong);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -913,8 +921,10 @@
   --cat-card-border: #ffffff;
   --cat-grid: #e5e5e5;
   --cat-ink: #0a0a0a; /* text/primary */
-  --cat-ink-2: #737373; /* text/secondary + icon/secondary (neutral-500) */
-  --cat-ink-3: #a3a3a3; /* text/tertiary (neutral-400) */
+  /* ink-2 / ink-3 darkened for WCAG AA (4.5:1) on every light surface: ink-3 was
+     #a3a3a3 (2.1-2.5:1). ink-2 stays darker than ink-3 to keep the hierarchy. */
+  --cat-ink-2: #525252; /* text/secondary + icon/secondary (neutral-600) */
+  --cat-ink-3: #666666; /* text/tertiary: 4.8:1 on #ebebeb up to 5.7:1 on white */
   /* Cards wear the sidebar's exact edge — white (invisible) border + the layered
      `--shadow-sidebar`. The scroll containers that hold cards are given matching
      horizontal room (px-3 / -mx-3, absorbed by the panel padding) so this soft
@@ -947,7 +957,9 @@
   --cat-grid: #27272a;
   --cat-ink: #fafafa; /* zinc-50 */
   --cat-ink-2: #a1a1aa; /* zinc-400 */
-  --cat-ink-3: #71717a; /* zinc-500 */
+  --cat-ink-3: #909099; /* was zinc-500 #71717a: 3.1-4.1:1 on dark cards; now 4.8-6.3:1 */
+  /* Red text on dark cards: #e04a3d is only 4.4:1 on #18181b. */
+  --primary-ink: #ef6a5e;
   /* BoardUI's card top-line: a 1px light highlight along the top edge, as if lit
      from above. On a dark card a plain border reads as a flat seam; this gives
      the surface the "sits on the page" lift BoardUI cards have. */

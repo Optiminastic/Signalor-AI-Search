@@ -40,7 +40,7 @@ function RouteBadge({ route }: { route: FixRow['route'] }): JSX.Element {
     )
   }
   return (
-    <span className="bg-primary/10 text-primary inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1 text-[10.5px] font-semibold">
+    <span className="bg-primary/10 text-primary-ink inline-flex shrink-0 items-center gap-1 rounded-sm px-2 py-1 text-[10.5px] font-semibold">
       <Zap className="h-3 w-3" aria-hidden />
       Auto fix
     </span>
@@ -99,7 +99,7 @@ export function HomeAutofixCard(): JSX.Element {
             Apply ranked fixes in one click, or review them as a PR
           </p>
         </div>
-        <span className="bg-primary shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
+        <span className="bg-primary-strong shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
           12
         </span>
       </div>
@@ -111,7 +111,7 @@ export function HomeAutofixCard(): JSX.Element {
       </ul>
       <p className="border-border text-muted-foreground flex items-center justify-between border-t px-4 py-2.5 text-[10.5px]">
         <span>Ship to themes, or open a PR. No engineer needed.</span>
-        <span className="text-primary inline-flex items-center gap-1 font-semibold">
+        <span className="text-primary-ink inline-flex items-center gap-1 font-semibold">
           Manage
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>

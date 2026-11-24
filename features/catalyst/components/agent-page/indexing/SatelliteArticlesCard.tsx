@@ -55,7 +55,7 @@ function ArticleRow({ article }: { article: SatelliteArticle }): JSX.Element {
       <span className={MUTED}>
         {hostOf(article.url)} · {googleStatus(article)}
       </span>
-      {article.flag && <span className="text-[11.5px] text-[#e04a3d]">{flagText(article)}</span>}
+      {article.flag && <span className="text-primary-ink text-[11.5px]">{flagText(article)}</span>}
     </li>
   )
 }

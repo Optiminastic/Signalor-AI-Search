@@ -22,7 +22,7 @@ const POPOVER =
   'absolute bottom-10 left-0 z-30 max-h-[calc(100dvh-140px)] w-[min(360px,calc(100vw-48px))] overflow-y-auto rounded-xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3 shadow-[0_12px_32px_rgba(16,24,40,.14)]'
 
 const NOTICE_OK = 'mb-2 rounded-md bg-emerald-600/10 px-2.5 py-1.5 text-[12px] text-emerald-700'
-const NOTICE_ERROR = 'mb-2 rounded-md bg-[#e04a3d]/10 px-2.5 py-1.5 text-[12px] text-[#e04a3d]'
+const NOTICE_ERROR = 'mb-2 rounded-md bg-[#e04a3d]/10 px-2.5 py-1.5 text-[12px] text-primary-ink'
 
 /** Close on Escape or a click outside the popover. */
 function useDismiss(ref: RefObject<HTMLElement | null>, open: boolean, close: () => void): void {

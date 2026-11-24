@@ -25,14 +25,14 @@ export function AgentTopBar(props: AgentTopBarProps): JSX.Element {
   return (
     <header className="relative z-30 flex items-center justify-between px-5 py-4">
       <Link href={agentHref} className="flex items-center gap-2">
-        <SignalorMark className="h-6 w-6 text-[#e04a3d]" />
+        <SignalorMark className="text-primary-ink h-6 w-6" />
         <span className="text-[14px] font-semibold text-[var(--cat-ink)]">Agent mode</span>
       </Link>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onReplayIntro}
-          className="mr-2 text-[12px] text-[var(--cat-ink-3)] hover:text-[#e04a3d]"
+          className="hover:text-primary-ink mr-2 text-[12px] text-[var(--cat-ink-3)]"
         >
           Replay intro
         </button>

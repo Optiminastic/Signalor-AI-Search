@@ -107,7 +107,7 @@ export function IntegrationsStrip(): JSX.Element {
 
         {/* Copy */}
         <div className="mx-auto mt-4 max-w-4xl text-center">
-          <p className="text-primary text-[11px] font-semibold tracking-[0.24em] uppercase">
+          <p className="text-primary-ink text-[11px] font-semibold tracking-[0.24em] uppercase">
             Integrations
           </p>
           <h2
@@ -115,7 +115,7 @@ export function IntegrationsStrip(): JSX.Element {
             className="text-foreground mt-4 text-2xl font-bold tracking-tight whitespace-nowrap sm:text-4xl lg:text-[2.65rem]"
           >
             Works where your{' '}
-            <span className="text-primary relative">
+            <span className="text-primary-ink relative">
               team already ships
               <span
                 className="border-primary/45 absolute right-0 -bottom-1 left-0 border-b-2 border-dashed"

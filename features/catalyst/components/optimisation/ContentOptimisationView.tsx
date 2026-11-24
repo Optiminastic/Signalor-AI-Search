@@ -63,7 +63,7 @@ function RailToggle({ on, onClick, title, children }: RailToggleProps): JSX.Elem
       title={title}
       className={`inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium transition ${
         on
-          ? 'border-primary/40 bg-primary/10 text-primary'
+          ? 'border-primary/40 bg-primary/10 text-primary-ink'
           : 'border-border bg-background text-foreground hover:bg-muted/40'
       }`}
     >
@@ -151,7 +151,7 @@ function ModeHint({ co }: { co: ContentOptimisation }): JSX.Element | null {
       <span>Click any element to edit. To apply, connect WordPress/Shopify or a GitHub repo.</span>
       <Link
         href={brandPath('integrations')}
-        className="text-primary inline-flex items-center gap-0.5 font-semibold hover:underline"
+        className="text-primary-ink inline-flex items-center gap-0.5 font-semibold hover:underline"
       >
         Connect <ExternalLink className="size-3" />
       </Link>

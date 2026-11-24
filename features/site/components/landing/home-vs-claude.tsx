@@ -145,7 +145,7 @@ function VsMedallion(): JSX.Element {
       aria-hidden
       className="absolute top-1/2 left-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 md:block"
     >
-      <span className="bg-card text-primary ring-border flex size-11 items-center justify-center rounded-full text-[13px] font-bold tracking-[0.06em] shadow-sm ring-1 shadow-black/10">
+      <span className="bg-card text-primary-ink ring-border flex size-11 items-center justify-center rounded-full text-[13px] font-bold tracking-[0.06em] shadow-sm ring-1 shadow-black/10">
         VS
       </span>
     </span>

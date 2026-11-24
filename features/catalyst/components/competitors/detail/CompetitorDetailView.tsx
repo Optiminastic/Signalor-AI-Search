@@ -45,7 +45,7 @@ function DetailHeader({ competitor }: { competitor: Competitor }): JSX.Element {
               href={competitor.url}
               target="_blank"
               rel="noreferrer"
-              className="text-[13px] font-medium text-[#e04a3d] hover:underline"
+              className="text-primary-ink text-[13px] font-medium hover:underline"
             >
               {domain}
             </a>

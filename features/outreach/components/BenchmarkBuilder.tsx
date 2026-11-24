@@ -58,7 +58,7 @@ function CopyButton({ label, value, html, tone = 'outline' }: CopyButtonProps): 
 
   const style =
     tone === 'solid'
-      ? 'bg-[#e04a3d] text-white hover:opacity-90'
+      ? 'bg-primary-strong text-white hover:opacity-90'
       : 'border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50'
 
   return (
@@ -216,7 +216,7 @@ function BenchmarkForm({ state, onChange, onSubmit }: BenchmarkFormProps): JSX.E
         <button
           type="submit"
           disabled={state.busy || !ready}
-          className="h-[38px] rounded-md bg-[#e04a3d] px-4 text-[14px] font-semibold text-white disabled:opacity-50"
+          className="bg-primary-strong h-[38px] rounded-md px-4 text-[14px] font-semibold text-white disabled:opacity-50"
         >
           {state.busy ? 'Running…' : 'Build report'}
         </button>

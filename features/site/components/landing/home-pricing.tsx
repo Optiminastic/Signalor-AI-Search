@@ -146,7 +146,7 @@ function PlanContent({ plan, symbol, amount, resolved }: PlanCellProps): JSX.Ele
         <div className="flex items-center gap-2">
           <h3 className="text-foreground text-base font-semibold tracking-tight">{plan.label}</h3>
           {plan.popular ? (
-            <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+            <span className="bg-primary-strong text-primary-foreground rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
               Popular
             </span>
           ) : null}
@@ -195,7 +195,7 @@ function PlanContent({ plan, symbol, amount, resolved }: PlanCellProps): JSX.Ele
             className="text-foreground/90 flex items-start gap-2 text-[13px] leading-snug"
           >
             <Check
-              className="text-primary mt-0.5 h-3.5 w-3.5 shrink-0"
+              className="text-primary-ink mt-0.5 h-3.5 w-3.5 shrink-0"
               strokeWidth={2.5}
               aria-hidden
             />
@@ -233,7 +233,7 @@ function EnterpriseRow(): JSX.Element {
               className="text-foreground/90 flex items-start gap-2 text-[13px] leading-snug"
             >
               <Check
-                className="text-primary mt-0.5 h-3.5 w-3.5 shrink-0"
+                className="text-primary-ink mt-0.5 h-3.5 w-3.5 shrink-0"
                 strokeWidth={2.5}
                 aria-hidden
               />
@@ -278,7 +278,7 @@ export function HomePricing(): JSX.Element {
           <CurrencyToggle currency={currency} onSelect={selectCurrency} />
           <Link
             href="/pricing"
-            className="text-primary hover:text-primary/80 text-[13px] font-semibold transition-colors"
+            className="text-primary-ink hover:text-primary-ink/80 text-[13px] font-semibold transition-colors"
           >
             Full plan comparison →
           </Link>

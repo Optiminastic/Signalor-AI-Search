@@ -27,7 +27,7 @@ export function BillingInvoicesCard({ invoices, loading }: BillingInvoicesCardPr
     <Card className="glass-card border-border/70">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <FileText className="text-primary h-4 w-4" />
+          <FileText className="text-primary-ink h-4 w-4" />
           <CardTitle>Invoices</CardTitle>
         </div>
         <CardDescription>Your payment history.</CardDescription>

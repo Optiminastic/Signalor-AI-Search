@@ -6,7 +6,7 @@ import { LandingNavMenu } from '@/features/landing/components/LandingNavMenu'
 function Logo(): JSX.Element {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2">
-      <SignalorMark className="text-primary h-7 w-7" />
+      <SignalorMark className="text-primary-ink h-7 w-7" />
       <span className="text-[19px] font-semibold tracking-tight text-[#171717]">SignalorAI</span>
     </Link>
   )

@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils'
 
 const TINT_CLASSES: Record<Testimonial['tint'], { dot: string; avatar: string; quote: string }> = {
   orange: {
-    dot: 'bg-primary/15 text-primary',
+    dot: 'bg-primary/15 text-primary-ink',
     avatar: 'bg-gradient-to-br from-primary to-orange-400 text-white',
-    quote: 'text-primary/25',
+    quote: 'text-primary-ink/25',
   },
   blue: {
     dot: 'bg-info/15 text-info',
@@ -34,7 +34,7 @@ export function Testimonials(): JSX.Element {
           className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem]"
         >
           Teams running{' '}
-          <span className="text-primary relative whitespace-nowrap">
+          <span className="text-primary-ink relative whitespace-nowrap">
             weekly GEO sprints
             <span
               className="border-primary/45 absolute right-0 -bottom-1 left-0 border-b-2 border-dashed"

@@ -21,11 +21,11 @@ export function Newsletter(): JSX.Element {
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           {/* Left — icon + heading + subtitle */}
           <div className="flex min-w-0 items-start gap-4">
-            <span className="bg-primary text-primary-foreground hidden h-11 w-11 shrink-0 items-center justify-center rounded-none shadow-[0_6px_16px_-6px_rgba(224,74,61,0.6)] sm:flex">
+            <span className="bg-primary-strong text-primary-foreground hidden h-11 w-11 shrink-0 items-center justify-center rounded-none shadow-[0_6px_16px_-6px_rgba(224,74,61,0.6)] sm:flex">
               <Mail className="h-5 w-5" aria-hidden />
             </span>
             <div className="min-w-0">
-              <p className="text-primary text-[11px] font-semibold tracking-[0.22em] uppercase">
+              <p className="text-primary-ink text-[11px] font-semibold tracking-[0.22em] uppercase">
                 Newsletter
               </p>
               <h2
@@ -42,7 +42,7 @@ export function Newsletter(): JSX.Element {
 
           {/* Right — form or success */}
           {submitted ? (
-            <div className="text-primary flex shrink-0 items-center gap-2 text-sm font-medium">
+            <div className="text-primary-ink flex shrink-0 items-center gap-2 text-sm font-medium">
               <Check className="h-4 w-4" aria-hidden />
               Subscribed, see you Thursday.
             </div>
@@ -59,7 +59,7 @@ export function Newsletter(): JSX.Element {
               />
               <button
                 type="submit"
-                className="bg-primary text-primary-foreground h-10 shrink-0 rounded-md px-5 text-sm font-semibold shadow-[0_4px_14px_-4px_rgba(224,74,61,0.5)] transition hover:opacity-90"
+                className="bg-primary-strong text-primary-foreground h-10 shrink-0 rounded-md px-5 text-sm font-semibold shadow-[0_4px_14px_-4px_rgba(224,74,61,0.5)] transition hover:opacity-90"
               >
                 Subscribe
               </button>

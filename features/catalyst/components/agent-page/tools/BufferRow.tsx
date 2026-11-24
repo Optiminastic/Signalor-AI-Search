@@ -97,7 +97,7 @@ export function BufferRow({ orgSlug }: BufferRowProps): JSX.Element {
     <li className="flex flex-col gap-1">
       <State buffer={buffer} connection={connection} />
       {connection.error && (
-        <p role="alert" className="px-2.5 text-[11.5px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink px-2.5 text-[11.5px]">
           {connection.error}
         </p>
       )}

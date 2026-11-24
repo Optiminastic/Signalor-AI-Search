@@ -56,19 +56,19 @@ const COMPARISON_DATA: ComparisonRow[] = [
 function CellValue({ value }: { value: string | boolean }): JSX.Element {
   if (typeof value === 'boolean') {
     return value ? (
-      <Check className="mx-auto h-5 w-5 text-success" strokeWidth={2.5} aria-label="Yes" />
+      <Check className="text-success mx-auto h-5 w-5" strokeWidth={2.5} aria-label="Yes" />
     ) : (
-      <X className="mx-auto h-5 w-5 text-muted-foreground/40" strokeWidth={2} aria-label="No" />
+      <X className="text-muted-foreground/40 mx-auto h-5 w-5" strokeWidth={2} aria-label="No" />
     )
   }
-  return <span className="text-sm text-foreground">{value}</span>
+  return <span className="text-foreground text-sm">{value}</span>
 }
 
 export function PromptTrackingComparisonTable(): JSX.Element {
   return (
     <section
       id="comparison"
-      className="scroll-mt-20 bg-background"
+      className="bg-background scroll-mt-20"
       aria-labelledby="comparison-heading"
     >
       <div
@@ -76,15 +76,15 @@ export function PromptTrackingComparisonTable(): JSX.Element {
         className="relative left-1/2 w-screen -translate-x-1/2 border-t border-black/6"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-16 pt-14 lg:px-12 lg:pb-20 lg:pt-16">
+      <div className="mx-auto max-w-7xl px-6 pt-14 pb-16 lg:px-12 lg:pt-16 lg:pb-20">
         <div className="mb-10">
           <h2
             id="comparison-heading"
-            className="text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="text-foreground text-3xl leading-tight font-bold tracking-tight sm:text-4xl"
           >
             How Signalor compares to brand monitoring tools
           </h2>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground lg:text-lg">
+          <p className="text-muted-foreground mt-4 max-w-3xl text-base leading-relaxed lg:text-lg">
             Traditional brand monitoring tools track web mentions. Signalor tracks AI-generated
             answers where 60% of search traffic now lands.
           </p>
@@ -95,23 +95,23 @@ export function PromptTrackingComparisonTable(): JSX.Element {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-black/10 bg-muted/30">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                <tr className="bg-muted/30 border-b border-black/10">
+                  <th className="text-foreground px-6 py-4 text-left text-sm font-semibold">
                     Feature
                   </th>
-                  <th className="bg-primary/5 border-l border-black/10 px-6 py-4 text-center text-sm font-semibold text-foreground">
+                  <th className="bg-primary/5 text-foreground border-l border-black/10 px-6 py-4 text-center text-sm font-semibold">
                     Signalor
                   </th>
-                  <th className="border-l border-black/10 px-6 py-4 text-center text-sm font-semibold text-muted-foreground">
+                  <th className="text-muted-foreground border-l border-black/10 px-6 py-4 text-center text-sm font-semibold">
                     Ahrefs Alerts
                   </th>
-                  <th className="border-l border-black/10 px-6 py-4 text-center text-sm font-semibold text-muted-foreground">
+                  <th className="text-muted-foreground border-l border-black/10 px-6 py-4 text-center text-sm font-semibold">
                     Semrush Brand Monitoring
                   </th>
-                  <th className="border-l border-black/10 px-6 py-4 text-center text-sm font-semibold text-muted-foreground">
+                  <th className="text-muted-foreground border-l border-black/10 px-6 py-4 text-center text-sm font-semibold">
                     Mention
                   </th>
-                  <th className="border-l border-black/10 px-6 py-4 text-center text-sm font-semibold text-muted-foreground">
+                  <th className="text-muted-foreground border-l border-black/10 px-6 py-4 text-center text-sm font-semibold">
                     Meltwater
                   </th>
                 </tr>
@@ -122,7 +122,7 @@ export function PromptTrackingComparisonTable(): JSX.Element {
                     key={row.feature}
                     className={idx !== COMPARISON_DATA.length - 1 ? 'border-b border-black/6' : ''}
                   >
-                    <td className="bg-background px-6 py-4 text-sm font-medium text-foreground">
+                    <td className="bg-background text-foreground px-6 py-4 text-sm font-medium">
                       {row.feature}
                     </td>
                     <td className="bg-primary/5 border-l border-black/10 px-6 py-4 text-center">
@@ -150,27 +150,27 @@ export function PromptTrackingComparisonTable(): JSX.Element {
         {/* Mobile cards */}
         <div className="space-y-6 lg:hidden">
           {COMPARISON_DATA.map(row => (
-            <div key={row.feature} className="rounded-lg border border-black/10 bg-card p-5">
-              <h3 className="mb-4 text-base font-semibold text-foreground">{row.feature}</h3>
+            <div key={row.feature} className="bg-card rounded-lg border border-black/10 p-5">
+              <h3 className="text-foreground mb-4 text-base font-semibold">{row.feature}</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between border-b border-black/6 pb-3">
-                  <span className="text-sm font-medium text-primary">Signalor</span>
+                  <span className="text-primary-ink text-sm font-medium">Signalor</span>
                   <CellValue value={row.signalor} />
                 </div>
                 <div className="flex items-center justify-between border-b border-black/6 pb-3">
-                  <span className="text-sm text-muted-foreground">Ahrefs Alerts</span>
+                  <span className="text-muted-foreground text-sm">Ahrefs Alerts</span>
                   <CellValue value={row.ahrefs} />
                 </div>
                 <div className="flex items-center justify-between border-b border-black/6 pb-3">
-                  <span className="text-sm text-muted-foreground">Semrush Brand Monitoring</span>
+                  <span className="text-muted-foreground text-sm">Semrush Brand Monitoring</span>
                   <CellValue value={row.semrush} />
                 </div>
                 <div className="flex items-center justify-between border-b border-black/6 pb-3">
-                  <span className="text-sm text-muted-foreground">Mention</span>
+                  <span className="text-muted-foreground text-sm">Mention</span>
                   <CellValue value={row.mention} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Meltwater</span>
+                  <span className="text-muted-foreground text-sm">Meltwater</span>
                   <CellValue value={row.meltwater} />
                 </div>
               </div>
@@ -178,7 +178,7 @@ export function PromptTrackingComparisonTable(): JSX.Element {
           ))}
         </div>
 
-        <p className="mt-6 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-6 text-sm">
           * Traditional brand monitoring tools track web mentions; Signalor tracks AI-generated
           answers where 60% of search traffic now lands.
         </p>
@@ -186,7 +186,7 @@ export function PromptTrackingComparisonTable(): JSX.Element {
         <div className="mt-8">
           <Link
             href="/sign-up"
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+            className="bg-primary-strong text-primary-foreground hover:bg-primary-strong/90 inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold shadow-sm transition-colors"
           >
             Start tracking AI mentions
           </Link>

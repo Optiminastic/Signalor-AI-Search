@@ -18,10 +18,10 @@ export function FeaturesGrid(): JSX.Element {
           className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem] xl:text-5xl"
         >
           Everything you need to{' '}
-          <span className="text-primary relative inline-flex items-center gap-2 align-middle whitespace-nowrap">
+          <span className="text-primary-ink relative inline-flex items-center gap-2 align-middle whitespace-nowrap">
             win in{' '}
             <Sparkles
-              className="text-primary inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
+              className="text-primary-ink inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
               strokeWidth={2.25}
               aria-hidden
             />{' '}

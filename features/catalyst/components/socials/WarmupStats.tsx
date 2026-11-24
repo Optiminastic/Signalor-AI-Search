@@ -41,7 +41,7 @@ export function WarmupStats(): JSX.Element {
           <p className="text-[11px] font-semibold tracking-wider text-[var(--cat-ink-3)] uppercase">
             Overall progress
           </p>
-          <span className="text-[13px] font-bold text-[#e04a3d] tabular-nums">{pct}%</span>
+          <span className="text-primary-ink text-[13px] font-bold tabular-nums">{pct}%</span>
         </div>
         <BarMeter value={pct} color="#e04a3d" />
         <div className="mt-1.5 flex justify-between text-[10px] font-semibold tracking-wide text-[var(--cat-ink-3)] uppercase">

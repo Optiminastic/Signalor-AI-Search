@@ -54,7 +54,7 @@ export function PromptTrackingHero({
               {TitleIcon ? (
                 <>
                   <TitleIcon
-                    className="text-primary inline-block h-8 w-8 align-[-0.18em] sm:h-9 sm:w-9 lg:h-10 lg:w-10"
+                    className="text-primary-ink inline-block h-8 w-8 align-[-0.18em] sm:h-9 sm:w-9 lg:h-10 lg:w-10"
                     strokeWidth={1.75}
                     aria-hidden
                   />{' '}
@@ -62,7 +62,7 @@ export function PromptTrackingHero({
               ) : null}
               {h.titleLine2}
             </span>
-            <span className="text-primary relative inline-block whitespace-nowrap">
+            <span className="text-primary-ink relative inline-block whitespace-nowrap">
               {h.titleAccent}
               <span
                 className="border-primary/50 absolute right-0 -bottom-1 left-0 border-b-2 border-dashed"
@@ -110,7 +110,7 @@ export function PromptTrackingHero({
                       className="h-6 w-6 object-contain"
                     />
                   ) : (
-                    <CardIcon className="text-primary h-5 w-5" strokeWidth={1.75} aria-hidden />
+                    <CardIcon className="text-primary-ink h-5 w-5" strokeWidth={1.75} aria-hidden />
                   )}
                 </span>
                 <span className="text-foreground mt-3 text-lg font-semibold tracking-tight">
@@ -119,7 +119,7 @@ export function PromptTrackingHero({
                 <span className="text-muted-foreground mt-1.5 text-sm leading-snug font-light">
                   {card.description}
                 </span>
-                <span className="text-primary mt-4 inline-flex items-center gap-1 text-sm font-semibold">
+                <span className="text-primary-ink mt-4 inline-flex items-center gap-1 text-sm font-semibold">
                   {card.cta}
                   <ArrowRight
                     className="h-4 w-4 transition-transform group-hover:translate-x-0.5"

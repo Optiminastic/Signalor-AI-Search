@@ -226,7 +226,7 @@ function Headline({ task }: { task: TaskDetail }): JSX.Element {
     <div className="min-w-0 flex-1">
       <h1 className="text-[22px] leading-tight font-bold tracking-tight text-balance text-[var(--cat-ink)]">
         {task.isTopFix && (
-          <span className="mr-1.5 text-[#e04a3d]" title="Top fix for today">
+          <span className="text-primary-ink mr-1.5" title="Top fix for today">
             ★
           </span>
         )}

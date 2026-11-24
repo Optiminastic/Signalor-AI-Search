@@ -33,16 +33,14 @@ function ExperienceInsightCard({
   return (
     <div className={`${HOME_CARD} flex flex-col gap-4 p-6 sm:p-7`}>
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
-          <Icon className="h-5 w-5 text-primary" strokeWidth={2} aria-hidden />
+        <span className="bg-primary/10 ring-primary/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ring-1">
+          <Icon className="text-primary-ink h-5 w-5" strokeWidth={2} aria-hidden />
         </span>
-        <span className="text-lg font-semibold tracking-tight text-foreground">
+        <span className="text-foreground text-lg font-semibold tracking-tight">
           {insight.metric}
         </span>
       </div>
-      <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
-        {insight.insight}
-      </p>
+      <p className="text-muted-foreground text-sm leading-relaxed text-pretty">{insight.insight}</p>
     </div>
   )
 }
@@ -52,29 +50,29 @@ function TrustBox(): JSX.Element {
     <div className="border-border bg-card mx-auto mt-12 max-w-3xl rounded-xl border p-6 shadow-sm shadow-black/5 sm:p-8">
       <div className="flex items-start gap-4">
         <span
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20"
+          className="bg-primary/10 ring-primary/20 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ring-1"
           aria-hidden
         >
-          <CheckCircle2 className="h-6 w-6 text-primary" strokeWidth={2} />
+          <CheckCircle2 className="text-primary-ink h-6 w-6" strokeWidth={2} />
         </span>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold tracking-tight text-foreground">
+          <h3 className="text-foreground text-lg font-semibold tracking-tight">
             Why trust this platform?
           </h3>
-          <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-muted-foreground">
+          <div className="text-muted-foreground mt-3 space-y-2.5 text-sm leading-relaxed">
             <p>
               This platform is based on{' '}
-              <strong className="font-semibold text-foreground">18 months</strong> of testing AI
+              <strong className="text-foreground font-semibold">18 months</strong> of testing AI
               engine behavior and{' '}
-              <strong className="font-semibold text-foreground">5,000+ real implementations</strong>.
-              We've tracked over{' '}
-              <strong className="font-semibold text-foreground">2 million prompts</strong> across
+              <strong className="text-foreground font-semibold">5,000+ real implementations</strong>
+              . We've tracked over{' '}
+              <strong className="text-foreground font-semibold">2 million prompts</strong> across
               ChatGPT, Claude, Gemini, Perplexity, and Google AI Overviews.
             </p>
             <p>
-              Every recommendation in our fix queue comes from analyzing which changes actually moved
-              citation rates in production. We don't ship theoretical advice — every check is backed
-              by data from live websites.
+              Every recommendation in our fix queue comes from analyzing which changes actually
+              moved citation rates in production. We don't ship theoretical advice — every check is
+              backed by data from live websites.
             </p>
           </div>
         </div>
@@ -86,33 +84,31 @@ function TrustBox(): JSX.Element {
 function CaseStudyHighlight(): JSX.Element {
   return (
     <div className="border-border bg-muted/30 mx-auto mt-8 max-w-3xl rounded-xl border p-6 sm:p-8">
-      <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-primary">
+      <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
         Real results
       </p>
-      <h3 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
+      <h3 className="text-foreground mt-2 text-xl font-semibold tracking-tight">
         DTC brand increased AI citations by 67% in 45 days
       </h3>
       <div className="mt-4 grid gap-6 sm:grid-cols-3">
         <div>
-          <p className="text-2xl font-semibold tabular-nums tracking-tight text-foreground">
-            67%
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Increase in AI citations</p>
+          <p className="text-foreground text-2xl font-semibold tracking-tight tabular-nums">67%</p>
+          <p className="text-muted-foreground mt-1 text-xs">Increase in AI citations</p>
         </div>
         <div>
-          <p className="text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+          <p className="text-foreground text-2xl font-semibold tracking-tight tabular-nums">
             +14 pts
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">GEO score improvement</p>
+          <p className="text-muted-foreground mt-1 text-xs">GEO score improvement</p>
         </div>
         <div>
-          <p className="text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+          <p className="text-foreground text-2xl font-semibold tracking-tight tabular-nums">
             45 days
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">Time to full implementation</p>
+          <p className="text-muted-foreground mt-1 text-xs">Time to full implementation</p>
         </div>
       </div>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="text-muted-foreground mt-4 text-sm leading-relaxed">
         After implementing Organization schema, FAQ markup, and optimizing their top 12 product
         pages, this Shopify store saw ChatGPT and Perplexity begin citing them in product
         recommendation prompts. The brand shipped all fixes using our Shopify integration.
@@ -123,10 +119,7 @@ function CaseStudyHighlight(): JSX.Element {
 
 export function HomeExperience(): JSX.Element {
   return (
-    <section
-      className="border-border relative border-t"
-      aria-labelledby="home-experience-heading"
-    >
+    <section className="border-border relative border-t" aria-labelledby="home-experience-heading">
       <GridCornerHandles top />
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         <HomeSectionHeader

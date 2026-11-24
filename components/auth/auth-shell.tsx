@@ -44,7 +44,7 @@ export function AuthMarketingPanel({
           </div>
 
           <div className="relative z-10 ml-auto max-w-md text-right">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               {eyebrow}
             </p>
             <h2 className="text-foreground mt-3 ml-auto max-w-sm text-2xl leading-[1.15] font-semibold tracking-tight xl:text-[28px]">
@@ -79,7 +79,7 @@ export function AuthShell({
       {/* LEFT — scrolls independently so the right illustration stays fixed. */}
       <div className="relative flex min-h-svh flex-col px-4 py-6 sm:px-6 lg:h-svh lg:min-h-0 lg:overflow-y-auto lg:px-10 xl:px-14">
         <Link href="/" className="flex w-fit shrink-0 items-center gap-2">
-          <SignalorMark className="text-primary h-6 w-6" />
+          <SignalorMark className="text-primary-ink h-6 w-6" />
           <span className="text-foreground text-[17px] font-semibold tracking-tight">
             SignalorAI
           </span>

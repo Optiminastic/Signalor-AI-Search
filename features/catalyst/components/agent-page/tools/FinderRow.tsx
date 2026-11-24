@@ -96,7 +96,7 @@ export function FinderRow(props: FinderRowProps): JSX.Element {
         </div>
       )}
       {error && (
-        <p role="alert" className="px-2.5 text-[11.5px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink px-2.5 text-[11.5px]">
           {error}
         </p>
       )}

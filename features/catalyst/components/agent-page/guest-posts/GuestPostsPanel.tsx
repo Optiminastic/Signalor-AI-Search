@@ -76,7 +76,7 @@ export function GuestPostsPanel({ orgSlug }: GuestPostsPanelProps): JSX.Element 
       </p>
       <SearchBar guest={guest} />
       {guest.actionError && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {guest.actionError}
         </p>
       )}

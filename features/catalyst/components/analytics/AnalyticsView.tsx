@@ -61,7 +61,7 @@ interface EmptyStateProps {
 function EmptyState({ icon, title, body, href, cta }: EmptyStateProps): JSX.Element {
   return (
     <Centered>
-      <span className="grid h-11 w-11 place-items-center rounded-md bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">
+      <span className="text-primary-ink grid h-11 w-11 place-items-center rounded-md bg-[rgba(224,74,61,0.1)]">
         {icon}
       </span>
       <div>

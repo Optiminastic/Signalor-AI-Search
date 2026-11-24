@@ -158,18 +158,18 @@ export function LandingFooter() {
         <div className="relative mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-2">
           <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-16">
             <div className="min-w-0">
-              <p className="text-primary/90 text-[11px] font-semibold tracking-[0.22em] uppercase">
+              <p className="text-primary-ink/90 text-[11px] font-semibold tracking-[0.22em] uppercase">
                 Get started
               </p>
               <h2 className="text-foreground mt-3 font-sans text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.35rem] xl:text-5xl">
                 Turn{' '}
                 <Sparkles
-                  className="text-primary inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
+                  className="text-primary-ink inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
                   strokeWidth={2.25}
                   aria-hidden
                 />{' '}
                 search into your{' '}
-                <span className="text-primary whitespace-nowrap">highest-intent pipeline</span>
+                <span className="text-primary-ink whitespace-nowrap">highest-intent pipeline</span>
               </h2>
               <p className="text-muted-foreground mt-4 max-w-lg text-sm leading-relaxed sm:text-base">
                 Run a free GEO audit, track citations across models, and ship fixes that move how
@@ -214,7 +214,7 @@ export function LandingFooter() {
                 <MailLink
                   user="hello"
                   subject="Careers"
-                  className="hover:text-foreground text-primary inline-flex align-middle text-sm font-medium transition-colors"
+                  className="hover:text-foreground text-primary-ink inline-flex align-middle text-sm font-medium transition-colors"
                 >
                   <CirclePlus width={16} height={16} />
                 </MailLink>

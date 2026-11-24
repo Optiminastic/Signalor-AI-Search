@@ -157,7 +157,7 @@ function IntegrationCards(): JSX.Element {
             <span className="text-muted-foreground mt-1.5 max-w-md text-sm leading-relaxed">
               {card.description}
             </span>
-            <span className="text-primary mt-5 inline-flex items-center gap-1 text-sm font-semibold">
+            <span className="text-primary-ink mt-5 inline-flex items-center gap-1 text-sm font-semibold">
               View integration
               <ArrowRight
                 className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
@@ -182,7 +182,7 @@ export function IntegrationHero(): JSX.Element {
           />
           <FloatingLogos />
           <div className="relative mx-auto max-w-2xl text-center">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Integrations
             </p>
             <h1

@@ -21,7 +21,7 @@ const LogoComp = ({ size = 36, compact = false, animated = true, className }: Lo
         className,
       )}
     >
-      <div style={{ width: iconSize, height: iconSize }} className="text-primary shrink-0">
+      <div style={{ width: iconSize, height: iconSize }} className="text-primary-ink shrink-0">
         <svg viewBox="0 0 1080 1080" className="h-full w-full [&_path]:fill-current">
           <path
             d="M565.79,201.17c43.67-3.79,81.17,9.26,114.46,37.06,72.34,60.41,69.67,134.55,104.91,214.09,45.59,102.92,157.65,196.05,41.43,299.84-44.78,39.99-108.24,55.11-162.85,76.4-85,33.15-130.62,64.56-228.66,44.72-279.35-56.53-309.76-455.82-77.76-594.82,46.15-27.65,156.07-72.76,208.47-77.3ZM568,214.45c-58.22,5.52-189.54,65.9-234.39,104.54-164.55,141.78-133.25,460.72,89.16,526.74,99.37,29.49,151.25-3.57,239.8-36.07,73.92-27.13,214.99-62.76,202.49-169.19-5.05-43-71.95-132.08-93.19-179.28-34.95-77.64-30.97-157.5-101.48-215.3-30.04-24.62-63.48-35.13-102.39-31.44Z"
@@ -69,7 +69,7 @@ const LogoComp = ({ size = 36, compact = false, animated = true, className }: Lo
           hydration mismatches from browser translation/extensions rewriting these
           short text nodes (e.g. "AI") — see issue #19. */}
       <span suppressHydrationWarning>SignalorAI</span>
-      {/* <span className="text-primary rounded-full" suppressHydrationWarning>
+      {/* <span className="text-primary-ink rounded-full" suppressHydrationWarning>
         .
       </span>
       <span className="font-semibold" suppressHydrationWarning>

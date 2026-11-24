@@ -13,7 +13,7 @@ export function OnboardingComplete(): JSX.Element {
 
   return (
     <div className="flex flex-col items-center text-center">
-      <span className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full">
+      <span className="bg-primary/10 text-primary-ink flex h-12 w-12 items-center justify-center rounded-full">
         <Check className="h-6 w-6" />
       </span>
       <h1 className="text-foreground mt-4 text-xl font-semibold tracking-tight">

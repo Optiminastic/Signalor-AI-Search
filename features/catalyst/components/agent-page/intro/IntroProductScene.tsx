@@ -14,7 +14,7 @@ function VisibilityMeter(): JSX.Element {
         <span className="text-[11px] font-medium text-[var(--cat-ink-2)]">AI visibility</span>
         <span className="text-[13px] font-semibold text-[var(--cat-ink)]">
           1% <span className="text-[var(--cat-ink-3)]">→</span>{' '}
-          <span className="text-[#e04a3d]">11%</span>
+          <span className="text-primary-ink">11%</span>
         </span>
       </div>
       <div className="cat-intro-ticks mt-2 flex gap-[2px]" aria-hidden="true">
@@ -36,7 +36,7 @@ function PlanRows(): JSX.Element {
         >
           <span className="font-semibold text-[var(--cat-ink)]">{row.week}</span>
           <span className="min-w-0 flex-1 truncate text-[var(--cat-ink-2)]">{row.task}</span>
-          <span className="rounded-full bg-[#e04a3d]/10 px-1.5 py-px text-[10px] font-medium text-[#e04a3d]">
+          <span className="text-primary-ink rounded-full bg-[#e04a3d]/10 px-1.5 py-px text-[10px] font-medium">
             {row.tag}
           </span>
         </li>
@@ -53,7 +53,7 @@ function RunPlanButton(): JSX.Element {
           className="cat-intro-ripple absolute inset-0 rounded-md bg-[#e04a3d]/50"
           aria-hidden="true"
         />
-        <span className="cat-intro-press relative inline-flex h-8 items-center rounded-md bg-[#e04a3d] px-3 text-[12px] font-semibold text-white shadow-[0_6px_18px_rgba(224,74,61,.35)]">
+        <span className="cat-intro-press bg-primary-strong relative inline-flex h-8 items-center rounded-md px-3 text-[12px] font-semibold text-white shadow-[0_6px_18px_rgba(224,74,61,.35)]">
           Run plan
         </span>
       </span>
@@ -74,7 +74,7 @@ export function IntroProductScene(): JSX.Element {
     <div className="cat-intro-scene2 absolute inset-0 grid place-items-center">
       <div className="cat-intro-card cat-card-edge w-[min(480px,88vw)] rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4 shadow-[0_30px_80px_rgba(224,74,61,.18)]">
         <div className="flex items-center gap-2">
-          <SignalorMark className="h-5 w-5 text-[#e04a3d]" />
+          <SignalorMark className="text-primary-ink h-5 w-5" />
           <span className="text-[13px] font-semibold text-[var(--cat-ink)]">SignalorAI Agent</span>
           <span className="ml-auto rounded-full bg-[var(--cat-track)] px-1.5 py-px text-[10px] text-[var(--cat-ink-2)]">
             This month

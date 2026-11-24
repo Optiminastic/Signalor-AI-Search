@@ -28,7 +28,7 @@ export function IntegrationsSummary({ connected, total }: IntegrationsSummaryPro
     <section className="cat-card-edge cat-rise mb-4 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-3">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">
+          <span className="text-primary-ink grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[rgba(224,74,61,0.1)]">
             <Blocks size={17} />
           </span>
           <div>

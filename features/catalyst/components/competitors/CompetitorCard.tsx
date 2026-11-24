@@ -20,7 +20,7 @@ function Identity({ competitor }: { competitor: Competitor }): JSX.Element {
       <div className="min-w-0">
         <TransitionLink
           href={href}
-          className="block truncate text-[14px] font-semibold text-[var(--cat-ink)] decoration-[var(--cat-ink-3)] underline-offset-2 group-hover:underline after:absolute after:inset-0"
+          className="block truncate py-0.5 text-[14px] font-semibold text-[var(--cat-ink)] decoration-[var(--cat-ink-3)] underline-offset-2 group-hover:underline after:absolute after:inset-0"
         >
           {name}
         </TransitionLink>
@@ -28,7 +28,7 @@ function Identity({ competitor }: { competitor: Competitor }): JSX.Element {
           href={`https://${domain}`}
           target="_blank"
           rel="noreferrer"
-          className="relative block truncate text-[12px] text-[var(--cat-ink-3)] transition-colors hover:text-[#e04a3d]"
+          className="hover:text-primary-ink relative block truncate py-1 text-[12px] text-[var(--cat-ink-3)] transition-colors"
         >
           {domain}
         </a>

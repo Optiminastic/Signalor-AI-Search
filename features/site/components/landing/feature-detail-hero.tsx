@@ -30,7 +30,7 @@ export function FeatureDetailHero({
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <span className="flex h-14 w-14 items-center justify-center rounded-none border border-black/8 bg-white shadow-sm">
-            <Icon className="text-primary h-7 w-7" strokeWidth={1.75} aria-hidden />
+            <Icon className="text-primary-ink h-7 w-7" strokeWidth={1.75} aria-hidden />
           </span>
           <div>
             <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">

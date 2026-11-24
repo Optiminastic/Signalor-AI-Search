@@ -38,7 +38,7 @@ function DayCard({ day }: { day: RoadDay }): JSX.Element {
       style={active ? { background: 'rgba(224,74,61,0.08)' } : undefined}
     >
       <p
-        className={`text-[10px] font-semibold tracking-wider uppercase ${active ? 'text-[#e04a3d]' : 'text-[var(--cat-ink-3)]'}`}
+        className={`text-[10px] font-semibold tracking-wider uppercase ${active ? 'text-primary-ink' : 'text-[var(--cat-ink-3)]'}`}
       >
         {active ? 'Today · ' : ''}Day {day.day}
       </p>

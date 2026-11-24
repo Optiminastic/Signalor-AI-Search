@@ -124,13 +124,13 @@ function PresetMenu({ filter, onPick, onCustom }: MenuProps): JSX.Element {
           className={ROW}
         >
           <span className="flex-1">{dateFilterLabel(option)}</span>
-          {isActive(filter, option) && <Check size={14} className="text-[#e04a3d]" />}
+          {isActive(filter, option) && <Check size={14} className="text-primary-ink" />}
         </button>
       ))}
       <div className="my-1 h-px bg-[var(--cat-border)]" />
       <button type="button" onClick={onCustom} className={ROW}>
         <span className="flex-1">Custom range…</span>
-        {filter.mode === 'range' && <Check size={14} className="text-[#e04a3d]" />}
+        {filter.mode === 'range' && <Check size={14} className="text-primary-ink" />}
       </button>
     </div>
   )
@@ -203,7 +203,7 @@ export function PromptDateFilter({
     <div ref={ref} className="relative shrink-0">
       <button
         type="button"
-        aria-label="Filter by date"
+        aria-label={`${dateFilterLabel(filter)}, filter by date`}
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}
         className={`${CONTROL_CHIP} gap-1.5`}

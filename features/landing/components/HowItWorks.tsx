@@ -15,7 +15,7 @@ export function HowItWorks(): JSX.Element {
           className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem]"
         >
           From pasted URL to{' '}
-          <span className="text-primary relative whitespace-nowrap">
+          <span className="text-primary-ink relative whitespace-nowrap">
             shipped fix
             <span
               className="border-primary/45 absolute right-0 -bottom-1 left-0 border-b-2 border-dashed"
@@ -48,7 +48,7 @@ function StepCard({ step }: { step: HowItWorksStep }): JSX.Element {
   return (
     <div className="flex flex-col gap-6 bg-white px-6 py-12 md:px-8 md:py-14 lg:px-8">
       <div className="flex items-center gap-3">
-        <span className="bg-primary/10 text-primary inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold">
+        <span className="bg-primary/10 text-primary-ink inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold">
           {step.n}
         </span>
         <span className="text-muted-foreground text-[11px] font-semibold tracking-[0.18em] uppercase">
@@ -74,7 +74,7 @@ function StepIllustration({ illo }: { illo: HowItWorksStep['illo'] }): JSX.Eleme
       <div className="flex w-full items-center gap-2 rounded-none border border-black/8 bg-white px-3 py-2.5 shadow-xs">
         <Globe className="text-muted-foreground h-4 w-4" aria-hidden />
         <span className="text-muted-foreground flex-1 truncate text-xs">signalor.ai</span>
-        <span className="bg-primary rounded-md px-2 py-0.5 text-[10px] font-semibold text-white">
+        <span className="bg-primary-strong rounded-md px-2 py-0.5 text-[10px] font-semibold text-white">
           Connect
         </span>
       </div>
@@ -110,7 +110,7 @@ function StepIllustration({ illo }: { illo: HowItWorksStep['illo'] }): JSX.Eleme
         <ul className="text-foreground mt-2 space-y-1.5 text-[11px] font-medium">
           <li className="flex items-center justify-between">
             <span className="truncate">perplexity.ai</span>
-            <span className="text-primary tabular-nums">8</span>
+            <span className="text-primary-ink tabular-nums">8</span>
           </li>
           <li className="flex items-center justify-between">
             <span className="truncate">gemini</span>

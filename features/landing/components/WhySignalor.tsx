@@ -47,9 +47,9 @@ export function WhySignalor(): JSX.Element {
           className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem] xl:text-5xl"
         >
           SEO got your site on Google. GEO gets you into{' '}
-          <span className="text-primary relative inline-flex items-center gap-2 align-middle whitespace-nowrap">
+          <span className="text-primary-ink relative inline-flex items-center gap-2 align-middle whitespace-nowrap">
             <Sparkles
-              className="text-primary inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
+              className="text-primary-ink inline-block h-[0.85em] w-[0.85em] shrink-0 align-middle"
               strokeWidth={2.25}
               aria-hidden
             />{' '}
@@ -278,7 +278,7 @@ export function WhySignalor(): JSX.Element {
                   <ul className="divide-y divide-black/6 text-xs font-medium">
                     {FEATURE_ROWS.map(({ icon: Icon, title, description }) => (
                       <li key={title} className="flex gap-3 py-3 first:pt-1 last:pb-1">
-                        <span className="bg-muted text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-black/8">
+                        <span className="bg-muted text-primary-ink flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-black/8">
                           <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden />
                         </span>
                         <div className="min-w-0 flex-1">

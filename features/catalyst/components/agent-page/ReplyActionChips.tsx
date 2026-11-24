@@ -18,9 +18,9 @@ interface ReplyActionChipsProps {
 const CHIP =
   'inline-flex items-center gap-1.5 rounded-full border border-[var(--cat-card-border)] bg-[var(--cat-content)]/80 px-3 py-1 text-[12px] text-[var(--cat-ink-2)] transition-colors hover:border-[#e04a3d]/40 hover:bg-[var(--cat-hover)] hover:text-[var(--cat-ink)]'
 // The board only shows on wide screens, so tab buttons are hidden below that.
-const TAB_CHIP = `${CHIP} hidden lg:inline-flex font-medium text-[#e04a3d]`
+const TAB_CHIP = `${CHIP} hidden lg:inline-flex font-medium text-primary-ink`
 const CONNECT_CHIP =
-  'inline-flex items-center gap-1.5 rounded-full bg-[#e04a3d] px-3 py-1 text-[12px] font-semibold text-white transition-opacity hover:opacity-90'
+  'inline-flex items-center gap-1.5 rounded-full bg-primary-strong px-3 py-1 text-[12px] font-semibold text-white transition-opacity hover:opacity-90'
 
 interface ConnectChipProps {
   tool: ConnectTool

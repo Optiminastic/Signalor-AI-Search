@@ -56,7 +56,7 @@ function activeStepFor(status: string, progress: number, done: boolean): number 
 function StepDot({ state }: { state: StepState }): JSX.Element {
   if (state === 'done') {
     return (
-      <span className="bg-primary grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full text-white">
+      <span className="bg-primary-strong grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full text-white">
         <Check className="h-3 w-3" strokeWidth={3} />
       </span>
     )
@@ -128,7 +128,7 @@ function Ticker({ step, phase }: { step: number; phase: string }): JSX.Element |
 function DoneCard(): JSX.Element {
   return (
     <div className="mt-7 flex flex-col items-center border-t border-neutral-200/70 pt-6">
-      <span className="bg-primary/10 text-primary grid h-12 w-12 place-items-center rounded-full">
+      <span className="bg-primary/10 text-primary-ink grid h-12 w-12 place-items-center rounded-full">
         <Check className="h-6 w-6" />
       </span>
       <p className="text-foreground mt-4 text-[15px] font-semibold">Your GEO report is ready</p>

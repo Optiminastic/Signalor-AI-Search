@@ -52,7 +52,7 @@ function CrawlSection({ report, isLoading }: CrawlSectionProps): JSX.Element | n
       )}
       <TransitionLink
         href={`${brandPath('visibility')}?tab=siteone`}
-        className="self-start text-[12px] font-medium text-[#e04a3d] underline decoration-[rgba(224,74,61,0.35)] underline-offset-2 hover:decoration-[#e04a3d]"
+        className="text-primary-ink self-start text-[12px] font-medium underline decoration-[rgba(224,74,61,0.35)] underline-offset-2 hover:decoration-[#e04a3d]"
       >
         Open the full SiteOne report
       </TransitionLink>

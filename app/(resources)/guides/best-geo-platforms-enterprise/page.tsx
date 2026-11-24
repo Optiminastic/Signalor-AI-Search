@@ -72,7 +72,10 @@ export default function BestGeoPlatformsEnterprisePage(): JSX.Element {
         data={breadcrumbJsonLd([
           { name: 'Home', path: '/' },
           { name: 'Guides', path: '/guides' },
-          { name: 'Best GEO Platforms for Enterprise', path: '/guides/best-geo-platforms-enterprise' },
+          {
+            name: 'Best GEO Platforms for Enterprise',
+            path: '/guides/best-geo-platforms-enterprise',
+          },
         ])}
       />
       <JsonLd
@@ -90,14 +93,25 @@ export default function BestGeoPlatformsEnterprisePage(): JSX.Element {
 
       <article className="border-border mx-auto max-w-4xl border-x px-6 py-16 sm:px-12 lg:px-16">
         <header className="mb-12">
-          <p className="text-muted-foreground mb-4 text-sm font-medium uppercase tracking-wide">
+          <p className="text-muted-foreground mb-4 text-sm font-medium tracking-wide uppercase">
             Enterprise Guide
           </p>
           <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl">
             What are the best GEO platforms for enterprise businesses to manage AI search presence?
           </h1>
           <p className="text-muted-foreground text-lg">
-            Published {new Date(publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · Updated {new Date(modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            Published{' '}
+            {new Date(publishDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}{' '}
+            · Updated{' '}
+            {new Date(modifiedDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
           </p>
         </header>
 
@@ -263,13 +277,15 @@ export default function BestGeoPlatformsEnterprisePage(): JSX.Element {
             integrations.
           </p>
 
-          <h3 className="mb-3 text-xl font-semibold">5. Team Collaboration and Workflow Management</h3>
+          <h3 className="mb-3 text-xl font-semibold">
+            5. Team Collaboration and Workflow Management
+          </h3>
           <p className="mb-4 leading-relaxed">
             GEO optimization requires coordination across content, engineering, and marketing teams.
             Enterprise platforms provide role-based access controls, task assignment, approval
             workflows, and audit trails. SignalorAI's collaboration features allow content teams to
-            draft improvements, technical teams to implement schema changes, and marketing leaders to
-            track progress against OKRs—all within a single platform.
+            draft improvements, technical teams to implement schema changes, and marketing leaders
+            to track progress against OKRs—all within a single platform.
           </p>
 
           <h3 className="mb-3 text-xl font-semibold">
@@ -357,13 +373,13 @@ export default function BestGeoPlatformsEnterprisePage(): JSX.Element {
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="/sign-up"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="bg-primary-strong text-primary-foreground hover:bg-primary-strong/90 inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Start Free Audit
             </a>
             <a
               href="/contact-sales"
-              className="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Contact Sales
             </a>

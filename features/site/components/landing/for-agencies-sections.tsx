@@ -197,7 +197,7 @@ function AgencyStats(): JSX.Element {
         <GridHandle className="-top-[3.5px] left-1/2 -ml-[3.5px] hidden lg:block" />
         <div className="lg:divide-border grid lg:grid-cols-2 lg:divide-x">
           <div className="max-lg:border-border flex flex-col justify-center px-6 py-14 max-lg:border-b sm:px-10 lg:py-20">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Built for rosters
             </p>
             <h2
@@ -263,7 +263,7 @@ function AgencyCapabilities(): JSX.Element {
               )}
             >
               <span className="flex items-center gap-2.5">
-                <Icon className="text-primary h-4.5 w-4.5" strokeWidth={2} aria-hidden />
+                <Icon className="text-primary-ink h-4.5 w-4.5" strokeWidth={2} aria-hidden />
                 <span className="text-foreground text-[15px] font-semibold tracking-tight">
                   {title}
                 </span>

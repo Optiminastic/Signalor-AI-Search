@@ -72,12 +72,12 @@ export function BillingUsageCard({ usage, loading }: BillingUsageCardProps): JSX
     <Card className="glass-card border-border/70">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Gauge className="text-primary h-4 w-4" />
+          <Gauge className="text-primary-ink h-4 w-4" />
           <CardTitle>Usage &amp; limits</CardTitle>
         </div>
         <CardDescription>
-          Analyses and auto-fixes reset on a rolling {windowDays}-day basis; prompts reset with
-          your billing cycle.
+          Analyses and auto-fixes reset on a rolling {windowDays}-day basis; prompts reset with your
+          billing cycle.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -98,7 +98,7 @@ export function BillingUsageCard({ usage, loading }: BillingUsageCardProps): JSX
             )}
             <div>
               <div className="flex items-center gap-1.5">
-                <Sparkles className="text-primary h-3.5 w-3.5" />
+                <Sparkles className="text-primary-ink h-3.5 w-3.5" />
                 <p className="text-foreground text-sm">AI engines on your plan</p>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">

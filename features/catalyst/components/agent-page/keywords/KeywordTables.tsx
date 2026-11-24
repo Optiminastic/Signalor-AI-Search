@@ -4,7 +4,7 @@ const ROW =
   'flex items-center gap-3 border-b border-[var(--cat-border)] py-2 text-[12.5px] last:border-0'
 const NUMBER = 'w-16 shrink-0 text-right text-[var(--cat-ink-2)] tabular-nums'
 const NEW_CHIP =
-  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-[#e04a3d]'
+  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-primary-ink'
 const HEAD = 'flex items-center gap-3 pb-1 text-[11px] text-[var(--cat-ink-3)]'
 
 const volume = new Intl.NumberFormat(undefined, { notation: 'compact' })

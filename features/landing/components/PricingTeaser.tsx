@@ -68,7 +68,7 @@ export function PricingTeaser(): JSX.Element {
           className="text-foreground mt-4 max-w-4xl text-3xl leading-[1.12] font-bold tracking-tight sm:text-4xl lg:text-[2.65rem]"
         >
           Plans from{' '}
-          <span className="text-primary relative whitespace-nowrap">
+          <span className="text-primary-ink relative whitespace-nowrap">
             {CURRENCY_SYMBOL}
             {TEASER_PLANS[0].price} / month
             <span
@@ -122,7 +122,7 @@ export function PricingTeaser(): JSX.Element {
                     className="text-accent-foreground flex items-start gap-2 text-[13px] leading-snug"
                   >
                     <Check
-                      className="text-primary mt-0.5 h-3.5 w-3.5 shrink-0"
+                      className="text-primary-ink mt-0.5 h-3.5 w-3.5 shrink-0"
                       strokeWidth={2.5}
                       aria-hidden
                     />
@@ -135,8 +135,8 @@ export function PricingTeaser(): JSX.Element {
                 className={cn(
                   'mt-auto inline-flex h-10 items-center justify-center gap-1.5 rounded-md px-4 text-[13px] font-semibold transition',
                   p.popular
-                    ? 'bg-primary text-primary-foreground shadow-[0_4px_14px_-4px_rgba(224,74,61,0.5)] hover:opacity-90'
-                    : 'border-primary/25 bg-primary/5 text-primary hover:bg-primary/10 border',
+                    ? 'bg-primary-strong text-primary-foreground shadow-[0_4px_14px_-4px_rgba(224,74,61,0.5)] hover:opacity-90'
+                    : 'border-primary/25 bg-primary/5 text-primary-ink hover:bg-primary/10 border',
                 )}
               >
                 Get {p.label}

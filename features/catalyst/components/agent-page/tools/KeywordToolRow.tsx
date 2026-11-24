@@ -31,13 +31,13 @@ const LOGOS: Record<string, { src: string; className: string }> = {
 const ROW = 'flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left'
 const MUTED = 'text-[12px] text-[var(--cat-ink-3)]'
 const IN_USE =
-  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-[#e04a3d]'
+  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-primary-ink'
 
 function Logo({ tool }: { tool: KeywordTool }): JSX.Element {
   if (tool.provider === 'signalor') {
     return (
       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[#e04a3d]/10">
-        <SignalorMark className="h-4 w-4 text-[#e04a3d]" />
+        <SignalorMark className="text-primary-ink h-4 w-4" />
       </span>
     )
   }
@@ -153,7 +153,7 @@ export function KeywordToolRow(props: KeywordToolRowProps): JSX.Element {
         </div>
       )}
       {error && (
-        <p role="alert" className="px-2.5 text-[11.5px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink px-2.5 text-[11.5px]">
           {error}
         </p>
       )}

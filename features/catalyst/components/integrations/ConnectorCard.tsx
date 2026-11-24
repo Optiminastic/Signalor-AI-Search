@@ -138,7 +138,7 @@ export function ConnectButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-[#e04a3d] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#c53f34]"
+      className="bg-primary-strong inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white transition-colors hover:bg-[#c53f34]"
     >
       {mark}
       {label}

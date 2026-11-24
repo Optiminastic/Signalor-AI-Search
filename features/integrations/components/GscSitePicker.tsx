@@ -67,7 +67,7 @@ function SiteOption({ site, checked, onSelect }: SiteOptionProps): JSX.Element {
           </span>
         )}
       </span>
-      {checked && <Check className="h-4 w-4 shrink-0 text-[#e04a3d]" />}
+      {checked && <Check className="text-primary-ink h-4 w-4 shrink-0" />}
     </label>
   )
 }

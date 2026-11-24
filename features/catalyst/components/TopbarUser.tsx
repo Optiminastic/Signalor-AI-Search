@@ -16,9 +16,9 @@ export function TopbarUser(): JSX.Element {
   return (
     <Link
       href="/profile"
-      aria-label="Your account"
+      aria-label={`${initials(name)}, your account`}
       title={name}
-      className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-[#e04a3d] text-[12px] font-semibold text-white"
+      className="bg-primary-strong grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full text-[12px] font-semibold text-white"
     >
       {initials(name)}
     </Link>

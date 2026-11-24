@@ -115,7 +115,7 @@ export default function ToolsIndexPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/tools/url-analyzer"
-                className="bg-primary inline-flex h-11 items-center gap-2 rounded-md px-5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
+                className="bg-primary-strong inline-flex h-11 items-center gap-2 rounded-md px-5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
               >
                 Analyze your site free
                 <ArrowRight className="h-4 w-4" />
@@ -144,14 +144,14 @@ export default function ToolsIndexPage() {
               <Link key={tool.href} href={tool.href} className="group flex flex-col">
                 <BlogCardFrame seed={tool.href}>
                   <span className="ring-foreground/10 grid h-14 w-14 place-items-center rounded-xl bg-white shadow-md ring-1">
-                    <tool.icon className="text-primary h-6 w-6" />
+                    <tool.icon className="text-primary-ink h-6 w-6" />
                   </span>
                 </BlogCardFrame>
-                <h3 className="text-foreground group-hover:text-primary mt-5 text-lg font-bold tracking-tight transition-colors">
+                <h3 className="text-foreground group-hover:text-primary-ink mt-5 text-lg font-bold tracking-tight transition-colors">
                   {tool.title}
                 </h3>
                 <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{tool.desc}</p>
-                <span className="text-primary mt-4 inline-flex items-center gap-1 text-sm font-medium transition group-hover:gap-1.5">
+                <span className="text-primary-ink mt-4 inline-flex items-center gap-1 text-sm font-medium transition group-hover:gap-1.5">
                   Open tool
                   <ArrowRight className="h-4 w-4" />
                 </span>

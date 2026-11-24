@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -10,28 +10,28 @@ import {
   Check,
   ChevronDown,
   Lock,
-} from "@/features/site/components/icons";
-import { cn } from "@/features/site/lib/utils";
-import type { ContentPage } from "@/features/site/lib/api/content-optimisation";
+} from '@/features/site/components/icons'
+import { cn } from '@/features/site/lib/utils'
+import type { ContentPage } from '@/features/site/lib/api/content-optimisation'
 
 type Props = {
-  url: string;
-  baseUrl: string;
-  pages: ContentPage[];
-  canGoBack: boolean;
-  canGoForward: boolean;
-  isLoading: boolean;
-  onUrlChange: (url: string) => void;
-  onBack: () => void;
-  onForward: () => void;
-  onRefresh: () => void;
-};
+  url: string
+  baseUrl: string
+  pages: ContentPage[]
+  canGoBack: boolean
+  canGoForward: boolean
+  isLoading: boolean
+  onUrlChange: (url: string) => void
+  onBack: () => void
+  onForward: () => void
+  onRefresh: () => void
+}
 
 function getPath(fullUrl: string, base: string): string {
   if (base && fullUrl.startsWith(base)) {
-    return fullUrl.slice(base.length) || "/";
+    return fullUrl.slice(base.length) || '/'
   }
-  return fullUrl;
+  return fullUrl
 }
 
 /** The classic three window dots — purely decorative, sells the browser frame. */
@@ -42,7 +42,7 @@ function TrafficLights() {
       <span className="size-2.5 rounded-full bg-[#FEBC2E]/80" />
       <span className="size-2.5 rounded-full bg-[#28C840]/80" />
     </span>
-  );
+  )
 }
 
 function NavButton({
@@ -51,10 +51,10 @@ function NavButton({
   label,
   children,
 }: {
-  onClick: () => void;
-  disabled: boolean;
-  label: string;
-  children: React.ReactNode;
+  onClick: () => void
+  disabled: boolean
+  label: string
+  children: React.ReactNode
 }) {
   return (
     <button
@@ -62,16 +62,16 @@ function NavButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "flex size-8 items-center justify-center rounded-full transition",
+        'flex size-8 items-center justify-center rounded-full transition',
         disabled
-          ? "cursor-not-allowed text-muted-foreground/35"
-          : "text-foreground/80 hover:bg-muted hover:text-foreground active:scale-95",
+          ? 'text-muted-foreground/35 cursor-not-allowed'
+          : 'text-foreground/80 hover:bg-muted hover:text-foreground active:scale-95',
       )}
       aria-label={label}
     >
       {children}
     </button>
-  );
+  )
 }
 
 function PagesMenu({
@@ -79,40 +79,40 @@ function PagesMenu({
   url,
   onPick,
 }: {
-  pages: ContentPage[];
-  url: string;
-  onPick: (url: string) => void;
+  pages: ContentPage[]
+  url: string
+  onPick: (url: string) => void
 }) {
   return (
-    <div className="absolute left-0 right-0 top-full z-30 mt-1.5 max-h-72 overflow-y-auto rounded-lg border border-border bg-popover py-1 shadow-xl">
-      <p className="select-none px-3 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="border-border bg-popover absolute top-full right-0 left-0 z-30 mt-1.5 max-h-72 overflow-y-auto rounded-lg border py-1 shadow-xl">
+      <p className="text-muted-foreground px-3 pt-1.5 pb-1 text-[10px] font-semibold tracking-wider uppercase select-none">
         Crawled pages
       </p>
-      {pages.slice(0, 50).map((p) => {
-        const active = p.url === url;
+      {pages.slice(0, 50).map(p => {
+        const active = p.url === url
         return (
           <button
             key={p.url}
             type="button"
-            onMouseDown={(e) => e.preventDefault()}
+            onMouseDown={e => e.preventDefault()}
             onClick={() => onPick(p.url)}
             className={cn(
-              "flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition",
-              active ? "bg-muted/60" : "hover:bg-muted/40",
+              'flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition',
+              active ? 'bg-muted/60' : 'hover:bg-muted/40',
             )}
           >
             <span className="min-w-0 flex-1">
-              <span className="block truncate font-medium text-foreground">{p.path || "/"}</span>
-              <span className="block truncate text-[11px] text-muted-foreground">
+              <span className="text-foreground block truncate font-medium">{p.path || '/'}</span>
+              <span className="text-muted-foreground block truncate text-[11px]">
                 {p.title || p.url}
               </span>
             </span>
-            {active ? <Check className="size-3.5 shrink-0 text-primary" /> : null}
+            {active ? <Check className="text-primary-ink size-3.5 shrink-0" /> : null}
           </button>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 export function BrowserChrome({
@@ -127,21 +127,21 @@ export function BrowserChrome({
   onForward,
   onRefresh,
 }: Props) {
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const currentPath = getPath(url, baseUrl);
+  const currentPath = getPath(url, baseUrl)
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return
     function onClick(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        setOpen(false)
       }
     }
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, [open]);
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [open])
 
   return (
     <div className="relative flex items-center gap-1.5 px-3 py-2">
@@ -158,44 +158,44 @@ export function BrowserChrome({
 
       {/* URL bar — domain locked, path shown, pages menu on the right */}
       <div className="relative ml-1 flex-1" ref={wrapperRef}>
-        <div className="flex h-9 items-center gap-1.5 rounded-full border border-border/80 bg-muted/30 px-1.5 pr-2 shadow-[inset_0_1px_2px_rgba(16,24,40,0.04)] transition-colors hover:border-border hover:bg-muted/45">
+        <div className="border-border/80 bg-muted/30 hover:border-border hover:bg-muted/45 flex h-9 items-center gap-1.5 rounded-full border px-1.5 pr-2 shadow-[inset_0_1px_2px_rgba(16,24,40,0.04)] transition-colors">
           {baseUrl ? (
             <>
               <span
-                className="flex shrink-0 select-none items-center gap-1.5 whitespace-nowrap rounded-full bg-background px-2.5 py-1 text-xs font-medium text-foreground/80 shadow-sm ring-1 ring-border/60"
+                className="bg-background text-foreground/80 ring-border/60 flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap shadow-sm ring-1 select-none"
                 title="Domain locked to your project URL"
               >
-                <Lock className="size-3 shrink-0 text-success" />
-                {baseUrl.replace(/^https?:\/\//, "")}
+                <Lock className="text-success size-3 shrink-0" />
+                {baseUrl.replace(/^https?:\/\//, '')}
               </span>
-              <span className="min-w-0 select-none truncate text-[13px] font-medium text-foreground">
-                {currentPath || "/"}
+              <span className="text-foreground min-w-0 truncate text-[13px] font-medium select-none">
+                {currentPath || '/'}
               </span>
             </>
           ) : (
-            <span className="flex min-w-0 select-none items-center gap-1.5 truncate pl-1 text-[13px] text-muted-foreground">
+            <span className="text-muted-foreground flex min-w-0 items-center gap-1.5 truncate pl-1 text-[13px] select-none">
               <Globe2 className="size-3.5 shrink-0" />
-              {url || "No URL configured"}
+              {url || 'No URL configured'}
             </span>
           )}
 
           {pages.length > 0 ? (
             <button
               type="button"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => setOpen((v) => !v)}
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => setOpen(v => !v)}
               className={cn(
-                "ml-auto flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] transition",
+                'ml-auto flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] transition',
                 open
-                  ? "border-primary/40 bg-primary/10 text-primary"
-                  : "border-transparent text-muted-foreground hover:border-border hover:bg-background hover:text-foreground hover:shadow-sm",
+                  ? 'border-primary/40 bg-primary/10 text-primary-ink'
+                  : 'text-muted-foreground hover:border-border hover:bg-background hover:text-foreground border-transparent hover:shadow-sm',
               )}
               aria-label="Browse site pages"
               aria-expanded={open}
               title="Browse site pages"
             >
               <span className="font-medium tabular-nums">{pages.length} pages</span>
-              <ChevronDown className={cn("size-3 transition", open && "rotate-180")} />
+              <ChevronDown className={cn('size-3 transition', open && 'rotate-180')} />
             </button>
           ) : null}
         </div>
@@ -204,9 +204,9 @@ export function BrowserChrome({
           <PagesMenu
             pages={pages}
             url={url}
-            onPick={(next) => {
-              setOpen(false);
-              onUrlChange(next);
+            onPick={next => {
+              setOpen(false)
+              onUrlChange(next)
             }}
           />
         ) : null}
@@ -215,10 +215,10 @@ export function BrowserChrome({
       {/* Browser-style loading shimmer along the chrome's bottom edge. */}
       {isLoading ? (
         <span
-          className="absolute inset-x-0 -bottom-px h-[2px] animate-pulse bg-gradient-to-r from-primary/0 via-primary/70 to-primary/0"
+          className="from-primary/0 via-primary/70 to-primary/0 absolute inset-x-0 -bottom-px h-[2px] animate-pulse bg-gradient-to-r"
           aria-hidden
         />
       ) : null}
     </div>
-  );
+  )
 }

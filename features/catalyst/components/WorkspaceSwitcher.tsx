@@ -67,7 +67,7 @@ function ProjectMenu({ projects, activeId, onSelect }: MenuProps): JSX.Element {
             </span>
             <span className="block truncate text-[11px] text-[var(--cat-ink-3)]">{p.url}</span>
           </span>
-          {p.id === activeId && <Check size={15} className="shrink-0 text-[#e04a3d]" />}
+          {p.id === activeId && <Check size={15} className="text-primary-ink shrink-0" />}
         </button>
       ))}
       {projects.length === 0 && (

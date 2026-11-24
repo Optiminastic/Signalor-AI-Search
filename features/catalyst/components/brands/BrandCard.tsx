@@ -72,7 +72,7 @@ export function BrandCard({ brand }: { brand: Brand }): JSX.Element {
         </span>
         <Link
           href={`/dashboard/${brand.slug}`}
-          className="flex items-center gap-1 text-[13px] font-semibold text-[#e04a3d] transition-all group-hover:gap-1.5"
+          className="text-primary-ink flex items-center gap-1 text-[13px] font-semibold transition-all group-hover:gap-1.5"
         >
           Open
           <ArrowRight size={14} />

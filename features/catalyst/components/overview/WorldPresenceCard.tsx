@@ -21,7 +21,7 @@ function Header(): JSX.Element {
   return (
     <div className="mb-3 flex items-start justify-between">
       <div className="flex items-center gap-2.5">
-        <span className="grid h-8 w-8 place-items-center rounded-md bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">
+        <span className="text-primary-ink grid h-8 w-8 place-items-center rounded-md bg-[rgba(224,74,61,0.1)]">
           <Globe size={16} />
         </span>
         <div>
@@ -35,7 +35,7 @@ function Header(): JSX.Element {
         </span>
         <Link
           href={`${brandPath('visibility')}?tab=analytics`}
-          className="inline-flex items-center gap-0.5 text-[12px] font-medium text-[#e04a3d] transition-colors hover:text-[#b9382d]"
+          className="text-primary-ink inline-flex items-center gap-0.5 text-[12px] font-medium transition-colors hover:text-[#b9382d]"
         >
           View details <ArrowRight size={13} />
         </Link>

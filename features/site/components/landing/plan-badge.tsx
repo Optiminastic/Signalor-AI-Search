@@ -16,7 +16,9 @@ export function PlanBadge({ popular, comingSoon }: PlanBadgeProps): JSX.Element 
     return <span className={`bg-muted text-muted-foreground ${BADGE_BASE}`}>Coming soon</span>
   }
   if (popular) {
-    return <span className={`bg-primary text-primary-foreground ${BADGE_BASE}`}>Popular</span>
+    return (
+      <span className={`bg-primary-strong text-primary-foreground ${BADGE_BASE}`}>Popular</span>
+    )
   }
   return null
 }

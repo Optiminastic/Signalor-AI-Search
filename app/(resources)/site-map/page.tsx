@@ -90,7 +90,7 @@ export default function SitemapPage() {
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
             Every public page on SignalorAI, grouped by area. Looking for the machine-readable
             version? It&apos;s at{' '}
-            <a href="/sitemap.xml" className="text-primary font-medium hover:underline">
+            <a href="/sitemap.xml" className="text-primary-ink font-medium hover:underline">
               /sitemap.xml
             </a>
             .

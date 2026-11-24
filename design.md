@@ -22,6 +22,11 @@ These hold for the marketing site and the dashboard alike. The Parts below add s
 ### 0.1 One accent, many neutrals
 
 - A single warm brand red - `--primary: #e04a3d` - carries every CTA, active state, and eyebrow highlight on both surfaces. Everything else is grayscale.
+- Accessible red (WCAG AA): `#e04a3d` is 4.0:1 as small text on white, below the 4.5:1 minimum.
+  - Red **text**: `text-primary-ink` (`#c13b2f` light, `#ef6a5e` dark).
+  - Red **behind small white text** (badges, small buttons, the avatar): `bg-primary-strong` (`#c13b2f`).
+  - Fills, icons, charts, tick meters and large shapes stay `#e04a3d`.
+  - Never use `text-primary` or `text-[#e04a3d]` for text.
 - Status colors (`success` green, `warning` amber, `info` blue, `feature-violet`) and chart data hues (blue / purple / yellow / green) appear **only where they carry meaning** - badges, deltas, live dots, chart series and their legends. Never in chrome (nav, buttons, borders).
 - Never introduce a new hex in new code. Use the Tailwind token classes, not raw hex. Never use pure `#000` text.
 
@@ -108,16 +113,16 @@ Rule: a new PAGE picks A or B by its page type (section 6) and uses it for every
 
 All from `app/globals.css`. Use the Tailwind token classes, never raw hex, in new code. (See also shared §0.1.)
 
-| Role                    | Token / class                                                                                      | Value             |
-| ----------------------- | -------------------------------------------------------------------------------------------------- | ----------------- |
-| Brand (the ONLY accent) | `text-primary` / `bg-primary`                                                                      | `#e04a3d`         |
-| Ink (headings)          | `text-foreground`                                                                                  | `#171717`         |
-| Body / muted            | `text-muted-foreground`                                                                            | `#737373`         |
-| Page canvas             | `bg-[#fafafa]` (set once by `MarketingShell`)                                                      | `#fafafa`         |
-| Card surface            | `bg-card` / `bg-white`                                                                             | `#ffffff`         |
-| Tinted panel            | `bg-muted`                                                                                         | `#f5f5f5`         |
-| Hairline                | `border-border` (A) or `border-black/6` `/8` `/10` (B)                                             | ~8% black         |
-| Status only             | `text-success #047857`, `text-warning #b45309`, `text-info #2563eb`, `text-feature-violet #6d28d9` | data meaning only |
+| Role                    | Token / class                                                                                      | Value                 |
+| ----------------------- | -------------------------------------------------------------------------------------------------- | --------------------- |
+| Brand (the ONLY accent) | `bg-primary` (fills); `text-primary-ink` (text); `bg-primary-strong` (behind white text)           | `#e04a3d` / `#c13b2f` |
+| Ink (headings)          | `text-foreground`                                                                                  | `#171717`             |
+| Body / muted            | `text-muted-foreground`                                                                            | `#737373`             |
+| Page canvas             | `bg-[#fafafa]` (set once by `MarketingShell`)                                                      | `#fafafa`             |
+| Card surface            | `bg-card` / `bg-white`                                                                             | `#ffffff`             |
+| Tinted panel            | `bg-muted`                                                                                         | `#f5f5f5`             |
+| Hairline                | `border-border` (A) or `border-black/6` `/8` `/10` (B)                                             | ~8% black             |
+| Status only             | `text-success #047857`, `text-warning #b45309`, `text-info #2563eb`, `text-feature-violet #6d28d9` | data meaning only     |
 
 - One accent: brand red carries every CTA, active state, and eyebrow highlight. Status colors appear only where they mean something (badges, category tones, live dots).
 - Never introduce a new hex. Never use pure `#000` text or heavy `shadow-lg/xl` blacks.
@@ -181,7 +186,7 @@ inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-card px-5 text
 
 ### Eyebrows (two sanctioned variants)
 
-- Rail: `text-[12px] font-semibold uppercase tracking-[0.18em] text-primary` - plain text, e.g. `How it works`.
+- Rail: `text-[12px] font-semibold uppercase tracking-[0.18em] text-primary-ink` - plain text, e.g. `How it works`.
 - Sheet: `text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground` - rendered bracketed, e.g. `[ free tools ]`.
 
 No third variant. `MarketingContent`'s red hex eyebrow counts as the Rail variant and should migrate to `text-primary`.
