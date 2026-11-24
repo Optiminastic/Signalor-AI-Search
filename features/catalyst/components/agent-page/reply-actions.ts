@@ -1,4 +1,4 @@
-import type { BoardTab } from '@/features/catalyst/components/agent-page/BoardTabs'
+import { HIDDEN_TABS, type BoardTab } from '@/features/catalyst/components/agent-page/BoardTabs'
 
 /**
  * Clickable next steps under the agent's latest reply: board tabs worth opening
@@ -71,18 +71,12 @@ const FOLLOW_UPS: Record<string, string[]> = {
   get_outreach: ['Who replied to our emails?', 'When are the next follow-ups?'],
   get_guest_posts: ['Find more guest post sites', 'How does guest post pitching work?'],
   find_guest_sites: ['Show the guest post sites you found'],
-  get_social: ['How can I raise my social score?', 'Check my social presence now'],
-  check_social_now: ['Show my social score'],
   get_indexing: ['Which pages are not indexed yet?', 'Check indexing now'],
   check_indexing_now: ['Show my indexing status'],
   get_connections: ['Which tools should I connect first?'],
   get_competitor_tracking: [
     'Which keywords are competitors beating us on?',
     'What should we do to catch up?',
-  ],
-  get_keywords: [
-    'Which golden keywords should we target first?',
-    'Which keyword gaps have the most searches?',
   ],
   get_site_health: ['Is anything wrong with my site?'],
   get_positioning: [
@@ -108,7 +102,11 @@ function unique<T>(items: T[]): T[] {
 function tabsFor(tools: string[], text: string): BoardTab[] {
   const fromTools = tools.map(tool => TOOL_TABS[tool]).filter((tab): tab is BoardTab => !!tab)
   const fromText = TAB_MENTIONS.filter(([, pattern]) => pattern.test(text)).map(([tab]) => tab)
-  return unique([...fromTools, ...fromText]).slice(0, MAX_TABS)
+  // Never offer a chip for a tab that isn't on the board.
+  const shown = (tab: BoardTab): boolean => !HIDDEN_TABS.has(tab)
+  return unique([...fromTools, ...fromText])
+    .filter(shown)
+    .slice(0, MAX_TABS)
 }
 
 function same(a: string, b: string): boolean {

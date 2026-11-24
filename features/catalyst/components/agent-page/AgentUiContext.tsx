@@ -1,8 +1,8 @@
 'use client'
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 
-import type { BoardTab } from '@/features/catalyst/components/agent-page/BoardTabs'
+import { HIDDEN_TABS, type BoardTab } from '@/features/catalyst/components/agent-page/BoardTabs'
 
 interface AgentUiState {
   orgSlug: string
@@ -23,11 +23,15 @@ interface AgentUiProviderProps {
 
 /** UI state shared between the chat and the board in an open Agent mode chat. */
 export function AgentUiProvider({ orgSlug, children }: AgentUiProviderProps): JSX.Element {
-  const [tab, setTab] = useState<BoardTab>('activity')
+  const [tab, setRawTab] = useState<BoardTab>('activity')
   const [toolsOpen, setToolsOpen] = useState(false)
+  // A tab taken off the board can't be opened by a chip, a link or anything else.
+  const setTab = useCallback((next: BoardTab) => {
+    if (!HIDDEN_TABS.has(next)) setRawTab(next)
+  }, [])
   const value = useMemo(
     () => ({ orgSlug, tab, setTab, toolsOpen, setToolsOpen }),
-    [orgSlug, tab, toolsOpen],
+    [orgSlug, tab, setTab, toolsOpen],
   )
   return <AgentUiContext.Provider value={value}>{children}</AgentUiContext.Provider>
 }
