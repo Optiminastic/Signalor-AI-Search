@@ -7,6 +7,7 @@ import {
   type ActionFilter,
   type ActionFilterCount,
 } from '@/features/catalyst/components/actions/ActionFilters'
+import { PassedChecks } from '@/features/catalyst/components/actions/PassedChecks'
 import { AgentSections } from '@/features/catalyst/components/agent/AgentSections'
 import { PlanProjection } from '@/features/catalyst/components/agent/PlanProjection'
 import { RunPlanButton } from '@/features/catalyst/components/agent/RunPlanButton'
@@ -44,8 +45,21 @@ function TodayView(): JSX.Element {
   )
 }
 
+/** The open filter's content: the plan, the passed technical checks, or the task list. */
+function ActionsBoard({ filter }: { filter: ActionFilter }): JSX.Element {
+  if (filter === 'today') return <TodayView />
+  if (filter === 'passed') return <PassedChecks />
+  return <TasksView filter={filter} />
+}
+
 function isFilter(value: string | null): value is ActionFilter {
-  return value === 'today' || value === 'backlog' || value === 'done' || value === 'all'
+  return (
+    value === 'today' ||
+    value === 'backlog' ||
+    value === 'done' ||
+    value === 'passed' ||
+    value === 'all'
+  )
 }
 
 /**
@@ -70,6 +84,7 @@ export function ActionsView(): JSX.Element {
     { key: 'today', label: 'Today', count: counts.today },
     { key: 'backlog', label: 'Backlog', count: counts.backlog },
     { key: 'done', label: 'Done', count: counts.done },
+    { key: 'passed', label: '✓ Passed', count: counts.passed },
     { key: 'all', label: 'All', count: counts.all },
   ]
 
@@ -90,7 +105,7 @@ export function ActionsView(): JSX.Element {
       </div>
       <ActionFilters current={current} counts={filters} basePath={brandPath('actions')} />
       <div className="-mx-3 mt-3 flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
-        {current === 'today' ? <TodayView /> : <TasksView filter={current} />}
+        <ActionsBoard filter={current} />
       </div>
     </>
   )

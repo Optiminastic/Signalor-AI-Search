@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useActiveProject } from '@/hooks/useActiveProject'
 import { useAgentPlan } from '@/hooks/useAgentPlan'
+import { useTechnicalChecks } from '@/hooks/useTechnicalChecks'
 import { getActions } from '@/lib/api/analyzer'
 
 const DONE = new Set(['completed', 'verified'])
@@ -14,6 +15,8 @@ export interface ActionCounts {
   /** Open actions beyond today's plan. */
   backlog: number | null
   done: number | null
+  /** Technical checks that passed: never actions, so never in Today, Done or All. */
+  passed: number | null
   all: number | null
 }
 
@@ -32,6 +35,8 @@ export interface ActionCounts {
 export function useActionCounts(): ActionCounts {
   const { email } = useActiveProject()
   const { plan } = useAgentPlan()
+  const { report: checks } = useTechnicalChecks()
+  const passed = checks ? checks.passed : null
 
   const { data } = useQuery({
     // Own key: this is a summary, not the board's row data, and it must stay
@@ -46,13 +51,14 @@ export function useActionCounts(): ActionCounts {
   })
 
   const today = plan ? plan.groups.reduce((n, g) => n + g.actions.length, 0) : null
-  if (!data) return { today, backlog: null, done: null, all: null }
+  if (!data) return { today, backlog: null, done: null, passed, all: null }
 
   return {
     today,
     // Today's plan is drawn from the open set, so the remainder is the backlog.
     backlog: today === null ? null : Math.max(0, data.open - today),
     done: data.done,
+    passed,
     all: data.total,
   }
 }

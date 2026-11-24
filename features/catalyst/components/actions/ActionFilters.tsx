@@ -3,7 +3,7 @@
 import { TransitionLink } from '@/components/TransitionLink'
 import { BRAND, BRAND_SOFT, BRAND_STRONG } from '@/features/catalyst/constants'
 
-export type ActionFilter = 'today' | 'backlog' | 'done' | 'all'
+export type ActionFilter = 'today' | 'backlog' | 'done' | 'passed' | 'all'
 
 export interface ActionFilterCount {
   key: ActionFilter
