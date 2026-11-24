@@ -34,13 +34,19 @@ const TABS: { id: BoardTab; label: string; className?: string }[] = [
   { id: 'activity', label: 'Activity' },
   { id: 'articles', label: 'Articles' },
   { id: 'guest', label: 'Guest posts' },
-  { id: 'keywords', label: 'Keywords' },
-  { id: 'social', label: 'Social' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
   // Wide screens show tracking in its own column on the right instead.
   { id: 'tracking', label: 'Tracking', className: 'min-[1440px]:hidden' },
 ]
+
+/**
+ * Tabs taken off the board for now (their panels stay in the code):
+ * - Social: numbers aren't complete yet (YouTube, Reddit and follower counts need API keys).
+ * - Keywords: waiting for search volumes (DataForSEO credit).
+ * Put a tab back by removing it here and re-adding it to TABS.
+ */
+export const HIDDEN_TABS: ReadonlySet<BoardTab> = new Set<BoardTab>(['social', 'keywords'])
 
 export function boardPanelId(tab: BoardTab): string {
   return `agent-board-panel-${tab}`

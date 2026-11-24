@@ -18,9 +18,19 @@ describe('replyActions', () => {
   })
 
   it('suggests follow-ups for the tools used, then general ones, at most three', () => {
-    const { followUps } = replyActions(['get_social'], 'Score 40.', [])
+    const { followUps } = replyActions(['get_indexing'], '12 pages indexed.', [])
     expect(followUps).toHaveLength(3)
-    expect(followUps[0]).toBe('How can I raise my social score?')
+    expect(followUps[0]).toBe('Which pages are not indexed yet?')
+  })
+
+  it('never offers a chip for a tab hidden from the board (Social and Keywords, for now)', () => {
+    const { tabs } = replyActions(
+      ['get_social', 'get_keywords'],
+      'Your social score is 40 and you rank for 3 keywords.',
+      [],
+    )
+    expect(tabs).not.toContain('social')
+    expect(tabs).not.toContain('keywords')
   })
 
   it('never suggests a question the owner already asked', () => {
