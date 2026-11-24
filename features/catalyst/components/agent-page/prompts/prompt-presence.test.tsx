@@ -1,7 +1,9 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { PLATFORM_ORDER } from '@/features/catalyst/components/agent-page/prompts/platforms'
 import { PromptCard } from '@/features/catalyst/components/agent-page/prompts/PromptCard'
+import { platformCounts } from '@/features/catalyst/components/agent-page/prompts/PromptPresencePanel'
 import { getPromptPresence, type PromptPresence } from '@/lib/api/agent-mode-prompt-presence'
 
 const presence: PromptPresence = {
@@ -53,7 +55,9 @@ afterEach(() => vi.clearAllMocks())
 
 describe('PromptCard', () => {
   it('shows subreddits, threads, posts and links per platform', () => {
-    const html = renderToStaticMarkup(<PromptCard presence={presence} open />)
+    const html = renderToStaticMarkup(
+      <PromptCard presence={presence} open platforms={PLATFORM_ORDER} />,
+    )
     expect(html).toContain('best 3d printer for beginners')
     expect(html).toContain('r/3dprinter · 2')
     expect(html).toContain('Reddit threads')
@@ -63,16 +67,51 @@ describe('PromptCard', () => {
   })
 
   it('marks where the brand already appears', () => {
-    const html = renderToStaticMarkup(<PromptCard presence={presence} open />)
-    expect(html).toContain('You appear on X')
+    const html = renderToStaticMarkup(
+      <PromptCard presence={presence} open platforms={PLATFORM_ORDER} />,
+    )
+    expect(html).toMatch(/You appear on.*X/)
     expect(html).toContain('mentions you')
   })
 
   it('says when the brand is not in any result', () => {
     const html = renderToStaticMarkup(
-      <PromptCard presence={{ ...presence, brandPresentOn: [] }} open />,
+      <PromptCard presence={{ ...presence, brandPresentOn: [] }} open platforms={PLATFORM_ORDER} />,
     )
     expect(html).toContain('Not mentioned yet')
+  })
+})
+
+describe('platform separation', () => {
+  it('labels each platform section with its own name and mark', () => {
+    const html = renderToStaticMarkup(
+      <PromptCard presence={presence} open platforms={PLATFORM_ORDER} />,
+    )
+    expect(html).toContain('aria-label="Reddit threads"')
+    expect(html).toContain('aria-label="X posts"')
+    expect(html).toContain('aria-label="Google links"')
+    expect(html).toContain('border-l-[#ff4500]') // Reddit's orange edge
+    expect(html).toContain('border-l-[#4285f4]') // Google's blue edge
+  })
+
+  it('shows only the picked platform, even when it has nothing', () => {
+    const html = renderToStaticMarkup(
+      <PromptCard presence={presence} open platforms={['linkedin']} />,
+    )
+    expect(html).toContain('LinkedIn posts')
+    expect(html).toContain('None found for this prompt.')
+    expect(html).not.toContain('Reddit threads')
+    expect(html).not.toContain('Subreddits:')
+  })
+
+  it('counts results per platform across prompts', () => {
+    const report = {
+      checkedAt: null,
+      checking: false,
+      trackedPrompts: 2,
+      prompts: [presence, presence],
+    }
+    expect(platformCounts(report)).toEqual({ reddit: 2, linkedin: 0, x: 2, google: 2 })
   })
 })
 
