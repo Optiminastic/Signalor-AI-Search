@@ -3,6 +3,7 @@ import {
   stepsForTools,
   type ActivityStep,
 } from '@/features/catalyst/components/agent-page/agent-activity'
+import { GREEN } from '@/features/catalyst/constants'
 import { Check, Loader2 } from '@/lib/icons'
 
 interface AgentActivityFeedProps {
@@ -14,48 +15,62 @@ interface AgentActivityFeedProps {
 interface StepRowProps {
   step: ActivityStep
   index: number
-  live: boolean
 }
 
-function StepRow({ step, index, live }: StepRowProps): JSX.Element {
+/** A step of the reply being written, revealed one after another. */
+function LiveStep({ step, index }: StepRowProps): JSX.Element {
   const Icon = step.icon
   return (
     <li
-      className={
-        live
-          ? 'cat-agent-step-live flex items-center gap-3'
-          : 'cat-agent-step flex items-center gap-3'
-      }
-      style={{ animationDelay: `${index * (live ? 1.1 : 0.12)}s` }}
+      className="cat-agent-step-live flex items-center gap-3"
+      style={{ animationDelay: `${index * 1.1}s` }}
     >
-      <span className="text-primary-ink grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#e04a3d]/10">
+      <span className="text-primary-ink grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[#e04a3d]/10">
         <Icon size={15} strokeWidth={2.2} />
       </span>
       <span className="flex-1 text-[13px] text-[var(--cat-ink)]">{step.label}</span>
-      {live ? (
-        <Loader2 size={14} className="cat-agent-spin text-[var(--cat-ink-3)]" />
-      ) : (
-        <Check size={14} strokeWidth={2.4} className="text-emerald-500" />
-      )}
+      <Loader2 size={14} className="cat-agent-spin text-[var(--cat-ink-3)]" />
     </li>
   )
 }
 
-/** What the agent is doing now (animated) or what it just did (its real tool trace). */
-export function AgentActivityFeed({ thinking, lastTools }: AgentActivityFeedProps): JSX.Element {
-  const steps = thinking ? THINKING_STEPS : stepsForTools(lastTools)
-  if (steps.length === 0) {
+/** What the last chat reply looked up, as one quiet strip above the log. */
+function LastReplySteps({ steps }: { steps: ActivityStep[] }): JSX.Element {
+  return (
+    <div className="rounded-md border border-[var(--cat-border)] bg-[var(--cat-card)] px-3 py-2.5">
+      <p className="text-[11.5px] text-[var(--cat-ink-3)]">From your last message</p>
+      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+        {steps.map(step => (
+          <li
+            key={step.label}
+            className="flex items-center gap-1.5 text-[12.5px] text-[var(--cat-ink)]"
+          >
+            <Check size={13} strokeWidth={2.4} style={{ color: GREEN }} aria-hidden="true" />
+            {step.label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/**
+ * What the agent is doing for the chat right now (animated), or what the last
+ * reply looked up. Renders nothing when the last reply used no tools.
+ */
+export function AgentActivityFeed({
+  thinking,
+  lastTools,
+}: AgentActivityFeedProps): JSX.Element | null {
+  if (thinking) {
     return (
-      <p className="text-[13px] text-[var(--cat-ink-3)]">
-        Answered from what it already knew. Ask about your plan or visibility to see it work.
-      </p>
+      <ol aria-live="polite" className="space-y-3">
+        {THINKING_STEPS.map((step, i) => (
+          <LiveStep key={step.label} step={step} index={i} />
+        ))}
+      </ol>
     )
   }
-  return (
-    <ol key={thinking ? 'live' : lastTools.join()} className="space-y-3">
-      {steps.map((step, i) => (
-        <StepRow key={step.label} step={step} index={i} live={thinking} />
-      ))}
-    </ol>
-  )
+  const steps = stepsForTools(lastTools)
+  return steps.length > 0 ? <LastReplySteps steps={steps} /> : null
 }

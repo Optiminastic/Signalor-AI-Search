@@ -162,7 +162,7 @@ const LINES: Record<string, Describe> = {
   }),
   guest_sites_found: e => ({
     title: `Found ${String(e.detail.count ?? 0)} guest-post sites`,
-    detail: 'Added to this month’s plan. See the Guest posts tab to skip any.',
+    detail: 'Added to this month’s plan. You can skip any of them.',
     tone: 'success',
   }),
   keywords_refresh_started: () => ({
@@ -174,17 +174,17 @@ const LINES: Record<string, Describe> = {
     e.detail.reason
       ? {
           title: 'Couldn’t read your keywords',
-          detail: 'See the Keywords tab for why.',
+          detail: 'Nothing changed in your keyword data.',
           tone: 'neutral',
         }
       : {
           title: `Found ${String(e.detail.gaps ?? 0)} keywords your competitors win`,
-          detail: 'See the Keywords tab.',
+          detail: 'Keywords where they rank and you don’t.',
           tone: 'success',
         },
   satellite_topics_planned: e => ({
     title: `Planned ${String(e.detail.count ?? 0)} articles on signalor.ai sites`,
-    detail: 'One every 3 days, each mentioning you. See Approvals to skip any topic.',
+    detail: 'One every 3 days, each mentioning you. You can skip any topic.',
     tone: 'success',
   }),
   social_check_started: () => ({
@@ -194,7 +194,7 @@ const LINES: Record<string, Describe> = {
   }),
   social_checked: e => ({
     title: `Social presence score: ${String((e.detail.overall as { score?: number } | undefined)?.score ?? 0)} of 100`,
-    detail: 'See the Social tab for each platform.',
+    detail: 'Scored across LinkedIn, X, YouTube, Instagram and Reddit.',
     tone: 'success',
   }),
   posted_by_owner: e => ({

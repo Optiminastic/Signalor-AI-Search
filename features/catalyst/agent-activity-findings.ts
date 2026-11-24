@@ -198,7 +198,7 @@ export const FINDING_LINES: Record<string, Describe> = {
     return found
       ? {
           title: `Checked your site: ${found} thing(s) changed`,
-          detail: 'See the lines above.',
+          detail: 'Each change is listed on its own line.',
           tone: 'attention',
         }
       : { title: 'Checked your site: all looks fine', detail: '', tone: 'neutral' }
@@ -237,7 +237,7 @@ export const FINDING_LINES: Record<string, Describe> = {
   }),
   rank_check_done: e => ({
     title: `Checked positions for ${num(e.detail.keywords)} keywords`,
-    detail: `${num(e.detail.mentions)} new mentions found. See You vs competitors.`,
+    detail: `${num(e.detail.mentions)} new mentions found.`,
     tone: 'success',
   }),
 }
