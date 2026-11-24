@@ -15,6 +15,7 @@ import {
 import { GuestPostsPanel } from '@/features/catalyst/components/agent-page/guest-posts/GuestPostsPanel'
 import { IndexingPanel } from '@/features/catalyst/components/agent-page/indexing/IndexingPanel'
 import { KeywordsPanel } from '@/features/catalyst/components/agent-page/keywords/KeywordsPanel'
+import { PromptPresencePanel } from '@/features/catalyst/components/agent-page/prompts/PromptPresencePanel'
 import { SocialPanel } from '@/features/catalyst/components/agent-page/social/SocialPanel'
 import { RankTrackingPanel } from '@/features/catalyst/components/agent-page/tracking/RankTrackingPanel'
 import { isSatelliteDraft } from '@/features/catalyst/satellite-topics'
@@ -35,6 +36,7 @@ function heading(tab: BoardTab, thinking: boolean): string {
   if (tab === 'indexing') return 'Indexing on Google'
   if (tab === 'articles') return 'Articles on signalor.ai sites'
   if (tab === 'social') return 'Social presence'
+  if (tab === 'prompts') return 'Prompt presence'
   if (tab === 'guest') return 'Guest posts'
   if (tab === 'keywords') return 'Keywords on Google'
   if (tab === 'tracking') return 'Tracking'
@@ -101,6 +103,7 @@ function BoardPanel({
   if (tab === 'guest') return <GuestPostsPanel orgSlug={orgSlug} />
   if (tab === 'keywords') return <KeywordsPanel orgSlug={orgSlug} />
   if (tab === 'social') return <SocialPanel orgSlug={orgSlug} approvals={approvals} />
+  if (tab === 'prompts') return <PromptPresencePanel orgSlug={orgSlug} />
   if (tab === 'approvals') return <AgentApprovalsPanel orgSlug={orgSlug} approvals={approvals} />
   if (tab === 'indexing') return <IndexingPanel orgSlug={orgSlug} />
   if (tab === 'tracking') return <RankTrackingPanel orgSlug={orgSlug} />

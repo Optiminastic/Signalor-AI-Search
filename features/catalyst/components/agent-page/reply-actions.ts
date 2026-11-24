@@ -35,6 +35,7 @@ export const TAB_LABELS: Record<BoardTab, string> = {
   keywords: 'Keywords',
   tracking: 'Tracking',
   social: 'Social',
+  prompts: 'Prompts',
   approvals: 'Approvals',
   indexing: 'Indexing',
 }
@@ -46,6 +47,7 @@ const TOOL_TABS: Record<string, BoardTab> = {
   get_guest_posts: 'guest',
   find_guest_sites: 'guest',
   get_social: 'social',
+  get_prompt_presence: 'prompts',
   check_social_now: 'social',
   get_indexing: 'indexing',
   check_indexing_now: 'indexing',
@@ -79,6 +81,7 @@ const FOLLOW_UPS: Record<string, string[]> = {
     'What should we do to catch up?',
   ],
   get_site_health: ['Is anything wrong with my site?'],
+  get_prompt_presence: ['Which Reddit threads should I join first?', 'Where do I already show up?'],
   get_positioning: [
     'Which competitors do AI answers recommend instead?',
     'Which sites should we get mentioned on?',
