@@ -8,6 +8,7 @@ export type BoardTab =
   | 'guest'
   | 'keywords'
   | 'social'
+  | 'prompts'
   | 'approvals'
   | 'indexing'
   | 'tracking'
@@ -34,6 +35,7 @@ const TABS: { id: BoardTab; label: string; className?: string }[] = [
   { id: 'activity', label: 'Activity' },
   { id: 'articles', label: 'Articles' },
   { id: 'guest', label: 'Guest posts' },
+  { id: 'prompts', label: 'Prompts' },
   { id: 'approvals', label: 'Approvals' },
   { id: 'indexing', label: 'Indexing' },
   // Wide screens show tracking in its own column on the right instead.

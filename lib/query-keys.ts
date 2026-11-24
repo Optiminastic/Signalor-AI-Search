@@ -54,6 +54,7 @@ export const queryKeys = {
     weeklyReports: (orgSlug: string) => ['agent-mode', orgSlug, 'weekly-reports'] as const,
     satelliteRanks: (orgSlug: string) => ['agent-mode', orgSlug, 'satellite-ranks'] as const,
     social: (orgSlug: string) => ['agent-mode', orgSlug, 'social'] as const,
+    promptPresence: (orgSlug: string) => ['agent-mode', orgSlug, 'prompt-presence'] as const,
     action: (orgSlug: string, actionId: string) =>
       ['agent-mode', orgSlug, 'actions', actionId] as const,
   },
