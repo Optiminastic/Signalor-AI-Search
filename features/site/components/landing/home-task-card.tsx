@@ -81,7 +81,7 @@ function TaskAction({ autoFix }: { autoFix: boolean }): JSX.Element {
       <span
         className={cn(
           'col-start-1 row-start-1 inline-flex items-center gap-1 rounded-sm px-2 py-1 transition-opacity duration-300 motion-safe:group-hover:opacity-0',
-          autoFix ? 'bg-primary/10 text-primary' : 'ring-border text-muted-foreground ring-1',
+          autoFix ? 'bg-primary/10 text-primary-ink' : 'ring-border text-muted-foreground ring-1',
         )}
       >
         {autoFix && <Zap className="h-3 w-3" aria-hidden />}
@@ -134,7 +134,7 @@ export function HomeTaskCard(): JSX.Element {
             Today&apos;s ranked plan, highest impact first
           </p>
         </div>
-        <span className="bg-primary shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
+        <span className="bg-primary-strong shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
           11
         </span>
       </div>
@@ -154,7 +154,7 @@ export function HomeTaskCard(): JSX.Element {
           <span className="bg-primary h-1.5 w-1.5 rounded-full" aria-hidden />
           Highest impact first
         </span>
-        <span className="text-primary inline-flex items-center gap-1 font-semibold">
+        <span className="text-primary-ink inline-flex items-center gap-1 font-semibold">
           View all
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>

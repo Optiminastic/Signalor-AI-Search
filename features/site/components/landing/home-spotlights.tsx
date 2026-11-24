@@ -26,7 +26,7 @@ function LearnMoreLink({ href }: { href: string }): JSX.Element {
   return (
     <Link
       href={href}
-      className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
+      className="text-primary-ink hover:text-primary-ink/80 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
     >
       Learn more
       <ArrowRight className="size-4" aria-hidden />

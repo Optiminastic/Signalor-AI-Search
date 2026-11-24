@@ -18,13 +18,13 @@ export function FooterCta(): JSX.Element {
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-16">
           {/* Left — copy + CTA */}
           <div className="min-w-0 text-center lg:text-left">
-            <p className="text-[11px] font-semibold tracking-[0.22em] text-[#e04a3d] uppercase">
+            <p className="text-primary-ink text-[11px] font-semibold tracking-[0.22em] uppercase">
               Get started
             </p>
             <h2 className="mt-4 text-[30px] leading-[1.12] font-bold tracking-tight text-[#141414] sm:text-[42px]">
-              Turn <Sparkle size={30} className="inline-block align-middle text-[#e04a3d]" /> search
-              into your{' '}
-              <span className="whitespace-nowrap text-[#e04a3d]">highest-intent pipeline</span>
+              Turn <Sparkle size={30} className="text-primary-ink inline-block align-middle" />{' '}
+              search into your{' '}
+              <span className="text-primary-ink whitespace-nowrap">highest-intent pipeline</span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[16px] leading-relaxed text-[#6b6b6b] lg:mx-0">
               Run a free GEO audit, track citations across models, and ship fixes that move how

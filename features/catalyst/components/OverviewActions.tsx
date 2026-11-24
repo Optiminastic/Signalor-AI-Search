@@ -75,7 +75,7 @@ function MenuItem({
       onClick={onClick}
       className="hover:bg-background-secondary-default flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-[13px] text-[var(--cat-ink)] transition-colors"
     >
-      <Check size={13} className={active ? 'text-[#e04a3d]' : 'opacity-0'} />
+      <Check size={13} className={active ? 'text-primary-ink' : 'opacity-0'} />
       {children}
     </button>
   )

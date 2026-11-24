@@ -23,7 +23,7 @@ export function AgentChatPanel({ orgSlug, brandName, chat }: AgentChatPanelProps
     >
       <header className="flex items-center gap-2.5 px-5 pt-4 pb-2">
         <span className="grid h-8 w-8 place-items-center rounded-full bg-[#e04a3d]/10">
-          <SignalorMark className="h-4 w-4 text-[#e04a3d]" />
+          <SignalorMark className="text-primary-ink h-4 w-4" />
         </span>
         <div className="min-w-0">
           <p className="text-[13px] font-semibold text-[var(--cat-ink)]">SignalorAI Agent</p>

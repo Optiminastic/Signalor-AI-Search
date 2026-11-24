@@ -12,7 +12,7 @@ function initials(name: string): string {
 
 function UserAvatar({ name }: { name: string }): JSX.Element {
   return (
-    <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-[#e04a3d] text-[12px] font-semibold text-white">
+    <span className="bg-primary-strong grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full text-[12px] font-semibold text-white">
       {initials(name)}
     </span>
   )

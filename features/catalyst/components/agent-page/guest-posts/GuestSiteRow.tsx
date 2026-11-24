@@ -28,9 +28,9 @@ const REVIEW_LABELS: Partial<Record<GuestStage, string>> = {
 }
 const MUTED = 'text-[11.5px] text-[var(--cat-ink-3)]'
 const CITED_CHIP =
-  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-[#e04a3d]'
+  'rounded-sm bg-[rgba(224,74,61,0.1)] px-1.5 text-[10.5px] font-semibold text-primary-ink'
 const REVIEW_BUTTON =
-  'shrink-0 rounded-md bg-[#e04a3d] px-2.5 py-1 text-[12px] font-semibold text-white hover:opacity-90'
+  'shrink-0 rounded-md bg-primary-strong px-2.5 py-1 text-[12px] font-semibold text-white hover:opacity-90'
 
 function shortDate(iso: string): string {
   const date = iso.length === 10 ? new Date(`${iso}T00:00:00`) : new Date(iso)

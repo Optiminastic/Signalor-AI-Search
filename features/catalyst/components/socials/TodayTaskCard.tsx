@@ -6,7 +6,7 @@ export function TodayTaskCard(): JSX.Element {
   return (
     <div className="cat-rise flex flex-wrap items-center gap-3 rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-4 shadow-[0_1px_2px_rgba(16,24,40,.04)]">
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold tracking-wider text-[#e04a3d] uppercase">
+        <p className="text-primary-ink text-[11px] font-semibold tracking-wider uppercase">
           Today’s task
         </p>
         <p className="mt-1.5 text-[14px] font-medium text-[var(--cat-ink)]">{today?.task}</p>

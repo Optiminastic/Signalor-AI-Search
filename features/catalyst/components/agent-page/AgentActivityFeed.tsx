@@ -28,7 +28,7 @@ function StepRow({ step, index, live }: StepRowProps): JSX.Element {
       }
       style={{ animationDelay: `${index * (live ? 1.1 : 0.12)}s` }}
     >
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#e04a3d]/10 text-[#e04a3d]">
+      <span className="text-primary-ink grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#e04a3d]/10">
         <Icon size={15} strokeWidth={2.2} />
       </span>
       <span className="flex-1 text-[13px] text-[var(--cat-ink)]">{step.label}</span>

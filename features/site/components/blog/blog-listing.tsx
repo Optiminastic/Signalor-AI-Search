@@ -69,7 +69,7 @@ export function BlogListing({ posts }: BlogListingProps): React.ReactElement {
                       className={cn(
                         'flex w-fit items-center gap-2 rounded-md px-3 py-1 text-sm transition-colors',
                         isActive
-                          ? 'bg-card ring-border text-primary font-medium shadow-sm ring-1 shadow-black/6.5'
+                          ? 'bg-card ring-border text-primary-ink font-medium shadow-sm ring-1 shadow-black/6.5'
                           : 'hover:text-foreground group-hover:bg-foreground/5',
                       )}
                     >

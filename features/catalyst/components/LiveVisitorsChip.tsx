@@ -31,13 +31,15 @@ export function LiveVisitorsChip(): JSX.Element {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        aria-label={`Live visitors: ${total}`}
         aria-expanded={open}
         className={CONTROL_CHIP}
       >
         <span className="h-1.5 w-1.5 rounded-full" style={{ background: GREEN }} />
+        {/* Named by its own text ("3 live visitors"), so voice control can say what is shown. */}
         {total}
-        <span className="hidden text-[var(--cat-ink-3)] lg:inline">live</span>
+        <span className="hidden text-[var(--cat-ink-3)] lg:inline"> live</span>
+        <span className="sr-only lg:hidden"> live</span>
+        <span className="sr-only"> visitors</span>
       </button>
       {open && (
         <>

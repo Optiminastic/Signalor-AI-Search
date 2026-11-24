@@ -65,9 +65,9 @@ function CardHeader({ rank }: { rank: number | null }): JSX.Element {
   return (
     <div className="flex items-start justify-between gap-3">
       <div>
-        <h3 className="text-[13.5px] font-semibold text-[var(--cat-ink)]">
+        <h2 className="text-[13.5px] font-semibold text-[var(--cat-ink)]">
           LLM Visibility Score &amp; Ranking
-        </h3>
+        </h2>
       </div>
       {rank !== null && (
         <div className="shrink-0 text-right">

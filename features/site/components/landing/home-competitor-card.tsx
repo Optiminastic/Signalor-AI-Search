@@ -54,7 +54,7 @@ function RivalRow({ item }: { item: RivalShare }): JSX.Element {
         <span className="text-foreground block truncate text-[12.5px] font-semibold">
           {item.name}
           {item.isBrand && (
-            <span className="bg-primary/10 text-primary ml-1.5 rounded px-1 py-px text-[9px] font-bold tracking-wide uppercase">
+            <span className="bg-primary/10 text-primary-ink ml-1.5 rounded px-1 py-px text-[9px] font-bold tracking-wide uppercase">
               You
             </span>
           )}
@@ -68,7 +68,7 @@ function RivalRow({ item }: { item: RivalShare }): JSX.Element {
         <span
           className={cn(
             'block text-[11.5px] font-semibold tabular-nums',
-            gain ? 'text-success' : 'text-primary',
+            gain ? 'text-success' : 'text-primary-ink',
           )}
         >
           {gain ? '+' : '−'}
@@ -91,7 +91,7 @@ export function HomeCompetitorCard(): JSX.Element {
             Share of AI citations, vs the brands engines name instead
           </p>
         </div>
-        <span className="bg-primary shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
+        <span className="bg-primary-strong shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
           7d
         </span>
       </div>

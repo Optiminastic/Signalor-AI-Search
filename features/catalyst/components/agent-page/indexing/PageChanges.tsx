@@ -33,7 +33,7 @@ export function PageChanges({ newlyIndexed, dropped }: PageChangesProps): JSX.El
   return (
     <section className="flex flex-col gap-3">
       <ChangeList title="Newly on Google" urls={newlyIndexed} tone="text-emerald-700" />
-      <ChangeList title="Dropped off Google" urls={dropped} tone="text-[#e04a3d]" />
+      <ChangeList title="Dropped off Google" urls={dropped} tone="text-primary-ink" />
     </section>
   )
 }

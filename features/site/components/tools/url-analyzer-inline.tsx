@@ -167,7 +167,7 @@ export function UrlAnalyzerToolInline() {
         <Button
           type="submit"
           disabled={!url.trim() || state.kind === 'running'}
-          className="bg-primary shrink-0 rounded-md px-4 text-xs font-semibold text-white hover:brightness-110"
+          className="bg-primary-strong shrink-0 rounded-md px-4 text-xs font-semibold text-white hover:brightness-110"
         >
           {state.kind === 'running' ? (
             <>
@@ -202,7 +202,7 @@ function RunningCard({ progress }: { progress: number }) {
   return (
     <div className="bg-card ring-border mt-5 rounded-xl border border-transparent p-5 shadow-sm ring-1 shadow-black/6.5">
       <div className="flex items-center gap-3">
-        <Loader2 className="text-primary h-4 w-4 animate-spin" />
+        <Loader2 className="text-primary-ink h-4 w-4 animate-spin" />
         <p className="text-foreground text-sm font-medium">
           Running your audit, fetching the page, parsing schema, scoring pillars…
         </p>
@@ -306,7 +306,7 @@ function ResultCards({
       {topRec && (
         <div className="bg-card ring-border rounded-xl border border-transparent p-5 shadow-sm ring-1 shadow-black/6.5">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-primary h-3.5 w-3.5" />
+            <Sparkles className="text-primary-ink h-3.5 w-3.5" />
             <p className="text-muted-foreground text-[11px] font-semibold tracking-wide uppercase">
               Top fix
             </p>
@@ -362,8 +362,8 @@ function GateCard({
     return (
       <div className="border-primary/25 from-primary/5 to-primary/10 rounded-xl border bg-gradient-to-br via-white p-5 shadow-sm">
         <div className="flex items-center gap-2">
-          <Lock className="text-primary h-3.5 w-3.5" />
-          <p className="text-primary text-[11px] font-semibold tracking-wide uppercase">
+          <Lock className="text-primary-ink h-3.5 w-3.5" />
+          <p className="text-primary-ink text-[11px] font-semibold tracking-wide uppercase">
             Unlock the full audit
           </p>
         </div>
@@ -375,7 +375,7 @@ function GateCard({
         <div className="mt-3 flex flex-wrap gap-2">
           <Link
             href={routes.signUp}
-            className="bg-primary inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
+            className="bg-primary-strong inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
           >
             Create a free account
             <ArrowRight className="h-3.5 w-3.5" />
@@ -395,8 +395,8 @@ function GateCard({
     return (
       <div className="border-primary/25 from-primary/5 to-primary/10 rounded-xl border bg-gradient-to-br via-white p-5 shadow-sm">
         <div className="flex items-center gap-2">
-          <Lock className="text-primary h-3.5 w-3.5" />
-          <p className="text-primary text-[11px] font-semibold tracking-wide uppercase">
+          <Lock className="text-primary-ink h-3.5 w-3.5" />
+          <p className="text-primary-ink text-[11px] font-semibold tracking-wide uppercase">
             Upgrade to see the full report
           </p>
         </div>
@@ -408,7 +408,7 @@ function GateCard({
         <div className="mt-3 flex flex-wrap gap-2">
           <Link
             href="/pricing"
-            className="bg-primary inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
+            className="bg-primary-strong inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
           >
             See plans
             <ArrowRight className="h-3.5 w-3.5" />
@@ -426,7 +426,7 @@ function GateCard({
       </p>
       <Link
         href={routes.signUp}
-        className="bg-primary mt-3 inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
+        className="bg-primary-strong mt-3 inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
       >
         Get started free
         <ArrowRight className="h-3.5 w-3.5" />

@@ -32,7 +32,7 @@ export function SocialEditForm({ post, onFields }: SocialEditFormProps): JSX.Ele
         }}
       />
       <p
-        className={`text-[11.5px] ${text.length > limit ? 'text-[#e04a3d]' : 'text-[var(--cat-ink-3)]'}`}
+        className={`text-[11.5px] ${text.length > limit ? 'text-primary-ink' : 'text-[var(--cat-ink-3)]'}`}
       >
         {text.length} / {limit} characters
       </p>

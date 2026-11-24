@@ -30,7 +30,7 @@ function MetricStat({ stat }: { stat: Stat }): JSX.Element {
 function ProjectionHeader({ tasksHref }: { tasksHref: string }): JSX.Element {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[rgba(224,74,61,0.1)] text-[#e04a3d] ring-1 ring-[rgba(224,74,61,0.16)] ring-inset">
+      <span className="text-primary-ink grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[rgba(224,74,61,0.1)] ring-1 ring-[rgba(224,74,61,0.16)] ring-inset">
         <Sparkles size={14} strokeWidth={2.2} />
       </span>
       <p className="min-w-0 truncate text-[13px] text-[var(--cat-ink-2)]">
@@ -39,7 +39,7 @@ function ProjectionHeader({ tasksHref }: { tasksHref: string }): JSX.Element {
         What Signalor can help you achieve.
         <TransitionLink
           href={tasksHref}
-          className="ml-2 font-medium text-[#e04a3d] underline decoration-[rgba(224,74,61,0.35)] underline-offset-2 transition-colors hover:decoration-[#e04a3d]"
+          className="text-primary-ink ml-2 font-medium underline decoration-[rgba(224,74,61,0.35)] underline-offset-2 transition-colors hover:decoration-[#e04a3d]"
         >
           Start now
         </TransitionLink>

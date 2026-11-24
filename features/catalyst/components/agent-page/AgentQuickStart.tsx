@@ -57,7 +57,7 @@ export function AgentQuickStart({ onPick, disabled }: AgentQuickStartProps): JSX
             onClick={() => onPick(prompt)}
             className="cat-card-edge flex items-start gap-3 rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-content)]/85 p-3 text-left backdrop-blur-sm transition-colors hover:bg-[var(--cat-hover)] disabled:opacity-50"
           >
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[#e04a3d]/10 text-[#e04a3d]">
+            <span className="text-primary-ink grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[#e04a3d]/10">
               <Icon size={15} strokeWidth={1.9} />
             </span>
             <span className="min-w-0">

@@ -8,7 +8,7 @@ import { TESTIMONIALS } from '@/features/site/lib/landing-testimonials-content'
 const SECONDARY_BTN =
   'inline-flex h-8 w-fit items-center gap-2 rounded-md border border-transparent bg-card px-3 text-xs font-medium shadow-sm shadow-black/10 ring-1 ring-foreground/10 transition duration-200 hover:bg-muted/50'
 const GHOST_BTN =
-  'inline-flex h-8 w-fit items-center rounded-md px-3 text-xs font-medium text-primary transition duration-200 hover:bg-foreground/5'
+  'inline-flex h-8 w-fit items-center rounded-md px-3 text-xs font-medium text-primary-ink transition duration-200 hover:bg-foreground/5'
 
 interface HelpCardProps {
   title: string
@@ -36,7 +36,7 @@ function HelpTestimonial(): React.ReactElement {
         <p className="text-foreground text-xl text-balance">&ldquo;{t.quote}&rdquo;</p>
         <div className="grid grid-cols-[auto_1fr] items-center gap-4">
           <div className="before:border-foreground/25 bg-primary/10 relative flex size-14 items-center justify-center overflow-hidden rounded-xl before:absolute before:inset-0 before:rounded-xl before:border">
-            <span className="text-primary text-base font-semibold">{t.initials}</span>
+            <span className="text-primary-ink text-base font-semibold">{t.initials}</span>
           </div>
           <div className="space-y-0.5">
             <p className="text-foreground text-sm font-medium text-balance">{t.name}</p>

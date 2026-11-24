@@ -146,7 +146,7 @@ export function HomePromptCard(): JSX.Element {
             Watch how AI engines answer the prompts that matter to your category
           </p>
         </div>
-        <span className="bg-primary shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
+        <span className="bg-primary-strong shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
           50
         </span>
       </div>
@@ -165,7 +165,7 @@ export function HomePromptCard(): JSX.Element {
           <span className="bg-success h-1.5 w-1.5 rounded-full" aria-hidden />
           Re-checked daily across 7 engines
         </span>
-        <span className="text-primary inline-flex items-center gap-1 font-semibold">
+        <span className="text-primary-ink inline-flex items-center gap-1 font-semibold">
           View all
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>

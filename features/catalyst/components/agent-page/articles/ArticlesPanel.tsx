@@ -29,7 +29,7 @@ function PlannedTopics({ orgSlug }: { orgSlug: string }): JSX.Element {
         onChange={satellite.setStatus}
       />
       {satellite.error && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {satellite.error}
         </p>
       )}

@@ -25,7 +25,7 @@ export function AgentRecentChats({ chats, href }: RecentChatsProps): JSX.Element
               href={href(chat.id)}
               className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-[var(--cat-ink-2)] hover:bg-[var(--cat-content)]/70 hover:text-[var(--cat-ink)]"
             >
-              <MessageSquare size={14} className="shrink-0 text-[#e04a3d]" />
+              <MessageSquare size={14} className="text-primary-ink shrink-0" />
               <span className="truncate">{chat.title}</span>
             </Link>
           </li>

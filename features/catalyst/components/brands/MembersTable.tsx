@@ -36,7 +36,7 @@ function MemberRow({
 }): JSX.Element {
   return (
     <div className="flex items-center gap-3 px-4 py-3">
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.12)] text-[12px] font-semibold text-[#e04a3d] uppercase">
+      <span className="text-primary-ink grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.12)] text-[12px] font-semibold uppercase">
         {row.email[0]}
       </span>
       <div className="min-w-0 flex-1">

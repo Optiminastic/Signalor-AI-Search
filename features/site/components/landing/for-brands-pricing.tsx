@@ -148,7 +148,11 @@ function PlanCell({ plan }: { plan: BrandPlan }): JSX.Element {
             key={feature}
             className="text-foreground/90 first:text-foreground flex items-center gap-2 first:font-medium"
           >
-            <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
+            <Check
+              className="text-primary-ink h-3.5 w-3.5 shrink-0"
+              strokeWidth={2.5}
+              aria-hidden
+            />
             <span>{feature}</span>
           </li>
         ))}
@@ -179,7 +183,11 @@ function BrandEnterpriseRow(): JSX.Element {
         <ul className="grid content-center gap-x-10 gap-y-3 p-8 text-sm sm:grid-cols-2">
           {BRAND_ENTERPRISE_FEATURES.map(feature => (
             <li key={feature} className="text-foreground/90 flex items-center gap-2">
-              <Check className="text-primary h-3.5 w-3.5 shrink-0" strokeWidth={2.5} aria-hidden />
+              <Check
+                className="text-primary-ink h-3.5 w-3.5 shrink-0"
+                strokeWidth={2.5}
+                aria-hidden
+              />
               <span>{feature}</span>
             </li>
           ))}
@@ -200,7 +208,7 @@ export function ForBrandsPricing(): JSX.Element {
         <div className="border-border relative border-t px-6 py-14 sm:py-16">
           <GridCornerHandles top />
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Brand pricing
             </p>
             <h2
@@ -214,11 +222,11 @@ export function ForBrandsPricing(): JSX.Element {
               in the answers your customers actually see.
             </p>
             <p className="text-muted-foreground mt-6 text-[13px] font-medium">
-              <span className="text-primary font-semibold">Free audit available</span> · Simple
+              <span className="text-primary-ink font-semibold">Free audit available</span> · Simple
               plans for one brand or many ·{' '}
               <Link
                 href="/pricing"
-                className="text-primary hover:text-primary/80 font-semibold transition-colors"
+                className="text-primary-ink hover:text-primary-ink/80 font-semibold transition-colors"
               >
                 See full comparison →
               </Link>

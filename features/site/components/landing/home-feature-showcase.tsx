@@ -135,7 +135,7 @@ export function HomeFeatureShowcase(): JSX.Element {
             title={
               <>
                 <GitFork
-                  className="text-primary mr-1.5 inline-block h-4 w-4 -translate-y-px"
+                  className="text-primary-ink mr-1.5 inline-block h-4 w-4 -translate-y-px"
                   aria-hidden
                 />
                 Every engine, one view
@@ -158,7 +158,7 @@ export function HomeFeatureShowcase(): JSX.Element {
           {MINI_FEATURES.map(({ icon: Icon, title }) => (
             <div key={title} className="bg-card px-6 py-6 sm:px-8">
               <div className="flex items-center gap-2">
-                <Icon className="text-primary h-4 w-4" strokeWidth={2} aria-hidden />
+                <Icon className="text-primary-ink h-4 w-4" strokeWidth={2} aria-hidden />
                 <h3 className="text-foreground text-sm font-semibold">{title}</h3>
               </div>
             </div>

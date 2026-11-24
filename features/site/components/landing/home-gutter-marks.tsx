@@ -50,8 +50,12 @@ function WaveColumn({ wave, duration }: WaveColumnProps): JSX.Element {
       className="motion-safe:animate-stream will-change-transform"
       style={{ animationDuration: duration }}
     >
-      <pre className="text-primary/45 font-mono text-lg leading-[1.2] font-semibold">{wave}</pre>
-      <pre className="text-primary/45 font-mono text-lg leading-[1.2] font-semibold">{wave}</pre>
+      <pre className="text-primary-ink/45 font-mono text-lg leading-[1.2] font-semibold">
+        {wave}
+      </pre>
+      <pre className="text-primary-ink/45 font-mono text-lg leading-[1.2] font-semibold">
+        {wave}
+      </pre>
     </div>
   )
 }
@@ -63,7 +67,9 @@ interface GutterProps {
 function Gutter({ side }: GutterProps): JSX.Element {
   const isLeft = side === 'left'
   return (
-    <div className={cn('absolute inset-y-0 w-52 overflow-hidden', isLeft ? 'right-full' : 'left-full')}>
+    <div
+      className={cn('absolute inset-y-0 w-52 overflow-hidden', isLeft ? 'right-full' : 'left-full')}
+    >
       <div className={cn('flex', isLeft ? 'justify-end pr-6' : 'justify-start pl-6')}>
         <WaveColumn wave={isLeft ? WAVE_LEFT : WAVE_RIGHT} duration={isLeft ? '90s' : '120s'} />
       </div>

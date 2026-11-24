@@ -64,7 +64,7 @@ export function AccountTypeForm(): JSX.Element {
               <span
                 className={cn(
                   'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md',
-                  active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
+                  active ? 'bg-primary/10 text-primary-ink' : 'bg-muted text-muted-foreground',
                 )}
               >
                 <opt.Icon className="h-4 w-4" />
@@ -72,7 +72,7 @@ export function AccountTypeForm(): JSX.Element {
               <span className="min-w-0 flex-1">
                 <span className="flex items-center justify-between gap-2">
                   <span className="text-foreground text-[15px] font-semibold">{opt.label}</span>
-                  {active && <Check className="text-primary h-4 w-4 shrink-0" />}
+                  {active && <Check className="text-primary-ink h-4 w-4 shrink-0" />}
                 </span>
                 <span className="text-muted-foreground mt-0.5 block text-[11px] leading-relaxed">
                   {opt.blurb}

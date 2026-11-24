@@ -60,7 +60,7 @@ export function HomeSectionHeader({
         centered ? 'mx-auto text-center' : 'text-left',
       )}
     >
-      <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+      <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
         {eyebrow}
       </p>
       <h2

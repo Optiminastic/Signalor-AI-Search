@@ -23,7 +23,7 @@ export function ActionRow({ action }: { action: AgentAction }): JSX.Element {
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] font-medium text-[var(--cat-ink)]">
-          {action.is_top_fix && <span className="mr-1.5 text-[#e04a3d]">★</span>}
+          {action.is_top_fix && <span className="text-primary-ink mr-1.5">★</span>}
           <TransitionLink
             href={brandPath(`tasks/${action.action_id}`)}
             className="decoration-[var(--cat-ink-3)] underline-offset-2 group-hover:underline after:absolute after:inset-0"

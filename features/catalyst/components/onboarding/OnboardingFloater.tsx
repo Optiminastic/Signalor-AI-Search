@@ -25,7 +25,7 @@ function readFlag(key: string, fallback: boolean): boolean {
 function StepIcon({ done }: { done: boolean }): JSX.Element {
   if (done) {
     return (
-      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#e04a3d] text-white">
+      <span className="bg-primary-strong grid h-5 w-5 shrink-0 place-items-center rounded-full text-white">
         <Check size={13} strokeWidth={3} />
       </span>
     )
@@ -57,7 +57,7 @@ function StepRow({ step, active }: { step: OnboardingStep; active: boolean }): J
       {active && !step.done && (
         <div className="mt-1.5 pl-[30px]">
           <p className="text-[12px] leading-relaxed text-[var(--cat-ink-3)]">{step.description}</p>
-          <span className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-md bg-[#e04a3d] px-3 text-[12px] font-semibold text-white">
+          <span className="bg-primary-strong mt-2 inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-semibold text-white">
             {step.cta}
             <ChevronRight size={14} strokeWidth={2.4} />
           </span>
@@ -88,7 +88,7 @@ function CollapsedTrigger({ completed, total, onOpen, drag }: CollapsedTriggerPr
           : 'cursor-grab transition-transform hover:-translate-y-0.5'
       }`}
     >
-      <span className="grid h-6 w-6 place-items-center rounded-full bg-[#e04a3d]/10 text-[#e04a3d]">
+      <span className="text-primary-ink grid h-6 w-6 place-items-center rounded-full bg-[#e04a3d]/10">
         <ListChecks size={14} />
       </span>
       Getting started
@@ -165,12 +165,12 @@ function OnboardingCard({
       </div>
       {allDone ? (
         <div className="flex flex-col items-center gap-2 px-4 py-6 text-center">
-          <PartyPopper size={22} className="text-[#e04a3d]" />
+          <PartyPopper size={22} className="text-primary-ink" />
           <p className="text-[13px] font-semibold text-[var(--cat-ink)]">You’re all set!</p>
           <button
             type="button"
             onClick={onDismiss}
-            className="mt-1 rounded-md bg-[#e04a3d] px-3 py-1.5 text-[12px] font-semibold text-white"
+            className="bg-primary-strong mt-1 rounded-md px-3 py-1.5 text-[12px] font-semibold text-white"
           >
             Dismiss
           </button>

@@ -28,7 +28,7 @@ function BrandPanel(): JSX.Element {
   return (
     <div className="min-w-0 border-b border-black/[0.06] bg-[#f7f7f6] px-6 py-10 sm:px-8 lg:w-[340px] lg:shrink-0 lg:border-r lg:border-b-0 lg:px-10 lg:py-14">
       <Link href="/" className="flex items-center gap-2">
-        <SignalorMark className="h-7 w-7 text-[#e04a3d]" />
+        <SignalorMark className="text-primary-ink h-7 w-7" />
         <span className="text-[18px] font-semibold tracking-tight text-[#171717]">SignalorAI</span>
       </Link>
       <p className="mt-5 max-w-xs text-[14px] leading-relaxed text-[#6b6b6b]">

@@ -32,7 +32,10 @@ export function BingKeySetup({
           {verifying ? 'Checking…' : 'Check key file'}
         </button>
         {keyCheck && (
-          <span role="status" className={keyCheck.verified ? 'text-emerald-700' : 'text-[#e04a3d]'}>
+          <span
+            role="status"
+            className={keyCheck.verified ? 'text-emerald-700' : 'text-primary-ink'}
+          >
             {keyCheck.verified ? 'Key file found. Bing will accept your pages.' : keyCheck.message}
           </span>
         )}

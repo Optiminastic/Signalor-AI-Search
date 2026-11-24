@@ -22,7 +22,7 @@ function ClosedStrip({ onOpen }: { onOpen: () => void }): JSX.Element {
       className={`${SURFACE} w-11 items-center gap-3 py-4 text-[var(--cat-ink-2)] transition-colors hover:text-[var(--cat-ink)]`}
     >
       <ChevronLeft size={16} strokeWidth={2.2} aria-hidden="true" />
-      <TrendingUp size={16} strokeWidth={2} className="text-[#e04a3d]" aria-hidden="true" />
+      <TrendingUp size={16} strokeWidth={2} className="text-primary-ink" aria-hidden="true" />
       <span className="text-[12px] font-semibold [writing-mode:vertical-rl]">
         You vs competitors
       </span>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { Chip, type ChipColor } from '@/components/base/badges/chip'
 import { DataState } from '@/features/catalyst/components/DataState'
@@ -214,10 +214,14 @@ function SectionEditor({
   big: boolean
   onChange: (value: string) => void
 }): JSX.Element {
+  const id = useId()
   return (
     <section className="cat-card-edge rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)] p-4">
-      <label className="mb-2 block text-[13px] font-semibold text-[var(--cat-ink)]">{label}</label>
+      <label htmlFor={id} className="mb-2 block text-[13px] font-semibold text-[var(--cat-ink)]">
+        {label}
+      </label>
       <textarea
+        id={id}
         value={value}
         onChange={e => onChange(e.target.value)}
         spellCheck={false}

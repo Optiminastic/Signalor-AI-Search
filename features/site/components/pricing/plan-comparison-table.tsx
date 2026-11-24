@@ -49,7 +49,7 @@ function Cell({ value }: { value: CellValue }): JSX.Element {
   if (value === true) {
     return (
       <>
-        <Check className="text-primary mx-auto h-4 w-4" aria-hidden />
+        <Check className="text-primary-ink mx-auto h-4 w-4" aria-hidden />
         <span className="sr-only">Included</span>
       </>
     )
@@ -103,7 +103,7 @@ export function PlanComparisonTable({
                   {col.price}
                 </span>
                 {col.id === featuredId ? (
-                  <span className="bg-primary text-primary-foreground mt-2 inline-block rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase">
+                  <span className="bg-primary-strong text-primary-foreground mt-2 inline-block rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase">
                     Popular
                   </span>
                 ) : null}

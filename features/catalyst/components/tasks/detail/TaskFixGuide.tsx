@@ -31,7 +31,7 @@ function StepHeading({ text }: { text: string }): JSX.Element {
   const match = text.match(/^step\s*(\d+)\s*[—–-]?\s*(.*)$/i)
   return (
     <p className="mt-3 flex items-center gap-2 first:mt-0">
-      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.1)] text-[11px] font-bold text-[#e04a3d] tabular-nums">
+      <span className="text-primary-ink grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.1)] text-[11px] font-bold tabular-nums">
         {match?.[1] ?? '•'}
       </span>
       <span className="text-[13px] font-semibold text-[var(--cat-ink)]">{match?.[2] || text}</span>

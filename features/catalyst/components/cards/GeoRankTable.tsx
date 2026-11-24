@@ -72,7 +72,7 @@ function RankRow({ item }: { item: RankItem }): JSX.Element {
       <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-[var(--cat-ink)]">
         {item.name}
         {item.isBrand && (
-          <span className="ml-1.5 rounded bg-[#e04a3d]/10 px-1 py-px text-[9px] font-semibold tracking-wide text-[#e04a3d] uppercase">
+          <span className="text-primary-ink ml-1.5 rounded bg-[#e04a3d]/10 px-1 py-px text-[9px] font-semibold tracking-wide uppercase">
             You
           </span>
         )}

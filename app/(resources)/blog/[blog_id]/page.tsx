@@ -59,7 +59,7 @@ export async function generateMetadata({
 const CATEGORY_TONE: Record<BlogPost['category'], { bg: string; fg: string }> = {
   Playbooks: { bg: 'bg-warning/10', fg: 'text-warning' },
   'AI visibility': { bg: 'bg-info/10', fg: 'text-info' },
-  Product: { bg: 'bg-primary/10', fg: 'text-primary' },
+  Product: { bg: 'bg-primary/10', fg: 'text-primary-ink' },
   Research: { bg: 'bg-[var(--feature-violet-tint)]', fg: 'text-[var(--feature-violet)]' },
   Guides: { bg: 'bg-success/10', fg: 'text-success' },
 }

@@ -28,7 +28,7 @@ export function SidebarPlanCard({ collapsed }: { collapsed?: boolean }): JSX.Ele
   return (
     <div className="mt-3 rounded-2xl border border-[var(--cat-border-soft)] bg-[var(--cat-card)] p-3 shadow-[0_1px_2px_rgba(16,24,40,.05)]">
       <div className="flex items-center gap-2.5">
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">
+        <span className="text-primary-ink grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(224,74,61,0.1)]">
           <IconSparklesFilled size={14} />
         </span>
         <div className="min-w-0">
@@ -53,7 +53,7 @@ function UpgradeCta(): JSX.Element {
       </p>
       <Link
         href="/pricing"
-        className="mt-2.5 flex h-8 items-center justify-center gap-1.5 rounded-md bg-[#e04a3d] text-[12px] font-semibold text-white transition-colors hover:bg-[#c53f34]"
+        className="bg-primary-strong mt-2.5 flex h-8 items-center justify-center gap-1.5 rounded-md text-[12px] font-semibold text-white transition-colors hover:bg-[#c53f34]"
       >
         <IconBoltFilled size={13} />
         Upgrade

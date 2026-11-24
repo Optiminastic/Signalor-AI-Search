@@ -49,7 +49,7 @@ function IntegrationsHeader(): JSX.Element {
   return (
     <div className="grid gap-6 px-6 py-14 sm:px-10 sm:py-16 lg:grid-cols-2 lg:gap-14">
       <div>
-        <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+        <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
           Integrations
         </p>
         <h2
@@ -68,7 +68,7 @@ function IntegrationsHeader(): JSX.Element {
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
           <Link
             href="/integration"
-            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
+            className="text-primary-ink hover:text-primary-ink/80 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
           >
             Browse integrations
             <ArrowRight className="h-3.5 w-3.5" aria-hidden />

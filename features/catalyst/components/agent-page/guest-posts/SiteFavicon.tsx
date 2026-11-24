@@ -14,7 +14,7 @@ export function SiteFavicon({ domain }: SiteFaviconProps): JSX.Element {
   if (failed || !domain) {
     return (
       <span
-        className={`${BASE} bg-[rgba(224,74,61,0.12)] text-[12px] font-semibold text-[#e04a3d] uppercase`}
+        className={`${BASE} text-primary-ink bg-[rgba(224,74,61,0.12)] text-[12px] font-semibold uppercase`}
       >
         {domain.charAt(0) || '?'}
       </span>

@@ -4,11 +4,11 @@ import { Star } from '@/lib/icons'
 export function G2Badge(): JSX.Element {
   return (
     <div className="mt-9 flex items-center justify-center gap-2.5">
-      <span className="grid h-9 w-9 place-items-center rounded-full bg-[#e04a3d] text-[13px] font-bold text-white">
+      <span className="bg-primary-strong grid h-9 w-9 place-items-center rounded-full text-[13px] font-bold text-white">
         G2
       </span>
       <div className="flex flex-col items-start gap-0.5">
-        <div className="flex items-center gap-0.5 text-[#e04a3d]">
+        <div className="text-primary-ink flex items-center gap-0.5">
           {[0, 1, 2, 3].map(i => (
             <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
           ))}

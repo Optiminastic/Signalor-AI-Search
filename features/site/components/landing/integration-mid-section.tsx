@@ -59,7 +59,7 @@ export function IntegrationMidSection() {
               className="border-border bg-card flex flex-col rounded-none border p-6 text-left shadow-sm"
             >
               <span className="border-border bg-muted flex h-11 w-11 items-center justify-center rounded-none border">
-                <Icon className="text-primary h-5 w-5" strokeWidth={1.75} aria-hidden />
+                <Icon className="text-primary-ink h-5 w-5" strokeWidth={1.75} aria-hidden />
               </span>
               <h3 className="text-foreground mt-4 text-lg font-semibold tracking-tight">{title}</h3>
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed font-light">

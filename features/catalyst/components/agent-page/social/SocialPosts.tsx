@@ -103,7 +103,7 @@ export function SocialPosts({ orgSlug, approvals, onOpen }: SocialPostsProps): J
         onPosted={id => posted.mutate(id)}
       />
       {posted.error && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {loadErrorMessage(posted.error)}
         </p>
       )}

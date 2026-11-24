@@ -212,7 +212,7 @@ export function RankTrackingPanel({ orgSlug, onClose }: RankTrackingPanelProps):
       <Header tracking={tracking} onClose={onClose} />
       <TabSwitch value={tab} onChange={setTab} />
       {tracking.actionError && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {tracking.actionError}
         </p>
       )}

@@ -14,7 +14,7 @@ export function AgentChatEmptyState(): JSX.Element {
         className="cat-card-edge grid h-28 shrink-0 place-items-center rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]"
         style={{ backgroundImage: DOT_FIELD }}
       >
-        <span className="grid h-11 w-11 place-items-center rounded-md bg-[#e04a3d]/10 text-[#e04a3d] ring-1 ring-[#e04a3d]/20">
+        <span className="text-primary-ink grid h-11 w-11 place-items-center rounded-md bg-[#e04a3d]/10 ring-1 ring-[#e04a3d]/20">
           <Sparkles size={22} strokeWidth={1.9} />
         </span>
       </div>
@@ -29,7 +29,7 @@ export function AgentChatEmptyState(): JSX.Element {
         <p className="text-[13px] leading-relaxed text-[var(--cat-ink-2)]">
           The Agent can help you understand your GEO scores, explain competitor gaps, and plan the
           next fixes across your brands.{' '}
-          <a href="#" className="font-medium text-[#e04a3d] hover:underline">
+          <a href="#" className="text-primary-ink font-medium hover:underline">
             Learn more
           </a>
         </p>

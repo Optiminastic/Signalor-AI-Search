@@ -23,7 +23,9 @@ function Hero({
 }: Omit<MarketingContentProps, 'sections'>): JSX.Element {
   return (
     <div>
-      <p className="text-[13px] font-semibold tracking-wider text-[#e04a3d] uppercase">{eyebrow}</p>
+      <p className="text-primary-ink text-[13px] font-semibold tracking-wider uppercase">
+        {eyebrow}
+      </p>
       <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#171717] md:text-5xl">
         {title}
       </h1>

@@ -110,7 +110,7 @@ export function KeywordsPanel({ orgSlug }: KeywordsPanelProps): JSX.Element {
     <div className="flex flex-col gap-5">
       <RefreshBar keywords={keywords} />
       {keywords.actionError && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {keywords.actionError}
         </p>
       )}

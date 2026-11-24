@@ -21,7 +21,7 @@ function PresenceCell({ url }: PresenceCellProps): JSX.Element {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className={`${CELL} text-[#e04a3d] hover:underline`}
+      className={`${CELL} text-primary-ink hover:underline`}
     >
       On it
     </a>

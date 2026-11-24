@@ -29,7 +29,7 @@ function LastRun({ last }: { last: NonNullable<BingState['last']> }): JSX.Elemen
     return <p className={MUTED}>No new or changed pages on {day(last.at)}, so nothing was sent.</p>
   }
   return (
-    <p className="text-[12.5px] text-[#e04a3d]">
+    <p className="text-primary-ink text-[12.5px]">
       Couldn&apos;t send on {day(last.at)}: {last.message}
     </p>
   )
@@ -81,7 +81,7 @@ export function BingCard({ orgSlug, bing }: BingCardProps): JSX.Element {
         <SendRow nextAt={bing.nextAt} sending={actions.sending} onSend={actions.sendNow} />
       )}
       {actions.error && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {actions.error}
         </p>
       )}

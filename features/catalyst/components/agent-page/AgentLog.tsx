@@ -36,7 +36,7 @@ const CATEGORY_LABELS: Record<ActivityCategory, string> = {
 }
 
 const CHIP = 'rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors'
-const CHIP_ON = `${CHIP} border-[#e04a3d] bg-[#e04a3d]/10 text-[#e04a3d]`
+const CHIP_ON = `${CHIP} border-[#e04a3d] bg-[#e04a3d]/10 text-primary-ink`
 const CHIP_OFF = `${CHIP} border-[var(--cat-border)] text-[var(--cat-ink-2)] hover:text-[var(--cat-ink)]`
 const MUTED = 'mt-2 text-[12.5px] text-[var(--cat-ink-2)]'
 

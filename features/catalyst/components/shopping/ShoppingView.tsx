@@ -18,7 +18,7 @@ function ConnectPrompt(): JSX.Element {
   const brandPath = useBrandPath()
   return (
     <div className="flex min-h-[220px] flex-col items-center justify-center gap-2 rounded-md border border-dashed border-[var(--cat-border)] bg-[var(--cat-card)] px-6 text-center">
-      <span className="grid h-12 w-12 place-items-center rounded-full bg-[rgba(224,74,61,0.1)] text-[#e04a3d]">
+      <span className="text-primary-ink grid h-12 w-12 place-items-center rounded-full bg-[rgba(224,74,61,0.1)]">
         <Store size={20} />
       </span>
       <p className="text-[14px] font-semibold text-[var(--cat-ink)]">Connect your Shopify store</p>

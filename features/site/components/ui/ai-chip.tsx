@@ -22,7 +22,7 @@ export function SignalorMark({ className, size = 'md', framed = false }: Signalo
     <svg
       viewBox="0 0 1080 1080"
       className={cn(
-        'text-primary h-full w-full [&_path]:fill-current',
+        'text-primary-ink h-full w-full [&_path]:fill-current',
         framed ? '' : SIZE_CLASSES[size],
       )}
       aria-label="SignalorAI"

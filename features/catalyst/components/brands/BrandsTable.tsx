@@ -28,7 +28,7 @@ function BrandRow({ brand }: { brand: Brand }): JSX.Element {
   return (
     <tr className="group border-t border-[var(--cat-border)] transition-colors hover:bg-[var(--cat-hover)]">
       <td className={TD}>
-        <Link href={`/dashboard/${brand.slug}`} className="block" aria-label={`Open ${brand.name}`}>
+        <Link href={`/dashboard/${brand.slug}`} className="block">
           <BrandIdentity brand={brand} />
         </Link>
       </td>

@@ -9,7 +9,7 @@ const TAG = 'rounded-sm px-1.5 text-[10.5px] leading-[16px] font-semibold'
 
 function WhoActs({ fixable }: { fixable: boolean }): JSX.Element {
   return fixable ? (
-    <span className={`${TAG} bg-[#e04a3d]/10 text-[#e04a3d]`}>Fixable on your site</span>
+    <span className={`${TAG} text-primary-ink bg-[#e04a3d]/10`}>Fixable on your site</span>
   ) : (
     <span className={`${TAG} bg-[var(--cat-hover)] text-[var(--cat-ink-2)]`}>Google decides</span>
   )

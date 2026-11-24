@@ -33,7 +33,7 @@ export function BillingPlanCard({ sub, accountType, loading }: BillingPlanCardPr
     <Card className="glass-card border-border/70">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <CreditCard className="text-primary h-4 w-4" />
+          <CreditCard className="text-primary-ink h-4 w-4" />
           <CardTitle>Subscription</CardTitle>
         </div>
         <CardDescription>Your current plan and renewal.</CardDescription>
@@ -55,7 +55,7 @@ export function BillingPlanCard({ sub, accountType, loading }: BillingPlanCardPr
                   {sub?.status ? sub.status.replace('_', ' ') : 'no subscription'}
                 </span>
                 {accountType === 'agency' && (
-                  <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-[11px] font-semibold">
+                  <span className="bg-primary/10 text-primary-ink rounded-full px-2 py-0.5 text-[11px] font-semibold">
                     Agency
                   </span>
                 )}
@@ -68,7 +68,7 @@ export function BillingPlanCard({ sub, accountType, loading }: BillingPlanCardPr
             </div>
             <Link
               href="/pricing"
-              className="bg-primary inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
+              className="bg-primary-strong inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-110"
             >
               {sub?.is_active ? 'Manage plan' : 'See plans'}
               <ArrowRight className="h-3.5 w-3.5" />

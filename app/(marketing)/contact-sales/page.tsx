@@ -44,7 +44,7 @@ const CONTACT_CHANNELS = [
     node: (
       <Link
         href="/pricing"
-        className="text-foreground hover:text-primary inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
+        className="text-foreground hover:text-primary-ink inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
       >
         See plans & pricing
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -57,7 +57,7 @@ const CONTACT_CHANNELS = [
       <MailLink
         user="hello"
         subject="Sales inquiry"
-        className="text-foreground hover:text-primary inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
+        className="text-foreground hover:text-primary-ink inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
       >
         Email the sales team
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -69,7 +69,7 @@ const CONTACT_CHANNELS = [
     node: (
       <Link
         href="/api"
-        className="text-foreground hover:text-primary inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
+        className="text-foreground hover:text-primary-ink inline-flex items-center gap-1 text-[15px] font-semibold transition-colors"
       >
         API & MCP docs
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -320,7 +320,7 @@ export default function ContactSalesPage() {
                           className={cn(
                             'rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors',
                             active
-                              ? 'border-primary bg-primary/10 text-primary'
+                              ? 'border-primary bg-primary/10 text-primary-ink'
                               : 'border-border text-muted-foreground hover:text-foreground',
                           )}
                         >

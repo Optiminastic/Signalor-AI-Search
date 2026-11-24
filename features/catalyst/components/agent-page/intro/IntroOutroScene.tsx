@@ -30,7 +30,7 @@ export function IntroOutroScene({ brandName }: { brandName: string }): JSX.Eleme
       <OutlinedRows />
       <div className="relative flex flex-col items-center px-6 text-center">
         <div className="cat-intro-lockup flex items-center gap-3">
-          <SignalorMark className="h-12 w-12 text-[#e04a3d]" />
+          <SignalorMark className="text-primary-ink h-12 w-12" />
           <span className="text-[36px] font-semibold tracking-tight text-[var(--cat-ink)] sm:text-[44px]">
             SignalorAI Agent
           </span>

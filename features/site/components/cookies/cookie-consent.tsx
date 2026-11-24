@@ -45,7 +45,7 @@ export function CookieConsentBanner() {
         See our{' '}
         <Link
           href="/policy"
-          className="text-primary font-medium underline underline-offset-2 hover:opacity-80"
+          className="text-primary-ink font-medium underline underline-offset-2 hover:opacity-80"
         >
           Privacy policy
         </Link>
@@ -62,7 +62,7 @@ export function CookieConsentBanner() {
         <button
           type="button"
           onClick={acceptAll}
-          className="bg-primary text-primary-foreground inline-flex h-8 flex-1 items-center justify-center rounded-md px-4 text-[13px] font-semibold shadow-sm transition-opacity hover:opacity-90"
+          className="bg-primary-strong text-primary-foreground inline-flex h-8 flex-1 items-center justify-center rounded-md px-4 text-[13px] font-semibold shadow-sm transition-opacity hover:opacity-90"
         >
           Accept
         </button>

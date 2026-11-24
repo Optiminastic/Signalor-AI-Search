@@ -40,7 +40,7 @@ function AboutStats(): JSX.Element {
           <GridHandle className="-bottom-[3.5px] left-1/2 -ml-[3.5px] hidden lg:block" />
           <div className="lg:divide-border grid lg:grid-cols-2 lg:divide-x">
             <div className="max-lg:border-border flex flex-col justify-center px-6 py-14 max-lg:border-b sm:px-10 lg:py-20">
-              <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+              <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
                 The platform
               </p>
               <h2 className="text-foreground mt-3 max-w-md text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
@@ -79,7 +79,7 @@ function AboutPrinciples(): JSX.Element {
   return (
     <div className="border-border mx-auto max-w-6xl border-x">
       <div className="px-6 py-14 sm:px-10 lg:py-20">
-        <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+        <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
           How we work
         </p>
         <h2 className="text-foreground mt-3 max-w-lg text-3xl font-semibold tracking-tight text-balance sm:text-4xl">

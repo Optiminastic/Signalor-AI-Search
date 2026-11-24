@@ -541,7 +541,7 @@ function RecommendationPreview() {
     <div className="overflow-hidden rounded-none border border-black/8 bg-white shadow-lg">
       <div className="bg-muted flex items-center justify-between border-b border-black/6 px-5 py-3">
         <div className="text-foreground flex items-center gap-2 text-xs font-semibold">
-          <ListChecks className="text-primary h-4 w-4" aria-hidden />
+          <ListChecks className="text-primary-ink h-4 w-4" aria-hidden />
           Prioritized fix queue
         </div>
         <div className="text-muted-foreground hidden items-center gap-3 text-[11px] sm:flex">
@@ -573,7 +573,7 @@ function RecommendationPreview() {
               </p>
               <p className="text-accent-foreground mt-1.5 text-xs leading-relaxed font-light">
                 <ArrowRight
-                  className="text-primary mr-1 -mb-0.5 inline-block h-3 w-3"
+                  className="text-primary-ink mr-1 -mb-0.5 inline-block h-3 w-3"
                   aria-hidden
                 />
                 {r.action}
@@ -582,7 +582,7 @@ function RecommendationPreview() {
             <div className="flex items-end justify-end sm:items-center">
               <Link
                 href="/sign-up"
-                className="bg-primary hover:bg-primary/90 inline-flex h-8 items-center gap-1 rounded-md px-3 text-[11px] font-semibold text-white transition"
+                className="bg-primary-strong hover:bg-primary-strong/90 inline-flex h-8 items-center gap-1 rounded-md px-3 text-[11px] font-semibold text-white transition"
               >
                 Ship fix <ArrowRight className="h-3 w-3" />
               </Link>
@@ -592,9 +592,9 @@ function RecommendationPreview() {
       </ul>
       <div className="bg-muted border-t border-black/6 px-5 py-3">
         <p className="text-muted-foreground text-[11px] leading-relaxed font-medium">
-          <Sparkles className="text-primary mr-1 inline-block h-3 w-3" aria-hidden /> Illustrative
-          queue, your real playbook ranks every fix by expected lift and effort, then verifies each
-          one after ship.
+          <Sparkles className="text-primary-ink mr-1 inline-block h-3 w-3" aria-hidden />{' '}
+          Illustrative queue, your real playbook ranks every fix by expected lift and effort, then
+          verifies each one after ship.
         </p>
       </div>
     </div>
@@ -618,7 +618,7 @@ function ResultsPreview() {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {metrics.map(m => {
         const I = m.icon
-        const toneClass = m.tone === 'emerald' ? 'text-success' : 'text-primary'
+        const toneClass = m.tone === 'emerald' ? 'text-success' : 'text-primary-ink'
         return (
           <article key={m.label} className="rounded-none border border-black/8 bg-white p-5 lg:p-6">
             <div className="text-muted-foreground flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] uppercase">
@@ -636,7 +636,7 @@ function ResultsPreview() {
               </div>
               <ArrowRight className="text-muted-foreground mb-1 h-4 w-4" aria-hidden />
               <div className="text-right">
-                <p className="text-primary text-[10px] font-semibold tracking-wide uppercase">
+                <p className="text-primary-ink text-[10px] font-semibold tracking-wide uppercase">
                   After 30d
                 </p>
                 <p className={`mt-0.5 text-2xl font-bold tabular-nums ${toneClass}`}>{m.after}</p>

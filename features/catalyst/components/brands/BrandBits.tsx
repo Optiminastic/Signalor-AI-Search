@@ -56,7 +56,9 @@ function BrandAvatar({ brand, tile }: { brand: Brand; tile: string }): JSX.Eleme
 
   if (!domain || failed) {
     return (
-      <span className={`${base} bg-[rgba(224,74,61,0.12)] font-semibold text-[#e04a3d] uppercase`}>
+      <span
+        className={`${base} text-primary-ink bg-[rgba(224,74,61,0.12)] font-semibold uppercase`}
+      >
         {brand.name[0]}
       </span>
     )

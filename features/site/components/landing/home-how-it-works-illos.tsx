@@ -56,7 +56,7 @@ function BrowserChrome(): JSX.Element {
 function ConnectGate(): JSX.Element {
   return (
     <div className="relative mt-2.5">
-      <span className="bg-primary text-primary-foreground flex w-full items-center justify-center gap-1.5 rounded-md px-3 py-2 text-[12px] font-semibold shadow-sm shadow-black/10 transition-opacity duration-300 motion-safe:group-hover:opacity-0">
+      <span className="bg-primary-strong text-primary-foreground flex w-full items-center justify-center gap-1.5 rounded-md px-3 py-2 text-[12px] font-semibold shadow-sm shadow-black/10 transition-opacity duration-300 motion-safe:group-hover:opacity-0">
         Connect
       </span>
       <span className="bg-success/10 text-success absolute inset-0 flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-[12px] font-semibold opacity-0 transition-opacity duration-300 motion-safe:group-hover:opacity-100">
@@ -152,7 +152,7 @@ function AuditIllo(): JSX.Element {
           <span aria-hidden className="bg-success mr-1.5 inline-block h-1.5 w-1.5 rounded-full" />
           Citable
         </span>
-        <span className="text-primary inline-flex items-center gap-1 text-[11px] font-semibold">
+        <span className="text-primary-ink inline-flex items-center gap-1 text-[11px] font-semibold">
           View report
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>
@@ -239,7 +239,7 @@ function TrackIllo(): JSX.Element {
 function ShipCriticalItem(): JSX.Element {
   return (
     <li className="bg-muted/60 ring-border/70 flex items-center gap-2.5 rounded-lg px-3 py-2.5 ring-1">
-      <Gauge className="text-primary h-4 w-4 shrink-0" aria-hidden />
+      <Gauge className="text-primary-ink h-4 w-4 shrink-0" aria-hidden />
       <div className="min-w-0 flex-1">
         <p className="text-foreground truncate text-xs font-semibold">Organization JSON-LD</p>
         <p className="text-muted-foreground mt-0.5 text-[10px]">High impact · ~2h</p>
@@ -266,7 +266,7 @@ function ShipDoneItem({ title }: { title: string }): JSX.Element {
         <Check className="h-2.5 w-2.5 text-white" aria-hidden />
       </span>
       <span className="text-foreground flex-1 truncate text-xs font-medium">{title}</span>
-      <span className="bg-primary/10 text-primary inline-flex shrink-0 items-center gap-1 rounded-sm px-1.5 py-0.5 text-[10px] font-semibold">
+      <span className="bg-primary/10 text-primary-ink inline-flex shrink-0 items-center gap-1 rounded-sm px-1.5 py-0.5 text-[10px] font-semibold">
         <Zap className="h-3 w-3" aria-hidden />
         Auto
       </span>
@@ -309,7 +309,7 @@ function ShipIllo(): JSX.Element {
         <span className="text-muted-foreground text-[11px]">
           Cited by Perplexity after shipping
         </span>
-        <span className="text-primary inline-flex items-center gap-1 text-[11px] font-semibold">
+        <span className="text-primary-ink inline-flex items-center gap-1 text-[11px] font-semibold">
           Review
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>

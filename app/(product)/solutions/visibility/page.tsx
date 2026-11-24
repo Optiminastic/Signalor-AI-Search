@@ -378,7 +378,7 @@ export default function VisibilitySolutionPage() {
             { k: 'Brand discovery', v: 'New audiences meet brands through AI first.' },
           ].map(c => (
             <li key={c.k} className="rounded-none border border-black/8 bg-white p-5">
-              <p className="text-primary text-[11px] font-semibold tracking-[0.18em] uppercase">
+              <p className="text-primary-ink text-[11px] font-semibold tracking-[0.18em] uppercase">
                 {c.k}
               </p>
               <p className="text-accent-foreground mt-2.5 text-sm leading-relaxed font-light">
@@ -563,9 +563,10 @@ function VisibilityDashboardPreview() {
 
       <div className="bg-muted border-t border-black/6 px-6 py-3.5">
         <p className="text-muted-foreground text-[11px] leading-relaxed font-medium">
-          <Sparkles className="text-primary mr-1 inline-block h-3 w-3" aria-hidden /> Illustrative
-          dashboard, your visibility score, citation share, and sentiment update with every re-run.{' '}
-          <Link href="/sign-up" className="text-primary font-semibold hover:underline">
+          <Sparkles className="text-primary-ink mr-1 inline-block h-3 w-3" aria-hidden />{' '}
+          Illustrative dashboard, your visibility score, citation share, and sentiment update with
+          every re-run.{' '}
+          <Link href="/sign-up" className="text-primary-ink font-semibold hover:underline">
             See yours now <Check className="-mb-px ml-0.5 inline-block h-3 w-3" />
           </Link>
         </p>

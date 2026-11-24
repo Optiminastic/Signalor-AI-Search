@@ -32,7 +32,7 @@ export function Hero(): JSX.Element {
 
       <h1 className="mx-auto max-w-3xl text-[40px] leading-[1.05] font-semibold tracking-tight text-[#141414] sm:text-[60px]">
         The{' '}
-        <span className="text-primary relative whitespace-nowrap">
+        <span className="text-primary-ink relative whitespace-nowrap">
           growth
           <span
             aria-hidden
@@ -40,7 +40,10 @@ export function Hero(): JSX.Element {
           />
         </span>{' '}
         engine for your AI Search
-        <Sparkle size={30} className="text-primary mx-1 inline-block align-middle sm:size-[42px]" />
+        <Sparkle
+          size={30}
+          className="text-primary-ink mx-1 inline-block align-middle sm:size-[42px]"
+        />
         visibility
       </h1>
 

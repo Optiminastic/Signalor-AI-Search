@@ -67,7 +67,7 @@ function SavedNote({ syncing, onClose }: { syncing: string; onClose: () => void 
       <button
         type="button"
         onClick={onClose}
-        className="mt-1 inline-flex h-8 items-center rounded-md bg-[#e04a3d] px-3.5 text-[12.5px] font-medium text-white transition-opacity hover:opacity-90"
+        className="bg-primary-strong mt-1 inline-flex h-8 items-center rounded-md px-3.5 text-[12.5px] font-medium text-white transition-opacity hover:opacity-90"
       >
         Done
       </button>

@@ -37,7 +37,7 @@ export function SiteFavicon({ domain, size = 16, title }: SiteFaviconProps): JSX
     return (
       <span
         title={title ?? host}
-        className="grid shrink-0 place-items-center rounded-[3px] bg-[rgba(224,74,61,0.12)] font-semibold text-[#e04a3d] uppercase"
+        className="text-primary-ink grid shrink-0 place-items-center rounded-[3px] bg-[rgba(224,74,61,0.12)] font-semibold uppercase"
         style={{ ...box, fontSize: Math.max(8, Math.round(size * 0.55)) }}
       >
         {host ? host[0] : '?'}

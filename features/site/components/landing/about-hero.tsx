@@ -50,7 +50,7 @@ function AboutValueCells(): JSX.Element {
             )}
           >
             <span className="flex items-center gap-2.5">
-              <Icon className="text-primary h-4.5 w-4.5" strokeWidth={2} aria-hidden />
+              <Icon className="text-primary-ink h-4.5 w-4.5" strokeWidth={2} aria-hidden />
               <span className="text-foreground text-[15px] font-semibold tracking-tight">
                 {title}
               </span>
@@ -75,7 +75,7 @@ export function AboutHero(): JSX.Element {
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_60%_at_50%_30%,rgba(224,74,61,0.05),transparent_70%)]"
           />
           <div className="relative mx-auto max-w-2xl text-center">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               About SignalorAI
             </p>
             <h1

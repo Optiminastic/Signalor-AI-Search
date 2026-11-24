@@ -126,7 +126,7 @@ export function HomeMeasureCard(): JSX.Element {
             Fixes move the number - then it stays moved
           </p>
         </div>
-        <span className="bg-primary shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
+        <span className="bg-primary-strong shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold text-white">
           30d
         </span>
       </div>

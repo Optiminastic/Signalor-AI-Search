@@ -85,7 +85,7 @@ export function IndexingPanel({ orgSlug }: IndexingPanelProps): JSX.Element {
       {indexing.report && <Report orgSlug={orgSlug} report={indexing.report} indexing={indexing} />}
       {indexing.report?.bing && <BingCard orgSlug={orgSlug} bing={indexing.report.bing} />}
       {indexing.checkError && (
-        <p role="alert" className="text-[12px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink text-[12px]">
           {indexing.checkError}
         </p>
       )}

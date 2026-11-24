@@ -57,7 +57,7 @@ export function IntroTypeScene(): JSX.Element {
             strokeLinecap="round"
           />
         </svg>
-        <span className="cat-intro-spark absolute top-0 left-0 text-[#e04a3d] drop-shadow-[0_0_10px_rgba(224,74,61,.6)]">
+        <span className="cat-intro-spark text-primary-ink absolute top-0 left-0 drop-shadow-[0_0_10px_rgba(224,74,61,.6)]">
           <Sparkles size={26} strokeWidth={1.8} />
         </span>
         <Headline />

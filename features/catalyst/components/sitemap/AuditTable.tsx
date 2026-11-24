@@ -19,7 +19,14 @@ const COLS = [
 export function AuditTable({ rows }: { rows: Row[] }): JSX.Element {
   return (
     <div className="cat-rise cat-card-edge overflow-hidden rounded-2xl border border-[var(--cat-card-border)] bg-[var(--cat-card)]">
-      <div className="overflow-x-auto">
+      {/* Keyboard users scroll it with the arrow keys once focused. */}
+      {}
+      <div
+        className="overflow-x-auto"
+        tabIndex={0}
+        role="region"
+        aria-label="Sitemap audit results"
+      >
         <table className="w-full min-w-[1160px] border-collapse text-left">
           <thead>
             <tr className="border-b border-[var(--cat-border)] bg-[var(--cat-hover)]">

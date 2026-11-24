@@ -26,7 +26,7 @@ export function HomeCta(): JSX.Element {
         />
         <div className="lg:divide-border relative grid lg:grid-cols-[1.15fr_1fr] lg:divide-x">
           <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Get started
             </p>
             <h2

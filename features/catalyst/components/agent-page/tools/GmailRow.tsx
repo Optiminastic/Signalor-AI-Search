@@ -75,7 +75,7 @@ export function GmailRow({ orgSlug }: GmailRowProps): JSX.Element {
     <li className="flex flex-col gap-1">
       <State gmail={gmail} />
       {gmail.error && (
-        <p role="alert" className="px-2.5 text-[11.5px] text-[#e04a3d]">
+        <p role="alert" className="text-primary-ink px-2.5 text-[11.5px]">
           {gmail.error}
         </p>
       )}

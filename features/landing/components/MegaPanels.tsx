@@ -25,7 +25,7 @@ function SectionLabel({ children }: { children: string }): JSX.Element {
 function IconTile({ icon: Icon }: { icon: TablerIcon }): JSX.Element {
   return (
     <span className="ring-foreground/10 grid h-10 w-10 shrink-0 place-items-center rounded-sm bg-white shadow ring-1">
-      <Icon size={18} stroke={1.75} className="text-primary" />
+      <Icon size={18} stroke={1.75} className="text-primary-ink" />
     </span>
   )
 }

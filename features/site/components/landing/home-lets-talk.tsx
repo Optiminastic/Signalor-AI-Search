@@ -27,7 +27,9 @@ function ServiceGrid(): JSX.Element {
     <ul className="divide-border grid h-full divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {SERVICES.map(s => (
         <li key={s.tag} className="px-6 py-8 sm:px-8 lg:py-20">
-          <span className="text-primary text-[12px] font-semibold tracking-[0.18em]">{s.tag}</span>
+          <span className="text-primary-ink text-[12px] font-semibold tracking-[0.18em]">
+            {s.tag}
+          </span>
           <p className="text-foreground mt-3 text-[15px] font-semibold">{s.label}</p>
           <p className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">{s.text}</p>
         </li>
@@ -49,7 +51,7 @@ export function HomeLetsTalk(): JSX.Element {
         <GridHandle className="-top-[3.5px] left-[40%] -ml-[3.5px] hidden lg:block" />
         <div className="lg:divide-border grid lg:grid-cols-[2fr_3fr] lg:divide-x">
           <div className="max-lg:border-border px-6 py-14 max-lg:border-b sm:px-10 lg:py-20">
-            <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+            <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
               Work with us
             </p>
             <h2

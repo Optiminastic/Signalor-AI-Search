@@ -74,7 +74,7 @@ function HeatRow({ row, engines, max }: RowProps): JSX.Element {
         <span className="flex items-center gap-2">
           <BrandFavicon domain={row.domain} name={row.name} color="#111827" size={LOGO_SIZE.base} />
           <span className="truncate text-[13px] font-medium text-[var(--cat-ink)]">{row.name}</span>
-          {row.isBrand && <UserRound size={13} className="shrink-0 text-[#e04a3d]" />}
+          {row.isBrand && <UserRound size={13} className="text-primary-ink shrink-0" />}
         </span>
       </td>
       {engines.map(engine => (

@@ -112,7 +112,7 @@ export function AppSidebar() {
             <div
               className={cn('flex items-center', open ? 'justify-start gap-2' : 'justify-center')}
             >
-              <div className="bg-primary/20 text-primary rounded-md p-1.5">
+              <div className="bg-primary/20 text-primary-ink rounded-md p-1.5">
                 <Radar className="h-3.5 w-3.5" />
               </div>
               {open ? (
@@ -122,7 +122,7 @@ export function AppSidebar() {
 
             {open && isRunScopedSubpage && slug ? (
               <>
-                <p className="text-primary mt-2 text-xs font-semibold tracking-wide uppercase">
+                <p className="text-primary-ink mt-2 text-xs font-semibold tracking-wide uppercase">
                   Project
                 </p>
                 <p className="text-muted-foreground mt-1 truncate text-xs">
@@ -144,7 +144,7 @@ export function AppSidebar() {
                     'flex h-10 w-full items-center rounded-md font-medium transition-colors',
                     open ? 'justify-start gap-2.5 px-2.5' : 'mx-auto size-10 justify-center px-0',
                     item.active
-                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      ? 'bg-primary-strong text-primary-foreground shadow-sm'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   )}
                 >

@@ -75,7 +75,7 @@ export function HomeHowItWorks(): JSX.Element {
         <div className="px-6 py-16 sm:px-10 sm:py-20">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-3xl">
-              <p className="text-primary text-[12px] font-semibold tracking-[0.18em] uppercase">
+              <p className="text-primary-ink text-[12px] font-semibold tracking-[0.18em] uppercase">
                 How it works
               </p>
               <h2
@@ -87,7 +87,7 @@ export function HomeHowItWorks(): JSX.Element {
             </div>
             <Link
               href="/sign-up"
-              className="text-primary hover:text-primary/80 inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold transition-colors"
+              className="text-primary-ink hover:text-primary-ink/80 inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold transition-colors"
             >
               Start step one
               <ArrowRight className="h-3.5 w-3.5" aria-hidden />

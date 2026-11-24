@@ -15,7 +15,7 @@ const THEME: Record<GateTheme, { border: string; btn: string; eyebrow: string; b
   orange: {
     border: 'border-primary/25',
     btn: 'bg-primary',
-    eyebrow: 'text-primary',
+    eyebrow: 'text-primary-ink',
     bg: 'bg-gradient-to-br from-primary/5 via-white to-primary/10',
   },
   blue: {
