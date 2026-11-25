@@ -1,9 +1,16 @@
 'use client'
 
+import { useMemo, useState } from 'react'
+
 import { SECONDARY_BUTTON } from '@/features/catalyst/components/agent-page/approvals/approval-styles'
+import {
+  PlatformFilter,
+  type PlatformChoice,
+} from '@/features/catalyst/components/agent-page/prompts/PlatformFilter'
+import { PLATFORM_ORDER } from '@/features/catalyst/components/agent-page/prompts/platforms'
 import { PromptCard } from '@/features/catalyst/components/agent-page/prompts/PromptCard'
 import { usePromptPresence, type PromptPresenceState } from '@/hooks/usePromptPresence'
-import type { PromptPresenceReport } from '@/lib/api/agent-mode-prompt-presence'
+import type { Platform, PromptPresenceReport } from '@/lib/api/agent-mode-prompt-presence'
 
 const NOTE = 'text-[12.5px] text-[var(--cat-ink-2)]'
 const MUTED = 'text-[11.5px] text-[var(--cat-ink-3)]'
@@ -12,6 +19,15 @@ function when(iso: string): string {
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(
     new Date(iso),
   )
+}
+
+/** How many results each platform has across every prompt. */
+export function platformCounts(report: PromptPresenceReport): Record<Platform, number> {
+  const counts = { reddit: 0, linkedin: 0, x: 0, google: 0 }
+  for (const prompt of report.prompts) {
+    for (const p of PLATFORM_ORDER) counts[p] += prompt.results[p].length
+  }
+  return counts
 }
 
 function Header({
@@ -46,6 +62,8 @@ function Header({
 }
 
 function Body({ report }: { report: PromptPresenceReport }): JSX.Element {
+  const [choice, setChoice] = useState<PlatformChoice>('all')
+  const counts = useMemo(() => platformCounts(report), [report])
   if (report.trackedPrompts === 0) {
     return <p className={NOTE}>No tracked prompts yet. Prompts come from the brand’s analysis.</p>
   }
@@ -56,22 +74,26 @@ function Body({ report }: { report: PromptPresenceReport }): JSX.Element {
       </p>
     )
   }
+  const platforms = choice === 'all' ? PLATFORM_ORDER : [choice]
   return (
-    <ul className="flex flex-col gap-2">
-      {report.prompts.map((p, i) => (
-        <li key={p.prompt}>
-          <PromptCard presence={p} open={i === 0} />
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col gap-3">
+      <PlatformFilter value={choice} onChange={setChoice} counts={counts} />
+      <ul className="flex flex-col gap-2">
+        {report.prompts.map((p, i) => (
+          <li key={p.prompt}>
+            <PromptCard presence={p} open={i === 0 || choice !== 'all'} platforms={platforms} />
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
 /**
  * The Prompts tab: for each prompt the brand tracks, the Reddit threads (and
  * their subreddits), LinkedIn posts, X posts and Google links where it's being
- * discussed, and where the brand already shows up, so the owner knows which
- * conversations to join.
+ * discussed, each platform marked and filterable, and where the brand already
+ * shows up, so the owner knows which conversations to join.
  */
 export function PromptPresencePanel({ orgSlug }: { orgSlug: string }): JSX.Element {
   const state = usePromptPresence(orgSlug)
